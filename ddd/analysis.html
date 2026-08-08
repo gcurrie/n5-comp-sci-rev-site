@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis — DDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Database Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Analysis</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-ddd">
+  <div class="inner">
+    <div class="hero-badge">Database Design &amp; Development</div>
+    <h1>Analysis</h1>
+    <p>End-user and functional requirements of a database problem — plus the UK GDPR and what it means for individuals and businesses.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🗄️ DDD Topics</div>
+        <ul>
+          <li><a href="database-introduction.html"><span class="sn-icon">🗄️</span>Database Introduction</a></li>
+          <li><a href="analysis.html" class="active"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="sql-select.html"><span class="sn-icon">🔎</span>SQL — SELECT</a></li>
+          <li><a href="sql-joins.html"><span class="sn-icon">🔗</span>SQL — Joins</a></li>
+          <li><a href="sql-insert-update-delete.html"><span class="sn-icon">✏️</span>SQL — Insert/Update/Delete</a></li>
+          <li><a href="testing-evaluation.html"><span class="sn-icon">✅</span>Testing &amp; Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#end-user">End-User Requirements</a></li>
+          <li><a href="#functional">Functional Requirements</a></li>
+          <li><a href="#gdpr">UK GDPR</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="end-user">End-User Requirements</h2>
+        <p>In the analysis stage of a database problem you must be able to identify two kinds of requirement. <strong>End-user requirements</strong> describe what the <strong>people using the database</strong> want to accomplish with it.</p>
+        <div class="example-block">
+          <div class="example-label">Example — youth club (2019 exam context)</div>
+          <ul>
+            <li>The club leaders need to <strong>add new activities</strong>.</li>
+            <li>The club leaders need to <strong>identify adults with first aid qualifications</strong>.</li>
+            <li>The club leaders need to <strong>find the activities members are registered for</strong>.</li>
+            <li>The club leaders need to <strong>view all members listed alphabetically</strong>.</li>
+          </ul>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>Answer format:</strong> start with the person — "The <em>club leader</em> needs…", "The <em>shop staff</em> need…", "The <em>headteacher</em> needs…"</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="functional">Functional Requirements</h2>
+        <p><strong>Functional requirements</strong> specify what the <strong>database</strong> must do to meet the end-users' needs — the entities and attributes (tables and fields) it needs, and the queries required to search and sort the data.</p>
+        <div class="example-block">
+          <div class="example-label">Example — youth club functional requirements</div>
+          <ul>
+            <li>The database needs a <strong>table</strong> storing leader details, including first aid qualification status.</li>
+            <li>The database needs <strong>tables</strong> for members and activities.</li>
+            <li>The database needs a <strong>query</strong> to display members sorted alphabetically by town.</li>
+          </ul>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>Answer format:</strong> start with the database — "The database needs a <em>table</em> about…", "The database needs a <em>query</em> to…"</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="gdpr">The UK GDPR</h2>
+        <p>The <strong>General Data Protection Regulation (UK GDPR)</strong> is a law covering how your data is stored and used (it replaced the Data Protection Act terminology in 2018). Some key terms:</p>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Data subject</div><div class="def">The person whose data is stored.</div></div>
+          <div class="key-term"><div class="term">Data controller</div><div class="def">The person/organisation controlling how the data is used.</div></div>
+          <div class="key-term"><div class="term">Declared purpose</div><div class="def">The stated reason the data was collected.</div></div>
+        </div>
+        <p>The implications for individuals and businesses are that data must be:</p>
+        <ol>
+          <li>processed <strong>lawfully, fairly and in a transparent manner</strong> in relation to individuals</li>
+          <li>used for the <strong>declared purpose only</strong></li>
+          <li><strong>limited to the data needed</strong> for the declared purpose</li>
+          <li><strong>accurate</strong></li>
+          <li><strong>not kept for longer than necessary</strong></li>
+          <li><strong>held securely</strong></li>
+        </ol>
+        <div class="example-block">
+          <div class="example-label">Example — GDPR applied to the youth club</div>
+          <ul>
+            <li>The club should collect <strong>only the data it needs</strong> for membership.</li>
+            <li>The data may be used <strong>only for running the club</strong> — not shared or sold without consent.</li>
+            <li>When a member leaves, their data should be <strong>deleted</strong> — it can't be kept longer than necessary.</li>
+            <li>Member data must be <strong>held securely</strong>.</li>
+          </ul>
+        </div>
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div>Exam questions usually ask you to identify <strong>two implications</strong> in the context of the scenario — knowing two or three well is enough. (GDPR officially sits in the <em>design</em> part of the course spec, but it fits naturally alongside analysis.)</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Requirements (2 marks)</div>
+          <p>A gym is having a database created. State one <strong>end-user requirement</strong> and one <strong>functional requirement</strong> for a system that lets staff find members whose membership has expired.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">End-user: the gym staff need to identify members whose membership has expired (1 mark). Functional: the database needs a query to display members where the expiry date is before today's date / a table storing membership expiry dates (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — GDPR (2 marks)</div>
+          <p>The gym stores members' personal details. Describe <strong>two</strong> implications of the UK GDPR for the gym.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Any two of: only collect the data needed for membership; use it only for the declared purpose; keep it accurate; delete it when no longer needed (e.g. when a member leaves); hold it securely; process it lawfully, fairly and transparently. (1 mark each)</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

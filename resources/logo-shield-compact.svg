@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="shieldCompactTitle">
+  <title id="shieldCompactTitle">Computing Revision Hub — shield mark</title>
+  <!-- Header-size variant: solid gold shield, no binary or cursor, so the
+       CRH still reads at 36px. Transparent background so it sits on the
+       dark green header bar. -->
+  <path d="M12,8 H108 V62 C108,92 86,110 60,120 C34,110 12,92 12,62 Z" fill="#C9A227"/>
+  <text x="60" y="72" text-anchor="middle" font-size="31" font-weight="700" letter-spacing="0.5" fill="#002D1C"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CRH</text>
+</svg>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASCII Explorer — chr() &amp; ord() — Higher Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --low:#1E40AF; --low-bg:#EFF6FF;
+    --oth:#4A5568; --oth-bg:#EDEFF2;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  /* Reserve the scrollbar gutter so the content width does not change when a
+     scrollbar appears — otherwise auto-sizing the embed oscillates. */
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:1080px;margin:0 auto}
+  header h1{font-family:var(--sans);font-size:clamp(22px,3.2vw,32px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:840px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  /* ---- controls ---- */
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:14px 18px;margin:18px 0 14px}
+  .modes{display:flex;border:1px solid var(--line)}
+  .modes button{border:0;border-right:1px solid var(--line);background:#fff;padding:9px 16px}
+  .modes button:last-child{border-right:0}
+  .modes button.on{background:var(--active-strong);color:#fff}
+  .modes button.on:hover{background:var(--active-strong)}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  button{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:9px 14px;border:1px solid var(--line);background:#fff;color:var(--active-strong);transition:background .15s,border-color .15s}
+  button:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+  button.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C}
+  button.primary:hover:not(:disabled){filter:brightness(1.06);background:var(--match-accent)}
+  button.on2{background:var(--active);border-color:var(--active);color:#fff}
+  button.on2:hover{background:var(--active)}
+  .chip{font-family:var(--mono);font-size:12px;padding:6px 10px;border:1px solid var(--line);background:#fff;display:flex;gap:7px;align-items:center}
+  .chip .k{color:var(--ink-soft);letter-spacing:.06em}
+  .chip.good{border-color:var(--active);background:var(--active-bg)}
+  .chip.good .k{color:var(--active)} .chip.good b{color:var(--active-strong)}
+
+  /* ---- panels ---- */
+  .panel{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  .panelbar{background:var(--bar);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .panelbar span{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--match-accent)}
+  .panelbar .dim{color:rgba(255,255,255,.45);letter-spacing:.1em}
+  .panelbody{padding:16px 18px}
+
+  /* ---- selection readout ---- */
+  .sel{display:flex;gap:16px;flex-wrap:wrap;align-items:stretch}
+  .bigch{
+    flex:0 0 auto;width:110px;border:2px solid var(--active-strong);background:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;
+  }
+  .bigch .g{font-family:var(--mono);font-size:44px;font-weight:700;color:var(--active-strong);line-height:1.1}
+  .bigch .n{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--ink-soft);margin-top:4px;text-align:center}
+  .exprs{flex:1 1 320px;display:flex;flex-direction:column;gap:9px;justify-content:center}
+  .ex{font-family:var(--mono);font-size:clamp(15px,2.4vw,20px);font-weight:700;word-break:break-word}
+  .ex .fn{color:var(--active)} .ex .ar{color:var(--ink-soft)} .ex .rs{color:var(--match)}
+  .codepick{flex:1 1 230px;border-left:1px solid var(--line);padding-left:16px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+  .codepick label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-soft)}
+  .codepick .row{display:flex;gap:6px;align-items:center}
+  .codepick input{font-family:var(--mono);font-size:17px;font-weight:700;width:86px;padding:8px 10px;border:1px solid var(--line);background:#fff;color:var(--ink);text-align:center}
+  .codepick input:focus{outline:none;border-color:var(--active);box-shadow:0 0 0 3px var(--active-bg)}
+  .codepick .note{font-size:12px;color:var(--ink-soft);line-height:1.45}
+
+  /* ---- strips ---- */
+  .strip{margin-bottom:14px}
+  .strip:last-child{margin-bottom:0}
+  .striphead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+  .striphead .nm{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase}
+  .striphead .rg{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 8px;border:1px solid}
+  .cells{display:grid;gap:3px}
+  .cells.l26{grid-template-columns:repeat(26,1fr)}
+  .cells.l10{grid-template-columns:repeat(10,1fr)}
+  .cells.l8{grid-template-columns:repeat(8,1fr)}
+  .cl{
+    border:1px solid var(--line);background:#fff;padding:5px 1px 4px;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:1px;transition:background .12s,border-color .12s;
+    font-family:var(--mono);text-transform:none;letter-spacing:0;
+  }
+  .cl .g{font-size:15px;font-weight:700;color:var(--ink);line-height:1.2}
+  .cl .n{font-size:8.5px;color:var(--ink-soft);line-height:1.2;visibility:hidden}
+  .cl.showcode .n{visibility:visible}
+  .cl:hover{border-color:var(--active);background:var(--active-bg)}
+  .cl.sel{border-width:2px;padding:4px 0 3px}
+  .up.sel{border-color:var(--active);background:var(--active-bg)} .up.sel .g{color:var(--active-strong)}
+  .lo.sel{border-color:var(--low);background:var(--low-bg)} .lo.sel .g{color:var(--low)}
+  .di.sel{border-color:var(--match);background:var(--match-bg)} .di.sel .g{color:var(--match)}
+  .ot.sel{border-color:var(--oth);background:var(--oth-bg)} .ot.sel .g{color:var(--oth)}
+  .cl.right{border-color:var(--active);background:var(--active-bg);border-width:2px}
+  .cl.wrong{border-color:var(--warn);background:var(--warn-bg);border-width:2px}
+
+  .nm.up{color:var(--active)} .rg.up{color:var(--active);border-color:var(--active);background:var(--active-bg)}
+  .nm.lo{color:var(--low)}    .rg.lo{color:var(--low);border-color:var(--low);background:var(--low-bg)}
+  .nm.di{color:var(--match)}  .rg.di{color:var(--match);border-color:var(--match-accent);background:var(--match-bg)}
+  .nm.ot{color:var(--oth)}    .rg.ot{color:var(--oth);border-color:var(--line);background:var(--oth-bg)}
+
+  /* ---- validation ---- */
+  .val .panelbody{padding:16px 18px}
+  .cond{font-family:var(--mono);font-size:clamp(13px,2.1vw,16px);font-weight:700;background:#0000000a;border:1px solid var(--line);padding:10px 12px;word-break:break-word}
+  .cond .t{color:var(--warn)} .cond .f{color:var(--active)}
+  .trace{margin-top:11px;display:flex;flex-direction:column;gap:5px}
+  .tr{font-family:var(--mono);font-size:13px;display:flex;gap:8px;flex-wrap:wrap}
+  .tr .lhs{color:var(--ink)} .tr .res{font-weight:700}
+  .tr .res.t{color:var(--warn)} .tr .res.f{color:var(--active)}
+  .verdict{margin-top:12px;font-size:14.5px;border:1px solid;border-left-width:3px;padding:11px 15px;line-height:1.55}
+  .verdict.ok{border-color:var(--active);background:var(--active-bg);color:var(--active-strong)}
+  .verdict.no{border-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .verdict b{font-weight:700}
+  .verdict code{font-family:var(--mono);background:#0000000d;padding:.05em .3em}
+  .srcnote{font-size:12.5px;color:var(--ink-soft);margin-top:10px;line-height:1.55}
+  .srcnote code{font-family:var(--mono);background:#0000000d;padding:.05em .3em}
+
+  /* ---- quiz ---- */
+  .quiz .qtext{font-size:16px;line-height:1.6;margin-bottom:12px}
+  .quiz .qtext code{font-family:var(--mono);font-size:1.05em;background:#0000000d;padding:.1em .4em;font-weight:700}
+  .numans{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .numans input{font-family:var(--mono);font-size:17px;font-weight:700;width:110px;padding:9px 11px;border:1px solid var(--line);text-align:center}
+  .numans input:focus{outline:none;border-color:var(--active);box-shadow:0 0 0 3px var(--active-bg)}
+  .yn{display:flex;gap:8px;flex-wrap:wrap}
+  .qfb{margin-top:12px;font-size:14.5px;border:1px solid var(--line);border-left:3px solid var(--line);padding:11px 15px;background:var(--bg);color:var(--ink-soft);line-height:1.55}
+  .qfb.ok{border-color:var(--active);border-left-color:var(--active);background:var(--active-bg);color:var(--active-strong)}
+  .qfb.no{border-color:var(--warn);border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .qfb b{font-weight:700}
+  .qfb code{font-family:var(--mono);background:#0000000d;padding:.05em .3em}
+
+  .narrate{margin-top:14px;font-size:14.5px;border:1px solid var(--line);border-left:3px solid var(--active);padding:12px 16px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-size:.92em;background:#0000000d;padding:.05em .3em}
+
+  .hide{display:none !important}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  @media(max-width:720px){
+    .controls{flex-direction:column;align-items:stretch}
+    .cells.l26{grid-template-columns:repeat(13,1fr)}
+    .codepick{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:12px}
+    .cl .g{font-size:13px}
+  }
+  @media print{.controls{display:none} body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Higher &#183; SDD &#183; Pre-defined Functions</p>
+    <h1>ASCII Explorer &#8212; <span style="font-family:var(--mono);font-size:.8em">chr()</span> &amp; <span style="font-family:var(--mono);font-size:.8em">ord()</span></h1>
+    <p class="sub">Click any character to see its ASCII code, or type a code to see the character it gives. The panel underneath runs the <b>capital-letter validation</b> from the Modular Programming page &#8212; <code>ord(letter) &lt; 65 or ord(letter) &gt; 90</code> &#8212; against whatever you have selected.</p>
+  </header>
+
+  <div class="controls">
+    <div class="modes">
+      <button id="m-explore" class="on">Explore</button>
+      <button id="m-quiz">Quiz</button>
+    </div>
+    <div class="btnrow" id="explorebtns">
+      <button id="showall">Show all codes</button>
+    </div>
+    <div class="btnrow hide" id="quizbtns">
+      <div class="chip good"><span class="k">score</span><b id="c-score">0 / 8</b></div>
+      <div class="chip"><span class="k">question</span><b id="c-qn">1 / 8</b></div>
+      <button id="newquiz" class="primary">New quiz</button>
+    </div>
+  </div>
+
+  <section class="panel quiz hide" id="quizpanel">
+    <div class="panelbar"><span>QUIZ</span><span class="dim" id="qkind"></span></div>
+    <div class="panelbody">
+      <p class="qtext" id="qtext"></p>
+      <div class="numans hide" id="numans">
+        <input id="qnum" type="number" inputmode="numeric" autocomplete="off" placeholder="code">
+        <button id="qsubmit" class="primary">Answer</button>
+      </div>
+      <div class="yn hide" id="ynans">
+        <button id="qyes">Yes &#8212; accepted</button>
+        <button id="qno">No &#8212; rejected</button>
+      </div>
+      <div class="qfb hide" id="qfb"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="selpanel">
+    <div class="panelbar"><span>SELECTED CHARACTER</span><span class="dim">CLICK A CELL, OR TYPE A CODE</span></div>
+    <div class="panelbody">
+      <div class="sel">
+        <div class="bigch"><span class="g" id="bg"></span><span class="n" id="bn"></span></div>
+        <div class="exprs">
+          <div class="ex"><span class="fn">ord</span><span class="ar">(</span><span id="e1a"></span><span class="ar">)</span><span class="ar"> &#8594; </span><span class="rs" id="e1b"></span></div>
+          <div class="ex"><span class="fn">chr</span><span class="ar">(</span><span id="e2a"></span><span class="ar">)</span><span class="ar"> &#8594; </span><span class="rs" id="e2b"></span></div>
+        </div>
+        <div class="codepick">
+          <label for="codein">Type an ASCII code (32&#8211;126)</label>
+          <div class="row">
+            <button id="cdown">&#8722;</button>
+            <input id="codein" type="number" min="32" max="126" inputmode="numeric" autocomplete="off">
+            <button id="cup">+</button>
+          </div>
+          <p class="note">Stepping through the codes shows the sets sitting next to each other &#8212; digits, then capitals, then lowercase.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>THE CHARACTER SETS</span><span class="dim">EACH SET IS A CONTIGUOUS BLOCK OF CODES</span></div>
+    <div class="panelbody" id="strips"></div>
+  </section>
+
+  <section class="panel val" id="valpanel">
+    <div class="panelbar"><span>CAPITAL-LETTER VALIDATION</span><span class="dim">FROM THE MODULAR PROGRAMMING PAGE</span></div>
+    <div class="panelbody">
+      <div class="cond" id="cond"></div>
+      <div class="trace" id="trace"></div>
+      <div class="verdict" id="verdict"></div>
+      <p class="srcnote">The full loop is <code>while len(letter) != 1 or (ord(letter) &lt; 65 or ord(letter) &gt; 90):</code> &#8212; it keeps asking while the condition is <b>True</b>. The <code>len(letter) != 1</code> part rejects anything that is not a single character; selecting one here always satisfies it.</p>
+    </div>
+  </section>
+
+  <div class="narrate idle" id="narrate">Click any character below, or type a code, and both <code>ord()</code> and <code>chr()</code> update together.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const SETS = [
+    {key:"up", nm:"A &#8211; Z  capitals", cls:"l26", from:65, to:90,  rg:"65 &#8211; 90"},
+    {key:"lo", nm:"a &#8211; z  lowercase", cls:"l26", from:97, to:122, rg:"97 &#8211; 122"},
+    {key:"di", nm:"0 &#8211; 9  digits", cls:"l10", from:48, to:57,  rg:"48 &#8211; 57"},
+    {key:"ot", nm:"a few others", cls:"l8", codes:[32,33,46,58,64,91,96,126], rg:"scattered"}
+  ];
+  const NAMES = {32:"space", 33:"!", 46:".", 58:":", 64:"@", 91:"[", 96:"`", 126:"~"};
+
+  const $ = id => document.getElementById(id);
+  const stripsEl = $("strips"), narrate = $("narrate");
+
+  let code = 65, mode = "explore", showAll = false;
+  let quiz = [], qi = 0, score = 0, answered = false;
+
+  const glyph = c => c === 32 ? "␣" : String.fromCharCode(c);
+  const label = c => c === 32 ? '" "' : '"' + String.fromCharCode(c) + '"';
+  const setOf = c => (c >= 65 && c <= 90) ? "up" : (c >= 97 && c <= 122) ? "lo" : (c >= 48 && c <= 57) ? "di" : "ot";
+  function say(html, cls){ narrate.className = "narrate" + (cls ? " " + cls : ""); narrate.innerHTML = html; }
+
+  function codesFor(s){
+    if(s.codes) return s.codes.slice();
+    const out = [];
+    for(let c = s.from; c <= s.to; c++) out.push(c);
+    return out;
+  }
+
+  function buildStrips(){
+    stripsEl.innerHTML = "";
+    SETS.forEach(s => {
+      const wrap = document.createElement("div");
+      wrap.className = "strip";
+      wrap.innerHTML = '<div class="striphead"><span class="nm ' + s.key + '">' + s.nm + '</span>' +
+                       '<span class="rg ' + s.key + '">' + s.rg + '</span></div>';
+      const cells = document.createElement("div");
+      cells.className = "cells " + s.cls;
+      codesFor(s).forEach(c => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "cl " + s.key;
+        b.dataset.c = c;
+        b.innerHTML = '<span class="g">' + glyph(c) + '</span><span class="n">' + c + '</span>';
+        b.addEventListener("click", () => onCell(c));
+        cells.appendChild(b);
+      });
+      wrap.appendChild(cells);
+      stripsEl.appendChild(wrap);
+    });
+  }
+
+  function onCell(c){
+    if(mode === "quiz"){ answerCell(c); return; }
+    setCode(c, true);
+  }
+
+  function setCode(c, fromCell){
+    code = Math.max(32, Math.min(126, c | 0));
+    $("codein").value = code;
+    render();
+    if(fromCell){
+      const s = setOf(code);
+      say('<code>ord(' + label(code) + ')</code> is <b>' + code + '</b>' +
+          (s === "up" ? ' &#8212; inside the capital range 65&#8211;90, so it would pass the validation.'
+                      : ' &#8212; outside 65&#8211;90, so the capital-letter check would reject it.'), "");
+    }
+  }
+
+  function render(){
+    $("bg").textContent = glyph(code);
+    $("bn").textContent = code === 32 ? "SPACE · " + code : "CODE " + code;
+    $("e1a").textContent = label(code);
+    $("e1b").textContent = code;
+    $("e2a").textContent = code;
+    $("e2b").textContent = label(code);
+
+    stripsEl.querySelectorAll(".cl").forEach(b => {
+      b.classList.toggle("sel", +b.dataset.c === code && mode === "explore");
+      b.classList.toggle("showcode", showAll && mode === "explore");
+      b.classList.remove("right","wrong");
+    });
+
+    renderValidation();
+    postHeight();
+  }
+
+  function renderValidation(){
+    const lt = code < 65, gt = code > 90, cond = lt || gt;
+    $("cond").innerHTML = 'ord(letter) &lt; 65 or ord(letter) &gt; 90' +
+      '<span class="' + (cond ? "t" : "f") + '">   &#8594;   ' + (cond ? "True" : "False") + '</span>';
+    $("trace").innerHTML =
+      '<div class="tr"><span class="lhs">ord(' + label(code) + ') = ' + code + '</span></div>' +
+      '<div class="tr"><span class="lhs">' + code + ' &lt; 65</span><span class="res ' + (lt ? "t" : "f") + '">' + (lt ? "True" : "False") + '</span></div>' +
+      '<div class="tr"><span class="lhs">' + code + ' &gt; 90</span><span class="res ' + (gt ? "t" : "f") + '">' + (gt ? "True" : "False") + '</span></div>';
+    const v = $("verdict");
+    if(cond){
+      v.className = "verdict no";
+      v.innerHTML = 'Condition is <b>True</b>, so the <code>while</code> loop runs again &#8212; ' +
+        label(code) + ' is <b>rejected</b> and the user is asked for another character. ' +
+        (code > 90 ? 'Its code is above 90, past <code>"Z"</code>.' : 'Its code is below 65, before <code>"A"</code>.');
+    } else {
+      v.className = "verdict ok";
+      v.innerHTML = 'Condition is <b>False</b>, so the loop <b>exits</b> &#8212; ' + label(code) +
+        ' is <b>accepted</b> as a capital letter and returned.';
+    }
+  }
+
+  /* ---- quiz ---- */
+  const ALL = SETS.reduce((a, s) => a.concat(codesFor(s)), []);
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+
+  function makeQuiz(){
+    const kinds = ["ord","chr","valid","ord","chr","valid","ord","valid"];
+    quiz = kinds.sort(() => Math.random() - 0.5).map(k => ({kind:k, c:pick(ALL)}));
+    qi = 0; score = 0; answered = false;
+    showQ();
+  }
+
+  function showQ(){
+    const q = quiz[qi];
+    answered = false;
+    $("c-score").textContent = score + " / " + quiz.length;
+    $("c-qn").textContent = (qi + 1) + " / " + quiz.length;
+    $("qfb").className = "qfb hide";
+    $("numans").classList.toggle("hide", q.kind !== "ord");
+    $("ynans").classList.toggle("hide", q.kind !== "valid");
+    $("qnum").value = "";
+    stripsEl.querySelectorAll(".cl").forEach(b => b.classList.remove("right","wrong","sel"));
+
+    if(q.kind === "ord"){
+      $("qkind").textContent = "CHARACTER → CODE";
+      $("qtext").innerHTML = 'What does <code>ord(' + label(q.c) + ')</code> return? Type the ASCII code.';
+    } else if(q.kind === "chr"){
+      $("qkind").textContent = "CODE → CHARACTER";
+      $("qtext").innerHTML = 'Which character does <code>chr(' + q.c + ')</code> return? <b>Click it</b> in the strips below.';
+    } else {
+      $("qkind").textContent = "VALIDATION";
+      $("qtext").innerHTML = 'Would ' + label(q.c) + ' get past <code>ord(letter) &lt; 65 or ord(letter) &gt; 90</code>, ' +
+        'or would the loop reject it and ask again?';
+    }
+    postHeight();
+  }
+
+  function finishQ(ok, html){
+    answered = true;
+    if(ok) score++;
+    $("c-score").textContent = score + " / " + quiz.length;
+    const fb = $("qfb");
+    fb.className = "qfb " + (ok ? "ok" : "no");
+    const last = qi === quiz.length - 1;
+    fb.innerHTML = html + (last
+      ? ' <b>That is the last one &#8212; ' + score + ' out of ' + quiz.length + '.</b> Press <b>New quiz</b> to go again.'
+      : ' <button id="qnext" style="margin-left:8px">Next &#9656;</button>');
+    if(!last) $("qnext").addEventListener("click", () => { qi++; showQ(); });
+    postHeight();
+  }
+
+  function answerCell(c){
+    const q = quiz[qi];
+    if(answered || q.kind !== "chr") return;
+    const cell = stripsEl.querySelector('.cl[data-c="' + c + '"]');
+    const ok = c === q.c;
+    cell.classList.add(ok ? "right" : "wrong");
+    if(!ok) stripsEl.querySelector('.cl[data-c="' + q.c + '"]').classList.add("right");
+    finishQ(ok, ok
+      ? '&#10003; <b>Correct.</b> <code>chr(' + q.c + ')</code> is ' + label(q.c) + '.'
+      : '&#10007; That is ' + label(c) + ', code ' + c + '. <code>chr(' + q.c + ')</code> is ' + label(q.c) + ' &#8212; now highlighted.');
+  }
+
+  $("qsubmit").addEventListener("click", () => {
+    const q = quiz[qi];
+    if(answered || q.kind !== "ord") return;
+    const val = parseInt($("qnum").value, 10);
+    if(isNaN(val)){ say("Type a number first.", "idle"); return; }
+    const ok = val === q.c;
+    finishQ(ok, ok
+      ? '&#10003; <b>Correct.</b> <code>ord(' + label(q.c) + ') = ' + q.c + '</code>.'
+      : '&#10007; Not ' + val + ' &#8212; <code>ord(' + label(q.c) + ')</code> is <b>' + q.c + '</b>. ' + anchor(q.c));
+  });
+  $("qnum").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); $("qsubmit").click(); } });
+
+  function anchor(c){
+    const s = setOf(c);
+    if(s === "up") return 'Count on from <code>"A"</code> = 65.';
+    if(s === "lo") return 'Count on from <code>"a"</code> = 97.';
+    if(s === "di") return 'Count on from <code>"0"</code> = 48.';
+    return 'This one is outside the three main blocks.';
+  }
+
+  function answerYN(said){
+    const q = quiz[qi];
+    if(answered || q.kind !== "valid") return;
+    const accepted = q.c >= 65 && q.c <= 90;
+    const ok = said === accepted;
+    finishQ(ok, (ok ? '&#10003; <b>Correct.</b> ' : '&#10007; <b>Not quite.</b> ') +
+      '<code>ord(' + label(q.c) + ')</code> is <b>' + q.c + '</b>, so it is ' +
+      (accepted ? 'inside 65&#8211;90 &#8212; the condition is <b>False</b> and the loop <b>exits</b>, accepting it.'
+                : 'outside 65&#8211;90 &#8212; the condition is <b>True</b> so the loop runs again, <b>rejecting</b> it.'));
+  }
+  $("qyes").addEventListener("click", () => answerYN(true));
+  $("qno").addEventListener("click", () => answerYN(false));
+
+  /* ---- mode + controls ---- */
+  function setMode(m){
+    mode = m;
+    $("m-explore").classList.toggle("on", m === "explore");
+    $("m-quiz").classList.toggle("on", m === "quiz");
+    $("explorebtns").classList.toggle("hide", m !== "explore");
+    $("quizbtns").classList.toggle("hide", m !== "quiz");
+    $("quizpanel").classList.toggle("hide", m !== "quiz");
+    $("selpanel").classList.toggle("hide", m === "quiz");
+    $("valpanel").classList.toggle("hide", m === "quiz");
+    if(m === "quiz"){ makeQuiz(); say('Answer each question, then press <b>Next</b>. Codes are hidden while the quiz is running.', "idle"); }
+    else { say('Click any character below, or type a code, and both <code>ord()</code> and <code>chr()</code> update together.', "idle"); }
+    render();
+  }
+
+  $("m-explore").addEventListener("click", () => setMode("explore"));
+  $("m-quiz").addEventListener("click", () => setMode("quiz"));
+  $("newquiz").addEventListener("click", makeQuiz);
+  $("showall").addEventListener("click", () => {
+    showAll = !showAll;
+    $("showall").classList.toggle("on2", showAll);
+    $("showall").textContent = showAll ? "Hide codes" : "Show all codes";
+    render();
+  });
+  $("codein").addEventListener("input", () => {
+    const v = parseInt($("codein").value, 10);
+    if(!isNaN(v) && v >= 32 && v <= 126){ code = v; render(); }
+  });
+  $("cup").addEventListener("click", () => setCode(code + 1, true));
+  $("cdown").addEventListener("click", () => setCode(code - 1, true));
+
+  /* Measure the body, not documentElement: once the parent has grown the
+     iframe, documentElement stretches to that new height, so re-reporting it
+     would ratchet the frame taller on every reflow. Declared before render(). */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    // Grow freely, but ignore shrinks of a few px: those are the scrollbar
+    // appearing and disappearing, and acting on them makes the frame oscillate.
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+
+  buildStrips();
+  setCode(65);
+  setMode("explore");
+
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

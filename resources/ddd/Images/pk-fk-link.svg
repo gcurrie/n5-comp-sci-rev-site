@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">How a primary key becomes a foreign key on the many side</title>
+  <desc id="dsc">Two tables stacked so the shared field lines up. The Customer table on top has a CustomerID column marked PK, holding 101 for Ada Khan and 102 for Ben Rae; each value appears exactly once, because the primary key must be unique. The Order table below has the same CustomerID field, this time marked FK, sitting between OrderID and Total. Orders 5001, 5002 and 5003 all carry CustomerID 101, and order 5004 carries 102, so the foreign key repeats freely. A gold connector runs from the CustomerID column of Customer down into the CustomerID column of Order, carrying a 1 at the Customer end and a three-pronged crow's foot marked M at the Order end. Braces to the right of the Order table group Ada Khan's three orders and Ben Rae's one order. Two notes explain that the primary key identifies one customer and never repeats, while the foreign key is a copy of it that may repeat as often as needed. A band along the bottom states the rule: the foreign key always goes in the table on the many side.</desc>
+
+  <text x="200" y="40" text-anchor="start" font-size="12" font-weight="700" letter-spacing="1.9" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CUSTOMER</text>
+  <line x1="200" y1="50" x2="272" y2="50" stroke="#C9A227" stroke-width="2"/>
+  <rect x="200" y="62" width="170" height="50" fill="#92750A"/>
+  <text x="285" y="88" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CustomerID</text>
+  <text x="285" y="105" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="1.4" fill="#FEF3C7" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">PK</text>
+  <rect x="370" y="62" width="190" height="50" fill="#001810"/>
+  <text x="465" y="92" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Name</text>
+  <rect x="200" y="112" width="170" height="44" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="285" y="140" text-anchor="middle" font-size="15" font-weight="700" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">101</text>
+  <rect x="370" y="112" width="190" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="465" y="140" text-anchor="middle" font-size="14" fill="#1A1A1A">Ada Khan</text>
+  <rect x="200" y="156" width="170" height="44" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="285" y="184" text-anchor="middle" font-size="15" font-weight="700" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">102</text>
+  <rect x="370" y="156" width="190" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="465" y="184" text-anchor="middle" font-size="14" fill="#1A1A1A">Ben Rae</text>
+  <text x="60" y="318" text-anchor="start" font-size="12" font-weight="700" letter-spacing="1.9" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">ORDER</text>
+  <line x1="60" y1="328" x2="105" y2="328" stroke="#C9A227" stroke-width="2"/>
+  <rect x="60" y="340" width="140" height="50" fill="#001810"/>
+  <text x="130" y="366" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">OrderID</text>
+  <text x="130" y="383" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="1.4" fill="#C9A227" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">PK</text>
+  <rect x="200" y="340" width="170" height="50" fill="#92750A"/>
+  <text x="285" y="366" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CustomerID</text>
+  <text x="285" y="383" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="1.4" fill="#FEF3C7" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">FK</text>
+  <rect x="370" y="340" width="120" height="50" fill="#001810"/>
+  <text x="430" y="370" text-anchor="middle" font-size="14.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Total</text>
+  <rect x="60" y="390" width="140" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="130" y="418" text-anchor="middle" font-size="15" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">5001</text>
+  <rect x="200" y="390" width="170" height="44" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="285" y="418" text-anchor="middle" font-size="15" font-weight="700" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">101</text>
+  <rect x="370" y="390" width="120" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="430" y="418" text-anchor="middle" font-size="15" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">24.99</text>
+  <rect x="60" y="434" width="140" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="130" y="462" text-anchor="middle" font-size="15" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">5002</text>
+  <rect x="200" y="434" width="170" height="44" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="285" y="462" text-anchor="middle" font-size="15" font-weight="700" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">101</text>
+  <rect x="370" y="434" width="120" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="430" y="462" text-anchor="middle" font-size="15" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">8.50</text>
+  <rect x="60" y="478" width="140" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="130" y="506" text-anchor="middle" font-size="15" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">5003</text>
+  <rect x="200" y="478" width="170" height="44" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="285" y="506" text-anchor="middle" font-size="15" font-weight="700" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">101</text>
+  <rect x="370" y="478" width="120" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="430" y="506" text-anchor="middle" font-size="15" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">61.00</text>
+  <rect x="60" y="522" width="140" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="130" y="550" text-anchor="middle" font-size="15" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">5004</text>
+  <rect x="200" y="522" width="170" height="44" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="285" y="550" text-anchor="middle" font-size="15" font-weight="700" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">102</text>
+  <rect x="370" y="522" width="120" height="44" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="430" y="550" text-anchor="middle" font-size="15" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">15.75</text>
+  <line x1="285" y1="200" x2="285" y2="306" stroke="#C9A227" stroke-width="3" stroke-linecap="round"/>
+  <line x1="285" y1="306" x2="259" y2="340" stroke="#C9A227" stroke-width="3" stroke-linecap="round"/>
+  <line x1="285" y1="306" x2="285" y2="340" stroke="#C9A227" stroke-width="3" stroke-linecap="round"/>
+  <line x1="285" y1="306" x2="311" y2="340" stroke="#C9A227" stroke-width="3" stroke-linecap="round"/>
+  <rect x="272" y="215" width="26" height="22" fill="#FFFFFF" stroke="#1B6B45" stroke-width="1"/>
+  <text x="285" y="231" text-anchor="middle" font-size="13" font-weight="700" fill="#00442A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">1</text>
+  <rect x="272" y="277" width="26" height="22" fill="#FFFFFF" stroke="#1B6B45" stroke-width="1"/>
+  <text x="285" y="293" text-anchor="middle" font-size="13" font-weight="700" fill="#00442A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">M</text>
+  <text x="311" y="266" font-size="14" font-style="italic" fill="#4A5568">the same field, copied into the table on the many side</text>
+  <path d="M506 393 h10 v126 h-10" fill="none" stroke="#92750A" stroke-width="2"/>
+  <text x="526" y="461" font-size="13.5" fill="#1A1A1A">Ada Khan's three orders — CustomerID 101 repeats</text>
+  <path d="M506 525 h10 v38 h-10" fill="none" stroke="#92750A" stroke-width="2"/>
+  <text x="526" y="549" font-size="13.5" fill="#1A1A1A">Ben Rae's one order</text>
+  <rect x="640" y="62" width="420" height="68" fill="#F8F7F2" stroke="#D1D5DB" stroke-width="1"/>
+  <rect x="640" y="62" width="4" height="68" fill="#00442A"/>
+  <text x="656" y="83" font-size="10" font-weight="700" letter-spacing="1.5" fill="#00442A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">PRIMARY KEY</text>
+  <text x="656" y="104" font-size="13.5" fill="#1A1A1A">CustomerID identifies one customer and</text>
+  <text x="656" y="123" font-size="13.5" fill="#1A1A1A">never repeats — 101 and 102 appear once each.</text>
+  <rect x="640" y="168" width="420" height="87" fill="#F8F7F2" stroke="#D1D5DB" stroke-width="1"/>
+  <rect x="640" y="168" width="4" height="87" fill="#92750A"/>
+  <text x="656" y="189" font-size="10" font-weight="700" letter-spacing="1.5" fill="#92750A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">FOREIGN KEY</text>
+  <text x="656" y="210" font-size="13.5" fill="#1A1A1A">The very same field, copied into Order. Here it</text>
+  <text x="656" y="229" font-size="13.5" fill="#1A1A1A">may repeat as often as it likes, because one</text>
+  <text x="656" y="248" font-size="13.5" fill="#1A1A1A">customer can place many orders.</text>
+  <rect x="60" y="606" width="1000" height="64" fill="#00442A"/>
+  <text x="560" y="630" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="2" fill="#C9A227" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">THE RULE</text>
+  <text x="560" y="653" text-anchor="middle" font-size="14.5" fill="#C7DED2">A foreign key always goes in the table on the <tspan font-weight="700" fill="#FFFFFF">many</tspan> side.</text>
+</svg>

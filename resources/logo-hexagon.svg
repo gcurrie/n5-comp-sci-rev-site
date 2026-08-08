@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="hexTitle">
+  <title id="hexTitle">Computing Revision Hub — hexagon processor logo</title>
+
+  <!-- backdrop -->
+  <rect width="120" height="120" fill="#001810"/>
+
+  <!-- processor pins / circuit traces -->
+  <g stroke="#92750A" stroke-width="1.3" stroke-linecap="round">
+    <line x1="60.0" y1="14.0" x2="60.0" y2="8.0"/>
+    <line x1="77.6" y1="18.7" x2="80.6" y2="13.5"/>
+    <line x1="90.5" y1="31.5" x2="95.7" y2="28.5"/>
+    <line x1="95.2" y1="49.1" x2="101.2" y2="49.1"/>
+    <line x1="95.2" y1="70.9" x2="101.2" y2="70.9"/>
+    <line x1="90.5" y1="88.5" x2="95.7" y2="91.5"/>
+    <line x1="77.6" y1="101.3" x2="80.6" y2="106.5"/>
+    <line x1="60.0" y1="106.0" x2="60.0" y2="112.0"/>
+    <line x1="42.4" y1="101.3" x2="39.4" y2="106.5"/>
+    <line x1="29.5" y1="88.5" x2="24.3" y2="91.5"/>
+    <line x1="24.8" y1="70.9" x2="18.8" y2="70.9"/>
+    <line x1="24.8" y1="49.1" x2="18.8" y2="49.1"/>
+    <line x1="29.5" y1="31.5" x2="24.3" y2="28.5"/>
+    <line x1="42.4" y1="18.7" x2="39.4" y2="13.5"/>
+  </g>
+  <g fill="#C9A227">
+    <circle cx="60.0" cy="6.6" r="1.8"/>
+    <circle cx="81.3" cy="12.3" r="1.8"/>
+    <circle cx="96.9" cy="27.8" r="1.8"/>
+    <circle cx="102.6" cy="49.1" r="1.8"/>
+    <circle cx="102.6" cy="70.9" r="1.8"/>
+    <circle cx="96.9" cy="92.2" r="1.8"/>
+    <circle cx="81.3" cy="107.7" r="1.8"/>
+    <circle cx="60.0" cy="113.4" r="1.8"/>
+    <circle cx="38.7" cy="107.7" r="1.8"/>
+    <circle cx="23.1" cy="92.2" r="1.8"/>
+    <circle cx="17.4" cy="70.9" r="1.8"/>
+    <circle cx="17.4" cy="49.1" r="1.8"/>
+    <circle cx="23.1" cy="27.8" r="1.8"/>
+    <circle cx="38.7" cy="12.3" r="1.8"/>
+  </g>
+
+  <!-- hexagon body -->
+  <polygon points="104,60 82,98.1 38,98.1 16,60 38,21.9 82,21.9" fill="#00442A" stroke="#C9A227" stroke-width="3"/>
+  <polygon points="96,60 78,91.2 42,91.2 24,60 42,28.8 78,28.8" fill="none" stroke="#1B6B45" stroke-width="1.2"/>
+
+  <!-- code bracket -->
+  <text x="60" y="49" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="0.5" fill="#C9A227"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">&lt;/&gt;</text>
+
+  <!-- wordmark -->
+  <text x="60" y="79" text-anchor="middle" font-size="27" font-weight="700" letter-spacing="0.5" fill="#F8F7F2"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CRH</text>
+</svg>

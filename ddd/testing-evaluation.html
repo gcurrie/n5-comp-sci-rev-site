@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing &amp; Evaluation — DDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Database Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Testing &amp; Evaluation</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-ddd">
+  <div class="inner">
+    <div class="hero-badge">Database Design &amp; Development</div>
+    <h1>Testing &amp; Evaluation</h1>
+    <p>Testing that SQL operations work correctly, and evaluating a database for fitness for purpose and accuracy of output.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🗄️ DDD Topics</div>
+        <ul>
+          <li><a href="database-introduction.html"><span class="sn-icon">🗄️</span>Database Introduction</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="sql-select.html"><span class="sn-icon">🔎</span>SQL — SELECT</a></li>
+          <li><a href="sql-joins.html"><span class="sn-icon">🔗</span>SQL — Joins</a></li>
+          <li><a href="sql-insert-update-delete.html"><span class="sn-icon">✏️</span>SQL — Insert/Update/Delete</a></li>
+          <li><a href="testing-evaluation.html" class="active"><span class="sn-icon">✅</span>Testing &amp; Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#testing">Testing SQL Queries</a></li>
+          <li><a href="#fitness">Fitness for Purpose</a></li>
+          <li><a href="#accuracy">Accuracy of Output</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="testing">Testing SQL Queries</h2>
+        <p>To test an SQL statement, <strong>run the query</strong> and compare the <strong>actual output</strong> on screen with the <strong>expected output</strong> — the results the query <em>should</em> produce. If they don't match, there is an error to correct.</p>
+        <div class="example-block">
+          <div class="example-label">Example — a query that fails its test</div>
+          <p>A query is supposed to find all the <strong>red</strong> cars, but it was written as:</p>
+          <div class="code-block code-sql">
+            <pre>SELECT Registration, Make, Model
+FROM Car
+WHERE Colour = "Green";</pre>
+          </div>
+          <p>The actual output (green cars) doesn't match the expected output (red cars) — the condition needs corrected to <code>Colour = "Red"</code>.</p>
+        </div>
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div>Unlike software development, you do <strong>not</strong> need to talk about normal, extreme or exceptional testing for databases — testing means checking that SQL operations work correctly.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="fitness">Fitness for Purpose</h2>
+        <p>A database (or query) is <strong>fit for purpose</strong> when it satisfies the <strong>functional requirements</strong> from the analysis stage — every required table exists and every required query works, verified through testing.</p>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>Answer format (usually 2 marks):</strong> "The database <strong>is</strong> fit for purpose because…" or "The database <strong>is not</strong> fit for purpose because…" — one mark for the judgement, one for the justification tied to the requirements.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="accuracy">Accuracy of Output</h2>
+        <p><strong>Accuracy of output</strong> is closely related to testing — it asks whether the queries produce the <strong>expected results</strong>. Your testing evidence (expected vs actual output comparisons) is exactly what supports a claim that the output is accurate.</p>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Evaluate the database (2 marks)</div>
+          <p>A café's functional requirements said the database needed a query showing all gluten-free items sorted by price. The finished query shows gluten-free items but unsorted. Evaluate the database's fitness for purpose.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">The database is <strong>not fully fit for purpose</strong> (1 mark) because the query does not meet the functional requirement to sort the results by price — the ORDER BY is missing (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Testing (2 marks)</div>
+          <p>Describe how you would test that a SELECT query works correctly.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Run the query on the database (1 mark) and compare the actual output with the expected output worked out beforehand — if they match, the query works correctly (1 mark).</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

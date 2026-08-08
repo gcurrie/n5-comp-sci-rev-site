@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 540" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="caTitle caDesc">
+  <title id="caTitle">Computer Architecture — Processor, Memory and the Three Buses</title>
+  <desc id="caDesc">The processor on the left, main memory on the right, joined by three buses. The processor box contains three parts: the control unit, which decodes each instruction and directs the data; the ALU, the arithmetic and logic unit, which does the sums and the comparisons; and the registers, tiny very fast stores inside the processor. The main memory box shows five numbered locations, 0100 to 1000, each holding its own binary contents, with location 0110 highlighted. Between them run three buses, colour coded by direction. The address bus is green with a single arrowhead pointing from the processor to memory: it is one-way, because the processor only ever sends an address. The data bus is gold with arrowheads at both ends: it is two-way, carrying data from memory when reading and to memory when writing. The control bus is blue with arrowheads at both ends: it is two-way and carries the read and write lines. The caption notes that the width of the address bus decides how many locations can be addressed, with n lines addressing 2 to the power n locations.</desc>
+
+  <!-- panel -->
+  <rect x="1" y="1" width="1138" height="538" fill="#F8F7F2" stroke="#D1D5DB" stroke-width="2"/>
+
+  <!-- heading -->
+  <text x="570" y="48" text-anchor="middle" font-size="27" font-weight="800" fill="#00442A" letter-spacing="-0.4">Computer Architecture</text>
+  <text x="570" y="76" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="2.2" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">COLOUR SHOWS DIRECTION &#183; GREEN = ONE-WAY &#183; GOLD AND BLUE = TWO-WAY</text>
+
+  <!-- ================= PROCESSOR ================= -->
+  <rect x="100" y="120" width="380" height="310" fill="#FFFFFF" stroke="#00442A" stroke-width="2"/>
+  <rect x="100" y="120" width="380" height="36" fill="#00442A"/>
+  <text x="124" y="144" font-size="12" font-weight="700" letter-spacing="2.2" fill="#FFFFFF"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">PROCESSOR (CPU)</text>
+
+  <rect x="124" y="168" width="332" height="72" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="144" y="194" font-size="13" font-weight="700" letter-spacing="1.4" fill="#00442A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CONTROL UNIT</text>
+  <text x="144" y="218" font-size="12.5" fill="#1A1A1A">Decodes each instruction and directs the data</text>
+
+  <rect x="124" y="256" width="332" height="72" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="144" y="282" font-size="13" font-weight="700" letter-spacing="1.4" fill="#00442A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">ALU</text>
+  <text x="144" y="306" font-size="12.5" fill="#1A1A1A">Arithmetic &amp; Logic Unit &#8212; sums and comparisons</text>
+
+  <rect x="124" y="344" width="332" height="72" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="144" y="370" font-size="13" font-weight="700" letter-spacing="1.4" fill="#00442A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">REGISTERS</text>
+  <text x="144" y="394" font-size="12.5" fill="#1A1A1A">Tiny, very fast stores inside the processor</text>
+
+  <!-- ================= MAIN MEMORY ================= -->
+  <rect x="760" y="120" width="280" height="310" fill="#FFFFFF" stroke="#001810" stroke-width="2"/>
+  <rect x="760" y="120" width="280" height="36" fill="#001810"/>
+  <text x="784" y="144" font-size="12" font-weight="700" letter-spacing="2.2" fill="#C9A227"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">MAIN MEMORY (RAM)</text>
+
+  <g font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace" text-anchor="middle">
+    <rect x="784" y="168" width="88" height="40" fill="#F4F6F5" stroke="#D1D5DB" stroke-width="1"/>
+    <rect x="872" y="168" width="144" height="40" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+    <text x="828" y="193" font-size="12" fill="#4A5568">0100</text><text x="944" y="193" font-size="12.5" fill="#1A1A1A">1011 0011</text>
+
+    <rect x="784" y="216" width="88" height="40" fill="#F4F6F5" stroke="#D1D5DB" stroke-width="1"/>
+    <rect x="872" y="216" width="144" height="40" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+    <text x="828" y="241" font-size="12" fill="#4A5568">0101</text><text x="944" y="241" font-size="12.5" fill="#1A1A1A">0010 1110</text>
+
+    <rect x="784" y="264" width="88" height="40" fill="#FEF3C7" stroke="#C9A227" stroke-width="2"/>
+    <rect x="872" y="264" width="144" height="40" fill="#FEF3C7" stroke="#C9A227" stroke-width="2"/>
+    <text x="828" y="289" font-size="12" font-weight="700" fill="#92750A">0110</text><text x="944" y="289" font-size="12.5" font-weight="700" fill="#92750A">0110 1001</text>
+
+    <rect x="784" y="312" width="88" height="40" fill="#F4F6F5" stroke="#D1D5DB" stroke-width="1"/>
+    <rect x="872" y="312" width="144" height="40" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+    <text x="828" y="337" font-size="12" fill="#4A5568">0111</text><text x="944" y="337" font-size="12.5" fill="#1A1A1A">1100 0101</text>
+
+    <rect x="784" y="360" width="88" height="40" fill="#F4F6F5" stroke="#D1D5DB" stroke-width="1"/>
+    <rect x="872" y="360" width="144" height="40" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+    <text x="828" y="385" font-size="12" fill="#4A5568">1000</text><text x="944" y="385" font-size="12.5" fill="#1A1A1A">0001 1010</text>
+  </g>
+  <text x="900" y="418" text-anchor="middle" font-size="11.5" font-style="italic" fill="#4A5568">every location has its own address</text>
+
+  <!-- ================= ADDRESS BUS &#183; ONE-WAY ================= -->
+  <text x="620" y="184" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="1.8" fill="#00442A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">ADDRESS BUS</text>
+  <rect x="490" y="194" width="234" height="26" fill="#1B6B45"/>
+  <polygon points="724,189 750,207 724,225" fill="#1B6B45"/>
+  <text x="620" y="236" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B6B45">ONE-WAY &#8212; processor sends an address</text>
+
+  <!-- ================= DATA BUS &#183; TWO-WAY ================= -->
+  <text x="620" y="262" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="1.8" fill="#92750A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">DATA BUS</text>
+  <rect x="516" y="272" width="208" height="26" fill="#C9A227"/>
+  <polygon points="516,267 490,285 516,303" fill="#C9A227"/>
+  <polygon points="724,267 750,285 724,303" fill="#C9A227"/>
+  <text x="620" y="314" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92750A">TWO-WAY &#8212; data in and data out</text>
+
+  <!-- ================= CONTROL BUS &#183; TWO-WAY ================= -->
+  <text x="620" y="340" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="1.8" fill="#1E40AF"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CONTROL BUS</text>
+  <rect x="516" y="350" width="208" height="26" fill="#1E40AF"/>
+  <polygon points="516,345 490,363 516,381" fill="#1E40AF"/>
+  <polygon points="724,345 750,363 724,381" fill="#1E40AF"/>
+  <text x="620" y="392" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E40AF">TWO-WAY &#8212; the read and write lines</text>
+
+  <!-- ================= caption ================= -->
+  <rect x="40" y="460" width="1060" height="60" fill="#FEF3C7" stroke="#C9A227" stroke-width="2"/>
+  <text x="570" y="484" text-anchor="middle" font-size="12.5" fill="#1A1A1A">The processor only ever <tspan font-weight="700">sends</tspan> an address, so the address bus is one-way. Data must travel <tspan font-weight="700">both</tspan> ways, so the data bus is not.</text>
+  <text x="570" y="505" text-anchor="middle" font-size="12.5" fill="#1A1A1A">The number of lines in the address bus sets how many locations can be addressed: <tspan font-weight="700">n</tspan> lines reach <tspan font-weight="700">2</tspan><tspan font-weight="700" font-size="9" dy="-4">n</tspan><tspan dy="4" font-weight="700"> locations</tspan>.</text>
+</svg>

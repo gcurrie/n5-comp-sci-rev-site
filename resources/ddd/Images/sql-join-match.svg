@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 648" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">How a join matches a primary key to a foreign key</title>
+  <desc id="dsc">Three tables of sample data sit side by side: Customer, Booking and Hotel. Customer holds customerNo as its primary key, with C201 for Nkosi and C202 for Byrne. Booking holds bookingNo as its primary key plus two foreign keys, customerNo and hotelRef, with booking B1004 for C201 at hotel H10 for 7 nights and booking B1005 for C202 at hotel H11 for 3 nights. Hotel holds hotelRef as its primary key, with H10 Seaview at 55 pounds per person per night and H11 Pinewood at 40 pounds. Matching columns share a colour: customerNo is green in both Customer and Booking, and hotelRef is blue in both Booking and Hotel. Connectors arc over the tables joining each primary key to the foreign key that copies it. Below, the WHERE clause is shown with its two conditions colour-matched to those connectors: Customer.customerNo equals Booking.customerNo, and Booking.hotelRef equals Hotel.hotelRef. Beneath that, the two rows of the result are shown, each stitched together from all three tables: Nkosi, B1004, 7 nights, Seaview, 55 pounds; and Byrne, B1005, 3 nights, Pinewood, 40 pounds. A band along the bottom gives the rule that N tables need N minus 1 joins, so three tables need two, and warns that leaving one out pairs every row with every other row.</desc>
+
+  <text x="40" y="40" font-size="12" font-weight="700" letter-spacing="1.9" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CUSTOMER</text>
+  <line x1="40" y1="50" x2="112" y2="50" stroke="#C9A227" stroke-width="2"/>
+  <rect x="40" y="104" width="100" height="44" fill="#1B6B45"/>
+  <text x="90" y="123" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">customerNo</text>
+  <text x="90" y="139" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="1.3" fill="#C9A227" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">PK</text>
+  <rect x="140" y="104" width="120" height="44" fill="#001810"/>
+  <text x="200" y="131" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">surname</text>
+  <rect x="40" y="148" width="100" height="38" fill="#E8F5EE" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="90" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">C201</text>
+  <rect x="140" y="148" width="120" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="200" y="172" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Nkosi</text>
+  <rect x="40" y="186" width="100" height="38" fill="#E8F5EE" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="90" y="210" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">C202</text>
+  <rect x="140" y="186" width="120" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="200" y="210" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Byrne</text>
+  <text x="330" y="40" font-size="12" font-weight="700" letter-spacing="1.9" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">BOOKING</text>
+  <line x1="330" y1="50" x2="393" y2="50" stroke="#C9A227" stroke-width="2"/>
+  <rect x="330" y="104" width="100" height="44" fill="#001810"/>
+  <text x="380" y="123" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">bookingNo</text>
+  <text x="380" y="139" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="1.3" fill="#C9A227" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">PK</text>
+  <rect x="430" y="104" width="110" height="44" fill="#1B6B45"/>
+  <text x="485" y="123" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">customerNo</text>
+  <text x="485" y="139" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="1.3" fill="#C9A227" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">FK</text>
+  <rect x="540" y="104" width="100" height="44" fill="#1E40AF"/>
+  <text x="590" y="123" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">hotelRef</text>
+  <text x="590" y="139" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="1.3" fill="#C9A227" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">FK</text>
+  <rect x="640" y="104" width="80" height="44" fill="#001810"/>
+  <text x="680" y="131" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">nights</text>
+  <rect x="330" y="148" width="100" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="380" y="172" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">B1004</text>
+  <rect x="430" y="148" width="110" height="38" fill="#E8F5EE" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="485" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">C201</text>
+  <rect x="540" y="148" width="100" height="38" fill="#EFF6FF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="590" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1E40AF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">H10</text>
+  <rect x="640" y="148" width="80" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="680" y="172" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">7</text>
+  <rect x="330" y="186" width="100" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="380" y="210" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">B1005</text>
+  <rect x="430" y="186" width="110" height="38" fill="#E8F5EE" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="485" y="210" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">C202</text>
+  <rect x="540" y="186" width="100" height="38" fill="#EFF6FF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="590" y="210" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1E40AF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">H11</text>
+  <rect x="640" y="186" width="80" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="680" y="210" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">3</text>
+  <text x="770" y="40" font-size="12" font-weight="700" letter-spacing="1.9" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">HOTEL</text>
+  <line x1="770" y1="50" x2="815" y2="50" stroke="#C9A227" stroke-width="2"/>
+  <rect x="770" y="104" width="100" height="44" fill="#1E40AF"/>
+  <text x="820" y="123" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">hotelRef</text>
+  <text x="820" y="139" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="1.3" fill="#C9A227" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">PK</text>
+  <rect x="870" y="104" width="120" height="44" fill="#001810"/>
+  <text x="930" y="131" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">hotelName</text>
+  <rect x="990" y="104" width="110" height="44" fill="#001810"/>
+  <text x="1045" y="131" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">perNight</text>
+  <rect x="770" y="148" width="100" height="38" fill="#EFF6FF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="820" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1E40AF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">H10</text>
+  <rect x="870" y="148" width="120" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="930" y="172" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Seaview</text>
+  <rect x="990" y="148" width="110" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="1045" y="172" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">55.00</text>
+  <rect x="770" y="186" width="100" height="38" fill="#EFF6FF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="820" y="210" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1E40AF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">H11</text>
+  <rect x="870" y="186" width="120" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="930" y="210" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Pinewood</text>
+  <rect x="990" y="186" width="110" height="38" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="1045" y="210" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">40.00</text>
+  <path d="M90 104 V66 H485 V96" fill="none" stroke="#1B6B45" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M485 104 l-6 -10 h12 z" fill="#1B6B45"/>
+  <circle cx="90" cy="104" r="4" fill="#1B6B45"/>
+  <path d="M820 104 V82 H590 V96" fill="none" stroke="#1E40AF" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M590 104 l-6 -10 h12 z" fill="#1E40AF"/>
+  <circle cx="820" cy="104" r="4" fill="#1E40AF"/>
+  <text x="40" y="268" font-size="12" font-weight="700" letter-spacing="1.9" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">THE JOIN, IN THE WHERE CLAUSE</text>
+  <line x1="40" y1="278" x2="301" y2="278" stroke="#C9A227" stroke-width="2"/>
+  <rect x="40" y="288" width="560" height="36" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1"/>
+  <rect x="40" y="288" width="4" height="36" fill="#1B6B45"/>
+  <text xml:space="preserve" x="58" y="312" font-size="13" font-weight="700" fill="#1B6B45" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">WHERE  Customer.customerNo = Booking.customerNo</text>
+  <rect x="40" y="328" width="560" height="36" fill="#EFF6FF" stroke="#1E40AF" stroke-width="1"/>
+  <rect x="40" y="328" width="4" height="36" fill="#1E40AF"/>
+  <text xml:space="preserve" x="58" y="352" font-size="13" font-weight="700" fill="#1E40AF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">  AND  Booking.hotelRef    = Hotel.hotelRef</text>
+  <text x="628" y="312" font-size="13" font-style="italic" fill="#4A5568">One condition per join, chained with AND.</text>
+  <text x="628" y="334" font-size="13" font-style="italic" fill="#4A5568">Any real search criteria are added the same way.</text>
+  <text x="40" y="410" font-size="12" font-weight="700" letter-spacing="1.9" fill="#92750A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">WHAT COMES BACK</text>
+  <line x1="40" y1="420" x2="175" y2="420" stroke="#C9A227" stroke-width="2"/>
+  <rect x="40" y="430" width="120" height="34" fill="#1B6B45"/>
+  <text x="100" y="452" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">surname</text>
+  <rect x="160" y="430" width="110" height="34" fill="#001810"/>
+  <text x="215" y="452" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">bookingNo</text>
+  <rect x="270" y="430" width="80" height="34" fill="#001810"/>
+  <text x="310" y="452" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">nights</text>
+  <rect x="350" y="430" width="140" height="34" fill="#1E40AF"/>
+  <text x="420" y="452" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">hotelName</text>
+  <rect x="490" y="430" width="110" height="34" fill="#1E40AF"/>
+  <text x="545" y="452" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FFFFFF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">perNight</text>
+  <rect x="40" y="464" width="120" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="100" y="488" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Nkosi</text>
+  <rect x="160" y="464" width="110" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="215" y="488" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">B1004</text>
+  <rect x="270" y="464" width="80" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="310" y="488" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">7</text>
+  <rect x="350" y="464" width="140" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="420" y="488" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Seaview</text>
+  <rect x="490" y="464" width="110" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="545" y="488" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">55.00</text>
+  <rect x="40" y="502" width="120" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="100" y="526" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Byrne</text>
+  <rect x="160" y="502" width="110" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="215" y="526" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">B1005</text>
+  <rect x="270" y="502" width="80" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="310" y="526" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">3</text>
+  <rect x="350" y="502" width="140" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="420" y="526" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">Pinewood</text>
+  <rect x="490" y="502" width="110" height="38" fill="#FEF3C7" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="545" y="526" text-anchor="middle" font-size="12.5" fill="#1A1A1A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">40.00</text>
+  <text x="620" y="488" font-size="13.5" fill="#1A1A1A">Each row is stitched together from all <tspan font-weight="700">three</tspan> tables &#8212; only where the keys match.</text>
+  <rect x="40" y="570" width="1060" height="62" fill="#00442A"/>
+  <text x="570" y="594" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="2" fill="#C9A227" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">HOW MANY JOINS?</text>
+  <text x="570" y="617" text-anchor="middle" font-size="14" fill="#C7DED2"><tspan font-weight="700" fill="#FFFFFF">N</tspan> tables need <tspan font-weight="700" fill="#FFFFFF">N &#8722; 1</tspan> joins. Miss one and every row is paired with every other row.</text>
+</svg>

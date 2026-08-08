@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loops — SDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Software Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Loops</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-sdd">
+  <div class="inner">
+    <div class="hero-badge">Software Design &amp; Development</div>
+    <h1>Loops</h1>
+    <p>Repetition and iteration — fixed loops that repeat a set number of times, and conditional loops that repeat while a condition is true.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">💻 SDD Topics</div>
+        <ul>
+          <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
+          <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
+          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
+          <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
+          <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
+          <li><a href="loops.html" class="active"><span class="sn-icon">🔁</span>Loops</a></li>
+          <li><a href="standard-algorithms.html"><span class="sn-icon">📊</span>Standard Algorithms</a></li>
+          <li><a href="testing.html"><span class="sn-icon">✅</span>Testing</a></li>
+          <li><a href="evaluation.html"><span class="sn-icon">⭐</span>Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#fixed">Fixed Loops</a></li>
+          <li><a href="#conditional">Conditional Loops</a></li>
+          <li><a href="#infinite">Infinite Loops</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="fixed">Fixed Loops</h2>
+        <p>Think of Bart Simpson writing the same line on the blackboard over and over. Without loops, printing "Hello world" nine times means nine print statements:</p>
+        <div class="code-block">
+          <div class="code-label">Python — very inefficient!</div>
+          <pre>print("Hello world")
+print("Hello world")
+print("Hello world")
+# ...and six more times...</pre>
+        </div>
+        <p>This is very inefficient. Suppose we wanted to change the message — we'd have to go back and change every line individually, taking up time (and boring us). Instead, code inside a <strong>fixed loop</strong> repeats a certain (fixed) number of times:</p>
+        <div class="code-block">
+          <div class="code-label">Python — fixed loop</div>
+          <pre>for counter in range(9):
+    print("Hello world")</pre>
+        </div>
+        <p><code>counter</code> is the <strong>loop variable</strong> — it could be called anything (even <code>bananas</code>), but it is good practice to give it a meaningful name.</p>
+        <div class="example-block">
+          <div class="example-label">Fixed loop with a running total</div>
+          <div class="code-block">
+            <div class="code-label">Python</div>
+            <pre># Ask the user to enter 10 numbers and keep a running total
+total = 0
+for counter in range(10):
+    number = int(input("Please enter a number"))
+    total = total + number
+
+# Show total once the loop is done
+print(total)</pre>
+          </div>
+        </div>
+        <div class="code-block">
+          <div class="code-label">SQA Reference Language — fixed loop</div>
+          <pre>REPEAT 10 TIMES
+    RECEIVE number FROM (INTEGER) KEYBOARD
+    SET total TO total + number
+END REPEAT</pre>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="conditional">Conditional Loops</h2>
+        <p>A <strong>conditional loop</strong> (in Python, a <code>while</code> loop) repeats <strong>only while a condition is true</strong>. Think of it as a combination of a fixed loop and an if statement — you can use all the same conditions in a <code>while</code> loop that you would in an <code>if</code>.</p>
+        <p>In this example, if the number entered is more than 100, part of the program repeats, asking the user to enter the number again. Once the condition fails, the loop stops and the program continues:</p>
+        <div class="code-block">
+          <div class="code-label">Python — while loop</div>
+          <pre># Initialise the variable
+mynumber = 0
+
+# Ask the user to enter a number
+mynumber = int(input("Please enter a number"))
+
+# Example of a while loop
+while mynumber &gt; 100:
+    print("That number is too big!")
+    mynumber = int(input("Please enter a number"))</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">SQA Reference Language — conditional loop</div>
+          <pre>WHILE mynumber &gt; 100 DO
+    SEND "That number is too big!" TO DISPLAY
+    RECEIVE mynumber FROM (INTEGER) KEYBOARD
+END WHILE</pre>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="infinite">Beware the Infinite Loop</h2>
+        <p>Be careful you don't get stuck in an <strong>infinite loop</strong> — make sure your condition can always end. This loop never finishes, because 100 is always more than 5:</p>
+        <div class="code-block">
+          <div class="code-label">Python — oh no, an infinite loop!</div>
+          <pre>while 100 &gt; 5:
+    print("One hundred is still more than five")</pre>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>There's a famous Big Bang Theory clip (S2E13) where Sheldon builds a flowchart for making a friend and gets stuck going round and round it — until Howard fixes it by making sure the loop's condition can end. That's exactly how loops appear on flowcharts: a decision whose arrow points back up.</div>
+        </div>
+        <div class="img-placeholder">
+          <span class="ph-icon">📷</span>
+          <em>Images to add</em>
+          Big Bang Theory "friendship algorithm" scene, and the flowchart showing its loop.
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Fixed or conditional? (2 marks)</div>
+          <p>For each program, state whether a fixed or conditional loop is more suitable, and why:</p>
+          <ol type="a">
+            <li>Asking for the marks of the 30 pupils in a class.</li>
+            <li>Asking for a password until the correct one is entered.</li>
+          </ol>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) Fixed loop — the number of repetitions (30) is known in advance (1 mark). b) Conditional loop — you can't know how many attempts the user will need; it repeats while the password is wrong (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — How many times? (2 marks)</div>
+          <p>How many times does each loop print a message?</p>
+          <div class="code-block">
+            <pre>for counter in range(6):
+    print("A")
+
+count = 0
+while count &lt; 4:
+    print("B")
+    count = count + 1</pre>
+          </div>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">"A" is printed 6 times (range(6) gives 0–5) (1 mark). "B" is printed 4 times (count goes 0,1,2,3) (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q3 — Spot the infinite loop (2 marks)</div>
+          <p>Explain why this loop never ends, and rewrite one line to fix it.</p>
+          <div class="code-block">
+            <pre>count = 1
+while count &lt;= 5:
+    print(count)</pre>
+          </div>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><code>count</code> never changes inside the loop, so <code>count &lt;= 5</code> is always true (1 mark). Fix: add <code>count = count + 1</code> inside the loop body (1 mark).</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

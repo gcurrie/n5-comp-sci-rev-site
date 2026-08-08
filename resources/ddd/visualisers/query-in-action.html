@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Queries in Action — Higher Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --blue:#1E40AF; --blue-bg:#EFF6FF;
+    --purp:#6A1B9A; --purp-bg:#F4E8FA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  /* Reserve the scrollbar gutter so the content width does not change when a
+     scrollbar appears — otherwise auto-sizing the embed oscillates. */
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:1080px;margin:0 auto}
+  header h1{font-size:clamp(21px,3vw,30px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:860px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  /* ---- controls ---- */
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:14px 18px;margin:18px 0 0}
+  .tabs{display:flex;flex-wrap:wrap;gap:7px}
+  .tab{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.07em;padding:9px 14px;border:1px solid var(--line);border-top-width:3px;background:#fff;color:var(--ink-soft);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+  .tab:nth-child(1){border-top-color:var(--active)}
+  .tab:nth-child(2){border-top-color:var(--blue)}
+  .tab:nth-child(3){border-top-color:var(--purp)}
+  .tab:hover{color:var(--active-strong);border-color:var(--active)}
+  .tab.on{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap}
+  button{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);transition:background .15s,border-color .15s}
+  button:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+  button.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C}
+  button.primary:hover:not(:disabled){filter:brightness(1.06);background:var(--match-accent)}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  .progress{height:6px;background:var(--tint);border:1px solid var(--line);border-top:0;overflow:hidden}
+  .progress i{display:block;height:100%;width:0;background:var(--active);transition:width .3s}
+
+  /* ---- panels ---- */
+  .panel{border:1px solid var(--line);background:var(--panel);margin-top:14px}
+  .panelbar{background:var(--bar);padding:11px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+  .panelbar .dim{color:rgba(255,255,255,.45);letter-spacing:.12em}
+  .panelbody{padding:16px 20px}
+
+  /* ---- the query ---- */
+  pre{margin:0;font-family:var(--mono);font-size:14px;line-height:1.75;white-space:pre-wrap;color:var(--ink)}
+  .cl{padding:1px 3px;border-radius:0;transition:background .35s,color .35s,box-shadow .35s}
+  .cl.lit{background:var(--match-bg);color:var(--match);font-weight:700;box-shadow:0 2px 0 var(--match-accent)}
+  .kw{color:var(--active);font-weight:700}
+  .cl.lit .kw{color:var(--match)}
+
+  /* ---- tables ---- */
+  table{border-collapse:collapse;font-family:var(--mono);font-size:13px;background:#fff;width:auto}
+  th,td{border:1px solid var(--line);padding:6px 13px;text-align:left;white-space:nowrap}
+  thead th{background:var(--active-strong);color:#fff;font-size:10.5px;letter-spacing:.09em;font-weight:700}
+  thead th.calc{background:var(--blue)}
+  .tablewrap{overflow-x:auto}
+  tbody tr{transition:opacity .45s,background .45s}
+  tbody tr.fail{opacity:.3}
+  tbody tr.fail td{text-decoration:line-through;color:var(--ink-soft)}
+  tbody tr.pass td{background:var(--active-bg)}
+  th.verdict{background:transparent;border:0}
+  td.verdict{border:0;font-family:var(--sans);font-size:12.5px;font-weight:600;white-space:nowrap;opacity:0;transition:opacity .4s}
+  tr.pass td.verdict,tr.fail td.verdict{opacity:1}
+  tr.pass td.verdict{color:var(--active)}
+  tr.fail td.verdict{color:var(--warn);text-decoration:none}
+  td.calccell{background:var(--blue-bg);color:var(--blue);font-weight:700;opacity:0;transition:opacity .5s}
+  td.calccell.on{opacity:1}
+
+  /* ---- the result ---- */
+  .result{display:none}
+  .result.show{display:block}
+  /* The alias step rebuilds the heading rather than cross-fading it, so the
+     column can shrink to fit the shorter name — which is half the point. */
+  thead th.renamed{background:var(--match);animation:flash 1.1s ease-out}
+  @keyframes flash{0%{background:var(--match-accent);color:#002D1C}100%{background:var(--match);color:#fff}}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:14px;border:1px solid var(--line);border-left:3px solid var(--active);padding:13px 17px;background:var(--active-bg)}
+  .narrate .n-step{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--active);display:block;margin-bottom:5px}
+  .narrate .n-body{font-size:14.5px;line-height:1.65}
+  .narrate code{font-family:var(--mono);font-size:13px;background:#fff;padding:1px 4px;border:1px solid var(--line)}
+  .narrate.gold{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate.gold .n-step{color:var(--match)}
+  .narrate.blue{border-left-color:var(--blue);background:var(--blue-bg)}
+  .narrate.blue .n-step{color:var(--blue)}
+  .narrate.purp{border-left-color:var(--purp);background:var(--purp-bg)}
+  .narrate.purp .n-step{color:var(--purp)}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media(max-width:700px){.controls{flex-direction:column;align-items:stretch}}
+  @media print{.controls,.progress{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Higher &#183; DDD &#183; SQL</p>
+    <h1>Three Queries in Action</h1>
+    <p class="sub">The three tools from this page, each run against the travel database so you can watch what the query actually does. Search it with a <b>wildcard</b>, work a value out with a <b>calculation</b>, then label the column with an <b>alias</b>.</p>
+  </header>
+
+  <div class="controls">
+    <div class="tabs" id="tabs"></div>
+    <div class="btnrow">
+      <button id="back">&#8592; Back</button>
+      <button id="play" class="primary">Play</button>
+      <button id="next">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <section class="panel">
+    <div class="panelbar"><span>THE QUERY</span><span class="dim" id="pb-num">WILDCARDS &#183; STEP 1 OF 3</span></div>
+    <div class="panelbody"><pre id="sql"></pre></div>
+  </section>
+
+  <div class="narrate" id="narrate">
+    <span class="n-step" id="n-step"></span>
+    <div class="n-body" id="n-body"></div>
+  </div>
+
+  <section class="panel">
+    <div class="panelbar"><span id="src-title">THE DATA IT WORKS ON</span><span class="dim" id="src-sub"></span></div>
+    <div class="panelbody"><div class="tablewrap"><table id="src"></table></div></div>
+  </section>
+
+  <section class="panel result" id="result">
+    <div class="panelbar"><span>WHAT THE QUERY RETURNS</span><span class="dim" id="res-count"></span></div>
+    <div class="panelbody"><div class="tablewrap"><table id="res"></table></div></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  /* Sample data — a superset of the rows used in the join diagram on the page,
+     so the two figures agree with each other. */
+  const CUSTOMER = [
+    ["C201", "Thabo", "Nkosi"],
+    ["C202", "Erin",  "Byrne"],
+    ["C203", "Ailsa", "MacDonald"],
+    ["C204", "Rhona", "MacLeod"],
+    ["C205", "Priya", "Shah"],
+    ["C206", "Wei",   "Chen"]
+  ];
+  // Booking joined to Hotel, ready for the calculation.
+  const JOINED = [
+    ["B1004", 7, 2, "55.00"],
+    ["B1005", 3, 4, "40.00"],
+    ["B1006", 5, 2, "72.00"],
+    ["B1007", 2, 3, "55.00"]
+  ];
+  const total = r => (r[1] * r[2] * parseFloat(r[3])).toFixed(2);
+
+  const CALC_SQL =
+    '<span class="kw">SELECT</span> bookingNo,\n' +
+    '       <span class="cl" data-c="calc">numberNights * numberInParty * pricePersonNight</span>\n' +
+    '<span class="kw">FROM</span> Booking, Hotel\n' +
+    '<span class="kw">WHERE</span> Booking.hotelRef = Hotel.hotelRef;';
+
+  const ALIAS_SQL =
+    '<span class="kw">SELECT</span> bookingNo,\n' +
+    '       numberNights * numberInParty * pricePersonNight\n' +
+    '       <span class="cl" data-c="as"><span class="kw">AS</span> [Total Cost]</span>\n' +
+    '<span class="kw">FROM</span> Booking, Hotel\n' +
+    '<span class="kw">WHERE</span> Booking.hotelRef = Hotel.hotelRef;';
+
+  const RAW_HEAD = "numberNights*numberInParty*pricePersonNight";
+
+  const TABS = [
+    {
+      name: "Wildcards", tone: "gold",
+      sql: '<span class="kw">SELECT</span> firstname, surname\n' +
+           '<span class="kw">FROM</span> Customer\n' +
+           '<span class="cl" data-c="where"><span class="kw">WHERE</span> surname <span class="kw">LIKE</span> \'Mac%\'</span>;',
+      srcTitle: "THE CUSTOMER TABLE", srcSub: "6 ROWS",
+      srcCols: ["customerNo", "firstname", "surname"],
+      srcRows: CUSTOMER,
+      test: r => r[2].startsWith("Mac"),
+      resCols: ["firstname", "surname"],
+      resRows: CUSTOMER.filter(r => r[2].startsWith("Mac")).map(r => [r[1], r[2]]),
+      steps: [
+        { lit:"where", src:"plain", res:"hidden",
+          label:"Step 1 — the pattern",
+          body:"<b>%</b> stands for <b>any number of characters</b>, so <code>'Mac%'</code> means “starts with Mac, then anything at all”. <b>LIKE</b> is the part that tells the database to treat the value as a <b>pattern</b> rather than something to match exactly — <code>=</code> could not do this." },
+        { lit:"where", src:"tested", res:"hidden",
+          label:"Step 2 — every row is tested",
+          body:"Each surname is checked against the pattern. <b>MacDonald</b> and <b>MacLeod</b> both begin with Mac, so they stay in. The other four do not match, so they drop out." },
+        { lit:null, src:"tested", res:"shown",
+          label:"Step 3 — what comes back",
+          body:"Only the surviving rows are returned, and only the columns named in the <b>SELECT</b> line. <code>customerNo</code> was there in the table but was never asked for, so it is not in the answer." }
+      ]
+    },
+    {
+      name: "Calculations", tone: "blue",
+      sql: CALC_SQL,
+      srcTitle: "BOOKING JOINED TO HOTEL", srcSub: "4 ROWS",
+      srcCols: ["bookingNo", "numberNights", "numberInParty", "pricePersonNight"],
+      srcRows: JOINED,
+      calc: true,
+      resCols: ["bookingNo", RAW_HEAD],
+      resRows: JOINED.map(r => [r[0], total(r)]),
+      steps: [
+        { lit:"calc", src:"plain", res:"hidden",
+          label:"Step 1 — the calculation goes in SELECT",
+          body:"A computed value sits in the <b>SELECT</b> line alongside the ordinary fields. It is worked out <b>while the query runs</b> — nothing new is ever stored in the database, which is why it can never fall out of date." },
+        { lit:"calc", src:"computed", res:"hidden",
+          label:"Step 2 — worked out row by row",
+          body:"Every row is calculated on its own: nights &times; party size &times; price per person. B1004 is 7 &times; 2 &times; 55.00 = <b>770.00</b>, and B1005 is 3 &times; 4 &times; 40.00 = <b>480.00</b>." },
+        { lit:null, src:"computed", res:"shown",
+          label:"Step 3 — but look at the heading",
+          body:"The calculated column is in the answer and the numbers are right. The <b>heading</b>, though, is the whole expression — because nothing told the database what to call it. That is what an alias is for." }
+      ]
+    },
+    {
+      name: "Aliases", tone: "purp",
+      sql: ALIAS_SQL,
+      srcTitle: "BOOKING JOINED TO HOTEL", srcSub: "4 ROWS",
+      srcCols: ["bookingNo", "numberNights", "numberInParty", "pricePersonNight"],
+      srcRows: JOINED,
+      calc: true,
+      resCols: ["bookingNo", RAW_HEAD],
+      resRows: JOINED.map(r => [r[0], total(r)]),
+      steps: [
+        { lit:null, src:"computed", res:"raw",
+          label:"Step 1 — where we left off",
+          body:"The right numbers, under a heading nobody would want to read. Everything below is the same query as before — only one thing is about to change." },
+        { lit:"as", src:"computed", res:"raw",
+          label:"Step 2 — add AS",
+          body:"<b>AS [Total Cost]</b> gives the column a readable name. The square brackets are only needed because the heading contains a <b>space</b>; a one-word alias needs none." },
+        { lit:"as", src:"computed", res:"named",
+          label:"Step 3 — only the label changed",
+          body:"Same rows, same calculation, same values. <b>AS</b> never alters what is stored or what is computed — it only changes what the column is <b>called</b> in the answer. You can alias any column, not just a calculated one." }
+      ]
+    }
+  ];
+
+  const FLAT = [];
+  TABS.forEach((t, ti) => t.steps.forEach((s, si) => FLAT.push([ti, si])));
+
+  let pos = 0, playing = false, timer = 0;
+
+  /* ------------------------------------------------------------- render -- */
+  function buildTable(el, cols, rows, opts){
+    opts = opts || {};
+    const head = cols.map((c, i) => {
+      const cls = opts.renamedCol === i ? "renamed" : (opts.calcCol === i ? "calc" : "");
+      return '<th' + (cls ? ' class="' + cls + '"' : '') + '>' + c + '</th>';
+    }).join("");
+    const body = rows.map((r, ri) =>
+      '<tr data-r="' + ri + '">' + r.map((v, i) =>
+        '<td' + (opts.calcCol === i ? ' class="calccell"' : '') + '>' + v + '</td>').join("") +
+      (opts.verdict ? '<td class="verdict"></td>' : '') + '</tr>').join("");
+    el.innerHTML = '<thead><tr>' + head + (opts.verdict ? '<th class="verdict"></th>' : '') +
+                   '</tr></thead><tbody>' + body + '</tbody>';
+  }
+
+  function show(i, animate){
+    pos = Math.max(0, Math.min(FLAT.length - 1, i));
+    const [ti, si] = FLAT[pos];
+    const t = TABS[ti], st = t.steps[si];
+
+    // tabs + chrome
+    [...document.querySelectorAll(".tab")].forEach((b, n) => b.classList.toggle("on", n === ti));
+    $("pb-num").textContent = t.name.toUpperCase() + " · STEP " + (si + 1) + " OF " + t.steps.length;
+    $("bar").style.width = ((pos + 1) / FLAT.length * 100) + "%";
+    $("back").disabled = pos === 0;
+    $("next").disabled = pos === FLAT.length - 1;
+
+    // query
+    $("sql").innerHTML = t.sql;
+    [...$("sql").querySelectorAll(".cl")].forEach(el =>
+      el.classList.toggle("lit", el.dataset.c === st.lit));
+
+    // narration
+    $("narrate").className = "narrate " + t.tone;
+    $("n-step").textContent = st.label;
+    $("n-body").innerHTML = st.body;
+
+    // source table
+    $("src-title").textContent = t.srcTitle;
+    $("src-sub").textContent = t.srcSub;
+    const srcRows = t.calc ? t.srcRows.map(r => r.concat([total(r)])) : t.srcRows;
+    const srcCols = t.calc ? t.srcCols.concat(["= Total"]) : t.srcCols;
+    buildTable($("src"), srcCols, srcRows, {
+      verdict: !!t.test,
+      calcCol: t.calc ? t.srcCols.length : -1
+    });
+    if(t.test){
+      [...$("src").querySelectorAll("tbody tr")].forEach((tr, ri) => {
+        if(st.src !== "tested") return;
+        const ok = t.test(t.srcRows[ri]);
+        tr.classList.add(ok ? "pass" : "fail");
+        tr.querySelector(".verdict").textContent = ok ? "✓ starts “Mac”" : "✗ no match";
+      });
+    }
+    if(t.calc && st.src === "computed"){
+      [...$("src").querySelectorAll(".calccell")].forEach(td => td.classList.add("on"));
+    }
+
+    // result table
+    const res = $("result");
+    res.classList.toggle("show", st.res !== "hidden");
+    if(st.res !== "hidden"){
+      const named = st.res === "named";
+      const cols = named ? [t.resCols[0], "Total Cost"] : t.resCols;
+      buildTable($("res"), cols, t.resRows, {
+        calcCol: t.calc ? 1 : -1,
+        renamedCol: named ? 1 : -1
+      });
+      [...$("res").querySelectorAll(".calccell")].forEach(td => td.classList.add("on"));
+      $("res-count").textContent = t.resRows.length + " ROW" + (t.resRows.length === 1 ? "" : "S");
+    }
+    postHeight();
+  }
+
+  function setPlaying(on){
+    playing = on;
+    $("play").textContent = on ? "Pause" : (pos === FLAT.length - 1 ? "Replay" : "Play");
+  }
+
+  function advance(){
+    clearTimeout(timer);
+    if(!playing) return;
+    if(pos === FLAT.length - 1){ setPlaying(false); return; }
+    show(pos + 1, true);
+    timer = setTimeout(advance, 5200);
+  }
+
+  $("play").addEventListener("click", () => {
+    if(playing){ clearTimeout(timer); setPlaying(false); return; }
+    if(pos === FLAT.length - 1) show(0, true);
+    setPlaying(true);
+    timer = setTimeout(advance, 4200);
+  });
+  $("next").addEventListener("click", () => { clearTimeout(timer); setPlaying(false); show(pos + 1, true); });
+  $("back").addEventListener("click", () => { clearTimeout(timer); setPlaying(false); show(pos - 1, true); });
+
+  /* Measure the body, not documentElement: once the parent has grown the
+     iframe, documentElement stretches to that new height, so re-reporting it
+     would ratchet the frame taller every time the content reflows.
+     Declared before show(), which calls postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    // Grow freely, but ignore shrinks of a few px: those are the scrollbar
+    // appearing and disappearing, and acting on them makes the frame oscillate.
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+
+  TABS.forEach((t, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "tab";
+    b.textContent = (i + 1) + " · " + t.name;
+    b.addEventListener("click", () => {
+      clearTimeout(timer); setPlaying(false);
+      show(FLAT.findIndex(f => f[0] === i), true);
+    });
+    $("tabs").appendChild(b);
+  });
+
+  show(0, false);
+  setPlaying(false);
+
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

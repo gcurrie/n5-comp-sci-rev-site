@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitmap vs Vector Scaling — Higher Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --target:#7A1414; --target-bg:#FDECEA;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --blue:#1E40AF; --blue-bg:#EFF6FF; --blue-line:#BFDBFE;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  /* Reserve the scrollbar gutter so the content width does not change when a
+     scrollbar appears — otherwise auto-sizing the embed oscillates. */
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:1180px;margin:0 auto}
+  header h1{font-family:var(--sans);font-size:clamp(22px,3.2vw,32px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:860px}
+  header p.sub b{color:var(--ink)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+  code{font-family:var(--mono);background:#0000000d;padding:.05em .35em}
+
+  /* ---- controls ---- */
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);padding:16px 18px;margin:18px 0}
+  .modefield{display:flex;flex-direction:column;gap:7px}
+  .modefield label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  button{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);transition:background .15s,border-color .15s}
+  button:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+  button.playing{background:var(--active-strong);border-color:var(--active-strong);color:#fff}
+  button.playing:hover:not(:disabled){background:var(--active-strong)}
+  .seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line)}
+  .seg button{border:none;border-right:1px solid var(--line);color:var(--ink-soft);letter-spacing:.08em;padding:10px 13px;text-transform:none}
+  .seg button:last-child{border-right:none}
+  .seg button.on{background:var(--active-strong);color:#fff}
+  .seg button.on:hover{background:var(--active-strong)}
+  .spacer{flex:1}
+  .chk{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;
+       letter-spacing:.06em;color:var(--ink-soft);cursor:pointer;padding-bottom:10px}
+  .chk input{width:16px;height:16px;accent-color:#00442A;cursor:pointer}
+
+  /* ---- the scale slider ---- */
+  .scalebar{background:var(--panel);border:1px solid var(--line);padding:16px 20px 18px;margin-bottom:16px}
+  .scalehead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .scalehead .lab{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .scalehead .val{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--active-strong)}
+  input[type=range]{width:100%;accent-color:#00442A;height:26px;cursor:ew-resize}
+  .ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--ink-soft);margin-top:-2px}
+
+  /* ---- the two stages ---- */
+  .stage{display:flex;gap:16px;flex-wrap:wrap;align-items:stretch}
+  .panel{border:1px solid var(--line);background:var(--panel);flex:1 1 380px;display:flex;flex-direction:column}
+  .panelbar{padding:11px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .panel.bmp .panelbar{background:#1E40AF}
+  .panel.vec .panelbar{background:var(--active-strong)}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:#fff;font-weight:700}
+  .panelbar .dim{color:rgba(255,255,255,.6);letter-spacing:.12em;font-weight:400}
+  .panelbody{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+  canvas.view{display:block;width:100%;border:1px solid var(--line);background:#fff}
+
+  .stats{margin-top:14px;font-family:var(--mono);font-size:12px}
+  .st{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .st .k{color:var(--ink-soft)}
+  .st .v{font-weight:700;color:var(--ink);text-align:right}
+  .verdict{margin-top:12px;padding:11px 14px;font-size:13.5px;line-height:1.55;border:1px solid var(--line);border-left:3px solid}
+  .panel.bmp .verdict{border-left-color:var(--warn);background:var(--warn-bg)}
+  .panel.vec .verdict{border-left-color:var(--active);background:var(--active-bg)}
+  .verdict b{color:inherit}
+
+  .narrate{margin-top:16px;font-size:14.5px;border:1px solid var(--line);border-left:3px solid var(--match-accent);
+           padding:13px 16px;background:var(--match-bg);line-height:1.6}
+  .codenote{font-size:12.5px;color:var(--ink-soft);margin:14px 0 0;line-height:1.65}
+  .codenote b{color:var(--ink)}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media print{.controls,.scalebar{display:none} body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Higher &#183; Data Representation &#183; Bitmap vs Vector</p>
+    <h1>Bitmap vs Vector &#8212; Scaling Up</h1>
+    <p class="sub">The <b>same shape</b>, enlarged by the <b>same amount</b>, stored two different ways. The bitmap can only make its stored pixels bigger, so it goes blocky. The vector <b>recalculates the objects</b> at the new size, so the edges stay sharp however far you push it.</p>
+  </header>
+
+  <div class="controls">
+    <div class="modefield">
+      <label>Shape</label>
+      <div class="seg" id="shapeseg" role="group" aria-label="Shape">
+        <button data-s="circle" class="on">Circle</button>
+        <button data-s="diag">Diagonals</button>
+        <button data-s="star">Star</button>
+        <button data-s="logo">Logo</button>
+      </div>
+    </div>
+
+    <div class="modefield">
+      <label>Bitmap resolution</label>
+      <div class="seg" id="baseseg" role="group" aria-label="Bitmap resolution">
+        <button data-b="16">16&#215;16</button>
+        <button data-b="32" class="on">32&#215;32</button>
+        <button data-b="64">64&#215;64</button>
+      </div>
+    </div>
+
+    <label class="chk"><input type="checkbox" id="showgrid"> show the pixel grid</label>
+
+    <div class="spacer"></div>
+    <button id="run">&#9654; Zoom in</button>
+    <button id="reset">Reset to &#215;1</button>
+  </div>
+
+  <div class="scalebar">
+    <div class="scalehead">
+      <span class="lab">Enlargement &#8212; drag to scale both images up</span>
+      <span class="val" id="zval">&#215;1.0</span>
+    </div>
+    <input type="range" id="zoom" min="1" max="16" step="0.1" value="1" aria-label="Enlargement factor">
+    <div class="ticks"><span>&#215;1</span><span id="zq1">&#215;4</span><span id="zmid">&#215;8</span><span id="zq3">&#215;12</span><span id="zmax">&#215;16</span></div>
+  </div>
+
+  <div class="stage">
+    <!-- BITMAP -->
+    <section class="panel bmp">
+      <div class="panelbar"><span>BIT-MAPPED</span><span class="dim">A GRID OF PIXELS</span></div>
+      <div class="panelbody">
+        <canvas id="cvBmp" class="view" width="600" height="600"></canvas>
+        <div class="stats">
+          <div class="st"><span class="k">stored as</span><span class="v" id="bStored">32 &#215; 32 pixels</span></div>
+          <div class="st"><span class="k">pixels in the file</span><span class="v" id="bCount">1,024</span></div>
+          <div class="st"><span class="k">one stored pixel is now</span><span class="v" id="bCell">1.0 &#215; 1.0 on screen</span></div>
+        </div>
+        <div class="verdict" id="bVerdict"></div>
+      </div>
+    </section>
+
+    <!-- VECTOR -->
+    <section class="panel vec">
+      <div class="panelbar"><span>VECTOR</span><span class="dim">A LIST OF OBJECTS</span></div>
+      <div class="panelbody">
+        <canvas id="cvVec" class="view" width="600" height="600"></canvas>
+        <div class="stats">
+          <div class="st"><span class="k">stored as</span><span class="v" id="vStored">2 objects</span></div>
+          <div class="st"><span class="k">attributes in the file</span><span class="v" id="vAttrs">8</span></div>
+          <div class="st"><span class="k">redrawn at</span><span class="v" id="vRedraw">&#215;1.0 &#8212; exactly</span></div>
+        </div>
+        <div class="verdict" id="vVerdict"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="narrate" id="narrate"></div>
+
+  <p class="codenote">Notice that <b>neither file changed size</b> as you zoomed. The bitmap still stores the same number of pixels and the vector still stores the same objects &#8212; what changed is only how they are <b>displayed</b>. That is the whole point: a bitmap has a fixed amount of detail baked in when it is saved, while a vector works out the detail fresh every time it is drawn.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var $ = function(id){ return document.getElementById(id); };
+  var cvB = $("cvBmp"), cvV = $("cvVec");
+  var cB = cvB.getContext("2d"), cV = cvV.getContext("2d");
+  var zoomEl = $("zoom"), zval = $("zval"), showgrid = $("showgrid");
+  var bStored=$("bStored"), bCount=$("bCount"), bCell=$("bCell"), bVerdict=$("bVerdict");
+  var vStored=$("vStored"), vAttrs=$("vAttrs"), vRedraw=$("vRedraw"), vVerdict=$("vVerdict");
+  var narrate=$("narrate"), bRun=$("run");
+
+  var shape = "circle";
+  var BASE = 32;              // the bitmap's stored resolution
+  var z = 1;                  // enlargement factor
+  var off = document.createElement("canvas");
+  var playing = false, raf = null, dir = 1, t0 = 0;
+
+  /* ------------------------------------------------------------------
+     Shapes are defined once in a unit square, 0..1 on both axes, so the
+     very same drawing code can be rasterised into the small bitmap and
+     re-run at any size for the vector. That is the honest comparison:
+     identical geometry, two different ways of storing it.
+     ------------------------------------------------------------------ */
+  /* Each shape names a focus point, in the same unit coordinates: the place
+     the view zooms towards. It has to sit on an EDGE — zoom into the middle of
+     a solid fill and both panels just show a flat colour, which proves nothing.
+     Edges are where a bitmap gives itself away. */
+  var SHAPES = {
+    circle: {
+      objects: 2, attrs: 9,
+      desc: "an ellipse and a line",
+      focus: [0.267, 0.227],          // on the circumference, upper left
+      draw: function(c, lw){
+        c.fillStyle = "#00442A";
+        c.beginPath(); c.arc(0.5, 0.46, 0.33, 0, Math.PI*2); c.fill();
+        c.strokeStyle = "#C9A227"; c.lineWidth = lw*3;
+        c.beginPath(); c.moveTo(0.13, 0.88); c.lineTo(0.87, 0.88); c.stroke();
+      }
+    },
+    diag: {
+      objects: 4, attrs: 16,
+      desc: "four lines",
+      focus: [0.50, 0.400],           // just above the second line, on its edge
+      draw: function(c, lw){
+        var cols = ["#00442A","#1B6B45","#C9A227","#7A1414"];
+        for(var i=0;i<4;i++){
+          // One stored pixel wide — the classic staircase case. Any thicker and
+          // a deep zoom sits entirely inside the stroke, showing flat colour.
+          c.strokeStyle = cols[i]; c.lineWidth = lw;
+          c.beginPath();
+          c.moveTo(0.10, 0.16 + i*0.09);
+          c.lineTo(0.90, 0.44 + i*0.14);
+          c.stroke();
+        }
+      }
+    },
+    star: {
+      objects: 1, attrs: 13,
+      desc: "one polygon",
+      focus: [0.550, 0.231],          // the midpoint of one slanted arm edge
+      draw: function(c, lw){
+        c.fillStyle = "#C9A227"; c.strokeStyle = "#92750A"; c.lineWidth = lw;
+        c.beginPath();
+        for(var i=0;i<10;i++){
+          var r = (i % 2 === 0) ? 0.40 : 0.17;
+          var a = -Math.PI/2 + i*Math.PI/5;
+          var x = 0.5 + r*Math.cos(a), y = 0.5 + r*Math.sin(a);
+          if(i === 0) c.moveTo(x,y); else c.lineTo(x,y);
+        }
+        c.closePath(); c.fill(); c.stroke();
+      }
+    },
+    logo: {
+      objects: 3, attrs: 17,
+      desc: "a rectangle, an ellipse and a line",
+      // The ellipse's upper-left curve. A curved, non-axis-aligned edge is the
+      // only kind that shows the difference — a horizontal edge lands on pixel
+      // boundaries and looks identical either way.
+      focus: [0.288, 0.324],
+      draw: function(c, lw){
+        c.fillStyle = "#A9AFB6"; c.strokeStyle = "#1A1A1A"; c.lineWidth = lw;
+        c.beginPath(); c.rect(0.06, 0.40, 0.88, 0.16); c.fill(); c.stroke();
+        c.fillStyle = "#FFFFFF"; c.strokeStyle = "#1A1A1A"; c.lineWidth = lw*1.5;
+        c.beginPath(); c.ellipse(0.5, 0.48, 0.30, 0.22, 0, 0, Math.PI*2); c.fill(); c.stroke();
+        c.strokeStyle = "#C9A227"; c.lineWidth = lw*3;
+        c.beginPath(); c.moveTo(0.16, 0.84); c.lineTo(0.84, 0.84); c.stroke();
+      }
+    }
+  };
+
+  /* ---------- rasterise the bitmap once, at BASE × BASE ---------- */
+  function bake(){
+    off.width = BASE; off.height = BASE;
+    var c = off.getContext("2d");
+    c.setTransform(1,0,0,1,0,0);
+    c.clearRect(0,0,BASE,BASE);
+    c.fillStyle = "#FFFFFF"; c.fillRect(0,0,BASE,BASE);
+    c.setTransform(BASE,0,0,BASE,0,0);
+    // One "unit" of line width is one stored pixel — the finest line the
+    // bitmap can hold.
+    SHAPES[shape].draw(c, 1/BASE);
+  }
+
+  /* ---------- sizing ---------- */
+  function layout(){
+    var w = cvB.clientWidth || 380;
+    var dpr = window.devicePixelRatio || 1;
+    [cvB, cvV].forEach(function(cv){
+      cv.style.height = w + "px";
+      cv.width  = Math.round(w * dpr);
+      cv.height = Math.round(w * dpr);
+    });
+  }
+
+  /* Zooming until the view holds only one stored pixel shows a flat colour, not
+     a jagged edge — a 16×16 image simply has nothing more to reveal. Cap the
+     slider so at least two stored pixels are always in view. */
+  function maxZoom(){ return Math.min(16, BASE/2); }
+  function capZoom(){
+    var m = maxZoom();
+    zoomEl.max = String(m);
+    if(z > m){ z = m; zoomEl.value = String(m); }
+    $("zmax").innerHTML = "&#215;" + m;
+    $("zmid").innerHTML = "&#215;" + (m/2);
+    $("zq1").innerHTML  = "&#215;" + (m/4);
+    $("zq3").innerHTML  = "&#215;" + (m*3/4);
+  }
+
+  /* ---------- the viewed region ----------
+     Both panels stay the same size on screen while the picture inside them is
+     enlarged, which is exactly what scaling an image up looks like. The window
+     shrinks as z grows and slides towards the shape's focus point, clamped so
+     it never runs off the edge of the image. */
+  function view(){
+    var half = 0.5 / z;
+    var f = SHAPES[shape].focus;
+    return {
+      half: half,
+      x: Math.min(Math.max(f[0], half), 1 - half),
+      y: Math.min(Math.max(f[1], half), 1 - half)
+    };
+  }
+
+  /* ---------- draw ---------- */
+  function drawBitmap(){
+    var W = cvB.width, H = cvB.height, v = view();
+    cB.setTransform(1,0,0,1,0,0);
+    cB.fillStyle = "#FFFFFF"; cB.fillRect(0,0,W,H);
+
+    var sw = BASE / z;
+    var sx = (v.x - v.half) * BASE, sy = (v.y - v.half) * BASE;
+    cB.imageSmoothingEnabled = false;      // no interpolation: show the real pixels
+    cB.drawImage(off, sx, sy, sw, sw, 0, 0, W, H);
+
+    var cell = W / sw;                     // one stored pixel, in canvas units
+    if(showgrid.checked && cell >= 5){
+      cB.strokeStyle = "rgba(30,64,175,.35)";
+      cB.lineWidth = 1;
+      cB.beginPath();
+      for(var gx = Math.ceil(sx); gx < sx + sw; gx++){
+        var px = Math.round((gx - sx) * cell) + .5;
+        cB.moveTo(px, 0); cB.lineTo(px, H);
+      }
+      for(var gy = Math.ceil(sy); gy < sy + sw; gy++){
+        var py = Math.round((gy - sy) * cell) + .5;
+        cB.moveTo(0, py); cB.lineTo(W, py);
+      }
+      cB.stroke();
+    }
+    if(z < 1.3) markTarget(cB, W);
+  }
+
+  function drawVector(){
+    var W = cvV.width, H = cvV.height, v = view();
+    cV.setTransform(1,0,0,1,0,0);
+    cV.fillStyle = "#FFFFFF"; cV.fillRect(0,0,W,H);
+
+    // Map the same viewed region of the unit square onto the whole canvas.
+    // Because the shape is re-run through the path commands at this scale,
+    // every curve is recomputed rather than stretched.
+    var k = W * z;
+    cV.setTransform(k, 0, 0, k, -(v.x - v.half) * k, -(v.y - v.half) * k);
+    cV.lineJoin = "round"; cV.lineCap = "round";
+    SHAPES[shape].draw(cV, 1/BASE);
+    cV.setTransform(1,0,0,1,0,0);
+    if(z < 1.3) markTarget(cV, W);
+  }
+
+  /* At normal size, show where the zoom is heading — otherwise the jump to a
+     magnified edge looks like a different picture entirely. */
+  function markTarget(c, W){
+    var f = SHAPES[shape].focus, s = W * 0.5 / 4;   // the ×4 window
+    c.save();
+    c.strokeStyle = "rgba(201,162,39,.95)"; c.lineWidth = Math.max(2, W/220);
+    c.setLineDash([W/60, W/90]);
+    c.strokeRect(f[0]*W - s, f[1]*W - s, s*2, s*2);
+    c.restore();
+  }
+
+  function render(){
+    var W = cvB.width;
+    drawBitmap();
+    drawVector();
+
+    zval.innerHTML = "&#215;" + z.toFixed(1);
+
+    var s = SHAPES[shape];
+    var px = BASE*BASE;
+    bStored.innerHTML = BASE + " &#215; " + BASE + " pixels";
+    bCount.textContent = px.toLocaleString("en-GB");
+    // Report in CSS pixels, which is what the reader actually sees.
+    var cellCss = (cvB.clientWidth / (BASE / z));
+    bCell.innerHTML = cellCss.toFixed(1) + " &#215; " + cellCss.toFixed(1) + " on screen";
+
+    vStored.textContent = s.objects + (s.objects === 1 ? " object" : " objects");
+    vAttrs.textContent = String(s.attrs);
+    vRedraw.innerHTML = "&#215;" + z.toFixed(1) + " &#8212; exactly";
+
+    if(z < 1.5){
+      bVerdict.innerHTML = "At normal size the two look the same. <b>Now drag the slider.</b>";
+      vVerdict.innerHTML = "At normal size the two look the same. <b>Now drag the slider.</b>";
+    } else {
+      bVerdict.innerHTML = "<b>Quality lost.</b> There are still only " + BASE + " &#215; " + BASE +
+        " pixels, each now " + cellCss.toFixed(1) + " screen pixels across. The computer has no extra detail to draw &#8212; it can only make the squares bigger, so the edges go <b>blocky</b>.";
+      vVerdict.innerHTML = "<b>Quality kept.</b> The file still holds " + s.desc +
+        ". At &#215;" + z.toFixed(1) + " the attributes are simply <b>recalculated</b> and the shape is drawn again from scratch, so the edges stay <b>sharp</b>.";
+    }
+
+    narrate.innerHTML = z < 1.5
+      ? "Both images are the same shape at the same size. Drag the <b>enlargement</b> slider &#8212; or press <b>Zoom in</b> &#8212; and watch what happens to each one."
+      : "Enlarged <b>&#215;" + z.toFixed(1) + "</b>. The bitmap is stuck with the " + BASE + " &#215; " + BASE +
+        " pixels it saved, so enlarging just makes each stored pixel bigger &#8212; that is <b>pixelation</b>. " +
+        "The vector saved " + s.desc + " instead of pixels, so it works out where every edge should be at this new size and redraws it cleanly. " +
+        "This is why <b>logos, icons and diagrams</b> are kept as vectors: they have to look right on a business card and on the side of a bus.";
+
+    postHeight();
+  }
+
+  /* ---------- controls ---------- */
+  zoomEl.addEventListener("input", function(){
+    stopRun();
+    z = parseFloat(zoomEl.value);
+    render();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll("#shapeseg button"), function(b){
+    b.addEventListener("click", function(){
+      Array.prototype.forEach.call(document.querySelectorAll("#shapeseg button"), function(o){ o.classList.remove("on"); });
+      b.classList.add("on");
+      shape = b.getAttribute("data-s");
+      bake(); render();
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll("#baseseg button"), function(b){
+    b.addEventListener("click", function(){
+      Array.prototype.forEach.call(document.querySelectorAll("#baseseg button"), function(o){ o.classList.remove("on"); });
+      b.classList.add("on");
+      BASE = parseInt(b.getAttribute("data-b"),10);
+      capZoom();
+      bake(); render();
+    });
+  });
+
+  showgrid.addEventListener("change", render);
+
+  function step(ts){
+    if(!playing) return;
+    if(!t0) t0 = ts;
+    var dt = (ts - t0)/1000; t0 = ts;
+    var m = maxZoom();
+    z += dir * dt * (m/4.7);
+    if(z >= m){ z = m; dir = -1; }
+    if(z <= 1){ z = 1; dir = 1; stopRun(); }
+    zoomEl.value = String(z);
+    render();
+    if(playing) raf = requestAnimationFrame(step);
+  }
+  function startRun(){
+    if(z >= maxZoom()){ z = 1; zoomEl.value = "1"; }
+    playing = true; dir = 1; t0 = 0;
+    bRun.textContent = "⏸ Pause"; bRun.classList.add("playing");
+    raf = requestAnimationFrame(step);
+  }
+  function stopRun(){
+    playing = false;
+    if(raf){ cancelAnimationFrame(raf); raf = null; }
+    bRun.textContent = "▶ Zoom in"; bRun.classList.remove("playing");
+  }
+  bRun.addEventListener("click", function(){ if(playing) stopRun(); else startRun(); });
+  $("reset").addEventListener("click", function(){
+    stopRun(); z = 1; zoomEl.value = "1"; render();
+  });
+
+  window.addEventListener("resize", function(){ layout(); render(); });
+
+  layout(); capZoom(); bake(); render();
+
+  /* Measure the body, not documentElement: once the parent has grown the
+     iframe, documentElement stretches to that new height, so re-reporting it
+     would ratchet the frame taller on every reflow. */
+  var sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    var h = Math.ceil(document.body.scrollHeight) + 6;
+    // Grow freely, but ignore shrinks of a few px: those are the scrollbar
+    // appearing and disappearing, and acting on them makes the frame oscillate.
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", function(){ layout(); render(); postHeight(); });
+  if("ResizeObserver" in window){ new ResizeObserver(function(){ postHeight(); }).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

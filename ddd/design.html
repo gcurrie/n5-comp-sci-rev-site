@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design — DDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Database Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Design</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-ddd">
+  <div class="inner">
+    <div class="hero-badge">Database Design &amp; Development</div>
+    <h1>Design</h1>
+    <p>Relational databases, primary and foreign keys, data dictionaries, entity-relationship diagrams and query design.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🗄️ DDD Topics</div>
+        <ul>
+          <li><a href="database-introduction.html"><span class="sn-icon">🗄️</span>Database Introduction</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html" class="active"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="sql-select.html"><span class="sn-icon">🔎</span>SQL — SELECT</a></li>
+          <li><a href="sql-joins.html"><span class="sn-icon">🔗</span>SQL — Joins</a></li>
+          <li><a href="sql-insert-update-delete.html"><span class="sn-icon">✏️</span>SQL — Insert/Update/Delete</a></li>
+          <li><a href="testing-evaluation.html"><span class="sn-icon">✅</span>Testing &amp; Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#relational">Relational Databases</a></li>
+          <li><a href="#keys">Primary &amp; Foreign Keys</a></li>
+          <li><a href="#data-dictionary">Data Dictionaries</a></li>
+          <li><a href="#er-diagrams">ER Diagrams</a></li>
+          <li><a href="#query-design">Query Design</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="relational">Relational Databases</h2>
+        <p>A <strong>flat file database</strong> has just one table — and that causes problems. Imagine a single Pupil table that also stores each pupil's house and head of house:</p>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>Forename</th><th>Surname</th><th>House</th><th>HeadOfHouse</th></tr></thead>
+            <tbody>
+              <tr><td>James</td><td>Watson</td><td>Montgomerie</td><td>Mrs Newall</td></tr>
+              <tr><td>Sara</td><td>Boyd</td><td>Curie</td><td>Mr Todd</td></tr>
+              <tr><td>Lena</td><td>Weir</td><td>Curie</td><td>Mr Todd</td></tr>
+              <tr><td>Ross</td><td>Hill</td><td>Churchill</td><td>Ms Blair</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul>
+          <li><strong>Delete anomaly</strong> — if James Watson is deleted, so is the house Montgomerie and Mrs Newall.</li>
+          <li><strong>Update anomaly</strong> — if the Head of House for Curie changes, it needs changed in more than one place.</li>
+          <li><strong>Insert anomaly</strong> — a new house can't be added without adding a new pupil.</li>
+        </ul>
+        <p>The solution is a <strong>relational database</strong>: split the data into <strong>two linked tables</strong> (Pupil and House). Now a new house can be added on its own, house details only need changed in one place, and removing a pupil doesn't remove a house. At National 5 you work with databases of <strong>two linked tables</strong>.</p>
+        <p>Database design uses three building blocks:</p>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Entity</div><div class="def">A database table representing a person, object or event — e.g. Staff Member, DVD, Booking.</div></div>
+          <div class="key-term"><div class="term">Attribute</div><div class="def">A field — one of the set of fields that describes an entity.</div></div>
+          <div class="key-term"><div class="term">Relationship</div><div class="def">The link between two entities.</div></div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="keys">Primary &amp; Foreign Keys</h2>
+        <p>All entities must have a <strong>primary key</strong> — an attribute used to <strong>uniquely identify each record</strong>. The value in the primary key field is never repeated in another record. IDs, numbers, codes and registrations make natural primary keys (e.g. <code>pupilID</code>, ISBN for books).</p>
+        <p><strong>Foreign keys</strong> are used to <strong>link entities</strong> in a relational database. A foreign key is an attribute in one entity that is the <em>primary key of another entity</em> — for example, <code>PublisherID</code> is the primary key of the Publisher table and appears in the Book table as a foreign key.</p>
+        <img src="../resources/ddd/Images/pk-fk-link.svg" alt="Diagram showing a primary key in one table linked to a matching foreign key in another table." class="zoomable" style="max-width:100%;" />
+
+        <h3>Referential integrity</h3>
+        <p>When two tables are linked with primary/foreign keys, the data in both tables must "match" — this is <strong>referential integrity</strong>. If a Movies table stores a <code>DirectorID</code>, deleting that director while movies still reference them would <strong>break referential integrity</strong> — the foreign key would point at a record that no longer exists.</p>
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div>You won't be asked for a definition — but you could be asked <strong>what would happen</strong> (what kind of error occurs) if data in one linked table is removed or changed.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="data-dictionary">Data Dictionaries</h2>
+        <p>The <strong>data dictionary</strong> helps us plan the content of a table. In the exam you're more likely to <strong>complete a partially-filled dictionary</strong> than create one from scratch. For each attribute it records:</p>
+        <ul>
+          <li><strong>Entity name</strong> and <strong>attribute name</strong> (e.g. ProductName)</li>
+          <li><strong>Key</strong> — primary key (PK, one per table at N5) or foreign key (FK, "borrowed" from another table)</li>
+          <li><strong>Type</strong> — text, number, date, time or Boolean</li>
+          <li><strong>Size</strong> — for text, the number of characters needed (e.g. a 12-character name)</li>
+          <li><strong>Required</strong> — must the field be filled in? (The primary key is always required)</li>
+          <li><strong>Validation</strong> — any checks on the data entered</li>
+        </ul>
+
+        <h3>The four types of validation</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Presence check</div><div class="def">The field cannot be left empty — a value must be entered.</div></div>
+          <div class="key-term"><div class="term">Restricted choice</div><div class="def">Only certain values are allowed — e.g. size must be "S", "M" or "L".</div></div>
+          <div class="key-term"><div class="term">Field length</div><div class="def">The value must have a certain number of characters — e.g. a postcode of at most 8 characters.</div></div>
+          <div class="key-term"><div class="term">Range</div><div class="def">A number must fall between limits — e.g. mark between 0 and 100.</div></div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example — data dictionary for a Product entity</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>Entity: Product</th><th>Key</th><th>Type</th><th>Size</th><th>Required</th><th>Validation</th></tr></thead>
+              <tbody>
+                <tr><td>productID</td><td>PK</td><td>Number</td><td></td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>productName</td><td></td><td>Text</td><td>20</td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>price</td><td></td><td>Number</td><td></td><td>Yes</td><td>Range: &gt;0 and &lt;500</td></tr>
+                <tr><td>size</td><td></td><td>Text</td><td>1</td><td>Yes</td><td>Restricted choice: S, M or L</td></tr>
+                <tr><td>supplierID</td><td>FK</td><td>Number</td><td></td><td>Yes</td><td>Presence check</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>There are <strong>only four types of validation</strong> at N5 — presence check, range, field length and restricted choice. If an exam question asks which validation applies, the answer is one of these!</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="er-diagrams">Entity-Relationship Diagrams</h2>
+        <p>An <strong>entity-relationship (ER) diagram</strong> shows the structure of the database more clearly than a data dictionary. A <strong>relationship</strong> is a link between two entities describing how they are related.</p>
+        <p>At National 5 you work with <strong>one-to-many</strong> relationships: every record in one entity is linked with several records in the other. For example, <em>one</em> school has <em>many</em> teachers; <em>one</em> director directs <em>many</em> movies.</p>
+        <img src="../resources/ddd/Images/er_1tm.svg" alt="Entity-relationship diagram showing a one-to-many relationship between two entities." class="zoomable" style="max-width:100%;" />
+        <p>In an ER diagram:</p>
+        <ul>
+          <li><strong>Entities</strong> (tables) are drawn as rectangles</li>
+          <li><strong>Attributes</strong> (fields) are drawn around each entity as ovals</li>
+          <li>The <strong>primary key</strong> is underlined</li>
+          <li>The <strong>foreign key</strong> is marked with an asterisk (*)</li>
+          <li>The relationship line shows <strong>1</strong> at one end and <strong>many</strong> (crow's foot) at the other</li>
+        </ul>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Always describe the relationship with a <strong>verb</strong>: "One director <em>directs</em> many movies" or "Many movies <em>are directed by</em> one director". ER diagram questions are typically worth 2–6 marks.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="query-design">Query Design</h2>
+        <p>Before writing SQL, a query can be planned in a <strong>query design table</strong> stating the field(s), table(s), search criteria and sort order:</p>
+        <div class="example-block">
+          <div class="example-label">Design — members from Ayr, sorted by surname</div>
+          <table>
+            <tbody>
+              <tr><td style="width:11rem;"><strong>Field(s)</strong></td><td>forename, surname, town</td></tr>
+              <tr><td><strong>Table(s)</strong></td><td>Member</td></tr>
+              <tr><td><strong>Search criteria</strong></td><td>town = "Ayr"</td></tr>
+              <tr><td><strong>Sort order</strong></td><td>surname, ascending</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The design maps directly onto the SQL you'll meet on the next page: fields → <code>SELECT</code>, tables → <code>FROM</code>, search criteria → <code>WHERE</code>, sort order → <code>ORDER BY</code>.</p>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Keys (2 marks)</div>
+          <p>A library database has a Book table and a Publisher table (one publisher publishes many books). State a suitable primary key for the Publisher table, and explain how the two tables would be linked.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Primary key: publisherID (any unique identifier) (1 mark). The Book table contains publisherID as a <strong>foreign key</strong>, linking each book to its publisher (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Validation (2 marks)</div>
+          <p>Name the most suitable validation for: a) a review score that must be between 1 and 5; b) a delivery option that must be "Standard" or "Express".</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) Range (1 mark). b) Restricted choice (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q3 — Referential integrity (1 mark)</div>
+          <p>A Publisher record is deleted while books in the Book table still reference it. State the problem this causes.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Referential integrity is broken — the foreign key in Book points to a publisher record that no longer exists.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing — SDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Software Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Testing</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-sdd">
+  <div class="inner">
+    <div class="hero-badge">Software Design &amp; Development</div>
+    <h1>Testing</h1>
+    <p>Normal, extreme and exceptional test data, test tables, and the three types of error — syntax, logic and execution.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">💻 SDD Topics</div>
+        <ul>
+          <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
+          <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
+          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
+          <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
+          <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
+          <li><a href="loops.html"><span class="sn-icon">🔁</span>Loops</a></li>
+          <li><a href="standard-algorithms.html"><span class="sn-icon">📊</span>Standard Algorithms</a></li>
+          <li><a href="testing.html" class="active"><span class="sn-icon">✅</span>Testing</a></li>
+          <li><a href="evaluation.html"><span class="sn-icon">⭐</span>Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#test-data">Test Data</a></li>
+          <li><a href="#test-tables">Test Tables</a></li>
+          <li><a href="#error-types">Error Types</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="test-data">Normal, Extreme &amp; Exceptional Test Data</h2>
+        <p>When we test a program, we use <strong>test data</strong> — entered as the inputs to the program. The data should try to capture a range of different scenarios: don't just test the program with one piece of data!</p>
+        <p>There are <strong>three types</strong> of test data you need to be able to use and give examples of:</p>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Normal</div><div class="def">Definitely within the accepted range — the program should accept and process it correctly.</div></div>
+          <div class="key-term"><div class="term">Extreme</div><div class="def">On the very edge of the accepted range (the boundaries) — but still valid and accepted.</div></div>
+          <div class="key-term"><div class="term">Exceptional</div><div class="def">Definitely invalid — the program should reject it with an error message, not crash.</div></div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Worked Example — guessing game (0 to 10)</div>
+          <p>A program picks a random number and asks the user to guess a number <strong>between 0 and 10 inclusive</strong>. Numbers outside the range should produce an error message.</p>
+          <table>
+            <thead><tr><th>Type</th><th>Suitable values</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Normal</strong></td><td>3, 5, 7</td><td>Comfortably inside the range</td></tr>
+              <tr><td><strong>Extreme</strong></td><td>0 and 10</td><td>The minimum and maximum — still valid</td></tr>
+              <tr><td><strong>Exceptional</strong></td><td>-4, 26, "ten"</td><td>Outside the range or wrong type — should be rejected</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Worked Example — rolling a dice</div>
+          <p>You are asked for four pieces of test data for a standard 6-sided dice: one normal, two extreme and one exceptional.</p>
+          <table>
+            <thead><tr><th>Value</th><th>Type</th></tr></thead>
+            <tbody>
+              <tr><td>4</td><td>Normal — a value in the middle of the range</td></tr>
+              <tr><td>1</td><td>Extreme — the minimum the dice can roll, still valid</td></tr>
+              <tr><td>6</td><td>Extreme — the maximum the dice can roll, still valid</td></tr>
+              <tr><td>180</td><td>Exceptional — a dice can't roll 180, totally invalid</td></tr>
+            </tbody>
+          </table>
+          <p>The values 1 and 6 should still be <strong>accepted</strong> by the program — it's perfectly valid for a dice to roll a 6.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-tables">Test Tables</h2>
+        <p>We write test data into a <strong>test table</strong>. Put <strong>one example in each row</strong> — don't write "anything between 1 and 9"; pick an actual value! For each row, state what you <strong>expect</strong> the program to do. Some test tables have another column for what <strong>actually</strong> happened, filled in after testing.</p>
+        <table>
+          <thead><tr><th>Test data</th><th>Type</th><th>Expected result</th><th>Actual result</th></tr></thead>
+          <tbody>
+            <tr><td>5</td><td>Normal</td><td>Guess accepted, compared with target</td><td>&nbsp;</td></tr>
+            <tr><td>0</td><td>Extreme</td><td>Guess accepted, compared with target</td><td>&nbsp;</td></tr>
+            <tr><td>10</td><td>Extreme</td><td>Guess accepted, compared with target</td><td>&nbsp;</td></tr>
+            <tr><td>26</td><td>Exceptional</td><td>Error message shown, asked again</td><td>&nbsp;</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div>In the <strong>coursework assignment</strong>, you'll usually be given specific data to test your program with — use exactly the data you're given, and record the results.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="error-types">Error Types — Syntax, Logic &amp; Execution</h2>
+        <p>There are three types of programming error you need to know. Syntax and logic errors are made <em>while writing</em> the program; execution errors happen <em>while it runs</em>.</p>
+
+        <h3>Syntax errors</h3>
+        <p>Typing mistakes that <strong>break the rules of the language</strong> — misspellings, wrong word order, or wrong symbols. Python spots these before the program runs and reports the line number:</p>
+        <div class="code-block">
+          <div class="code-label">Python — syntax errors</div>
+          <pre>priiiint("Hello")          # misspelled print
+print("Hello," name)       # comma in the wrong place
+range[0, 10]               # square brackets instead of range(0, 10)</pre>
+        </div>
+
+        <h3>Logic errors</h3>
+        <p>Logic errors are trickier to spot — they <strong>don't produce error messages</strong>. The program still runs, but it doesn't do what you'd expect:</p>
+        <div class="code-block">
+          <div class="code-label">Python — a logic error</div>
+          <pre># Meant to check a rating out of 10 — but tests up to 100!
+if rating &gt;= 0 and rating &lt;= 100:
+    print("That is a rating out of 10")</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">Python — another logic error</div>
+          <pre>name = input("What is your name?")
+age = input("How old are you?")
+print("Hello", age, ". You are", name, "years old.")
+# Bob, aged 15, sees: "Hello 15. You are Bob years old."</pre>
+        </div>
+        <p>Testing with appropriate test data is the best way of tracking down logic errors.</p>
+
+        <h3>Execution errors</h3>
+        <p>An <strong>execution error</strong> (or run-time error) occurs while the program is running, causing it to crash. Examples:</p>
+        <ul>
+          <li>The user types in a string when the program is expecting an integer.</li>
+          <li>A number is not entered and the program tries to divide by 0.</li>
+          <li>A file that the program needs is missing or renamed.</li>
+        </ul>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Programs that minimise the chance of execution errors are said to be <strong>robust</strong> — see the <a href="evaluation.html">Evaluation</a> page. Input validation prevents most execution errors.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Choose test data (3 marks)</div>
+          <p>A program accepts a percentage mark between 0 and 100 inclusive. Give one example each of normal, extreme and exceptional test data.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Normal: any value comfortably inside, e.g. 55. Extreme: 0 or 100 (the boundaries). Exceptional: e.g. -10, 150, or "abc". (1 mark each)</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Name the error type (3 marks)</div>
+          <p>Identify the type of error in each case:</p>
+          <ol type="a">
+            <li>The program crashes when the user enters "five" instead of 5.</li>
+            <li><code>pirnt("Total")</code></li>
+            <li>A discount program takes 20% off instead of 10%, with no error message.</li>
+          </ol>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) Execution (run-time) error. b) Syntax error. c) Logic error. (1 mark each)</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

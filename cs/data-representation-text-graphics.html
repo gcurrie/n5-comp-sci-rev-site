@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Representation — Text &amp; Graphics — Computer Systems — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Computer Systems</a><span class="sep">›</span>
+    <span class="current">Data Representation — Text &amp; Graphics</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-cs">
+  <div class="inner">
+    <div class="hero-badge">Computer Systems</div>
+    <h1>Data Representation — Text &amp; Graphics</h1>
+    <p>Extended ASCII for storing characters, and the two ways of representing graphics — bit-mapped and vector.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🖥️ CS Topics</div>
+        <ul>
+          <li><a href="data-representation-numbers.html"><span class="sn-icon">🔢</span>Data Representation — Numbers</a></li>
+          <li><a href="data-representation-text-graphics.html" class="active"><span class="sn-icon">🖼️</span>Data Representation — Text &amp; Graphics</a></li>
+          <li><a href="computer-architecture.html"><span class="sn-icon">🖥️</span>Computer Architecture</a></li>
+          <li><a href="environmental-impact.html"><span class="sn-icon">🌱</span>Environmental Impact</a></li>
+          <li><a href="security.html"><span class="sn-icon">🔒</span>Security</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#ascii">ASCII &amp; Extended ASCII</a></li>
+          <li><a href="#ascii-explorer">Try It — ASCII Explorer</a></li>
+          <li><a href="#bitmap">Bitmap Graphics</a></li>
+          <li><a href="#vector">Vector Graphics</a></li>
+          <li><a href="#scaling">Try It — Bitmap vs Vector</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="ascii">ASCII &amp; Extended ASCII</h2>
+        <p>Text is stored by giving each character a <strong>numeric value</strong>, which is then converted to binary. For example, capital <strong>A</strong> has an ASCII code of <strong>65</strong>, which is stored as the binary number <code>01000001</code>. The Space key is 32.</p>
+        <p><strong>Extended ASCII</strong> uses <strong>8 bits per character</strong>, giving 256 possible characters. There are two types:</p>
+        <ul>
+          <li><strong>Printable characters</strong> — letters, numbers and symbols you can see on screen</li>
+          <li><strong>Control characters</strong> — signals without printed symbols, like <em>escape</em> and <em>delete</em></li>
+        </ul>
+
+        <h3>Calculating storage</h3>
+        <div class="code-block">
+          <div class="code-label">Formula</div>
+          <pre>Space needed (in bits) = length of the message × 8
+
+"Hello"  →  5 × 8 = 40 bits  =  40 ÷ 8  =  5 bytes</pre>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What you need to know:</strong> extended ASCII uses 8 bits per character; it has printable and control characters; every character has an ASCII number; storage = message length × 8 bits (÷ 8 for bytes).</div>
+        </div>
+      </article>
+
+      <article id="ascii-explorer">
+        <div class="interactive-block">
+          <div class="ib-label">Visualiser</div>
+          <p class="ib-title">ASCII Explorer</p>
+          <div class="ib-body">
+            <p class="ib-intro">Type any character (or pick from the table) to see its ASCII code and 8-bit binary pattern — watch how "A" and "a" differ.</p>
+            <iframe src="../resources/cs/visualisers/ascii-explorer.html"
+                    title="ASCII Explorer — interactive visualiser"
+                    loading="lazy"
+                    style="height:600px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="bitmap">Bitmap Graphics</h2>
+        <p>A <strong>bitmap is a grid of pixels</strong>, and each pixel has a colour associated with it. In a black and white bitmap, a black pixel is stored as a <strong>1</strong> and a white pixel as a <strong>0</strong>.</p>
+        <p>For colour images, the number of bits per pixel increases — up to <strong>24-bit True Colour</strong>, where each pixel can be one of <strong>16,777,216 colours</strong>.</p>
+        <svg viewBox="0 0 420 160" role="img" aria-label="A black and white bitmap stored as 1s and 0s" style="max-width:420px;width:100%;height:auto;display:block;margin:1rem auto;">
+          <style>
+            .bm-cell { stroke:#8aa295; stroke-width:1; }
+            .bm-code { font:600 13px 'JetBrains Mono',monospace; fill:#0d1f17; }
+          </style>
+          <g>
+            <rect class="bm-cell" x="20" y="20" width="30" height="30" fill="#fff"/><rect class="bm-cell" x="50" y="20" width="30" height="30" fill="#0d1f17"/><rect class="bm-cell" x="80" y="20" width="30" height="30" fill="#0d1f17"/><rect class="bm-cell" x="110" y="20" width="30" height="30" fill="#fff"/>
+            <rect class="bm-cell" x="20" y="50" width="30" height="30" fill="#0d1f17"/><rect class="bm-cell" x="50" y="50" width="30" height="30" fill="#fff"/><rect class="bm-cell" x="80" y="50" width="30" height="30" fill="#fff"/><rect class="bm-cell" x="110" y="50" width="30" height="30" fill="#0d1f17"/>
+            <rect class="bm-cell" x="20" y="80" width="30" height="30" fill="#0d1f17"/><rect class="bm-cell" x="50" y="80" width="30" height="30" fill="#fff"/><rect class="bm-cell" x="80" y="80" width="30" height="30" fill="#fff"/><rect class="bm-cell" x="110" y="80" width="30" height="30" fill="#0d1f17"/>
+            <rect class="bm-cell" x="20" y="110" width="30" height="30" fill="#fff"/><rect class="bm-cell" x="50" y="110" width="30" height="30" fill="#0d1f17"/><rect class="bm-cell" x="80" y="110" width="30" height="30" fill="#0d1f17"/><rect class="bm-cell" x="110" y="110" width="30" height="30" fill="#fff"/>
+          </g>
+          <text class="bm-code" x="200" y="42">0 1 1 0</text>
+          <text class="bm-code" x="200" y="72">1 0 0 1</text>
+          <text class="bm-code" x="200" y="102">1 0 0 1</text>
+          <text class="bm-code" x="200" y="132">0 1 1 0</text>
+          <text class="bm-code" x="310" y="87" style="fill:#92750A;">← stored in binary</text>
+        </svg>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>Exam answer (2 marks):</strong> a bitmap is stored as a <strong>grid of pixels</strong> (1 mark), and <strong>each pixel has a colour / binary value</strong> assigned to it (1 mark).</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="vector">Vector Graphics</h2>
+        <p>A vector graphic <strong>isn't stored as pixels</strong>. Instead, the image is made up of shapes called <strong>objects</strong>, and each object is stored as a list of <strong>attributes</strong>. The four objects at National 5:</p>
+        <table>
+          <thead><tr><th>Object</th><th>Attributes stored</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Rectangle</strong></td><td rowspan="2">co-ordinates (X and Y), fill colour, line colour</td></tr>
+            <tr><td><strong>Ellipse</strong> (the name for an oval)</td></tr>
+            <tr><td><strong>Polygon</strong></td><td>co-ordinates of each point, fill colour, line colour</td></tr>
+            <tr><td><strong>Line</strong></td><td>co-ordinates, line colour — <strong>no fill colour!</strong></td></tr>
+          </tbody>
+        </table>
+        <p>For example, in an image containing a green circle, an orange-edged triangle and a blue line: the circle is an <strong>ellipse</strong> with fill colour green; the polygon has line colour orange; the line object has line colour blue — and all of the objects have X and Y co-ordinates.</p>
+        <img src="../resources/cs/vector-objects-attributes.svg" alt="Vector objects and their attributes — rectangle, ellipse, line and polygon with coordinates, fill colour and line colour." class="zoomable" style="max-width:100%;" />
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>Be careful when answering questions about a <strong>line</strong> — it doesn't have a fill colour!</div>
+        </div>
+      </article>
+
+      <article id="scaling">
+        <div class="interactive-block">
+          <div class="ib-label">Visualiser</div>
+          <p class="ib-title">Bitmap vs Vector — Scaling</p>
+          <div class="ib-body">
+            <p class="ib-intro">Zoom in on the same picture stored both ways — watch the bitmap pixelate while the vector stays perfectly sharp.</p>
+            <iframe src="../resources/cs/visualisers/bitmap-vs-vector-scaling.html"
+                    title="Bitmap vs Vector scaling — interactive visualiser"
+                    loading="lazy"
+                    style="height:600px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — ASCII storage (2 marks)</div>
+          <p>Calculate the number of <strong>bits</strong> needed to store the word "Computing" in extended ASCII, and convert your answer to bytes.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">9 characters × 8 = <strong>72 bits</strong> (1 mark) = 72 ÷ 8 = <strong>9 bytes</strong> (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Bitmap storage (2 marks)</div>
+          <p>Describe how a bit-mapped graphic is stored.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">As a grid of pixels (1 mark); each pixel is assigned a colour stored as a binary value (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q3 — Vector attributes (2 marks)</div>
+          <p>A vector graphic contains an ellipse. State <strong>two</strong> attributes that would be stored for it.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Any two of: co-ordinates (X/Y position), fill colour, line colour. (1 mark each)</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

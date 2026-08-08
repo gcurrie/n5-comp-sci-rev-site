@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="hexCompactTitle">
+  <title id="hexCompactTitle">Computing Revision Hub — hexagon mark</title>
+  <!-- Header-size variant: solid gold hexagon, no pins or bracket, so the
+       CRH still reads at 36px. Transparent background so it sits on the
+       dark green header bar. -->
+  <polygon points="117,60 88.5,109.4 31.5,109.4 3,60 31.5,10.6 88.5,10.6" fill="#C9A227"/>
+  <text x="60" y="72" text-anchor="middle" font-size="33" font-weight="700" letter-spacing="0.5" fill="#002D1C"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CRH</text>
+</svg>

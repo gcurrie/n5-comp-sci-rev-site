@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Representation — Numbers — Computer Systems — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Computer Systems</a><span class="sep">›</span>
+    <span class="current">Data Representation — Numbers</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-cs">
+  <div class="inner">
+    <div class="hero-badge">Computer Systems</div>
+    <h1>Data Representation — Numbers</h1>
+    <p>Storing positive integers in binary, converting between binary and denary, and floating-point representation with mantissa and exponent.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🖥️ CS Topics</div>
+        <ul>
+          <li><a href="data-representation-numbers.html" class="active"><span class="sn-icon">🔢</span>Data Representation — Numbers</a></li>
+          <li><a href="data-representation-text-graphics.html"><span class="sn-icon">🖼️</span>Data Representation — Text &amp; Graphics</a></li>
+          <li><a href="computer-architecture.html"><span class="sn-icon">🖥️</span>Computer Architecture</a></li>
+          <li><a href="environmental-impact.html"><span class="sn-icon">🌱</span>Environmental Impact</a></li>
+          <li><a href="security.html"><span class="sn-icon">🔒</span>Security</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#binary">What Are Binary Numbers?</a></li>
+          <li><a href="#bin-to-den">Binary → Denary</a></li>
+          <li><a href="#den-to-bin">Denary → Binary</a></li>
+          <li><a href="#converter">Try It — Converter</a></li>
+          <li><a href="#floating-point">Floating Point</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="binary">What Are Binary Numbers?</h2>
+        <p>Computers store whole numbers using <strong>binary</strong> — a number system that uses only the digits <strong>1 and 0</strong>. At National 5 you must be able to convert between <strong>denary</strong> (the base-10 numbers we use) and binary, in both directions.</p>
+        <ul>
+          <li><strong>Binary</strong> — what the computer uses, e.g. <code>10011101</code></li>
+          <li><strong>Denary</strong> — what we use, e.g. <code>157</code></li>
+        </ul>
+        <p>We work with <strong>eight place values (columns)</strong>, starting at 1 on the right and doubling each time:</p>
+        <table style="text-align:center;">
+          <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
+          <tbody><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td></tr></tbody>
+        </table>
+        <p>To convert <code>10011101</code> to denary, add up all the columns with a 1 in them: 128 + 16 + 8 + 4 + 1 = <strong>157</strong>.</p>
+      </article>
+
+      <article>
+        <h2 id="bin-to-den">Converting Binary → Denary</h2>
+        <div class="worked-example">
+          <div class="q-label">Worked Example — 01011100 to denary</div>
+          <table style="text-align:center;">
+            <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
+            <tbody><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr></tbody>
+          </table>
+          <p>Add up all the columns with a 1 in them: 64 + 16 + 8 + 4 = <strong>92</strong>.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="den-to-bin">Converting Denary → Binary</h2>
+        <p>You also need to be able to write a denary number in binary. There are a few methods — this one is the simplest:</p>
+        <div class="worked-example">
+          <div class="q-label">Worked Example — 87 to binary</div>
+          <p>Draw the place value columns and ask: <em>which of these columns, when added up, would make 87?</em></p>
+          <ol>
+            <li><strong>128</strong> doesn't go into 87, so there must be a <strong>0</strong> in that column.</li>
+            <li><strong>64</strong> does go into 87, so write a <strong>1</strong> in the 64 column. This leaves 87 − 64 = <strong>23</strong>.</li>
+            <li>Which remaining columns add up to 23? 16 + 4 + 2 + 1 — put a <strong>1</strong> in each of those columns.</li>
+            <li>Finally, fill in the empty columns with <strong>0s</strong>.</li>
+          </ol>
+          <table style="text-align:center;">
+            <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
+            <tbody><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr></tbody>
+          </table>
+          <p>So 87 in binary is <code>01010111</code>. <strong>Check your working</strong> by adding the columns with a 1: 64 + 16 + 4 + 2 + 1 = 87 ✓</p>
+        </div>
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div>At National 5 you only deal with <strong>positive integers</strong> in binary. (Negative numbers using two's complement are a Higher topic.)</div>
+        </div>
+      </article>
+
+      <article id="converter">
+        <div class="interactive-block">
+          <div class="ib-label">Visualiser</div>
+          <p class="ib-title">8-bit Binary Converter</p>
+          <div class="ib-body">
+            <p class="ib-intro">Click any bit to flip it, or type a decimal number and convert. Stick to <strong>standard 8-bit (unsigned)</strong> mode — that's the National 5 requirement. (Two's complement mode is a sneak peek at Higher!)</p>
+            <iframe src="../resources/cs/visualisers/binary-converter-8bit.html"
+                    title="8-bit Binary Number Converter — interactive visualiser"
+                    loading="lazy"
+                    style="height:600px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="floating-point">Floating Point — Mantissa &amp; Exponent</h2>
+        <p>Real (decimal) numbers like <code>0.5571257</code> are stored using <strong>floating point representation</strong>. If you are asked <em>how floating point numbers are stored</em>, the answer is: with a <strong>mantissa</strong> and an <strong>exponent</strong>.</p>
+        <p>The idea comes from scientific notation:</p>
+        <div class="code-block">
+          <div class="code-label">Example</div>
+          <pre>5.8125 = 0.58125 × 10⁴
+
+mantissa = 58125     (remove the decimal point)
+exponent = 4         (remove the ×10)</pre>
+        </div>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Mantissa</div><div class="def">Governs the <strong>precision</strong> of the number. Pi can be shortened to 3.14, but 3.14159265359 is more precise — the longer the mantissa, the more precise the number.</div></div>
+          <div class="key-term"><div class="term">Exponent</div><div class="def">Governs the <strong>range</strong> of the number. The higher the exponent, the larger the number can be.</div></div>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>Exam gold:</strong> this question has come up in the same way in <em>every</em> N5 exam — you're given a floating point number and asked to pick out the two parts. Practise identifying the mantissa and exponent!</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Binary to denary (2 marks)</div>
+          <p>Convert the binary number <code>01101001</code> to denary.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">64 + 32 + 8 + 1 = <strong>105</strong>. (2 marks; 1 mark for correct method with one slip)</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Denary to binary (2 marks)</div>
+          <p>Convert the denary number <strong>203</strong> to 8-bit binary.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">203 = 128 + 64 + 8 + 2 + 1 → <code>11001011</code>. (2 marks)</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q3 — Floating point (2 marks)</div>
+          <p>A number is represented as 0.110101 × 2¹⁰¹. Identify the mantissa and the exponent.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Mantissa: <code>110101</code> (1 mark). Exponent: <code>101</code> (1 mark).</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

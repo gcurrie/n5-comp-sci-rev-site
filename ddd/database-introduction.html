@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Database Introduction — DDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Database Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Database Introduction</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-ddd">
+  <div class="inner">
+    <div class="hero-badge">Database Design &amp; Development</div>
+    <h1>Database Introduction</h1>
+    <p>Fields, records and tables — the key terminology of databases, and the attribute types used at National 5.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🗄️ DDD Topics</div>
+        <ul>
+          <li><a href="database-introduction.html" class="active"><span class="sn-icon">🗄️</span>Database Introduction</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="sql-select.html"><span class="sn-icon">🔎</span>SQL — SELECT</a></li>
+          <li><a href="sql-joins.html"><span class="sn-icon">🔗</span>SQL — Joins</a></li>
+          <li><a href="sql-insert-update-delete.html"><span class="sn-icon">✏️</span>SQL — Insert/Update/Delete</a></li>
+          <li><a href="testing-evaluation.html"><span class="sn-icon">✅</span>Testing &amp; Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#terminology">Key Terminology</a></li>
+          <li><a href="#types">Attribute Types</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="terminology">Databases — Key Terminology</h2>
+        <p>A <strong>database</strong> is a collection of information on a particular topic that is structured in some way — a database of football teams, a CD collection, or the books in a library. Databases are organised into <strong>fields</strong>, <strong>records</strong> and <strong>tables</strong>:</p>
+
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Field</div><div class="def">A <strong>single piece of information</strong> about a person or thing — e.g. a pupil's name, date of birth or address. A field is also known as an <strong>attribute</strong>.</div></div>
+          <div class="key-term"><div class="term">Record</div><div class="def">A <strong>collection of fields</strong> about one particular person or thing — e.g. one record for each pupil in a school.</div></div>
+          <div class="key-term"><div class="term">Table</div><div class="def">A <strong>collection of records</strong> on a particular topic — e.g. a table containing a record for every pupil in the school.</div></div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example — a school pupil table</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>Forename</th><th>Surname</th><th>DateOfBirth</th><th>YearGroup</th></tr></thead>
+              <tbody>
+                <tr><td>Aisha</td><td>Khan</td><td>04/02/2010</td><td>S4</td></tr>
+                <tr><td>Callum</td><td>Reid</td><td>19/09/2009</td><td>S5</td></tr>
+                <tr><td>Iona</td><td>Murray</td><td>30/06/2010</td><td>S4</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Each <strong>column</strong> is a field (attribute); each <strong>row</strong> is a record; the whole thing is a table.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="types">Field / Attribute Types</h2>
+        <p>Each attribute in a database must be assigned a <strong>type</strong>, which specifies what sort of data the field will hold. The National 5 attribute types are:</p>
+        <table>
+          <thead><tr><th>Type</th><th>Stores</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Text</strong></td><td>Letters, numbers and symbols</td><td>"Aisha", "KA7 2RG"</td></tr>
+            <tr><td><strong>Number</strong></td><td>Numeric values</td><td>15, 2.49</td></tr>
+            <tr><td><strong>Date</strong></td><td>A calendar date</td><td>04/02/2010</td></tr>
+            <tr><td><strong>Time</strong></td><td>A time of day</td><td>09:15</td></tr>
+            <tr><td><strong>Boolean</strong></td><td>Only TRUE or FALSE</td><td>hasPaid = TRUE</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>In MS Access, Date and Time fields are called <em>Date/Time</em> and Boolean fields are called <em>Yes/No</em>. You must <strong>not</strong> use the MS Access names when designing your database or answering exam questions — use the SQA types above.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Terminology (3 marks)</div>
+          <p>A vet's database stores information about pets. Match the terms <em>field</em>, <em>record</em> and <em>table</em> to: a) all the information about one pet; b) all of the pets; c) a pet's name.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) Record. b) Table. c) Field (attribute). (1 mark each)</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Attribute types (3 marks)</div>
+          <p>State the most suitable attribute type for: a) a pet's appointment time; b) whether its vaccinations are up to date; c) the owner's phone number "07700 900123".</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) Time. b) Boolean. c) Text — the leading 0 and space would be lost if stored as a number! (1 mark each)</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

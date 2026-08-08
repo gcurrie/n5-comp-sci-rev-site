@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selection — SDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Software Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Selection</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-sdd">
+  <div class="inner">
+    <div class="hero-badge">Software Design &amp; Development</div>
+    <h1>Selection</h1>
+    <p>IF statements, comparison operators, complex conditions with AND, OR and NOT, and multiple selection with elif.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">💻 SDD Topics</div>
+        <ul>
+          <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
+          <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
+          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
+          <li><a href="selection.html" class="active"><span class="sn-icon">🔀</span>Selection</a></li>
+          <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
+          <li><a href="loops.html"><span class="sn-icon">🔁</span>Loops</a></li>
+          <li><a href="standard-algorithms.html"><span class="sn-icon">📊</span>Standard Algorithms</a></li>
+          <li><a href="testing.html"><span class="sn-icon">✅</span>Testing</a></li>
+          <li><a href="evaluation.html"><span class="sn-icon">⭐</span>Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#what-is-selection">What is Selection?</a></li>
+          <li><a href="#operators">Comparison Operators</a></li>
+          <li><a href="#logical-operators">Logical Operators</a></li>
+          <li><a href="#python-if">IF Statements in Python</a></li>
+          <li><a href="#elif">Multiple Selection — elif</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="what-is-selection">What is Selection?</h2>
+        <p><strong>Selection</strong> constructs let a program ask a question and follow different paths depending on the answer. Think of a daily decision: <em>IF today is a weekday THEN go to school.</em></p>
+        <div class="code-block">
+          <div class="code-label">Pseudocode — simple IF</div>
+          <pre>1. IF today = "weekday" THEN
+2.     Go to school
+3. END IF</pre>
+        </div>
+        <p>Line 1 is the <strong>condition</strong>; line 2 only runs if the condition is <strong>true</strong>. Commands between <code>IF</code> and <code>END IF</code> run exclusively when the condition is met — otherwise the program continues past <code>END IF</code>.</p>
+        <p>An <code>ELSE</code> adds an alternative path — <em>go to school, or else go to the shops:</em></p>
+        <div class="code-block">
+          <div class="code-label">Pseudocode — IF … ELSE</div>
+          <pre>1. IF today = "weekday" THEN
+2.     Go to school
+3. ELSE
+4.     Go shopping
+5. END IF</pre>
+        </div>
+        <p>Line 2 runs if the condition is true; line 4 runs if it is false. Only <strong>one</strong> branch ever runs — the branches are mutually exclusive.</p>
+      </article>
+
+      <article>
+        <h2 id="operators">Comparison Operators</h2>
+        <p>Conditions compare two values using these operators:</p>
+        <table>
+          <thead><tr><th>Meaning</th><th>Maths / exam papers</th><th>Python</th></tr></thead>
+          <tbody>
+            <tr><td>Equal to</td><td>=</td><td><code>==</code></td></tr>
+            <tr><td>Not equal to</td><td>≠</td><td><code>!=</code></td></tr>
+            <tr><td>Less than</td><td>&lt;</td><td><code>&lt;</code></td></tr>
+            <tr><td>Greater than</td><td>&gt;</td><td><code>&gt;</code></td></tr>
+            <tr><td>Less than or equal to</td><td>≤</td><td><code>&lt;=</code></td></tr>
+            <tr><td>Greater than or equal to</td><td>≥</td><td><code>&gt;=</code></td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>In Python, <strong>double equals</strong> <code>==</code> tests equality — a single <code>=</code> <strong>assigns</strong> a value. Mixing them up is a classic syntax error.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="logical-operators">Logical Operators &amp; Complex Conditions</h2>
+        <p><strong>Logical operators</strong> build more complex expressions by joining two conditions together. There are three: <strong>AND</strong>, <strong>OR</strong> and <strong>NOT</strong>. (If you have done any electronics, these are the same basic logic operations used in signal processing.)</p>
+        <table>
+          <thead><tr><th>Operator</th><th>Result is TRUE when…</th></tr></thead>
+          <tbody>
+            <tr><td><code>AND</code></td><td><strong>both</strong> conditions are true</td></tr>
+            <tr><td><code>OR</code></td><td><strong>at least one</strong> condition is true</td></tr>
+            <tr><td><code>NOT</code></td><td>the condition is <strong>false</strong> (it flips the answer)</td></tr>
+          </tbody>
+        </table>
+        <p>A <strong>complex condition</strong> is any conditional statement that uses <strong>two or more conditions</strong>:</p>
+        <div class="code-block">
+          <div class="code-label">Pseudocode — complex conditions</div>
+          <pre>IF num1 &gt; 3 OR num2 &gt; 13 THEN
+IF num1 &gt; 2 AND num2 &lt; 13 THEN
+IF answer = "Yes" OR answer = "No" THEN
+IF NOT (num1 = 5 AND num2 &lt; 10) THEN</pre>
+        </div>
+        <div class="worked-example">
+          <div class="q-label">Worked Example — evaluating a complex condition</div>
+          <p>Evaluate <code>height &gt;= 2500 AND height &lt; 3000</code> when <code>height</code> is <strong>2750</strong>:</p>
+          <ul>
+            <li>First condition: 2750 ≥ 2500 → <strong>true</strong></li>
+            <li>Second condition: 2750 &lt; 3000 → <strong>true</strong></li>
+            <li><code>true AND true</code> → the whole expression is <strong>true</strong></li>
+          </ul>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="python-if">IF Statements in Python</h2>
+        <p>Remember the diamond decision symbol in flowcharts? This is how those yes/no decisions are implemented. Note the <strong>colon</strong> at the end of the <code>if</code> line, and the <strong>indentation</strong> of the code inside the branch:</p>
+        <div class="code-block">
+          <div class="code-label">Python — if</div>
+          <pre># Ask the user to enter a password
+passwd = input("Please enter the password")
+
+# Is access granted?
+if passwd == "hello123":
+    print("Access granted")</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">Python — if … else</div>
+          <pre># Ask the user for their age
+age = int(input("Please enter your age"))
+
+# Old enough to drive?
+if age &gt;= 17:
+    print("Broom broom")
+else:
+    print("Sorry, no drive yet")</pre>
+        </div>
+        <div class="example-block">
+          <div class="example-label">Full example — quiz and age check</div>
+          <div class="code-block">
+            <div class="code-label">Python</div>
+            <pre># Simple conditions
+answer = input("What is the capital of Scotland? ")
+if answer == "Edinburgh":
+    print("Well done, you are correct!")
+else:
+    print("Wrong")
+
+age = int(input("Please enter your age"))
+if age &gt; 16:
+    print("You're old enough to learn to drive")
+else:
+    print("You need to wait a little longer")</pre>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="elif">Multiple Selection — elif</h2>
+        <p>Sometimes there are more than two possible outcomes. Think about exam grades: if the mark is 70 or more, the student gets an A. Otherwise, if it is 60 or more, they get a B. Otherwise, if it is 50 or more, a C — and otherwise, no award.</p>
+        <p><code>elif</code> is short for <strong>else-if</strong>. Each <code>elif</code> is followed by a new condition, checked <strong>only if</strong> the conditions above it were false. This is <strong>efficient</strong>: if the student got an A, the program never has to check for a B or C.</p>
+        <div class="code-block">
+          <div class="code-label">Python — if / elif / else</div>
+          <pre># Ask for percentage mark
+mark = int(input("Please enter percentage mark"))
+
+# Check which category the mark goes in
+if mark &gt;= 70:
+    grade = "A"
+elif mark &gt;= 60:
+    grade = "B"
+elif mark &gt;= 50:
+    grade = "C"
+else:
+    grade = "F"
+
+# Print the grade
+print(grade)</pre>
+        </div>
+        <div class="example-block">
+          <div class="example-label">Full example — with complex conditions</div>
+          <div class="code-block">
+            <div class="code-label">Python</div>
+            <pre># Multiple selection (else if)
+score = int(input("Please enter your test score: "))
+
+if score &gt; 100:
+    print("Your score cannot be larger than 100%")
+elif score &gt;= 70 and score &lt; 100:
+    print("You have achieved an A")
+elif score &gt;= 60 and score &lt; 70:
+    print("You have achieved a B")
+elif score &gt;= 50 and score &lt; 60:
+    print("You have passed")
+else:
+    print("You have not passed")</pre>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Evaluate the conditions (3 marks)</div>
+          <p>If <code>x = 10</code> and <code>y = 5</code>, state whether each expression is true or false:</p>
+          <ol type="a">
+            <li><code>x &gt; 8 AND y &gt; 8</code></li>
+            <li><code>x &gt; 8 OR y &gt; 8</code></li>
+            <li><code>NOT (x == 10)</code></li>
+          </ol>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) False — y is not greater than 8. b) True — one condition (x &gt; 8) is enough for OR. c) False — x == 10 is true, and NOT flips it. (1 mark each)</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Write the code (3 marks)</div>
+          <p>A theme park ride requires riders to be at least 120&nbsp;cm tall and no taller than 200&nbsp;cm. Write a Python if statement that displays "You may ride" when the height stored in <code>height</code> is allowed, and "Sorry" otherwise.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block">
+                <div class="code-label">Suggested answer</div>
+                <pre>if height &gt;= 120 and height &lt;= 200:
+    print("You may ride")
+else:
+    print("Sorry")</pre>
+              </div>
+              <p>1 mark for the complex condition with AND, 1 mark for correct operators (≥ 120, ≤ 200), 1 mark for the if/else structure with both outputs.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q3 — Reading code (2 marks)</div>
+          <p>Using the grades example, state what grade is printed when the user enters <strong>60</strong>, and explain why the program never checks <code>mark &gt;= 50</code> for that input.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Grade <strong>B</strong> is printed (1 mark). Once <code>mark &gt;= 60</code> is true, the elif chain stops — later conditions are only checked if all earlier ones were false (1 mark).</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

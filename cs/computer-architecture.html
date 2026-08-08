@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computer Architecture — Computer Systems — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Computer Systems</a><span class="sep">›</span>
+    <span class="current">Computer Architecture</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-cs">
+  <div class="inner">
+    <div class="hero-badge">Computer Systems</div>
+    <h1>Computer Architecture</h1>
+    <p>The processor (registers, ALU, control unit), memory locations with unique addresses, buses — and why programs must be translated by interpreters and compilers.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🖥️ CS Topics</div>
+        <ul>
+          <li><a href="data-representation-numbers.html"><span class="sn-icon">🔢</span>Data Representation — Numbers</a></li>
+          <li><a href="data-representation-text-graphics.html"><span class="sn-icon">🖼️</span>Data Representation — Text &amp; Graphics</a></li>
+          <li><a href="computer-architecture.html" class="active"><span class="sn-icon">🖥️</span>Computer Architecture</a></li>
+          <li><a href="environmental-impact.html"><span class="sn-icon">🌱</span>Environmental Impact</a></li>
+          <li><a href="security.html"><span class="sn-icon">🔒</span>Security</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#components">Components of the Computer</a></li>
+          <li><a href="#processor">Inside the Processor</a></li>
+          <li><a href="#translators">Interpreters &amp; Compilers</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="components">Components of the Computer</h2>
+        <p>Computers have a <strong>processor</strong>, which has three parts: <strong>registers</strong>, the <strong>ALU</strong> and the <strong>control unit</strong>. The processor does the computer's "thinking". Data and instructions from the programs you are running are stored in <strong>memory locations</strong>, each with a <strong>unique address</strong>, and are moved between memory and the processor along <strong>buses</strong>.</p>
+        <p>You need to know how these are linked together — this is a simplified version of how it works:</p>
+        <img src="../resources/cs/computer-architecture.svg" alt="Computer architecture diagram: processor containing registers, ALU and control unit, connected to memory locations by the address bus and data bus." class="zoomable" style="max-width:100%;" />
+        <ul>
+          <li>The <strong>address bus</strong> carries the address of the memory location being accessed, from the processor to memory.</li>
+          <li>The <strong>data bus</strong> carries the actual data between the processor and memory.</li>
+        </ul>
+      </article>
+
+      <article>
+        <h2 id="processor">Inside the Processor</h2>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Registers</div><div class="def">A small amount of memory inside the processor that stores data temporarily, especially during calculations.</div></div>
+          <div class="key-term"><div class="term">Control unit</div><div class="def">Decodes and executes instructions, and keeps the other parts of the processor in time with its clock.</div></div>
+          <div class="key-term"><div class="term">ALU (Arithmetic Logic Unit)</div><div class="def">Does all the calculations and logical decisions a program requires — when your if statements use ==, &lt; or &gt;, that's the ALU at work.</div></div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="translators">Interpreters &amp; Compilers</h2>
+        <p>We write our programs in Python. Python is easy for <em>us</em> to read (it looks a bit like English), but it isn't readable by the computer — the computer only understands <strong>machine code</strong> (binary 1s and 0s). Before a program can run, it must be <strong>translated</strong> into machine code by an <strong>interpreter</strong> or a <strong>compiler</strong>. Both are types of <strong>translator</strong>.</p>
+        <table>
+          <thead><tr><th></th><th>Interpreter</th><th>Compiler</th></tr></thead>
+          <tbody>
+            <tr><td><strong>How it translates</strong></td><td>Line-by-line, every time the program runs</td><td>The whole program at once, producing a machine-code file</td></tr>
+            <tr><td><strong>Errors</strong></td><td>Shown "live" as they happen — great while developing</td><td>All syntax errors reported together after compiling</td></tr>
+            <tr><td><strong>Speed</strong></td><td>Slower to run — translated every time</td><td>Runs fast once compiled, but you wait for compilation</td></tr>
+          </tbody>
+        </table>
+        <p>What we use — Python — is <strong>interpreted</strong>: you see your errors live as they happen. A compiler would find all the syntax errors once at the start, but you'd have to wait for the whole program to compile before running it.</p>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>These are usually short 1–2 mark questions. Learn a few advantages of each, and remember: <strong>all programs must be translated to machine code before they can run</strong>.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Processor parts (3 marks)</div>
+          <p>Name the three parts of the processor and state the purpose of each.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>Registers</strong> — temporary storage inside the processor. <strong>Control unit</strong> — decodes/executes instructions and keeps everything in time. <strong>ALU</strong> — performs calculations and logical decisions. (1 mark each)</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Buses (2 marks)</div>
+          <p>Describe the purpose of the address bus and the data bus.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">The address bus carries the unique address of the memory location to be accessed (1 mark); the data bus transfers the data between the processor and that memory location (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q3 — Translators (2 marks)</div>
+          <p>Explain why a program written in Python must be translated before it can run, and state which type of translator finds errors line-by-line.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">The processor only understands machine code (binary), so high-level code must be translated first (1 mark). An <strong>interpreter</strong> translates and reports errors line-by-line (1 mark).</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

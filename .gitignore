@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / tooling folders
+.vscode/
+.idea/
+.claude/
+
+# Local backups — git already keeps the history
+backupcss/

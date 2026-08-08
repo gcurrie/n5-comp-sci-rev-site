@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8-bit Binary Number Converter — Higher Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --target:#7A1414; --target-bg:#FDECEA;     /* sign bit / negative (dark red) */
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  /* Reserve the scrollbar gutter so the content width does not change when a
+     scrollbar appears — otherwise auto-sizing the embed oscillates. */
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:1180px;margin:0 auto}
+  header h1{font-family:var(--sans);font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:720px}
+  header p.sub b{color:var(--ink)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+  code{font-family:var(--mono);background:#0000000d;padding:.05em .35em}
+
+  /* ---- controls ---- */
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);padding:16px 18px;margin:18px 0}
+  .field,.modefield{display:flex;flex-direction:column;gap:7px}
+  .field label,.modefield label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .field input{font-family:var(--mono);font-size:15px;padding:9px 11px;width:120px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  .field input:focus{outline:none;border-color:var(--active);box-shadow:0 0 0 3px var(--active-bg)}
+  .hint{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--ink-soft)}
+  button{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);transition:background .15s,border-color .15s}
+  button:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+  button.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C;padding:10px 18px}
+  button.primary:hover:not(:disabled){filter:brightness(1.06);background:var(--match-accent)}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  .spacer{flex:1}
+  .seg{display:inline-flex;border:1px solid var(--line)}
+  .seg button{border:none;color:var(--ink-soft);letter-spacing:.1em;padding:11px 15px}
+  .seg button:hover:not(.on){background:var(--active-bg);color:var(--ink)}
+  .seg button.on{background:var(--active-strong);color:#fff}
+  .stepper{display:inline-flex;gap:6px}
+  .stepper button{min-width:44px;font-size:13px;padding:9px 0;text-transform:none;letter-spacing:0}
+
+  /* ---- layout ---- */
+  .stage{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .panel{border:1px solid var(--line);background:var(--panel)}
+  .panel.visual{flex:1 1 560px}
+  .panel.method{flex:1 1 360px}
+  .panelbar{background:var(--bar);padding:11px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+  .panelbar .dim{color:rgba(255,255,255,.45);letter-spacing:.12em}
+  .panelbody{padding:20px 22px}
+
+  /* ---- chips ---- */
+  .statebar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+  .chip{font-family:var(--mono);font-size:12px;padding:6px 10px;border:1px solid var(--line);background:#fff;display:flex;gap:7px;align-items:center}
+  .chip .k{color:var(--ink-soft);letter-spacing:.06em}
+  .chip b{color:var(--ink)}
+  .chip.mode{border-color:var(--active);background:var(--active-bg)}
+  .chip.mode b{color:var(--active-strong)}
+  .chip.dec{border-color:var(--match-accent);background:var(--match-bg)}
+  .chip.dec .k{color:var(--match)}
+  .chip.dec b{color:var(--match)}
+  .chip.dec.neg{border-color:var(--warn);background:var(--warn-bg)}
+  .chip.dec.neg .k,.chip.dec.neg b{color:var(--warn)}
+
+  /* ---- bit grid ---- */
+  .bits{overflow-x:auto;padding-bottom:4px}
+  .bitgrid{display:inline-grid;grid-auto-flow:column;gap:8px}
+  .bcol{display:flex;flex-direction:column;align-items:center;gap:7px}
+  .place{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink-soft);min-height:1.2em}
+  .col-sign .place{color:var(--target)}
+  .bit{width:56px;height:56px;padding:0;border:1px solid var(--line);background:#fff;color:var(--ink-soft);font-family:var(--mono);font-size:24px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .16s,border-color .16s,color .16s;text-transform:none;letter-spacing:0}
+  .bit:hover{border-color:var(--active);background:var(--active-bg)}
+  .bit:focus-visible{outline:3px solid var(--active-bg);outline-offset:2px}
+  .bit.on{border-color:var(--active);background:var(--active-bg);color:var(--active-strong)}
+  .col-sign .bit.on{border-color:var(--target);background:var(--target-bg);color:var(--target)}
+  .blabel{font-family:var(--mono);font-size:10px;color:var(--ink-soft)}
+
+  /* ---- breakdown ---- */
+  .breakdown{margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:7px;font-family:var(--mono);font-size:14px;min-height:2em}
+  .term{padding:3px 8px;border:1px solid var(--line);background:#fff;color:var(--ink-soft)}
+  .term.on{border-color:var(--active);background:var(--active-bg);color:var(--active-strong);font-weight:700}
+  .term.sign{border-color:var(--target);background:var(--target-bg);color:var(--target);font-weight:700}
+  .op{color:var(--ink-soft);padding:0 2px}
+  .eq{color:var(--ink-soft);padding:0 2px}
+  .result{padding:3px 8px;border:1px solid var(--match-accent);background:var(--match-bg);color:var(--match);font-weight:700}
+  .result.neg{border-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:22px;font-size:14.5px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:12px 16px;background:var(--active-bg)}
+  .narrate.sign{border-left-color:var(--target);background:var(--target-bg)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .sw{width:13px;height:13px;border:1px solid var(--line);display:inline-block}
+  .sw.on{background:var(--active-bg);border-color:var(--active)}
+  .sw.sign{background:var(--target-bg);border-color:var(--target)}
+
+  /* ---- method panel ---- */
+  .method{display:flex;flex-direction:column;gap:2px;font-family:var(--mono);font-size:13px}
+  .mrow{display:grid;grid-template-columns:auto 18px 18px 18px 1fr;gap:8px;align-items:center;padding:4px 8px;color:var(--ink-soft)}
+  .mrow .mx,.mrow .meq{text-align:center;color:#9CA3AF}
+  .mrow .mplace,.mrow .mprod{text-align:right}
+  .mrow .mbit{text-align:center}
+  .mrow.on{background:var(--active-bg);color:var(--active-strong);font-weight:700}
+  .mrow.sign.on{background:var(--target-bg);color:var(--target);font-weight:700}
+  .mdiv{border-top:1px dashed var(--line);margin:8px 0 4px}
+  .mtotal{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:2px 8px;font-weight:700}
+  .mtotal .mlabel{color:var(--ink)}
+  .mtotal .mprod{text-align:right;color:var(--match)}
+  .mtotal .mprod.neg{color:var(--warn)}
+  .codenote{font-size:12px;color:var(--ink-soft);margin:18px 0 0;line-height:1.5}
+  .codenote b{color:var(--ink)}
+
+  .flip{display:none;margin-top:18px;font-size:12.5px;line-height:1.7;padding:14px 16px;border:1px solid var(--line);border-left:3px solid var(--target);background:var(--target-bg);color:var(--ink)}
+  .flip.show{display:block}
+  .flip .flabel{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--target);display:block;margin-bottom:8px}
+  .flip code{background:#ffffffaa}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media(max-width:760px){.field input{width:100%}}
+  @media print{.controls{display:none} body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Higher · Data Representation · Binary</p>
+    <h1>8-bit Binary Number Converter</h1>
+    <p class="sub">Click any bit to flip it, or type a decimal number and convert. Switch between <b>standard 8-bit (unsigned)</b> and <b>two's complement (signed)</b> to see how the very same 8 bits are read differently.</p>
+  </header>
+
+  <div class="controls">
+    <div class="modefield">
+      <label>Interpretation</label>
+      <div class="seg" id="seg" role="group" aria-label="Number interpretation">
+        <button id="mode-std" class="on" aria-pressed="true">Unsigned</button>
+        <button id="mode-two" aria-pressed="false">Two's complement</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="dec">Decimal value</label>
+      <input id="dec" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="0">
+      <span class="hint" id="range-hint">Range 0 to 255</span>
+    </div>
+    <button id="convert" class="primary">Convert →</button>
+
+    <div class="modefield">
+      <label>Adjust</label>
+      <div class="stepper">
+        <button id="dec1" title="Subtract one">−1</button>
+        <button id="inc1" title="Add one">+1</button>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+    <button id="rand">Randomise</button>
+    <button id="clear">Clear</button>
+  </div>
+
+  <div class="stage">
+    <!-- VISUAL -->
+    <section class="panel visual">
+      <div class="panelbar"><span>INTERACTIVE · 8-BIT CONVERTER</span><span class="dim">SIGNED / UNSIGNED</span></div>
+      <div class="panelbody">
+        <div class="statebar">
+          <div class="chip mode"><span class="k">mode</span><b id="c-mode">unsigned</b></div>
+          <div class="chip dec" id="c-dec-chip"><span class="k">decimal</span><b id="c-dec">0</b></div>
+          <div class="chip"><span class="k">binary</span><b id="c-bin">0000 0000</b></div>
+          <div class="chip"><span class="k">hex</span><b id="c-hex">0x00</b></div>
+        </div>
+
+        <div class="bits"><div class="bitgrid" id="bitgrid"></div></div>
+
+        <div class="breakdown" id="breakdown"></div>
+
+        <div class="narrate idle" id="narrate" aria-live="polite">All bits are 0 → the value is 0.</div>
+
+        <div class="legend">
+          <span><i class="sw"></i>bit = 0</span>
+          <span><i class="sw on"></i>bit = 1</span>
+          <span><i class="sw sign"></i>sign bit (−128)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- METHOD -->
+    <aside class="panel method">
+      <div class="panelbar"><span id="method-head">PLACE-VALUE METHOD</span></div>
+      <div class="panelbody">
+        <p class="rule" id="rule"></p>
+        <div class="method" id="method"></div>
+        <div class="flip" id="flip"></div>
+        <p class="codenote">The <b>binary</b> and <b>hex</b> readings never change between modes — only the decimal meaning does. That is the whole point of two's complement: the same byte, reinterpreted.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const N = 8;
+  let bits = new Array(N).fill(0);
+  let mode = "std"; // "std" | "two"
+
+  const $ = id => document.getElementById(id);
+  const grid=$("bitgrid"), breakdown=$("breakdown"), narrate=$("narrate");
+  const cMode=$("c-mode"), cDec=$("c-dec"), cDecChip=$("c-dec-chip"), cBin=$("c-bin"), cHex=$("c-hex");
+  const inDec=$("dec"), rangeHint=$("range-hint");
+  const methodEl=$("method"), ruleEl=$("rule"), methodHead=$("method-head"), flipEl=$("flip");
+  const bStd=$("mode-std"), bTwo=$("mode-two");
+
+  const placeOf = i => 1 << (7 - i);
+  const weightOf = i => (mode==="two" && i===0) ? -128 : placeOf(i);
+  const isSignBit = i => (mode==="two" && i===0);
+
+  function value(){ let v=0; for(let i=0;i<N;i++){ if(bits[i]) v += weightOf(i); } return v; }
+  function unsignedByte(){ let v=0; for(let i=0;i<N;i++){ if(bits[i]) v += placeOf(i); } return v; }
+  function binStr(){ return bits.join("").replace(/(\d{4})(\d{4})/,"$1 $2"); }
+  function hexStr(){ return "0x"+unsignedByte().toString(16).toUpperCase().padStart(2,"0"); }
+
+  function setFromDecimal(v){
+    let byte = (v<0) ? (v + 256) : v;
+    byte &= 0xFF;
+    for(let i=0;i<N;i++){ bits[i] = (byte >> (7-i)) & 1; }
+  }
+
+  const bitBtns=[], placeEls=[], colEls=[];
+  for(let i=0;i<N;i++){
+    const col=document.createElement("div"); col.className="bcol";
+    const place=document.createElement("div"); place.className="place";
+    const btn=document.createElement("button"); btn.className="bit"; btn.type="button";
+    btn.setAttribute("aria-label","bit "+(7-i));
+    const lab=document.createElement("div"); lab.className="blabel"; lab.textContent="bit "+(7-i);
+    btn.addEventListener("click",()=>{ bits[i] ^= 1; render("toggle",i); });
+    col.appendChild(place); col.appendChild(btn); col.appendChild(lab);
+    grid.appendChild(col);
+    colEls.push(col); placeEls.push(place); bitBtns.push(btn);
+  }
+
+  const mrows=[];
+  for(let i=0;i<N;i++){
+    const row=document.createElement("div"); row.className="mrow";
+    const p=document.createElement("span"); p.className="mplace";
+    const x=document.createElement("span"); x.className="mx"; x.textContent="×";
+    const b=document.createElement("span"); b.className="mbit";
+    const e=document.createElement("span"); e.className="meq"; e.textContent="=";
+    const pr=document.createElement("span"); pr.className="mprod";
+    row.appendChild(p); row.appendChild(x); row.appendChild(b); row.appendChild(e); row.appendChild(pr);
+    methodEl.appendChild(row);
+    mrows.push({row,p,b,pr});
+  }
+  const mdiv=document.createElement("div"); mdiv.className="mdiv"; methodEl.appendChild(mdiv);
+  const totalRow=document.createElement("div"); totalRow.className="mtotal";
+  const tLabel=document.createElement("span"); tLabel.className="mlabel"; tLabel.textContent="total";
+  const tProd=document.createElement("span"); tProd.className="mprod";
+  totalRow.appendChild(tLabel); totalRow.appendChild(tProd);
+  methodEl.appendChild(totalRow);
+
+  function render(reason, changedIdx){
+    const v = value();
+    const neg = v < 0;
+
+    for(let i=0;i<N;i++){
+      placeEls[i].textContent = weightOf(i);
+      colEls[i].classList.toggle("col-sign", isSignBit(i));
+      bitBtns[i].textContent = bits[i];
+      bitBtns[i].classList.toggle("on", bits[i]===1);
+    }
+
+    cMode.textContent = mode==="two" ? "two's complement" : "unsigned";
+    cDec.textContent = v;
+    cDecChip.classList.toggle("neg", neg);
+    cBin.textContent = binStr();
+    cHex.textContent = hexStr();
+
+    if(document.activeElement !== inDec) inDec.value = String(v);
+    rangeHint.textContent = mode==="two" ? "Range −128 to 127" : "Range 0 to 255";
+
+    renderBreakdown(v, neg);
+    renderMethod(v, neg);
+    renderNarration(v, neg, reason, changedIdx);
+    renderFlip(v, neg);
+
+    postHeight();
+  }
+
+  function renderBreakdown(v, neg){
+    breakdown.innerHTML = "";
+    const onIdx = [];
+    for(let i=0;i<N;i++) if(bits[i]) onIdx.push(i);
+
+    if(onIdx.length===0){
+      const t=document.createElement("span"); t.className="term"; t.textContent="0";
+      breakdown.appendChild(t);
+      const eq=document.createElement("span"); eq.className="eq"; eq.textContent="=";
+      const r=document.createElement("span"); r.className="result"; r.textContent="0";
+      breakdown.appendChild(eq); breakdown.appendChild(r);
+      return;
+    }
+    onIdx.forEach((i,k)=>{
+      if(k>0){ const op=document.createElement("span"); op.className="op"; op.textContent="+"; breakdown.appendChild(op); }
+      const t=document.createElement("span");
+      t.className = "term " + (isSignBit(i) ? "sign" : "on");
+      t.textContent = weightOf(i);
+      breakdown.appendChild(t);
+    });
+    const eq=document.createElement("span"); eq.className="eq"; eq.textContent="="; breakdown.appendChild(eq);
+    const r=document.createElement("span"); r.className="result"+(neg?" neg":""); r.textContent=v; breakdown.appendChild(r);
+  }
+
+  function renderMethod(v, neg){
+    methodHead.textContent = mode==="two" ? "WEIGHTED-BIT METHOD · TWO’S COMPLEMENT" : "PLACE-VALUE METHOD";
+    for(let i=0;i<N;i++){
+      const w = weightOf(i);
+      mrows[i].p.textContent = w;
+      mrows[i].b.textContent = bits[i];
+      mrows[i].pr.textContent = bits[i] ? w : 0;
+      mrows[i].row.className = "mrow" + (bits[i] ? " on" : "") + (isSignBit(i) ? " sign" : "");
+    }
+    tProd.textContent = v;
+    tProd.classList.toggle("neg", neg);
+  }
+
+  function renderNarration(v, neg, reason, changedIdx){
+    let cls="narrate", html="";
+    if(mode==="std"){
+      if(v===0){ cls="narrate idle"; html="All bits are 0 → the value is <b>0</b>."; }
+      else{ cls="narrate"; html=`Every bit carries a positive place value. This pattern reads <b>${v}</b> as an unsigned 8-bit number.`; }
+    }else{
+      if(v===0){ cls="narrate idle"; html="All bits are 0 → the value is <b>0</b>."; }
+      else if(bits[0]===0){ cls="narrate"; html=`Bit 7 (the sign bit) is <code>0</code>, so this is zero or positive. Value = <b>${v}</b>.`; }
+      else{ cls="narrate sign"; const rest = v + 128; html=`Bit 7 (the sign bit) is <code>1</code>, so this is <b>negative</b>: <code>−128 + ${rest} = ${v}</code>.`; }
+    }
+    if(reason==="mode"){
+      const other = mode==="two" ? "unsigned" : "two's complement";
+      const otherVal = otherModeValue();
+      html += ` <span style="color:var(--ink-soft)">Same byte <code>${binStr()}</code> reads <b>${otherVal}</b> as ${other}.</span>`;
+    }
+    narrate.className = cls;
+    narrate.innerHTML = html;
+  }
+
+  function otherModeValue(){
+    if(mode==="two"){ return unsignedByte(); }
+    let v=0;
+    for(let i=0;i<N;i++){ if(bits[i]) v += (i===0 ? -128 : placeOf(i)); }
+    return v;
+  }
+
+  function renderFlip(v, neg){
+    if(mode!=="two" || !neg){ flipEl.className="flip"; flipEl.innerHTML=""; return; }
+    const flipped = bits.map(b=>b?0:1);
+    const flippedStr = flipped.join("").replace(/(\d{4})(\d{4})/,"$1 $2");
+    let mag=0; for(let i=0;i<N;i++){ if(flipped[i]) mag += placeOf(i); }
+    mag += 1;
+    const plus1 = ((mag) >>> 0).toString(2).padStart(8,"0").replace(/(\d{4})(\d{4})/,"$1 $2");
+    flipEl.className="flip show";
+    flipEl.innerHTML =
+      `<span class="flabel">FINDING THE SIZE OF A NEGATIVE</span>`+
+      `Flip every bit, then add 1:<br>`+
+      `<code>${binStr()}</code> → flip → <code>${flippedStr}</code> → +1 → <code>${plus1}</code> = <b>${mag}</b>.<br>`+
+      `So the number is <b>−${mag} = ${v}</b>.`;
+  }
+
+  function setMode(m){
+    if(mode===m) return;
+    mode=m;
+    bStd.classList.toggle("on", m==="std"); bStd.setAttribute("aria-pressed", m==="std");
+    bTwo.classList.toggle("on", m==="two"); bTwo.setAttribute("aria-pressed", m==="two");
+    render("mode");
+  }
+
+  function applyDecimal(){
+    const raw = inDec.value.trim().replace(/[−–]/g,"-");
+    if(raw==="" || raw==="-"){ render("dec"); return; }
+    const n = Number(raw);
+    if(!Number.isInteger(n)){ warnRange("Enter a whole number."); return; }
+    const lo = mode==="two" ? -128 : 0;
+    const hi = mode==="two" ? 127 : 255;
+    if(n<lo || n>hi){ warnRange(`<b>${n}</b> is outside the ${mode==="two"?"two's complement":"unsigned 8-bit"} range (${lo} to ${hi}).`); return; }
+    setFromDecimal(n);
+    render("convert");
+  }
+
+  function warnRange(msg){
+    narrate.className="narrate warn";
+    narrate.innerHTML = msg + " Nothing was changed.";
+    postHeight();
+  }
+
+  function step(delta){
+    const lo = mode==="two" ? -128 : 0;
+    const hi = mode==="two" ? 127 : 255;
+    let v = value() + delta;
+    if(v<lo){ v=lo; } if(v>hi){ v=hi; }
+    setFromDecimal(v);
+    render("step");
+  }
+
+  function randomise(){ for(let i=0;i<N;i++) bits[i]=Math.random()<0.5?0:1; render("rand"); }
+  function clearAll(){ bits=new Array(N).fill(0); render("clear"); }
+
+  bStd.addEventListener("click",()=>setMode("std"));
+  bTwo.addEventListener("click",()=>setMode("two"));
+  $("convert").addEventListener("click",applyDecimal);
+  inDec.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); applyDecimal(); inDec.blur(); } });
+  inDec.addEventListener("blur",applyDecimal);
+  $("inc1").addEventListener("click",()=>step(1));
+  $("dec1").addEventListener("click",()=>step(-1));
+  $("rand").addEventListener("click",randomise);
+  $("clear").addEventListener("click",clearAll);
+
+  render("init");
+
+  /* Measure the body, not documentElement: once the parent has grown the
+     iframe, documentElement stretches to that new height, so re-reporting it
+     would ratchet the frame taller on every reflow. */
+  var sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    var h = Math.ceil(document.body.scrollHeight) + 6;
+    // Grow freely, but ignore shrinks of a few px: those are the scrollbar
+    // appearing and disappearing, and acting on them makes the frame oscillate
+    // forever. A real shrink (clearing the converter) clears the threshold.
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      // Resizing can rewrap the content, so measure again once the size lands.
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(function(){ postHeight(); }).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

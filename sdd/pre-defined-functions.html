@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pre-Defined Functions — SDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Software Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Pre-Defined Functions</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-sdd">
+  <div class="inner">
+    <div class="hero-badge">Software Design &amp; Development</div>
+    <h1>Pre-Defined Functions</h1>
+    <p>The three National 5 pre-defined functions — random, round and length — and how to use them with parameters.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">💻 SDD Topics</div>
+        <ul>
+          <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
+          <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
+          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
+          <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
+          <li><a href="pre-defined-functions.html" class="active"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
+          <li><a href="loops.html"><span class="sn-icon">🔁</span>Loops</a></li>
+          <li><a href="standard-algorithms.html"><span class="sn-icon">📊</span>Standard Algorithms</a></li>
+          <li><a href="testing.html"><span class="sn-icon">✅</span>Testing</a></li>
+          <li><a href="evaluation.html"><span class="sn-icon">⭐</span>Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#random">Random</a></li>
+          <li><a href="#length">Length</a></li>
+          <li><a href="#round">Round</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="intro">Introduction</h2>
+        <p><strong>Pre-defined functions</strong> are built in to Python. This saves you "reinventing the wheel" each time you need a common job done. Values passed to a function inside the brackets are called <strong>parameters</strong>.</p>
+        <p>The National 5 course requires three pre-defined functions (all with parameters):</p>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">random</div><div class="def">Returns a random integer between two limits — like rolling dice or tossing a coin.</div></div>
+          <div class="key-term"><div class="term">round</div><div class="def">Rounds a real number to the nearest whole number, or to a given number of decimal places.</div></div>
+          <div class="key-term"><div class="term">length (len)</div><div class="def">Returns the number of characters in a string.</div></div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="random">Random</h2>
+        <p>Something <strong>random</strong> is open to chance — like rolling dice or tossing a coin. <code>random.randint()</code> returns an integer between its two parameters (inclusive). You must <code>import random</code> at the top of the program first:</p>
+        <div class="code-block">
+          <div class="code-label">Python — random numbers</div>
+          <pre># This program is going to use random numbers
+import random
+
+# Generate a random number from 1 to 6
+dice = random.randint(1, 6)</pre>
+        </div>
+        <div class="example-block">
+          <div class="example-label">Full example — guessing game</div>
+          <div class="code-block">
+            <div class="code-label">Python</div>
+            <pre># This program is going to use random numbers
+import random
+
+# Ask the user to enter a number
+guess = int(input("What is your guess?"))
+target = random.randint(1, 10)
+
+if guess == target:
+    print("Well done, you guessed correctly.")
+else:
+    print("Sorry, you guessed wrongly")</pre>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="length">Length of a String</h2>
+        <p><code>len()</code> returns the <strong>length</strong> — the number of characters — in a string. So <code>len("hello")</code> is 5, and <code>len("abc")</code> is 3.</p>
+        <div class="code-block">
+          <div class="code-label">Python — len()</div>
+          <pre># Display how many characters are in the word "hello"
+how_long = len("hello")
+print(how_long)</pre>
+        </div>
+        <div class="example-block">
+          <div class="example-label">Full example — password length check</div>
+          <div class="code-block">
+            <div class="code-label">Python</div>
+            <pre># Ask the user to enter a password
+passwd = input("Please enter your password")
+
+# The password must be at least 6 characters long
+if len(passwd) &gt; 6:
+    print("Your password is long enough")
+else:
+    print("Your password is NOT long enough")</pre>
+          </div>
+          <p>This check could be placed inside a loop so the user is asked again until their password is long enough — see <a href="standard-algorithms.html">input validation</a>.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="round">Round</h2>
+        <p><code>round()</code> can round to the nearest whole number, or to a certain number of decimal places (given as a second parameter):</p>
+        <div class="code-block">
+          <div class="code-label">Python — round()</div>
+          <pre>num1 = round(3.14159265)
+print(num1)              # 3 — nearest whole number
+
+num2 = round(3.14159265, 2)
+print(num2)              # 3.14 — two decimal places
+
+num3 = round(3.14159265, 5)
+print(num3)              # 3.14159 — five decimal places</pre>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><code>round(total, 2)</code> is perfect for money — it keeps answers to pounds and pence. Expect to use it in average and price calculations.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Predict the output (3 marks)</div>
+          <p>State the output of each line:</p>
+          <div class="code-block">
+            <pre>print(len("computing"))
+print(round(7.851, 1))
+print(round(9.5))</pre>
+          </div>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><code>9</code> — nine characters (1 mark). <code>7.9</code> — one decimal place (1 mark). <code>10</code> — nearest whole number (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Write the code (2 marks)</div>
+          <p>Write Python to simulate rolling a 20-sided dice, storing the result in <code>roll</code>. Include any line needed at the top of the program.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block">
+                <div class="code-label">Suggested answer</div>
+                <pre>import random
+roll = random.randint(1, 20)</pre>
+              </div>
+              <p>1 mark for the import, 1 mark for randint with parameters 1 and 20.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

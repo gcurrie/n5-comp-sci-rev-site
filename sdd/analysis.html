@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis — SDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Software Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">Analysis</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-sdd">
+  <div class="inner">
+    <div class="hero-badge">Software Design &amp; Development</div>
+    <h1>Analysis</h1>
+    <p>Identifying the purpose and functional requirements of a problem — the inputs, processes and outputs a program must have.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">💻 SDD Topics</div>
+        <ul>
+          <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
+          <li><a href="analysis.html" class="active"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
+          <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
+          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
+          <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
+          <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
+          <li><a href="loops.html"><span class="sn-icon">🔁</span>Loops</a></li>
+          <li><a href="standard-algorithms.html"><span class="sn-icon">📊</span>Standard Algorithms</a></li>
+          <li><a href="testing.html"><span class="sn-icon">✅</span>Testing</a></li>
+          <li><a href="evaluation.html"><span class="sn-icon">⭐</span>Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#purpose">Purpose</a></li>
+          <li><a href="#requirements">Functional Requirements</a></li>
+          <li><a href="#examples">Worked Examples</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="purpose">Analysis — Purpose</h2>
+        <p>The <strong>Analysis</strong> stage investigates what the software must do. Questions asked at this stage include:</p>
+        <ul>
+          <li>What does the client want the software to do?</li>
+          <li>Who will use the software?</li>
+          <li>What are the <strong>inputs</strong>, <strong>processes</strong> and <strong>outputs</strong>?</li>
+          <li>What hardware will the software run on?</li>
+        </ul>
+        <p>A <strong>systems analyst</strong> gathers this information by:</p>
+        <ul>
+          <li>visiting and observing the client's workplace</li>
+          <li>interviewing the client's employees</li>
+          <li>studying documentation</li>
+          <li>issuing questionnaires</li>
+        </ul>
+        <p>The result of the analysis stage is a document called the <strong>software specification</strong>. It sets out exactly what the software is required to do. Once the client reviews and agrees to it, both parties sign it, and it becomes a <strong>legally binding contract</strong> that can be used to settle disputes.</p>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div>At National 5 you won't write a full software specification — but you <strong>must</strong> be able to read a problem description and identify its <strong>purpose</strong> and <strong>functional requirements</strong>.</div>
+        </div>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Purpose</div><div class="def">A plain-language statement of what the program is for — what it will do, and for whom.</div></div>
+          <div class="key-term"><div class="term">Functional requirements</div><div class="def">The inputs, processes and outputs a program must have to solve the problem.</div></div>
+          <div class="key-term"><div class="term">Inputs</div><div class="def">The data that must be entered into the program by the user.</div></div>
+          <div class="key-term"><div class="term">Processes</div><div class="def">The calculations carried out, or new data generated, by the program.</div></div>
+          <div class="key-term"><div class="term">Outputs</div><div class="def">The results and messages the program displays to the user.</div></div>
+          <div class="key-term"><div class="term">Software specification</div><div class="def">The document produced at the end of analysis stating exactly what the software must do — signed by both parties as a legally binding agreement.</div></div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="requirements">Functional Requirements — Inputs, Processes &amp; Outputs</h2>
+        <p>Once the purpose of a program has been defined, the analysis looks at its individual functions. These <strong>functional requirements</strong> are agreed with the client and are organised into three categories:</p>
+        <table>
+          <thead><tr><th>Category</th><th>Meaning</th><th>Spot it in a question by…</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Inputs</strong></td><td>Data gathered from the user</td><td>"the user enters…", "asks for…"</td></tr>
+            <tr><td><strong>Processes</strong></td><td>Calculations or new data the program generates</td><td>"calculates…", "checks…", "counts…"</td></tr>
+            <tr><td><strong>Outputs</strong></td><td>Results and messages displayed</td><td>"displays…", "shows a message…"</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Read the problem specification carefully and pick out the <strong>key pieces of information</strong> the program will need. Highlight the verbs — <em>enter</em>, <em>calculate</em>, <em>display</em> — they signpost inputs, processes and outputs.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="examples">Worked Examples</h2>
+
+        <div class="worked-example">
+          <div class="q-label">Exam Scores Program</div>
+          <p><strong>Problem:</strong> A program is needed to help a student work out their total score across three exams. The student should enter their Physics, Computing and Maths marks. The program should add the scores together and display the total with a suitable message.</p>
+          <table>
+            <tbody>
+              <tr><td style="width:10rem;"><strong>Inputs</strong></td><td>The three exam marks (Physics, Computing, Maths)</td></tr>
+              <tr><td><strong>Processes</strong></td><td>Add the three scores together</td></tr>
+              <tr><td><strong>Outputs</strong></td><td>Display the total score with a message</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Edinburgh Castle Program</div>
+          <p><strong>Problem:</strong> Edinburgh Castle needs a program for its ticket desk. The employee enters the number of adult tickets and the number of child tickets sold for a tour group. The program calculates the total cost of the group (adult tickets cost &pound;19.50, child tickets cost &pound;11.50) and displays the total cost of the booking.</p>
+          <table>
+            <tbody>
+              <tr><td style="width:10rem;"><strong>Inputs</strong></td><td>Number of adult tickets, number of child tickets</td></tr>
+              <tr><td><strong>Processes</strong></td><td>Calculate the total cost (adults &times; 19.50 + children &times; 11.50)</td></tr>
+              <tr><td><strong>Outputs</strong></td><td>Display the total cost of the booking</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Functional Requirements (3 marks)</div>
+          <p>A leisure centre needs a program for its café. The user enters the price of each of the four items a customer buys. The program calculates the total cost, applies a 10% member discount, and displays the final amount due.</p>
+          <p>Identify <strong>one input</strong>, <strong>one process</strong> and <strong>one output</strong> of this program.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p>One mark each for a valid input, process and output:</p>
+              <p style="color:#6A1B9A;"><strong>Input:</strong> the price of each item bought (four prices).<br/>
+              <strong>Process:</strong> calculate the total cost / apply the 10% discount.<br/>
+              <strong>Output:</strong> display the final amount due.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Purpose (1 mark)</div>
+          <p>State the purpose of the leisure centre café program described in Q1.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">To calculate the total cost of a customer's café order, including the member discount, and display the amount due.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

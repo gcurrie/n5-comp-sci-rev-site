@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL — Joins — DDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Database Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">SQL — Joins</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-ddd">
+  <div class="inner">
+    <div class="hero-badge">Database Design &amp; Development</div>
+    <h1>SQL — Joins (Equi-Join)</h1>
+    <p>Querying two linked tables at once by joining the primary key to the matching foreign key.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🗄️ DDD Topics</div>
+        <ul>
+          <li><a href="database-introduction.html"><span class="sn-icon">🗄️</span>Database Introduction</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="sql-select.html"><span class="sn-icon">🔎</span>SQL — SELECT</a></li>
+          <li><a href="sql-joins.html" class="active"><span class="sn-icon">🔗</span>SQL — Joins</a></li>
+          <li><a href="sql-insert-update-delete.html"><span class="sn-icon">✏️</span>SQL — Insert/Update/Delete</a></li>
+          <li><a href="testing-evaluation.html"><span class="sn-icon">✅</span>Testing &amp; Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#why">Why Joins Are Needed</a></li>
+          <li><a href="#how">Writing an Equi-Join</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="why">Why Joins Are Needed</h2>
+        <p>An <strong>equi-join</strong> is needed when a query uses <strong>two tables</strong>. Imagine a garage database with a <strong>Car</strong> table and a <strong>Customer</strong> table, where <code>CustomerID</code> is the primary key of Customer and a foreign key in Car.</p>
+        <p><strong>Task:</strong> find the addresses of all Ford Fiesta owners. The problem: <code>Address</code> lives in the Customer table, but <code>Model</code> lives in the Car table — the query needs data from <strong>both</strong>.</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — WRONG: no join between the tables</div>
+          <pre>SELECT Make, Model, Address
+FROM Car, Customer
+WHERE Model = "Fiesta";</pre>
+        </div>
+        <p>This query produces nonsense — every Fiesta gets paired with <em>every</em> customer's address, because nothing tells the database which customer owns which car.</p>
+      </article>
+
+      <article>
+        <h2 id="how">Writing an Equi-Join</h2>
+        <p>The fix is to add the <strong>join condition</strong> — matching the primary key in one table to the foreign key in the other:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — CORRECT: with the equi-join</div>
+          <pre>SELECT Make, Model, Address
+FROM Car, Customer
+WHERE Model = "Fiesta"
+  AND Car.CustomerID = Customer.CustomerID;</pre>
+        </div>
+        <p>The equi-join always follows this pattern:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">The pattern</div>
+          <pre>Table1.PrimaryKey = Table2.ForeignKey</pre>
+        </div>
+        <img src="../resources/ddd/Images/sql-join-match.svg" alt="Diagram showing how the join condition matches the primary key in one table to the foreign key in the other." class="zoomable" style="max-width:100%;" />
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>Checklist for two-table queries:</strong> both tables in <code>FROM</code> (separated by a comma), and the join condition <code>Table1.Key = Table2.Key</code> in the <code>WHERE</code> clause, ANDed with any search criteria. Forgetting the join is the most common lost mark.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Spot the missing join (2 marks)</div>
+          <p>A school database has Pupil (pupilID PK, forename, surname, classCode*) and Class (classCode PK, teacher, room). Explain why this query is wrong, and rewrite the WHERE clause correctly:</p>
+          <div class="code-block code-sql">
+            <pre>SELECT forename, surname, teacher
+FROM Pupil, Class
+WHERE room = "12";</pre>
+          </div>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">There is no join condition, so every pupil is matched with every class (1 mark). Corrected: <code>WHERE room = "12" AND Pupil.classCode = Class.classCode</code> (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Write an equi-join (3 marks)</div>
+          <p>Using the garage database (Car: registration PK, make, model, customerID*; Customer: customerID PK, name, address, town), write a query to display the name of every customer who owns a Vauxhall.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Suggested answer</div>
+                <pre>SELECT Name
+FROM Car, Customer
+WHERE Make = "Vauxhall"
+  AND Car.CustomerID = Customer.CustomerID;</pre>
+              </div>
+              <p>1 mark: SELECT Name with both tables in FROM. 1 mark: correct search condition. 1 mark: correct equi-join.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

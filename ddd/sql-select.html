@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL — SELECT — DDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Database Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">SQL — SELECT</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-ddd">
+  <div class="inner">
+    <div class="hero-badge">Database Design &amp; Development</div>
+    <h1>SQL — SELECT</h1>
+    <p>Searching and sorting a database with SELECT … FROM … WHERE … ORDER BY.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🗄️ DDD Topics</div>
+        <ul>
+          <li><a href="database-introduction.html"><span class="sn-icon">🗄️</span>Database Introduction</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="sql-select.html" class="active"><span class="sn-icon">🔎</span>SQL — SELECT</a></li>
+          <li><a href="sql-joins.html"><span class="sn-icon">🔗</span>SQL — Joins</a></li>
+          <li><a href="sql-insert-update-delete.html"><span class="sn-icon">✏️</span>SQL — Insert/Update/Delete</a></li>
+          <li><a href="testing-evaluation.html"><span class="sn-icon">✅</span>Testing &amp; Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#structure">The SELECT Query</a></li>
+          <li><a href="#sorting">Sorting with ORDER BY</a></li>
+          <li><a href="#conditions">AND &amp; OR Conditions</a></li>
+          <li><a href="#reading">Reading a Query's Output</a></li>
+          <li><a href="#visualiser">Try It — Query in Action</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="structure">The SELECT Query</h2>
+        <p>At National 5 you must be able to <strong>read, understand, explain and write</strong> SQL SELECT queries. A SELECT query <strong>searches or sorts</strong> a database, and follows this structure:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — the full structure</div>
+          <pre>SELECT Registration, Make, Model
+FROM Car
+WHERE Colour = "Blue"
+ORDER BY Mileage DESC;</pre>
+        </div>
+        <ul>
+          <li><code>SELECT</code> — the field(s) to display</li>
+          <li><code>FROM</code> — the table the data comes from</li>
+          <li><code>WHERE</code> — the search condition <em>(optional)</em></li>
+          <li><code>ORDER BY</code> — the sort order <em>(optional)</em></li>
+        </ul>
+        <p>Without the optional clauses, the query displays every record. To show <strong>all fields</strong>, use the asterisk wildcard:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — all fields, all records</div>
+          <pre>SELECT *
+FROM Car;</pre>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="sorting">Sorting with ORDER BY</h2>
+        <p>Use <code>ASC</code> to sort A→Z / smallest→largest, or <code>DESC</code> for the reverse. At N5, you can sort on a <strong>maximum of two fields</strong>:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — sorting</div>
+          <pre>SELECT Registration, Make, Model
+FROM Car
+WHERE Colour = "Blue"
+ORDER BY Registration ASC;
+
+-- Two-field sort: by make A-Z, then newest first within each make
+SELECT *
+FROM Car
+ORDER BY Make ASC, Year DESC;</pre>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="conditions">Complex Conditions — AND &amp; OR</h2>
+        <p>The <code>WHERE</code> clause can combine conditions with <code>AND</code> and <code>OR</code>, and use the <code>&lt;</code>, <code>&gt;</code> and <code>=</code> operators:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — multiple conditions</div>
+          <pre>-- Both conditions must be true
+SELECT Registration, Make, Model
+FROM Car
+WHERE Colour = "Red" AND Year = 2009;
+
+-- Either condition can be true
+SELECT Registration, Make, Model
+FROM Car
+WHERE Colour = "Red" OR Colour = "Blue";
+
+-- A range
+SELECT Registration, Make, Model
+FROM Car
+WHERE Year &gt;= 2009 AND Year &lt;= 2018;</pre>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="reading">Reading a Query's Output</h2>
+        <p>The other common exam question gives you a query and asks you to <strong>state or describe its output</strong>. Use a three-step method:</p>
+        <div class="worked-example">
+          <div class="q-label">Worked Example — what does this query display?</div>
+          <div class="code-block code-sql">
+            <pre>SELECT Make, Model, Registration
+FROM Car
+WHERE Colour = "Black";</pre>
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>Registration</th><th>Make</th><th>Model</th><th>Colour</th><th>Year</th></tr></thead>
+              <tbody>
+                <tr><td>SK19 TRE</td><td>Ford</td><td>Fiesta</td><td>Red</td><td>2019</td></tr>
+                <tr><td>ST99 FDT</td><td>Volkswagen</td><td>Golf</td><td>Black</td><td>2017</td></tr>
+                <tr><td>SG02 PLM</td><td>Vauxhall</td><td>Corsa</td><td>Blue</td><td>2015</td></tr>
+                <tr><td>SH88 NNG</td><td>Nissan</td><td>Qashqai</td><td>Black</td><td>2018</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ol>
+            <li><strong>Identify the fields to display</strong> — the SELECT clause gives the column headings: Make, Model, Registration.</li>
+            <li><strong>Check the WHERE condition</strong> — Colour = "Black". Two cars match: the Volkswagen and the Nissan.</li>
+            <li><strong>Extract the information</strong> for the matching records only.</li>
+          </ol>
+          <p><strong>Output:</strong></p>
+          <table>
+            <thead><tr><th>Make</th><th>Model</th><th>Registration</th></tr></thead>
+            <tbody>
+              <tr><td>Volkswagen</td><td>Golf</td><td>ST99 FDT</td></tr>
+              <tr><td>Nissan</td><td>Qashqai</td><td>SH88 NNG</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article id="visualiser">
+        <div class="interactive-block">
+          <div class="ib-label">Visualiser</div>
+          <p class="ib-title">Query in Action</p>
+          <div class="ib-body">
+            <p class="ib-intro">Step through a SELECT query clause by clause and watch which rows survive the WHERE, how ORDER BY rearranges them, and which columns are displayed.</p>
+            <iframe src="../resources/ddd/visualisers/query-in-action.html"
+                    title="SQL query in action — interactive visualiser"
+                    loading="lazy"
+                    style="height:600px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Write a query (3 marks)</div>
+          <p>Using the Car table above, write a query to display the registration and year of all cars newer than 2016, with the newest first.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Suggested answer</div>
+                <pre>SELECT Registration, Year
+FROM Car
+WHERE Year &gt; 2016
+ORDER BY Year DESC;</pre>
+              </div>
+              <p>1 mark: SELECT/FROM with correct fields and table. 1 mark: correct WHERE. 1 mark: correct ORDER BY … DESC.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — State the output (2 marks)</div>
+          <p>Using the Car table above, state the output of:</p>
+          <div class="code-block code-sql">
+            <pre>SELECT Registration
+FROM Car
+WHERE Colour = "Red" OR Colour = "Blue";</pre>
+          </div>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">A single Registration column containing SK19 TRE (red Fiesta) and SG02 PLM (blue Corsa). (1 mark for correct records, 1 mark for showing only the Registration field)</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

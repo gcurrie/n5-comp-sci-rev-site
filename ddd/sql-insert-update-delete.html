@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL — Insert, Update &amp; Delete — DDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Database Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">SQL — Insert, Update &amp; Delete</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-ddd">
+  <div class="inner">
+    <div class="hero-badge">Database Design &amp; Development</div>
+    <h1>SQL — Insert, Update &amp; Delete</h1>
+    <p>Changing the data in a database: adding records with INSERT, editing them with UPDATE, and removing them with DELETE.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">🗄️ DDD Topics</div>
+        <ul>
+          <li><a href="database-introduction.html"><span class="sn-icon">🗄️</span>Database Introduction</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="sql-select.html"><span class="sn-icon">🔎</span>SQL — SELECT</a></li>
+          <li><a href="sql-joins.html"><span class="sn-icon">🔗</span>SQL — Joins</a></li>
+          <li><a href="sql-insert-update-delete.html" class="active"><span class="sn-icon">✏️</span>SQL — Insert/Update/Delete</a></li>
+          <li><a href="testing-evaluation.html"><span class="sn-icon">✅</span>Testing &amp; Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#insert">INSERT</a></li>
+          <li><a href="#update">UPDATE</a></li>
+          <li><a href="#delete">DELETE</a></li>
+          <li><a href="#test-yourself">Test Yourself</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="insert">INSERT INTO … VALUES …</h2>
+        <p>As well as searching and sorting, you may have to <strong>add</strong>, <strong>change</strong> or <strong>delete</strong> data. <code>INSERT INTO</code> adds a completely new record. Write the table name, then list each value <strong>in the order the fields come in the table</strong>:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — INSERT INTO</div>
+          <pre>INSERT INTO Car
+VALUES ("Ford", "Focus", "Blue", 2020);
+
+INSERT INTO Pupil
+VALUES ("Jasmine", "Smith", "S4", "123 Hamilton Street");</pre>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>The values <strong>must match the field order</strong>. If the Pupil table's fields are forename, surname, yearGroup, address, then <code>VALUES ("Jasmine", "Smith", "123 Hamilton Street", "S4")</code> puts the address in the year group field!</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="update">UPDATE … SET … WHERE …</h2>
+        <p><code>UPDATE</code> changes existing records. It always goes in this order: <code>UPDATE</code> the table, <code>SET</code> the new value, <code>WHERE</code> to choose which records change:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — UPDATE</div>
+          <pre>UPDATE Car
+SET Year = 2019
+WHERE Colour = "Red";
+
+-- Move every S4 pupil up a year group
+UPDATE Pupil
+SET YearGroup = "S5"
+WHERE YearGroup = "S4";</pre>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="delete">DELETE FROM … WHERE …</h2>
+        <p><code>DELETE FROM</code> removes <strong>whole records</strong> — you cannot delete just one field from a record:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — DELETE FROM</div>
+          <pre>DELETE FROM Car
+WHERE Colour = "Red";
+
+-- Compound condition
+DELETE FROM Car
+WHERE Year &gt;= 2009 AND Year &lt;= 2018;</pre>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>Always use a WHERE clause</strong> with UPDATE and DELETE — without one, the command changes or removes <em>every record in the table</em>.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="test-yourself">Test Yourself</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Q1 — Write the queries (3 marks)</div>
+          <p>A Member table has the fields: memberID, forename, surname, town. Write SQL to:</p>
+          <ol type="a">
+            <li>Add member 205, "Eilidh", "Ross", from "Troon".</li>
+            <li>Change every member from "Prestwick" to "Ayr".</li>
+            <li>Remove member 118.</li>
+          </ol>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Suggested answers</div>
+                <pre>INSERT INTO Member
+VALUES (205, "Eilidh", "Ross", "Troon");
+
+UPDATE Member
+SET Town = "Ayr"
+WHERE Town = "Prestwick";
+
+DELETE FROM Member
+WHERE MemberID = 118;</pre>
+              </div>
+              <p>1 mark each for a correct INSERT (values in field order), UPDATE (SET before WHERE) and DELETE (with WHERE).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Q2 — Explain the error (2 marks)</div>
+          <p>A pupil runs <code>DELETE FROM Member;</code> intending to remove one member. Describe what actually happens, and how the query should have been written.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Every record in the Member table is deleted, because there is no WHERE clause (1 mark). It should include a condition identifying the member, e.g. <code>DELETE FROM Member WHERE MemberID = …;</code> (1 mark).</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
