@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-depth="1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Input &amp; Output — SDD — National 5 Computing Science</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<script src="../js/nav.js"></script>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a><span class="sep">›</span>
+    <a href="index.html">Software Design &amp; Development</a><span class="sep">›</span>
+    <span class="current">User Input &amp; Output</span>
+  </div>
+</div>
+<section class="page-hero hero-image hero-sdd">
+  <div class="inner">
+    <div class="hero-badge">Software Design &amp; Development</div>
+    <h1>User Input &amp; Output</h1>
+    <p>Displaying messages on screen with print(), getting data from the keyboard with input(), and making sure numbers arrive as numbers.</p>
+  </div>
+</section>
+<main class="page-content">
+  <div class="content-layout">
+    <aside class="content-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sn-header">💻 SDD Topics</div>
+        <ul>
+          <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
+          <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
+          <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
+          <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
+          <li><a href="input-output.html" class="active"><span class="sn-icon">⌨️</span>User Input &amp; Output</a></li>
+          <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
+          <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
+          <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
+          <li><a href="loops.html"><span class="sn-icon">🔁</span>Loops</a></li>
+          <li><a href="standard-algorithms.html"><span class="sn-icon">📊</span>Standard Algorithms</a></li>
+          <li><a href="testing.html"><span class="sn-icon">✅</span>Testing</a></li>
+          <li><a href="evaluation.html"><span class="sn-icon">⭐</span>Evaluation</a></li>
+          <li><a href="coursework-prep.html"><span class="sn-icon">📝</span>Coursework Prep</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar-nav" aria-label="Page sections">
+        <div class="sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#output">Output with print()</a></li>
+          <li><a href="#comments">Internal Comments</a></li>
+          <li><a href="#input">User Input with input()</a></li>
+          <li><a href="#numbers">Inputting Numbers — Casting</a></li>
+          <li><a href="#together">Putting It Together</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="content-area">
+
+      <article>
+        <h2 id="intro">Introduction</h2>
+        <p>Time to actually write some Python! Every useful program does two things at its edges: it <strong>outputs</strong> information to the user, and it takes <strong>input</strong> from them. Think about Netflix or a game — the software constantly shows you things and responds to what you do. A program with no input is static; a program with no output is pointless. (Who's it for?)</p>
+        <p>This page covers the basics of both — no calculations or clever processing yet, just getting data in and out.</p>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Output</div><div class="def">Information the program displays to the user — in Python, with the <code>print()</code> statement.</div></div>
+          <div class="key-term"><div class="term">Input</div><div class="def">Data the user enters from the keyboard — in Python, with the <code>input()</code> statement.</div></div>
+          <div class="key-term"><div class="term">Prompt</div><div class="def">The message shown to the user telling them what to enter.</div></div>
+          <div class="key-term"><div class="term">Casting</div><div class="def">Converting input to the right data type with <code>int()</code> or <code>float()</code> — because everything typed at the keyboard arrives as a string.</div></div>
+          <div class="key-term"><div class="term">Internal comment</div><div class="def">A line starting with <code>#</code> that the computer ignores — it's there to explain the code to humans.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> input and output appear inside almost every program you'll <strong>read, explain and write</strong> — and in reference language questions they look like <code>RECEIVE … FROM KEYBOARD</code> and <code>SEND … TO DISPLAY</code>.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="output">Output with print()</h2>
+        <p>The <code>print()</code> statement displays information on screen. Put the message you want inside the brackets — literal text goes in <strong>quotation marks</strong>:</p>
+        <div class="code-block">
+          <div class="code-label">Python — printing messages</div>
+          <pre>print("Hello world")
+print("Welcome to National 5")</pre>
+        </div>
+        <p>To display what's <em>inside</em> a variable, use its name <strong>without</strong> quotation marks. With quotes, Python prints the literal text; without, it prints the contents:</p>
+        <div class="code-block">
+          <div class="code-label">Python — printing a variable</div>
+          <pre>name = "Aisha"
+print(name)        # displays: Aisha
+print("name")      # displays: name  (probably not what you wanted!)</pre>
+        </div>
+        <p>In SQA reference language — which is how output appears in exam papers — the same idea is written as:</p>
+        <div class="code-block">
+          <div class="code-label">SQA Reference Language</div>
+          <pre>SEND "My name is: " &amp; name TO DISPLAY</pre>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="comments">Internal Comments</h2>
+        <p>Any line starting with a <code>#</code> is an <strong>internal comment</strong>. The computer ignores these lines completely (na na na na, can't hear you) — they exist to explain the code to whoever reads it: you, another programmer, or the person marking your assignment.</p>
+        <div class="code-block">
+          <div class="code-label">Python — comments</div>
+          <pre># This program displays a welcome message
+# Written by G. Currie
+
+print("Welcome!")   # this line runs — the comments are skipped</pre>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Get into the habit now: comment every program you write. Internal commentary is one of the four things that make code <strong>readable</strong> — and readability earns marks. More on the <a href="evaluation.html">Evaluation</a> page.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="input">User Input with input()</h2>
+        <p>When you want the user to enter data, use an <strong>input statement</strong>. The message in the brackets is the <strong>prompt</strong> — it tells the user what you're asking for:</p>
+        <div class="code-block">
+          <div class="code-label">Python — inputting strings</div>
+          <pre># Enter some data from the keyboard
+name = input("Please enter your name: ")
+title = input("Enter book title: ")
+author = input("Enter book author: ")</pre>
+        </div>
+        <p>Whatever the user types gets stored in the variable on the left. You'll use <code>input()</code> in almost every program you write this year.</p>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Write helpful prompts! <code>input("Enter number: ")</code> — what number? Of what? A clear prompt like <code>"Enter the number of tickets (1-6): "</code> makes your program far easier to use.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="numbers">Inputting Numbers — Casting</h2>
+        <p>Here's the catch: <strong>everything typed at the keyboard arrives as a string</strong>. If the user types 15, your program receives the text <code>"15"</code> — which you can't do maths with. Before calculating, you must convert (<strong>cast</strong>) the input to the right data type:</p>
+        <div class="code-block">
+          <div class="code-label">Python — casting input</div>
+          <pre># Strings need no conversion
+name = input("Please enter your name: ")
+
+# For an integer (whole number), wrap the input in int( )
+age = int(input("Enter your age: "))
+
+# For a real number (decimals), wrap it in float( )
+price = float(input("Enter the price: "))</pre>
+        </div>
+        <p>Match the cast to the data type you identified back in analysis: whole number → <code>int()</code>, decimal → <code>float()</code>, text → no cast needed.</p>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>Forgetting <code>int()</code> or <code>float()</code> is one of the most common N5 mistakes — the program crashes (or behaves very strangely) the moment you try a calculation. If your maths "isn't working", check your casts first.</div>
+        </div>
+        <p>In reference language, the data type is shown in brackets instead:</p>
+        <div class="code-block">
+          <div class="code-label">SQA Reference Language</div>
+          <pre>RECEIVE name FROM (STRING) KEYBOARD
+RECEIVE age FROM (INTEGER) KEYBOARD
+RECEIVE height FROM (REAL) KEYBOARD</pre>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="together">Putting It Together</h2>
+        <p>A complete (if nosy) little program using everything on this page — comments, inputs with the right casts, and outputs:</p>
+        <div class="code-block">
+          <div class="code-label">Python — inputs and outputs, no processing</div>
+          <pre># Ask the user about themselves
+name = input("Please enter your name: ")
+age = int(input("Please enter your age: "))
+height = float(input("Please enter your height in metres: "))
+
+# Play it all back to them
+print("Hello " + name)
+print(age)
+print(height)</pre>
+        </div>
+        <p>Notice there's no processing here at all — data in, data straight back out. The interesting bit in the middle (doing something with the data) starts on the <a href="calculations.html">Calculations</a> page.</p>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎛️</span>
+          <em>Placeholder — try it yourself</em>
+          Suggestion: an embedded runnable Python editor (e.g. a Trinket/Skulpt-style widget) preloaded with the program above, so pupils can run it, change the prompts and break the casts to see what happens.
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

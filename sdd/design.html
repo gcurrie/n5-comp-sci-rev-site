@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Software Design &amp; Development</div>
     <h1>Design</h1>
-    <p>User-interface design with wireframes, and the three design techniques — structure diagrams, flowcharts and pseudocode.</p>
+    <p>Designing the user interface from your inputs and outputs, and planning the logic with structure diagrams, flowcharts and pseudocode.</p>
   </div>
 </section>
 <main class="page-content">
@@ -31,9 +31,8 @@
           <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
           <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
           <li><a href="design.html" class="active"><span class="sn-icon">📐</span>Design</a></li>
-          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
           <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
-          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="input-output.html"><span class="sn-icon">⌨️</span>User Input &amp; Output</a></li>
           <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
           <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
           <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
@@ -49,10 +48,11 @@
         <ul>
           <li><a href="#intro">Introduction</a></li>
           <li><a href="#ui-design">User-Interface Design</a></li>
+          <li><a href="#notations">One Design, Three Notations</a></li>
           <li><a href="#structure-diagrams">Structure Diagrams</a></li>
           <li><a href="#flowcharts">Flowcharts</a></li>
           <li><a href="#pseudocode">Pseudocode</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#refinement">Stepwise Refinement</a></li>
         </ul>
       </nav>
     </aside>
@@ -60,126 +60,154 @@
 
       <article>
         <h2 id="intro">Introduction</h2>
-        <p>In the <strong>Design</strong> stage, the purpose and requirements from analysis are turned into plans. Three things are designed:</p>
+        <p>In the <strong>design</strong> phase, we take everything we learned in <a href="analysis.html">analysis</a> and plan the solution — <em>before</em> writing any code. Two things get designed:</p>
         <ul>
-          <li>what the <strong>user interface</strong> will look like — using a <strong>wireframe</strong></li>
-          <li>what <strong>data</strong> the program will store — the data types and structures</li>
-          <li>how the program will carry out its functions — the <strong>algorithm design</strong>, using a design technique</li>
+          <li>what the program will <strong>look like</strong> — the <strong>user interface</strong>, designed with a wireframe</li>
+          <li>how the program will <strong>work</strong> — the <strong>algorithm</strong>, designed with a design notation</li>
         </ul>
-        <p>At National 5 you must be able to <strong>describe, identify, read and understand</strong> all three design techniques — <strong>structure diagrams</strong>, <strong>flowcharts</strong> and <strong>pseudocode</strong> — and use at least one of them to design efficient solutions to a problem.</p>
+        <p>Skipping design and diving straight into code feels faster… right up until your program turns into a tangled mess and you can't remember what it was meant to do. Trust the process!</p>
 
         <h3>Key Terms</h3>
         <div class="key-terms">
-          <div class="key-term"><div class="term">Wireframe</div><div class="def">A sketch of the user interface showing the position of inputs and outputs, with annotations explaining functionality.</div></div>
-          <div class="key-term"><div class="term">Structure diagram</div><div class="def">A diagram that breaks a task into smaller chunks, read top-to-bottom and left-to-right.</div></div>
-          <div class="key-term"><div class="term">Flowchart</div><div class="def">A diagram of standard symbols and arrows showing the order of events in a program.</div></div>
-          <div class="key-term"><div class="term">Pseudocode</div><div class="def">A line-by-line plan of the program written in structured English rather than actual code.</div></div>
+          <div class="key-term"><div class="term">User interface</div><div class="def">The parts of the program the user sees and interacts with — where they enter data and read results.</div></div>
+          <div class="key-term"><div class="term">Wireframe</div><div class="def">A sketch of the user interface showing the position of each input and output, with annotations.</div></div>
+          <div class="key-term"><div class="term">Design notation</div><div class="def">A way of writing down an algorithm: structure diagrams, flowcharts or pseudocode.</div></div>
+          <div class="key-term"><div class="term">Structure diagram</div><div class="def">Breaks the task into smaller chunks — read top-to-bottom, left-to-right.</div></div>
+          <div class="key-term"><div class="term">Flowchart</div><div class="def">Standard symbols joined by arrows showing the order of events — read by following the arrows.</div></div>
+          <div class="key-term"><div class="term">Pseudocode</div><div class="def">A line-by-line plan of the program written in structured English, not real code.</div></div>
+          <div class="key-term"><div class="term">Stepwise refinement</div><div class="def">Breaking big steps down into smaller and smaller steps until each one is simple enough to code.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe, identify, read and understand</strong> all three design notations, <strong>use one of them</strong> to design your own solutions, and <strong>describe, exemplify and implement</strong> a user-interface design using a wireframe.</div>
         </div>
       </article>
 
       <article>
         <h2 id="ui-design">User-Interface Design — Wireframes</h2>
-        <p>A <strong>user</strong> is someone operating the program, and the <strong>user interface</strong> is the parts of the program the user interacts with. Think of Netflix: users browse films and shows, view details about each one, then select something to watch — all through the interface.</p>
-        <p>Designing the interface matters because it shows the programmer what <strong>input</strong> and <strong>output</strong> is required and how the user will interact with the program. A wireframe can be hand-drawn or made with software, and should show:</p>
+        <p>A <strong>user</strong> is anyone operating the program, and the <strong>user interface</strong> is everything they interact with. Think about Netflix: you browse shows, read details, press play — all through its interface. You never see the code underneath, and you don't need to.</p>
+        <p>Here's the clever bit: you've already done most of the work for your UI design during analysis. The <strong>inputs</strong> tell you what the user needs to enter, and the <strong>outputs</strong> tell you what the program needs to display. A wireframe is just those inputs and outputs arranged on the screen.</p>
+        <p>A wireframe can be hand-drawn or made with software, and should show:</p>
         <ul>
-          <li>the <strong>positioning</strong> of each element (inputs, outputs, buttons, labels)</li>
-          <li><strong>annotations</strong> explaining what each element does</li>
+          <li>the <strong>position</strong> of every input and output on the screen</li>
+          <li><strong>annotations</strong> explaining what each part does</li>
         </ul>
 
         <div class="example-block">
-          <div class="example-label">Wireframe — text-based interface (weekly pay program)</div>
-          <p>For a console program, the wireframe shows each prompt the computer displays and the response the user types:</p>
+          <div class="example-label">Building a UI from the analysis — Exam Scores program</div>
+          <p>From the analysis page: the inputs are three exam marks, and the output is the total with a message. For a text-based program, the wireframe shows each prompt and the space for the user's response:</p>
           <table>
             <thead><tr><th>Prompt (computer)</th><th>Response (user)</th></tr></thead>
             <tbody>
-              <tr><td>Enter how many hours you worked this week</td><td>___</td></tr>
-              <tr><td>Enter how many hours you worked on Saturday</td><td>___</td></tr>
-              <tr><td>Enter how many hours you worked on Sunday</td><td>___</td></tr>
-              <tr><td>Your pay this week is __________</td><td></td></tr>
+              <tr><td>Enter your Physics mark</td><td>___</td></tr>
+              <tr><td>Enter your Computing mark</td><td>___</td></tr>
+              <tr><td>Enter your Maths mark</td><td>___</td></tr>
+              <tr><td>Your total mark is ______</td><td></td></tr>
             </tbody>
           </table>
+          <p>Every input from the analysis has a prompt, and the output has a clearly marked space. That's all a text-based wireframe needs to show.</p>
         </div>
 
         <div class="img-placeholder">
           <span class="ph-icon">📷</span>
-          <em>Image to add</em>
-          Wireframes for the salary program — text-based and graphical (window) versions side by side — and a wireframe of the test mark example from the Analysis page.
+          <em>Placeholder — image</em>
+          Suggestion: side-by-side wireframes of the same Exam Scores program — the text-based version above next to a graphical (window) version with labelled entry boxes, a button annotated "click to calculate total", and an output area. Shows that the same inputs/outputs can be laid out for different kinds of interface.
         </div>
       </article>
 
       <article>
-        <h2 id="structure-diagrams">Structure Diagrams</h2>
-        <p>A <strong>structure diagram</strong> (or structure chart) is the first design notation. We use these to <strong>break the task down into smaller chunks</strong>. A structure diagram is useful for showing the sequence of steps needed to solve the problem, and it is always read <strong>from top-to-bottom and left-to-right</strong>. You can draw them on paper or with a free online tool such as <a href="https://www.drawio.com/" target="_blank" rel="noopener">draw.io</a>.</p>
-
-        <div class="worked-example">
-          <div class="q-label">Worked Example — Login Program</div>
-          <p><strong>Problem:</strong> a program asks for the user's username and password, checks if they are correct, and tells them whether or not they have been granted access.</p>
-          <p>The task splits into <strong>inputs → process → outputs</strong>, carried out left to right:</p>
-          <svg viewBox="0 0 640 210" role="img" aria-label="Structure diagram for a login program" style="max-width:640px;width:100%;height:auto;display:block;margin:1rem auto;">
-            <style>
-              .sd-box { fill:#fff; stroke:#00442A; stroke-width:2; }
-              .sd-top { fill:#00442A; }
-              .sd-txt { font:600 13px 'Public Sans',sans-serif; fill:#0d1f17; text-anchor:middle; }
-              .sd-txtw { font:700 14px 'Public Sans',sans-serif; fill:#fff; text-anchor:middle; }
-              .sd-line { stroke:#00442A; stroke-width:1.6; }
-            </style>
-            <rect class="sd-top" x="245" y="12" width="150" height="42" rx="6"/>
-            <text class="sd-txtw" x="320" y="38">Login Program</text>
-            <line class="sd-line" x1="320" y1="54" x2="320" y2="78"/>
-            <line class="sd-line" x1="110" y1="78" x2="530" y2="78"/>
-            <line class="sd-line" x1="110" y1="78" x2="110" y2="96"/>
-            <line class="sd-line" x1="320" y1="78" x2="320" y2="96"/>
-            <line class="sd-line" x1="530" y1="78" x2="530" y2="96"/>
-            <rect class="sd-box" x="20" y="96" width="180" height="46" rx="6"/>
-            <text class="sd-txt" x="110" y="116">Get username</text>
-            <text class="sd-txt" x="110" y="132">and password</text>
-            <rect class="sd-box" x="230" y="96" width="180" height="46" rx="6"/>
-            <text class="sd-txt" x="320" y="116">Check if they</text>
-            <text class="sd-txt" x="320" y="132">are valid</text>
-            <rect class="sd-box" x="440" y="96" width="180" height="46" rx="6"/>
-            <text class="sd-txt" x="530" y="116">Tell user if they</text>
-            <text class="sd-txt" x="530" y="132">have access</text>
-            <line class="sd-line" x1="110" y1="142" x2="110" y2="160"/>
-            <line class="sd-line" x1="60" y1="160" x2="160" y2="160"/>
-            <line class="sd-line" x1="60" y1="160" x2="60" y2="170"/>
-            <line class="sd-line" x1="160" y1="160" x2="160" y2="170"/>
-            <rect class="sd-box" x="14" y="170" width="92" height="32" rx="6"/>
-            <text class="sd-txt" x="60" y="190">Get username</text>
-            <rect class="sd-box" x="118" y="170" width="92" height="32" rx="6"/>
-            <text class="sd-txt" x="164" y="190">Get password</text>
-          </svg>
-          <p>Notice how the first step has been <strong>decomposed</strong> further into "Get username" and "Get password" — breaking big steps into smaller ones is exactly what structure diagrams are for.</p>
+        <h2 id="notations">One Design, Three Notations</h2>
+        <p>Now for the program's logic. There are <strong>three design notations</strong> at National 5, and the best way to understand them is to see the <strong>same program designed in all three</strong>.</p>
+        <p>Our program: <em>ask the user for two test scores, add them together, and display the total.</em> Watch how each notation describes exactly the same solution in its own way.</p>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>In the exam you can be shown <em>any</em> of the three and asked to read it, complete it or find a mistake in it. When designing your own solution (including in the assignment), you only need to use <strong>one</strong> — whichever suits you.</div>
         </div>
+      </article>
+
+      <article>
+        <h2 id="structure-diagrams">Notation 1 — Structure Diagrams</h2>
+        <p>A <strong>structure diagram</strong> breaks the task into smaller chunks, arranged in a hierarchy. It is always read <strong>top-to-bottom and left-to-right</strong>. You can draw them on paper or with a free tool such as <a href="https://www.drawio.com/" target="_blank" rel="noopener">draw.io</a>.</p>
+
+        <svg viewBox="0 0 640 160" role="img" aria-label="Structure diagram for the add two scores program" style="max-width:640px;width:100%;height:auto;display:block;margin:1rem auto;">
+          <style>
+            .sd-box { fill:#fff; stroke:#00442A; stroke-width:2; }
+            .sd-top { fill:#00442A; }
+            .sd-txt { font:600 13px 'Public Sans',sans-serif; fill:#0d1f17; text-anchor:middle; }
+            .sd-txtw { font:700 14px 'Public Sans',sans-serif; fill:#fff; text-anchor:middle; }
+            .sd-line { stroke:#00442A; stroke-width:1.6; }
+          </style>
+          <rect class="sd-top" x="245" y="12" width="150" height="42" rx="6"/>
+          <text class="sd-txtw" x="320" y="38">Total Score</text>
+          <line class="sd-line" x1="320" y1="54" x2="320" y2="78"/>
+          <line class="sd-line" x1="110" y1="78" x2="530" y2="78"/>
+          <line class="sd-line" x1="110" y1="78" x2="110" y2="96"/>
+          <line class="sd-line" x1="320" y1="78" x2="320" y2="96"/>
+          <line class="sd-line" x1="530" y1="78" x2="530" y2="96"/>
+          <rect class="sd-box" x="20" y="96" width="180" height="46" rx="6"/>
+          <text class="sd-txt" x="110" y="116">Get the two</text>
+          <text class="sd-txt" x="110" y="132">test scores</text>
+          <rect class="sd-box" x="230" y="96" width="180" height="46" rx="6"/>
+          <text class="sd-txt" x="320" y="116">Add the scores</text>
+          <text class="sd-txt" x="320" y="132">together</text>
+          <rect class="sd-box" x="440" y="96" width="180" height="46" rx="6"/>
+          <text class="sd-txt" x="530" y="116">Display the</text>
+          <text class="sd-txt" x="530" y="132">total</text>
+        </svg>
+
+        <p>Spot the pattern? The three boxes are the program's <strong>inputs → processes → outputs</strong>, straight from the analysis. Structure diagrams are brilliant at showing the big picture of a solution at a glance.</p>
 
         <h3>Structure diagram symbols</h3>
-        <p>There are <strong>four different symbols</strong> that can be used on a structure diagram:</p>
+        <p>There are <strong>four symbols</strong> that can appear on a structure diagram:</p>
         <table>
           <thead><tr><th>Symbol</th><th>Used for</th></tr></thead>
           <tbody>
-            <tr><td><strong>Process</strong></td><td>Notes a process, such as a calculation.</td></tr>
-            <tr><td><strong>Loop</strong></td><td>Shows that part of the problem repeats a fixed number of times, or repeats while a condition is met.</td></tr>
-            <tr><td><strong>Selection</strong></td><td>Shows that the problem may branch, depending on the conditions met.</td></tr>
+            <tr><td><strong>Process</strong></td><td>A step the program carries out, such as a calculation.</td></tr>
+            <tr><td><strong>Loop</strong></td><td>Shows that the steps below it repeat — a fixed number of times, or while a condition is met.</td></tr>
+            <tr><td><strong>Selection</strong></td><td>Shows the program branching, depending on a condition.</td></tr>
             <tr><td><strong>Pre-defined process</strong></td><td>Shows the use of a pre-defined function or procedure.</td></tr>
           </tbody>
         </table>
         <div class="img-placeholder">
           <span class="ph-icon">📷</span>
-          <em>Image to add</em>
-          The four SQA structure diagram symbols (process, loop, selection, pre-defined process) as they appear in exam papers.
-        </div>
-
-        <h3>Showing repetition</h3>
-        <p>Suppose a program that added <strong>two</strong> numbers is changed to add <strong>five</strong> numbers. Rather than drawing five separate "get number" boxes, a <strong>loop symbol</strong> is added above the repeated steps — the diagram below it is then carried out on every pass of the loop.</p>
-        <div class="img-placeholder">
-          <span class="ph-icon">📷</span>
-          <em>Image to add</em>
-          Two versions of the "add five numbers" structure diagram — the long version with five repeated boxes, and the simplified version using a loop symbol ("repeat 5 times").
+          <em>Placeholder — image</em>
+          Suggestion: the four SQA structure diagram symbols exactly as drawn in exam papers (process, loop, selection, pre-defined process), so pupils recognise them on sight.
         </div>
       </article>
 
       <article>
-        <h2 id="flowcharts">Flowcharts</h2>
-        <p><strong>Flowcharts</strong> are used to show the sequence of steps in a program. We read the flowchart from <strong>top-to-bottom, following the arrows</strong>. You can use a flowchart with any program, but they are especially good at clearly showing <strong>decisions</strong> and <strong>loops</strong>.</p>
+        <h2 id="flowcharts">Notation 2 — Flowcharts</h2>
+        <p>A <strong>flowchart</strong> shows the same sequence of steps, but joined by arrows. You read it from <strong>top to bottom, following the arrows</strong>. Flowcharts work for any program, but they're especially good at showing <strong>decisions</strong> and <strong>loops</strong> clearly.</p>
+
+        <p>Here's our two-scores program again — same logic, different notation:</p>
+        <svg viewBox="0 0 320 420" role="img" aria-label="Flowchart for the add two scores program" style="max-width:300px;width:100%;height:auto;display:block;margin:1rem auto;">
+          <style>
+            .fl-shape { fill:#fff; stroke:#00442A; stroke-width:2; }
+            .fl-txt { font:600 12.5px 'Public Sans',sans-serif; fill:#0d1f17; text-anchor:middle; }
+            .fl-line { stroke:#00442A; stroke-width:1.8; fill:none; marker-end:url(#arr2); }
+          </style>
+          <defs>
+            <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#00442A"/>
+            </marker>
+          </defs>
+          <rect class="fl-shape" x="100" y="10" width="120" height="38" rx="19"/>
+          <text class="fl-txt" x="160" y="33">Start</text>
+          <path class="fl-line" d="M160 48 L160 70"/>
+          <polygon class="fl-shape" points="110,74 270,74 250,114 90,114"/>
+          <text class="fl-txt" x="180" y="98">Get two test scores</text>
+          <path class="fl-line" d="M160 114 L160 136"/>
+          <rect class="fl-shape" x="80" y="140" width="160" height="42"/>
+          <text class="fl-txt" x="160" y="157">total = score1 +</text>
+          <text class="fl-txt" x="160" y="173">score2</text>
+          <path class="fl-line" d="M160 182 L160 204"/>
+          <polygon class="fl-shape" points="110,208 270,208 250,248 90,248"/>
+          <text class="fl-txt" x="180" y="232">Display total</text>
+          <path class="fl-line" d="M160 248 L160 270"/>
+          <rect class="fl-shape" x="100" y="274" width="120" height="38" rx="19"/>
+          <text class="fl-txt" x="160" y="297">Stop</text>
+        </svg>
 
         <h3>Flowchart symbols</h3>
         <svg viewBox="0 0 660 150" role="img" aria-label="The four main flowchart symbols" style="max-width:660px;width:100%;height:auto;display:block;margin:1rem auto;">
@@ -206,131 +234,69 @@
           <text class="fc-cap" x="585" y="120">yes / no branches</text>
         </svg>
         <ul>
-          <li>A <strong>parallelogram</strong> is used for input/output.</li>
-          <li>A <strong>diamond</strong> is used to make a decision — decisions must have yes/no branches.</li>
-          <li>Flowcharts should always mark the start and end with <strong>rounded (terminal) symbols</strong>.</li>
-          <li>A <strong>rectangle</strong> is used for any other task, e.g. a calculation.</li>
+          <li>The <strong>rounded (terminal)</strong> symbols always mark the start and end.</li>
+          <li>A <strong>parallelogram</strong> is used for input and output.</li>
+          <li>A <strong>rectangle</strong> is used for any other task, such as a calculation.</li>
+          <li>A <strong>diamond</strong> makes a decision — and decisions must have <strong>yes/no branches</strong>.</li>
         </ul>
-        <div class="callout callout-info">
-          <div class="callout-icon">ℹ️</div>
-          <div>The full SQA symbol set also includes a <strong>flow line</strong> (arrow), an <strong>initialisation</strong> symbol (declaring variables or setting starting values), a <strong>pre-defined process</strong>, and an <strong>on-page connector</strong> used to split a flowchart across a page.</div>
-        </div>
-
-        <h3>Loops in flowcharts</h3>
-        <p>Flowcharts don't have a specific loop symbol. Instead, a loop is shown as a <strong>decision with the arrows going up/backwards</strong>.</p>
-
-        <div class="worked-example">
-          <div class="q-label">Worked Example — Password Check Loop</div>
-          <p>If the password is not correct, the program shows an error message, and the arrow points <strong>back</strong> towards asking for the password again. The loop continues until the user enters a correct password, breaking the loop.</p>
-          <svg viewBox="0 0 420 470" role="img" aria-label="Flowchart showing a password validation loop" style="max-width:420px;width:100%;height:auto;display:block;margin:1rem auto;">
-            <style>
-              .fl-shape { fill:#fff; stroke:#00442A; stroke-width:2; }
-              .fl-txt { font:600 12.5px 'Public Sans',sans-serif; fill:#0d1f17; text-anchor:middle; }
-              .fl-lab { font:700 12px 'Public Sans',sans-serif; fill:#92750A; text-anchor:middle; }
-              .fl-line { stroke:#00442A; stroke-width:1.8; fill:none; marker-end:url(#arr); }
-            </style>
-            <defs>
-              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#00442A"/>
-              </marker>
-            </defs>
-            <rect class="fl-shape" x="150" y="12" width="120" height="40" rx="20"/>
-            <text class="fl-txt" x="210" y="36">Start</text>
-            <path class="fl-line" d="M210 52 L210 76"/>
-            <polygon class="fl-shape" points="160,80 280,80 262,120 142,120"/>
-            <text class="fl-txt" x="211" y="104">Ask for password</text>
-            <path class="fl-line" d="M210 120 L210 150"/>
-            <polygon class="fl-shape" points="210,154 300,204 210,254 120,204"/>
-            <text class="fl-txt" x="210" y="200">Password</text>
-            <text class="fl-txt" x="210" y="216">correct?</text>
-            <text class="fl-lab" x="105" y="196">No</text>
-            <text class="fl-lab" x="222" y="276">Yes</text>
-            <path class="fl-line" d="M120 204 L58 204 L58 100 L138 100"/>
-            <rect class="fl-shape" x="16" y="284" width="140" height="44"/>
-            <text class="fl-txt" x="86" y="303">Display error</text>
-            <text class="fl-txt" x="86" y="319">message</text>
-            <path class="fl-line" d="M58 204 L58 240 L86 240 L86 280"/>
-            <path class="fl-line" d="M86 328 L86 360 L36 360 L36 150 L58 150"/>
-            <path class="fl-line" d="M210 254 L210 288"/>
-            <polygon class="fl-shape" points="160,292 280,292 262,332 142,332"/>
-            <text class="fl-txt" x="211" y="308">Display "Access</text>
-            <text class="fl-txt" x="211" y="324">granted"</text>
-            <path class="fl-line" d="M210 332 L210 362"/>
-            <rect class="fl-shape" x="150" y="366" width="120" height="40" rx="20"/>
-            <text class="fl-txt" x="210" y="390">Stop</text>
-          </svg>
+        <p>Flowcharts don't have a special loop symbol. Instead, a loop is drawn as a <strong>decision whose arrow points back up</strong> to an earlier step — the program keeps going round until the decision lets it escape. You'll see this in action on the <a href="loops.html">Loops</a> page.</p>
+        <div class="img-placeholder">
+          <span class="ph-icon">📷</span>
+          <em>Placeholder — diagram</em>
+          Suggestion: a flowchart showing a loop — e.g. a password check where the "No" branch arrows back up to "Ask for password". Could be animated: a dot travels the arrows and visibly goes round the loop until the condition is met.
         </div>
       </article>
 
       <article>
-        <h2 id="pseudocode">Pseudocode</h2>
-        <p><strong>Pseudocode</strong> is a way of planning your program <strong>line-by-line, without writing actual code</strong>. It is less rigid than a programming language, is written in English, and has no strict formatting rules — what matters is breaking the problem down into clear steps.</p>
-        <p>The design begins with the <strong>main steps (algorithm)</strong>. Where a step needs more detail, it is expanded in numbered <strong>refinements</strong> — step 1 becomes 1.1, 1.2, 1.3, and so on. Each refinement should eventually translate into a line or two of actual code.</p>
+        <h2 id="pseudocode">Notation 3 — Pseudocode</h2>
+        <p><strong>Pseudocode</strong> plans the program <strong>line-by-line, in English, without writing actual code</strong>. There are no strict formatting rules — what matters is breaking the problem into clear, ordered steps. Here's our two-scores program one more time:</p>
+        <div class="code-block">
+          <div class="code-label">Pseudocode — the same design again</div>
+          <pre>1  Ask the user to enter the two test scores
+2  Add the two scores together
+3  Display the total with a message</pre>
+        </div>
+        <p>Same three steps as the structure diagram, same order as the flowchart. All three notations describe one algorithm — they just draw it differently.</p>
+      </article>
 
-        <div class="worked-example">
-          <div class="q-label">Worked Example — Swimming Pool Volume (SQA example)</div>
+      <article>
+        <h2 id="refinement">Stepwise Refinement</h2>
+        <p>Look at step 1 above: "Ask the user to enter the two test scores." That's actually <em>two</em> things to code. Real problems are full of steps like this — too big to turn straight into a line of code. The fix is <strong>stepwise refinement</strong>: keep breaking big steps into smaller ones until each step is small enough to become a line or two of code.</p>
+        <p>In pseudocode, refinements are numbered after the step they expand — step 1 becomes 1.1, 1.2, and so on:</p>
+        <div class="code-block">
+          <div class="code-label">Pseudocode — algorithm with refinements</div>
+          <pre>Algorithm
+1  Ask the user to enter the two test scores
+2  Add the two scores together
+3  Display the total with a message
+
+Refinement
+1.1  Ask the user to enter the first score
+1.2  Ask the user to enter the second score
+2.1  total is calculated as score1 + score2
+3.1  Display "Your total mark is ", total</pre>
+        </div>
+        <p>In a structure diagram, the same idea appears as a box splitting into smaller boxes below it. It's exactly the same thinking — big chunk, broken down.</p>
+        <div class="example-block">
+          <div class="example-label">A bigger example — swimming pool volume (SQA's own example)</div>
           <div class="code-block">
-            <div class="code-label">Algorithm</div>
-            <pre>1  Ask user to enter dimensions of a swimming pool in metres
+            <div class="code-label">Pseudocode</div>
+            <pre>Algorithm
+1  Ask user to enter dimensions of a swimming pool in metres
 2  Calculate volume of pool
-3  Display message stating the volume of the pool</pre>
-          </div>
-          <div class="code-block">
-            <div class="code-label">Refinement</div>
-            <pre>1.1  Ask user to enter length of pool
+3  Display message stating the volume of the pool
+
+Refinement
+1.1  Ask user to enter length of pool
 1.2  Ask user to enter width of pool
 1.3  Ask user to enter depth of pool
 2.1  Volume is calculated as length * width * depth
 3.1  Display "The volume of the pool is", volume</pre>
           </div>
         </div>
-
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>Indentation can be used in pseudocode to highlight <strong>selection</strong> and <strong>repetition</strong> — just like indenting inside an <code>if</code> or a loop in Python.</div>
-        </div>
-      </article>
-
-      <article>
-        <h2 id="test-yourself">Test Yourself</h2>
-
-        <div class="practice-question">
-          <div class="q-label">Q1 — Design techniques (2 marks)</div>
-          <p>Name the <strong>three</strong> design techniques you could use to design a program's logic at National 5, and state <strong>one</strong> thing a wireframe is used to design.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">Structure diagram, flowchart, pseudocode (1 mark). A wireframe designs the user interface — the layout of the program's inputs and outputs (1 mark).</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q2 — Reading a flowchart (2 marks)</div>
-          <p>In a flowchart, state the purpose of: a) a diamond symbol; b) a parallelogram symbol.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">a) A decision — the program branches depending on a condition, with yes/no branches (1 mark).<br/>b) Input or output — data being entered or displayed (1 mark).</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q3 — Writing pseudocode (3 marks)</div>
-          <p>Write pseudocode (algorithm only) for a program that asks the user for the price of a meal, calculates a 10% tip, and displays the total cost including the tip.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p>One mark for each correct step in a sensible order:</p>
-              <div class="code-block">
-                <div class="code-label">Suggested answer</div>
-                <pre>1  Ask the user to enter the price of the meal
-2  Calculate the total as price + (price * 0.1)
-3  Display the total cost including tip</pre>
-              </div>
-            </div>
-          </details>
+          <div>A good refinement test: <em>could I turn this line into code right now?</em> If yes, stop refining. If you're still not sure how you'd code it, break it down further. Get comfortable with this — it's the thinking skill behind every design you'll write in the assignment.</div>
         </div>
       </article>
 

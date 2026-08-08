@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Software Design &amp; Development</div>
     <h1>Evaluation</h1>
-    <p>Judging a finished program on fitness for purpose, efficient use of coding constructs, robustness and readability.</p>
+    <p>Judging a finished program on the four National 5 criteria: fitness for purpose, efficient use of coding constructs, robustness and readability.</p>
   </div>
 </section>
 <main class="page-content">
@@ -31,9 +31,8 @@
           <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
           <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
           <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
-          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
           <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
-          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="input-output.html"><span class="sn-icon">⌨️</span>User Input &amp; Output</a></li>
           <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
           <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
           <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
@@ -47,96 +46,127 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
+          <li><a href="#intro">Introduction</a></li>
           <li><a href="#fitness">Fitness for Purpose</a></li>
           <li><a href="#efficiency">Efficiency</a></li>
           <li><a href="#robustness">Robustness</a></li>
           <li><a href="#readability">Readability</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
+        <h2 id="intro">Introduction</h2>
+        <p><strong>Evaluation</strong> is the final phase of the development process: stepping back from the finished program and judging it honestly. Not "does it run?" — you settled that in testing — but <em>is it actually any good?</em> At National 5 that judgement is made against <strong>four criteria</strong>, and each one gets its own section below, with a worked example of the kind of evaluation statement that earns marks.</p>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Fitness for purpose</div><div class="def">Does the program do everything the functional requirements said it must?</div></div>
+          <div class="key-term"><div class="term">Efficient use of coding constructs</div><div class="def">Does the code avoid unnecessary repetition and wasted checks — using loops and elif chains where it should?</div></div>
+          <div class="key-term"><div class="term">Robustness</div><div class="def">Does the program cope with exceptional data without crashing?</div></div>
+          <div class="key-term"><div class="term">Readability</div><div class="def">How easy the code is for a human to read — commentary, meaningful identifiers, indentation and white space.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe, identify and exemplify</strong> the evaluation of a solution against all four criteria — and in the assignment, you'll write a short evaluation of your own program.</div>
+        </div>
+      </article>
+
+      <article>
         <h2 id="fitness">Fitness for Purpose</h2>
-        <p>A program is <strong>fit for purpose</strong> if it does what it is supposed to do. The standard to judge against is the <strong>functional requirements</strong> set out in the analysis — if the program meets all of them, it is fit for purpose.</p>
+        <p>A program is <strong>fit for purpose</strong> if it does what it was supposed to do. And "supposed to" isn't a vibe — it's the <strong>functional requirements</strong> agreed way back in <a href="analysis.html">analysis</a>. Meet them all: fit for purpose. Miss any: not fit for purpose, no matter how nice the code looks.</p>
         <div class="example-block">
-          <div class="example-label">Example evaluation statements</div>
-          <ul>
-            <li>"The program <strong>is fit for purpose</strong>, because it asks the user their age, and shows an error if they enter a negative number."</li>
-            <li>"The program <strong>is not fit for purpose</strong>, as it is only supposed to accept percentages between 0 and 100, but it accepts values outside this range."</li>
-          </ul>
+          <div class="example-label">Worked example — evaluating fitness for purpose</div>
+          <p>The requirements said: <em>accept a percentage mark between 0 and 100, and display the matching grade.</em> The finished program displays grades correctly, but accepts a mark of 400 without complaint.</p>
+          <p><strong>Evaluation statement:</strong> "The program is <strong>not fully fit for purpose</strong>. It displays the correct grade for valid marks, but it was only supposed to accept percentages between 0 and 100 — it currently accepts values outside this range."</p>
+          <p>Notice the shape: a clear judgement, backed by a <em>specific</em> requirement. Compare a fit-for-purpose statement: "The program <strong>is fit for purpose</strong>, because it asks for the user's age and displays an error if a negative number is entered — meeting all the stated requirements."</p>
         </div>
         <div class="callout callout-warning">
           <div class="callout-icon">⚠️</div>
-          <div><strong>Don't be too kind!</strong> If it isn't fit for purpose, say so. Link your evaluation to <em>specific</em> requirements of the program — vague, hedging statements lose marks.</div>
+          <div><strong>Don't be too kind!</strong> If it isn't fit for purpose, say so. Vague, generous statements ("it mostly works fine") lose marks — always tie your judgement to the specific requirements.</div>
         </div>
       </article>
 
       <article>
         <h2 id="efficiency">Efficient Use of Coding Constructs</h2>
-        <p>Efficient code achieves its goal <strong>without unnecessary repetition</strong>. The SQA loves to show you an inefficient program and ask how to improve it. The two classic cases:</p>
+        <p>Efficient code gets the job done <strong>without unnecessary repetition or wasted checks</strong>. The SQA loves showing you an inefficient program and asking how to improve it — and the answer is almost always one of two constructs you already know.</p>
 
-        <h3>1. Repeated code → use a loop</h3>
-        <div class="code-block">
-          <div class="code-label">Python — inefficient vs efficient</div>
-          <pre># Inefficient — five separate lines     # Efficient — a fixed loop
-print("Hello!")                          for counter in range(5):
-print("Hello!")                              print("Hello!")
+        <h3>Repeated code? Use a loop</h3>
+        <div class="example-block">
+          <div class="example-label">Worked example — from repetition to a loop</div>
+          <div class="code-block">
+            <div class="code-label">Python — inefficient</div>
+            <pre>print("Hello!")
+print("Hello!")
 print("Hello!")
 print("Hello!")
 print("Hello!")</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-label">Python — efficient</div>
+            <pre>for counter in range(5):
+    print("Hello!")</pre>
+          </div>
+          <p><strong>Evaluation statement:</strong> "The program does not make efficient use of coding constructs — the same print statement is repeated five times. A <strong>fixed loop</strong> would achieve the same output with less code, and changing the message would only need one edit."</p>
         </div>
 
-        <h3>2. Separate IFs → use if/elif/else</h3>
-        <p>With separate <code>if</code> statements, <em>every</em> condition is checked even after the right one is found. With <code>if / elif / else</code>, checking stops at the first match:</p>
-        <div class="code-block">
-          <div class="code-label">Python — inefficient: three separate ifs</div>
-          <pre>if age == 15:
+        <h3>Separate ifs? Use elif (or a nested if)</h3>
+        <div class="example-block">
+          <div class="example-label">Worked example — from separate ifs to a chain</div>
+          <div class="code-block">
+            <div class="code-label">Python — inefficient: every condition is always checked</div>
+            <pre>if age == 15:
     year = "S4"
 if age == 16:
     year = "S5"
 if age == 17:
     year = "S6"</pre>
-        </div>
-        <div class="code-block">
-          <div class="code-label">Python — efficient: if / elif / else</div>
-          <pre>if age == 15:
+          </div>
+          <div class="code-block">
+            <div class="code-label">Python — efficient: checking stops at the first match</div>
+            <pre>if age == 15:
     year = "S4"
 elif age == 16:
     year = "S5"
 else:
     year = "S6"</pre>
+          </div>
+          <p>With three separate ifs, a 15-year-old is checked against <em>all three</em> conditions even though the first one matched. The <strong>elif chain</strong> stops as soon as it finds the answer — same result, fewer checks. The same logic applies to <a href="selection.html">nested ifs</a>: because the inner if is only reached when the outer condition is true, no impossible combinations ever get checked.</p>
         </div>
       </article>
 
       <article>
         <h2 id="robustness">Robustness</h2>
-        <p>A <strong>robust</strong> program doesn't crash when the user enters <strong>exceptional data</strong>. If an age program is given a negative number, it should display an error message and ask again — not fall over.</p>
-        <p>You evaluate robustness by testing with exceptional data and asking: <em>how does the program behave?</em> A program that crashes is not robust; one that handles the error gracefully is — and that's exactly what you should write in an evaluation.</p>
+        <p>A <strong>robust</strong> program doesn't crash when the user enters <strong>exceptional data</strong>. Users will type "five" when you asked for 5, press Enter on an empty box, and claim to be -7 years old — a robust program shrugs, shows an error message, and asks again.</p>
+        <p>How do you evaluate it? With your <a href="testing.html">exceptional test data</a>. Feed the program rubbish and watch what happens: a crash means not robust; a polite error message and a second chance means robust.</p>
+        <div class="example-block">
+          <div class="example-label">Worked example — evaluating robustness</div>
+          <p>During testing, entering an age of -7 made the program crash with an execution error.</p>
+          <p><strong>Evaluation statement:</strong> "The program is <strong>not robust</strong>, because entering the exceptional value -7 caused it to crash. Adding <strong>input validation</strong> — a conditional loop that rejects ages outside the valid range and asks again — would make the program robust."</p>
+        </div>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div><a href="standard-algorithms.html"><strong>Input validation</strong></a> should prevent most execution errors and make your program robust — the topics all link together!</div>
+          <div>Spot the connection: <a href="standard-algorithms.html">input validation</a> isn't just a standard algorithm to memorise — it's <em>the</em> tool that makes programs robust. Exam questions link the two constantly.</div>
         </div>
       </article>
 
       <article>
         <h2 id="readability">Readability</h2>
-        <p><strong>Readability</strong> is about making your program easy for you — or other programmers after you — to read and understand. There are <strong>four techniques</strong>, and you are expected to use them all in the assignment:</p>
-
+        <p><strong>Readability</strong> is about making your code easy for a human to understand — you in six months, another programmer, or the person marking your assignment. The computer couldn't care less what your variables are called; the humans reading your code care a lot. There are <strong>four techniques</strong>, and you're expected to use all of them:</p>
         <div class="key-terms">
-          <div class="key-term"><div class="term">Internal commentary</div><div class="def">Comments (lines starting #) explaining the code — ignored by the computer.</div></div>
-          <div class="key-term"><div class="term">Meaningful identifiers</div><div class="def">Variable names like <code>age</code> or <code>password</code> rather than <code>x</code> or <code>k</code>.</div></div>
-          <div class="key-term"><div class="term">Indentation</div><div class="def">Code inside ifs and loops is tabbed in, making the structure clear (Python requires it!).</div></div>
-          <div class="key-term"><div class="term">White space</div><div class="def">Blank lines between sections group related code together instead of jamming it up.</div></div>
+          <div class="key-term"><div class="term">Internal commentary</div><div class="def">Comments (lines starting <code>#</code>) explaining what the code does.</div></div>
+          <div class="key-term"><div class="term">Meaningful identifiers</div><div class="def">Names that say what they store — <code>age</code> and <code>password</code>, not <code>x</code> and <code>k</code>.</div></div>
+          <div class="key-term"><div class="term">Indentation</div><div class="def">Code inside ifs and loops is tabbed in, making the structure visible at a glance.</div></div>
+          <div class="key-term"><div class="term">White space</div><div class="def">Blank lines between sections, grouping related code instead of jamming it together.</div></div>
         </div>
-
-        <div class="worked-example">
-          <div class="q-label">Worked Example — all four techniques in one program</div>
+        <div class="example-block">
+          <div class="example-label">Worked example — all four techniques in one program</div>
           <div class="code-block">
             <div class="code-label">Python</div>
-            <pre># Ask the user to enter their name, reject if not a valid username
-username = input("Please enter your username:")
+            <pre># Ask the user to enter their username, reject if not valid
+username = input("Please enter your username: ")
 
 if username == "admin":
     print("Welcome, admin. What would you like to do?")
@@ -144,54 +174,16 @@ else:
     print("Access denied, go away...")</pre>
           </div>
           <ul>
-            <li><strong>Internal commentary</strong> — the # line at the top explains the program.</li>
+            <li><strong>Internal commentary</strong> — the <code>#</code> line explains the program's job.</li>
             <li><strong>Meaningful identifier</strong> — <code>username</code> says exactly what it stores.</li>
-            <li><strong>Indentation</strong> — the print statements are tabbed inside the if/else branches.</li>
-            <li><strong>White space</strong> — a blank line separates the input from the selection.</li>
+            <li><strong>Indentation</strong> — the print statements are tabbed inside their if/else branches.</li>
+            <li><strong>White space</strong> — a blank line separates the input from the decision.</li>
           </ul>
+          <p><strong>Evaluation statement:</strong> "The program is readable because it uses internal commentary to explain its purpose, a meaningful identifier (<code>username</code>), consistent indentation inside the selection, and white space to separate the input from the processing."</p>
         </div>
-      </article>
-
-      <article>
-        <h2 id="test-yourself">Test Yourself</h2>
-
-        <div class="practice-question">
-          <div class="q-label">Q1 — The four criteria (2 marks)</div>
-          <p>State the four criteria used to evaluate a program at National 5.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">Fitness for purpose; efficient use of coding constructs; robustness; readability (internal commentary, meaningful identifiers, indentation, white space). (2 marks for all four; 1 mark for two or three)</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q2 — Improve the efficiency (2 marks)</div>
-          <p>Describe how this code could be made more efficient, and name the construct you would use:</p>
-          <div class="code-block">
-            <pre>print("Line of a song")
-print("Line of a song")
-print("Line of a song")
-print("Line of a song")</pre>
-          </div>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">Replace the repeated print statements with a <strong>fixed loop</strong> that repeats 4 times (1 mark for identifying repetition, 1 mark for the fixed loop): <code>for counter in range(4): print("Line of a song")</code></p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q3 — Robustness (2 marks)</div>
-          <p>A program crashes when the user presses Enter without typing a number. Explain why the program is not robust, and describe how to fix it.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">It crashes on exceptional data instead of handling it (1 mark). Add input validation — a conditional loop that shows an error message and asks again until valid input is entered (1 mark).</p>
-            </div>
-          </details>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>One nuance for indentation: in Python it's actually <em>required</em> — the program won't run without it. So the readability point isn't just "indent" but indent <strong>consistently</strong>, so the structure of ifs and loops is obvious at a glance.</div>
         </div>
       </article>
 

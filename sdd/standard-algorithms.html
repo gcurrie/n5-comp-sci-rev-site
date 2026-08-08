@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Software Design &amp; Development</div>
     <h1>Standard Algorithms</h1>
-    <p>The three National 5 standard algorithms — input validation, running total within a loop, and traversing a 1-D array.</p>
+    <p>The three ready-made recipes every N5 candidate must know: input validation, running total, and traversing a 1-D array.</p>
   </div>
 </section>
 <main class="page-content">
@@ -31,9 +31,8 @@
           <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
           <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
           <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
-          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
           <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
-          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="input-output.html"><span class="sn-icon">⌨️</span>User Input &amp; Output</a></li>
           <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
           <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
           <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
@@ -51,7 +50,6 @@
           <li><a href="#input-validation">Input Validation</a></li>
           <li><a href="#running-total">Running Total</a></li>
           <li><a href="#traversing">Traversing a 1-D Array</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
         </ul>
       </nav>
     </aside>
@@ -59,38 +57,38 @@
 
       <article>
         <h2 id="intro">Introduction</h2>
-        <p>There are <strong>three standard algorithms</strong> in the National 5 course. You must be able to describe, exemplify and implement each one — and they come up in <strong>both the exam and the assignment</strong>:</p>
+        <p>Some programming problems come up so often that their solutions have become <strong>standard algorithms</strong> — recipes that every programmer knows by heart. At National 5 there are three, and they're built entirely from things you've already learned: loops, conditions, variables and arrays. Nothing new — just familiar pieces clicked together in a pattern worth memorising.</p>
+        <p>These three appear in <strong>both the exam and the assignment</strong>, so it's worth being able to write each one in your sleep.</p>
+
+        <h3>Key Terms</h3>
         <div class="key-terms">
-          <div class="key-term"><div class="term">Input validation</div><div class="def">Checking that input is acceptable, and asking again until it is.</div></div>
-          <div class="key-term"><div class="term">Running total within a loop</div><div class="def">Adding up a list of values, one per pass of a loop.</div></div>
-          <div class="key-term"><div class="term">Traversing a 1-D array</div><div class="def">Accessing each element of an array from first to last.</div></div>
+          <div class="key-term"><div class="term">Input validation</div><div class="def">Checking input is acceptable, and asking again (and again…) until it is.</div></div>
+          <div class="key-term"><div class="term">Running total</div><div class="def">Adding up a list of values one at a time inside a loop, keeping a cumulative total.</div></div>
+          <div class="key-term"><div class="term">Traversing a 1-D array</div><div class="def">Using a loop to visit every element of an array, from first to last.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe, exemplify and implement</strong> all three standard algorithms — and recognise them when <strong>reading</strong> code, whether it's written in Python or SQA reference language.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="input-validation">Input Validation</h2>
-        <p>Input validation checks that you have entered the <strong>right type of data</strong> in each place. Note: it's not checking that the data is actually <em>correct</em> — just that it is the right <em>sort</em> of data. Common examples: a password must have a minimum length; an age must be a sensible whole number; a percentage must be between 0 and 100.</p>
-        <p>The algorithm uses a <strong>conditional loop</strong>:</p>
+        <h2 id="input-validation">Standard Algorithm 1 — Input Validation</h2>
+        <p>Users make mistakes. Ask for an age and someone will type -7, or 300. <strong>Input validation</strong> checks that input is acceptable — and if it isn't, shows an error and asks again, repeating until the input passes. Note what it's checking: that the data is the right <em>sort</em> (in range, long enough), not that it's actually <em>true</em>. If you claim to be 21, the program takes your word for it.</p>
+        <p>The recipe uses a <strong>conditional loop</strong> — because we can't know how many attempts the user will need:</p>
         <ol>
-          <li>Ask the user for input</li>
-          <li>While the input is not valid…</li>
-          <li>&nbsp;&nbsp;Display an error message</li>
-          <li>&nbsp;&nbsp;Ask for the input again</li>
-          <li>End loop</li>
+          <li>Ask for the input</li>
+          <li><strong>While</strong> the input is not acceptable…</li>
+          <li>&nbsp;&nbsp;&nbsp;&nbsp;Display an error message</li>
+          <li>&nbsp;&nbsp;&nbsp;&nbsp;Ask for the input again</li>
+          <li>End loop — the program only gets here with valid input</li>
         </ol>
         <div class="code-block">
-          <div class="code-label">SQA Reference Language — input validation (while loop)</div>
-          <pre>RECEIVE number FROM KEYBOARD
-WHILE number &lt; 10 OR number &gt; 20 DO
-    SEND "Error, please enter again" TO DISPLAY
-    RECEIVE number FROM KEYBOARD
-END WHILE</pre>
-        </div>
-        <div class="code-block">
-          <div class="code-label">Python — validating an age</div>
+          <div class="code-label">Python — validating an age (range check)</div>
           <pre>age = int(input("Enter your age: "))
 while age &lt; 11 or age &gt; 18:
-    print("Error, age must be between 11 &amp; 18")
+    print("Error - age must be between 11 and 18")
     age = int(input("Enter your age: "))
 print("Your age is acceptable")</pre>
         </div>
@@ -102,25 +100,56 @@ while len(password) &lt; 7:
     password = input("Please re-enter your new password: ")
 print("Your password is long enough")</pre>
         </div>
-        <div class="callout callout-info">
-          <div class="callout-icon">ℹ️</div>
-          <div>Notice the input line appears <strong>twice</strong> — once before the loop and once inside it. That's deliberate: the program needs a first value to test, and must ask again <em>inside</em> the loop or it would never end.</div>
+        <p>Two details that catch people out:</p>
+        <ul>
+          <li><strong>The input line appears twice</strong> — once before the loop (the program needs a first value to test) and once inside it (or the loop could never end). This is one repeat that's allowed!</li>
+          <li><strong>The loop condition describes the <em>bad</em> input</strong> — we loop <em>while</em> the age is out of range. Writing the condition the wrong way round is a classic logic error.</li>
+        </ul>
+
+        <h3>The other way it appears: REPEAT … UNTIL</h3>
+        <p>Learn the <code>while</code> version — it's the one you'll write. But exam papers sometimes show input validation with a <strong>repeat-until</strong> loop instead, so you need to recognise it. The logic is flipped: the loop body always runs at least once, and the condition at the bottom describes the <em>good</em> input that lets you escape:</p>
+        <div class="code-block">
+          <div class="code-label">SQA Reference Language — both versions</div>
+          <pre>&lt;# WHILE version - loop while the input is BAD #&gt;
+RECEIVE number FROM KEYBOARD
+WHILE number &lt; 10 OR number &gt; 20 DO
+    SEND "Error, please enter again" TO DISPLAY
+    RECEIVE number FROM KEYBOARD
+END WHILE
+
+&lt;# REPEAT ... UNTIL version - loop until the input is GOOD #&gt;
+REPEAT
+    RECEIVE number FROM KEYBOARD
+    IF number &lt; 10 OR number &gt; 20 THEN
+        SEND "Error, please enter again" TO DISPLAY
+    END IF
+UNTIL number &gt;= 10 AND number &lt;= 20</pre>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Input validation is what makes a program <strong>robust</strong> — it stops exceptional data from crashing it. That link comes up in evaluation questions constantly: see the <a href="evaluation.html">Evaluation</a> page.</div>
+        </div>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎛️</span>
+          <em>Placeholder — interactive trainer</em>
+          Suggestion: a validation tester — pupils type values at a live validation loop (age 11–18) and watch which ones bounce off and which get through, with the condition highlighting true/false on each attempt. A boundary-highlighter like the Higher site's would also work here.
         </div>
       </article>
 
       <article>
-        <h2 id="running-total">Running Total Within a Loop</h2>
-        <p>The running total algorithm keeps a <strong>cumulative sum</strong> of numbers — from user input or from an array. The total is <strong>initialised to 0</strong>, then each value is added on inside a loop.</p>
+        <h2 id="running-total">Standard Algorithm 2 — Running Total</h2>
+        <p>How do you add up ten numbers when you can only handle one at a time? The same way a shop till does: keep a <strong>running total</strong>. Start the total at 0, and add each value on as it arrives. The recipe:</p>
         <ol>
-          <li>Set total to 0</li>
+          <li>Set the total to 0 (initialise — this step is <em>not optional</em>)</li>
           <li>Start a loop</li>
-          <li>&nbsp;&nbsp;Get the next value (from input or the array)</li>
-          <li>&nbsp;&nbsp;Add it to the total</li>
-          <li>End loop, then display the total</li>
+          <li>&nbsp;&nbsp;&nbsp;&nbsp;Get the next value (from the user, or from an array)</li>
+          <li>&nbsp;&nbsp;&nbsp;&nbsp;Add it to the total</li>
+          <li>End loop, then use the total</li>
         </ol>
+        <p>The txt says it works two ways, so here's both — <strong>without</strong> an array (values typed in, used once, forgotten) and <strong>with</strong> an array (values already stored, added up by index):</p>
         <div class="code-block">
-          <div class="code-label">Python — running total from user input</div>
-          <pre># Example 1 — running total without an array
+          <div class="code-label">Python — running total from user input (no array)</div>
+          <pre># Add up 5 prices typed in by the user
 total = 0
 for counter in range(5):
     price = int(input("Please enter a price: "))
@@ -129,33 +158,38 @@ print("The total price is £" + str(total))</pre>
         </div>
         <div class="code-block">
           <div class="code-label">Python — running total from an array</div>
-          <pre># Example 2 — running total with an array
+          <pre># Add up prices already stored in an array
 prices = [5, 25, 32, 10, 3]
 total = 0
 for counter in range(len(prices)):
     total = total + prices[counter]
 print("The total price is £" + str(total))</pre>
         </div>
+        <p>The key line is the same in both: <code>total = total + …</code> — "the new total is the old total plus this value". And in reference language:</p>
         <div class="code-block">
-          <div class="code-label">SQA Reference Language — running total (fixed loop)</div>
+          <div class="code-label">SQA Reference Language — running total</div>
           <pre>SET total TO 0
 FOR counter FROM 0 TO 4 DO
     SET total TO total + prices(counter)
 END FOR
 SEND "The total is " &amp; total TO DISPLAY</pre>
         </div>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>Forget <code>total = 0</code> at the start and the algorithm falls apart — you'd be adding to whatever happened to be in the variable. Initialise first, always.</div>
+        </div>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>Calculating an <strong>average</strong>? Add the values inside the loop, but do the division <strong>once, after the loop ends</strong> — dividing on every pass is wasted work and loses efficiency marks. A running total can also be used with a <strong>conditional loop</strong> — e.g. 2019 exam Q19b asked users to keep entering numbers until the total reached 100 or more.</div>
+          <div>Calculating an <strong>average</strong>? Total inside the loop, divide <strong>once after the loop ends</strong>. Dividing on every pass gives the right answer eventually but does pointless work — an <a href="evaluation.html">efficiency</a> question waiting to happen. And it has appeared with a conditional loop too: a 2019 exam question kept accepting numbers <em>until the total reached 100</em>.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="traversing">Traversing a 1-D Array</h2>
-        <p>Arrays cut out repetitive variables (<code>score1</code>, <code>score2</code>, …) and loops cut out repetitive code — <strong>traversing an array</strong> combines both. It means using a loop to travel through the array, visiting each element from first to last:</p>
+        <h2 id="traversing">Standard Algorithm 3 — Traversing a 1-D Array</h2>
+        <p>On the <a href="data-types-structures.html">arrays page</a>, you accessed elements one at a time: <code>scores[0]</code>, <code>scores[4]</code>. Useful — but the real power of an array is processing <em>every</em> element, and for that you <strong>traverse</strong> it: use a loop, with the <strong>loop variable as the index</strong>.</p>
         <ol>
-          <li>Start a fixed loop for the number of array elements</li>
-          <li>&nbsp;&nbsp;Use the element at position [counter]</li>
+          <li>Start a fixed loop that runs once per element</li>
+          <li>&nbsp;&nbsp;&nbsp;&nbsp;Use the element at position [counter]</li>
           <li>End the loop</li>
         </ol>
         <div class="code-block">
@@ -163,16 +197,20 @@ SEND "The total is " &amp; total TO DISPLAY</pre>
           <pre># An array of seven names
 names = ["Dopey", "Grumpy", "Doc", "Bashful", "Sneezy", "Sleepy", "Happy"]
 
-# The elements are numbered 0 to 6 — loop through and print each
+# Elements are numbered 0 to 6 - visit and print each one
 for counter in range(7):
     print(names[counter])</pre>
         </div>
+        <p>On the first pass <code>counter</code> is 0, so it prints <code>names[0]</code> (Dopey). Next pass, <code>names[1]</code> (Grumpy). The loop variable sweeps through every index in turn — that's the whole trick. Rather than hard-coding the 7, you can let Python count the array for you with <code>range(len(names))</code> — then the loop still works if the array grows.</p>
         <div class="code-block">
-          <div class="code-label">Python — filling then displaying an array</div>
+          <div class="code-label">Python — filling an array, then traversing it</div>
           <pre>names = []
-for counter in range(4):
-    names.append(input("Please enter your name: "))
 
+# Fill the array from user input
+for counter in range(4):
+    names.append(input("Please enter a name: "))
+
+# Traverse it to display every name
 for counter in range(len(names)):
     print(names[counter])</pre>
         </div>
@@ -182,61 +220,11 @@ for counter in range(len(names)):
     SEND names(counter) TO DISPLAY
 END FOR</pre>
         </div>
-      </article>
-
-      <article>
-        <h2 id="test-yourself">Test Yourself</h2>
-
-        <div class="practice-question">
-          <div class="q-label">Q1 — Name the algorithm (3 marks)</div>
-          <p>Name the standard algorithm used in each situation:</p>
-          <ol type="a">
-            <li>Adding up the cost of every item in a shopping basket.</li>
-            <li>Making sure a mark entered is between 0 and 100.</li>
-            <li>Displaying every name stored in an array.</li>
-          </ol>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">a) Running total within a loop. b) Input validation. c) Traversing a 1-D array. (1 mark each)</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q2 — Write input validation (4 marks)</div>
-          <p>Using a design technique or code of your choice, write an input validation algorithm to get a number of tickets between 1 and 6 inclusive from the user.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <div class="code-block">
-                <div class="code-label">Python — suggested answer</div>
-                <pre>tickets = int(input("How many tickets (1-6)? "))
-while tickets &lt; 1 or tickets &gt; 6:
-    print("Error — you can book between 1 and 6 tickets")
-    tickets = int(input("How many tickets (1-6)? "))</pre>
-              </div>
-              <p>1 mark: initial input. 1 mark: conditional loop with correct complex condition. 1 mark: error message inside loop. 1 mark: input repeated inside loop.</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q3 — Trace the running total (2 marks)</div>
-          <p>What is displayed when this code runs?</p>
-          <div class="code-block">
-            <pre>values = [4, 9, 1]
-total = 0
-for counter in range(len(values)):
-    total = total + values[counter]
-print(total)</pre>
-          </div>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;"><code>14</code> — the loop adds 4, then 9, then 1 (0+4=4, 4+9=13, 13+1=14). (2 marks for correct answer with working; 1 mark for correct method with arithmetic slip)</p>
-            </div>
-          </details>
+        <p>Traversal also combines beautifully with the running total — look back at the "running total from an array" example above and you'll see it's <em>both</em> standard algorithms in one: a traversal that adds instead of prints. Exam questions mix the algorithms together like this all the time.</p>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎞️</span>
+          <em>Placeholder — animation</em>
+          Suggestion: a traversal stepper — the names array drawn as boxes, with a highlight hopping from index 0 to 6 as the loop variable ticks up, and each element appearing in an output panel. A toggle to "running total mode" (numbers instead of names, with the total accumulating) would cover two algorithms in one visualiser.
         </div>
       </article>
 

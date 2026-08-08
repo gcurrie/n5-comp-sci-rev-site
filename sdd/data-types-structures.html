@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Software Design &amp; Development</div>
     <h1>Data Types, Variables &amp; Arrays</h1>
-    <p>The five National 5 data types, storing single values in variables, and storing lists of values in 1-D arrays.</p>
+    <p>The five data types, how a program stores single values in variables, and how it stores lists of values in 1-D arrays.</p>
   </div>
 </section>
 <main class="page-content">
@@ -31,9 +31,8 @@
           <li><a href="development-methodologies.html"><span class="sn-icon">🔄</span>Iterative Development</a></li>
           <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
           <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
-          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
           <li><a href="data-types-structures.html" class="active"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
-          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="input-output.html"><span class="sn-icon">⌨️</span>User Input &amp; Output</a></li>
           <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
           <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
           <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
@@ -47,83 +46,115 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
+          <li><a href="#intro">Introduction</a></li>
           <li><a href="#data-types">The Five Data Types</a></li>
+          <li><a href="#choosing">Choosing the Right Type</a></li>
           <li><a href="#variables">Variables</a></li>
           <li><a href="#variables-python">Variables in Python</a></li>
           <li><a href="#arrays">Arrays</a></li>
           <li><a href="#arrays-python">Arrays in Python</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="data-types">The Five Data Types</h2>
-        <p>Data types are crucial in programming — the computer has to know whether to expect numbers, text, or other types of values. At National 5 you must be able to <strong>identify the data types and structures required for a problem</strong>, and describe, exemplify and implement them.</p>
-        <table>
-          <thead><tr><th>Data type</th><th>Stores</th><th>Examples</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Integer</strong></td><td>Whole numbers</td><td><code>45</code>, <code>2</code>, <code>122</code>, <code>-7</code></td></tr>
-            <tr><td><strong>Real</strong></td><td>Numbers with a decimal point</td><td><code>8.1</code>, <code>0.99</code>, <code>-2.5</code></td></tr>
-            <tr><td><strong>String</strong></td><td>Text — words, letters, numbers and symbols</td><td><code>"PlayerOne"</code>, <code>"KA7 2RG"</code></td></tr>
-            <tr><td><strong>Character</strong></td><td>A single letter, digit or symbol</td><td><code>"E"</code>, <code>"%"</code></td></tr>
-            <tr><td><strong>Boolean</strong></td><td>Only TRUE or FALSE</td><td><code>True</code>, <code>False</code></td></tr>
-          </tbody>
-        </table>
+        <h2 id="intro">Introduction</h2>
+        <p>Every program you'll ever write works with data — names, marks, prices, yes/no answers. Before a program can store any of it, the computer has to know <strong>what kind of data</strong> to expect (numbers? text? true/false?) and <strong>where to keep it</strong>. That's what this page is about: the five <strong>data types</strong>, and the two places we store data — <strong>variables</strong> (one value) and <strong>arrays</strong> (a list of values).</p>
 
-        <div class="worked-example">
-          <div class="q-label">Worked Example — spotting data types in a game</div>
-          <p>Think about the information on a video game's screen:</p>
-          <ul>
-            <li><strong>"E"</strong> is a <strong>character</strong>, because it is a single letter.</li>
-            <li><strong>45, 2 and 122</strong> are <strong>integers</strong>, because they are whole numbers.</li>
-            <li>The <strong>player names</strong> are <strong>strings</strong>, because they are made up of words, letters, numbers and symbols — we use a string whenever we want to store text.</li>
-            <li>A rating of <strong>8.1</strong> is a <strong>real</strong> number, because it has a decimal point.</li>
-            <li>Whether the game is <strong>saved</strong> is a <strong>Boolean</strong> — it can only be true or false.</li>
-          </ul>
-          <div class="img-placeholder">
-            <span class="ph-icon">📷</span>
-            <em>Images to add</em>
-            Two video game screenshots — one showing character/integer/string examples, one showing the 8.1 rating and save status.
-          </div>
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Data type</div><div class="def">What kind of data a value is: string, integer, real, character or Boolean.</div></div>
+          <div class="key-term"><div class="term">Variable</div><div class="def">A named storage location that holds a <strong>single</strong> item of data.</div></div>
+          <div class="key-term"><div class="term">Array</div><div class="def">A data structure that holds <strong>several</strong> items of data — all of the same type — under one name.</div></div>
+          <div class="key-term"><div class="term">Index</div><div class="def">The position number of an item in an array. Counting starts at <strong>0</strong>.</div></div>
+          <div class="key-term"><div class="term">Declaring</div><div class="def">Creating a new variable or array — giving it a name and a data type.</div></div>
+          <div class="key-term"><div class="term">Assigning</div><div class="def">Placing a value into a variable or array position.</div></div>
+          <div class="key-term"><div class="term">Initialising</div><div class="def">Setting a variable to a starting value (like 0), usually at the beginning of a program.</div></div>
         </div>
 
-        <div class="worked-example">
-          <div class="q-label">Worked Example — the class data program</div>
-          <p><strong>Problem:</strong> a program asks the user for the names and ages of everyone in the class. When finished, it displays a message saying how many people are in the class, and their average age.</p>
-          <ul>
-            <li>The <strong>names</strong> are strings, because they are text.</li>
-            <li>The <strong>ages</strong> are integers — e.g. someone is 15 years old.</li>
-            <li>The <strong>number of people</strong> in the class is an integer, because you can't have 0.5 of a person.</li>
-            <li>The <strong>average</strong> is a real number, because it might have a decimal point in it.</li>
-          </ul>
-          <div class="callout callout-warning">
-            <div class="callout-icon">⚠️</div>
-            <div><strong>The last point is really important.</strong> If three people are 15, 15 and 16 — those ages are integers — but the average is 15.333…, a <strong>real</strong> number. Averages come up in exam questions all the time.</div>
-          </div>
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>identify the most suitable data type</strong> for a value in a problem, and <strong>describe, exemplify and implement</strong> variables and 1-D arrays in your own programs.</div>
         </div>
       </article>
 
       <article>
+        <h2 id="data-types">The Five Data Types</h2>
+        <p>There are five data types at National 5. Learn them cold — you'll be talking about them constantly, in every topic and in every program you write:</p>
+        <table>
+          <thead><tr><th>Data type</th><th>Stores</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td><strong>String</strong></td><td>Text — words, letters, numbers and symbols</td><td><code>"PlayerOne"</code>, <code>"KA7 2RG"</code></td></tr>
+            <tr><td><strong>Integer</strong></td><td>Whole numbers</td><td><code>45</code>, <code>2</code>, <code>-7</code></td></tr>
+            <tr><td><strong>Real</strong></td><td>Numbers with a decimal point</td><td><code>8.1</code>, <code>0.99</code>, <code>-2.5</code></td></tr>
+            <tr><td><strong>Character</strong></td><td>A single letter, digit or symbol</td><td><code>"E"</code>, <code>"%"</code></td></tr>
+            <tr><td><strong>Boolean</strong></td><td>Only TRUE or FALSE — nothing else</td><td><code>True</code>, <code>False</code></td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article>
+        <h2 id="choosing">Choosing the Most Suitable Data Type</h2>
+        <p>Exam questions love to describe a program and ask you to identify the most suitable data type for each piece of data. Think about what the data <em>is</em>, not what it looks like:</p>
+        <div class="example-block">
+          <div class="example-label">Example — spotting data types on a game screen</div>
+          <ul>
+            <li>The grade <strong>"E"</strong> is a <strong>character</strong> — a single letter.</li>
+            <li><strong>45, 2 and 122</strong> (lives, level, coins) are <strong>integers</strong> — whole numbers.</li>
+            <li>The <strong>player names</strong> are <strong>strings</strong> — we use a string whenever we want to store text.</li>
+            <li>The rating <strong>8.1</strong> is a <strong>real</strong> — it has a decimal point.</li>
+            <li>Whether the game is <strong>saved</strong> is a <strong>Boolean</strong> — it can only be true or false.</li>
+          </ul>
+          <div class="img-placeholder">
+            <span class="ph-icon">📷</span>
+            <em>Placeholder — image</em>
+            Suggestion: annotated video game screenshot(s) with arrows labelling each on-screen value with its data type — the character grade, integer scores, string names, real rating and Boolean save status.
+          </div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example — the class data program</div>
+          <p>A program asks for the names and ages of everyone in the class, then displays how many people there are and their average age.</p>
+          <ul>
+            <li>The <strong>names</strong> are strings — they're text.</li>
+            <li>The <strong>ages</strong> are integers — someone is 15, not 15.3.</li>
+            <li>The <strong>number of people</strong> is an integer — you can't have half a person.</li>
+            <li>The <strong>average age</strong> is a <strong>real</strong> — and this one catches people out.</li>
+          </ul>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>The average trap.</strong> If three people are 15, 15 and 16, the ages are all integers — but the average is 15.333…, a <strong>real</strong> number. Any time a question involves an average (or a division), think <em>real</em>. This comes up in exams again and again.</div>
+        </div>
+
+        <h3>Watch out for "numbers" that are really text</h3>
+        <p>A phone number like <code>07700 900123</code> looks numeric, but you'd store it as a <strong>string</strong> — you never do maths with it, and storing it as a number would lose the leading 0. Same goes for postcodes. Ask yourself: <em>will the program ever calculate with this?</em> If not, it's probably a string.</p>
+      </article>
+
+      <article>
         <h2 id="variables">Variables</h2>
-        <p>A <strong>variable</strong> stores a <strong>single item of data</strong> in a program. Imagine a variable as a box that can hold one item at a time.</p>
-        <p>Creating a new variable is called <strong>declaring</strong>. Every variable needs:</p>
+        <p>A <strong>variable</strong> stores a <strong>single item of data</strong>. Picture it as a labelled box that can hold one thing at a time. Every variable needs:</p>
         <ul>
-          <li>a <strong>meaningful identifier</strong> (name) that tells you what it stores — e.g. <code>score</code> for a player's game score</li>
-          <li>a <strong>data type</strong> — e.g. <code>score</code> is an integer, because scores are whole numbers</li>
+          <li>a <strong>meaningful name</strong> (identifier) that says what it stores — <code>score</code> for a player's score, not <code>s</code> or <code>thing</code></li>
+          <li>a <strong>data type</strong> — <code>score</code> would be an integer, because scores are whole numbers</li>
         </ul>
 
-        <h3>How variables work</h3>
-        <p>When a value is <strong>assigned</strong> to a variable, it's like putting something into the box. Assigning a new value <strong>overwrites</strong> what was there. Using the variable's name displays its current contents:</p>
+        <h3>What variables do</h3>
+        <p>Three things happen to variables, and each has its own word:</p>
         <div class="code-block">
-          <div class="code-label">SQA Reference Language</div>
-          <pre>SET score TO 15        &lt;# score now holds 15 #&gt;
-SET score TO 20        &lt;# 15 is overwritten — score now holds 20 #&gt;
-SEND score TO DISPLAY  &lt;# displays 20 #&gt;
-SET score TO 0         &lt;# initialised back to 0 #&gt;</pre>
+          <div class="code-label">SQA Reference Language — a variable's life story</div>
+          <pre>SET score TO 0         &lt;# initialise — start the box at 0 #&gt;
+SET score TO 15        &lt;# assign — put 15 in the box #&gt;
+SET score TO 20        &lt;# assign again — the 15 is overwritten #&gt;
+SEND score TO DISPLAY  &lt;# use it — displays 20 #&gt;</pre>
         </div>
-        <p>Variables can be reset by <strong>initialising</strong> them — it is good practice to do this at the start of a program:</p>
+        <p>Two important behaviours to remember:</p>
+        <ul>
+          <li>Assigning a new value <strong>overwrites</strong> the old one — the 15 above is gone forever once the 20 goes in.</li>
+          <li>Using a variable's name gives you its <strong>current</strong> contents — which is why the display shows 20, not 15.</li>
+        </ul>
+        <p>It's good practice to <strong>initialise</strong> variables at the start of a program, so every box starts with a known value:</p>
         <div class="code-block">
           <div class="code-label">SQA Reference Language — initialising vs assigning</div>
           <pre>&lt;# Initialising #&gt;          &lt;# Assigning #&gt;
@@ -133,23 +164,20 @@ SET price TO 0.00           SET price TO 2.49
 SET found TO FALSE          SET found TO TRUE</pre>
         </div>
 
-        <div class="key-terms">
-          <div class="key-term"><div class="term">Declaring</div><div class="def">Creating a new variable and setting its name and data type.</div></div>
-          <div class="key-term"><div class="term">Assigning</div><div class="def">Placing a value in a variable.</div></div>
-          <div class="key-term"><div class="term">Initialising</div><div class="def">Resetting or clearing the contents of a variable, usually at the start of a program.</div></div>
-        </div>
-
-        <div class="example-block">
-          <div class="example-label">One variable per piece of information</div>
-          <p>A new variable should be declared for each piece of information you need to store. For a program that asks 100m sprinters for their name and times in two heats, then works out their best time, you would need: <code>runnerName</code>, <code>heat1Time</code>, <code>heat2Time</code> and <code>bestTime</code>.</p>
+        <h3>How variables fit into a program</h3>
+        <p>Declare one variable for <strong>each piece of information</strong> the program needs to remember. A program that asks 100m sprinters for their name and their times in two heats, then works out their best time, needs four variables: <code>runnerName</code>, <code>heat1Time</code>, <code>heat2Time</code> and <code>bestTime</code>.</p>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎞️</span>
+          <em>Placeholder — animation</em>
+          Suggestion: "variable as a box" animation — a labelled box called score; a value drops in (assign), a new value knocks the old one out (overwrite), and a copy floats out to the screen (display). Simple but makes the overwrite behaviour stick.
         </div>
       </article>
 
       <article>
         <h2 id="variables-python">Variables in Python</h2>
-        <p>In Python, a variable is created the moment you assign a value to it. Use <strong>meaningful names</strong> — <code>age = 15</code> tells you far more than <code>x = 15</code>:</p>
+        <p>In Python, a variable is created the moment you assign a value to it with <code>=</code>. Use meaningful names — <code>age = 15</code> tells you far more than <code>x = 15</code>:</p>
         <div class="code-block">
-          <div class="code-label">Python — variables using all five N5 data types</div>
+          <div class="code-label">Python — variables using all five data types</div>
           <pre># Variables using all N5 data types
 name = "Mr Currie"        # string
 firstInitial = "G"        # character
@@ -157,24 +185,22 @@ age = 25                  # integer
 height = 2.12             # real
 teacher = True            # Boolean
 
-# Print statements to print each variable
 print(name)
-print(firstInitial)
-print(age)
-print(height)
-print(teacher)</pre>
+print(age)</pre>
         </div>
+        <p>(Yes, all entirely accurate data. No further questions.)</p>
       </article>
 
       <article>
         <h2 id="arrays">Arrays</h2>
-        <p>An <strong>array</strong> is a <strong>data structure</strong>. It is similar to a variable, but it can store <strong>several items of data</strong> — as long as they are all <strong>the same type</strong>. Think of it as a list of items that must all be on the same subject.</p>
-        <p>Declaring an array needs three things:</p>
+        <p>Variables are great — until you need to store the test scores of a whole class. Thirty variables called <code>score1</code> to <code>score30</code>? No thanks. When you have <strong>several similar items of the same type</strong>, you want an <strong>array</strong>.</p>
+        <p>An array is a <strong>data structure</strong>: one name, holding a whole list of values. Declaring an array needs three things:</p>
         <ul>
-          <li>a <strong>meaningful identifier</strong> — e.g. <code>ages</code> for storing pupil ages</li>
-          <li>a <strong>data type</strong> — <em>all</em> items must share it, e.g. integer</li>
-          <li>a <strong>maximum size</strong> — each position has an <strong>index</strong> number to identify it, and <strong>indexes start at 0</strong></li>
+          <li>a <strong>meaningful name</strong> — e.g. <code>ages</code> for storing pupil ages</li>
+          <li>a <strong>data type</strong> — every item in the array must share it</li>
+          <li>a <strong>size</strong> — how many items it holds</li>
         </ul>
+        <p>Each position in the array is numbered with an <strong>index</strong> — and indexes start at <strong>0</strong>, not 1:</p>
 
         <svg viewBox="0 0 620 120" role="img" aria-label="An array of five integers with indexes 0 to 4" style="max-width:620px;width:100%;height:auto;display:block;margin:1rem auto;">
           <style>
@@ -200,26 +226,32 @@ print(teacher)</pre>
         </svg>
 
         <h3>How arrays work</h3>
+        <p>Working with one position of an array is just like working with a variable — you just add the index to say <em>which</em> position you mean:</p>
         <div class="code-block">
           <div class="code-label">SQA Reference Language</div>
           <pre>SET ages(0) TO 15        &lt;# position 0 now contains 15 #&gt;
 SET ages(3) TO 12        &lt;# position 3 now contains 12 #&gt;
-SET ages(3) TO 14        &lt;# 12 is overwritten — position 3 now holds 14 #&gt;
+SET ages(3) TO 14        &lt;# the 12 is overwritten — position 3 now holds 14 #&gt;
 SEND ages(3) TO DISPLAY  &lt;# displays 14 #&gt;</pre>
         </div>
-        <p>A new array should be declared when there are <strong>a number of similar items of the same type</strong> to be stored — like the test scores of a whole class.</p>
+        <p>Everything you know about variables still applies: assigning to a position overwrites what was there, and using a position gives you its current contents.</p>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎛️</span>
+          <em>Placeholder — visualiser</em>
+          Suggestion: an interactive array visualiser — a row of boxes where pupils type an index and a value, click "assign", and watch the value land in (or overwrite) the right box; a "display" button shows what comes out. Reinforces zero-indexing by making off-by-one mistakes visible.
+        </div>
       </article>
 
       <article>
         <h2 id="arrays-python">Arrays in Python</h2>
-        <p>Say a program asks for 3 test scores, adds them together and prints the total. With variables, that's three separate inputs:</p>
+        <p>Imagine a program that asks for 3 test scores and adds them up. With variables:</p>
         <div class="code-block">
-          <div class="code-label">Python — without an array</div>
+          <div class="code-label">Python — three separate variables</div>
           <pre>score1 = int(input("Please enter first score"))
 score2 = int(input("Please enter second score"))
 score3 = int(input("Please enter third score"))</pre>
         </div>
-        <p>Now imagine 20 scores — or 100! An array (a <strong>list</strong> in Python) solves this: it is a whole set of memory locations, one after the other, under one name.</p>
+        <p>Fine for 3 scores. Now imagine 20. Or 100. (And imagine renaming them all when your teacher asks for one more.) An array — a <strong>list</strong> in Python — stores them all under one name:</p>
 
         <h3>Declaring and initialising</h3>
         <div class="code-block">
@@ -227,7 +259,7 @@ score3 = int(input("Please enter third score"))</pre>
           <pre># An array of five empty strings
 pupilnames = [str]*5
 
-# An array of five integers, all set to 0
+# An array of five integers
 scores = [int]*5
 
 # An array of ten real numbers
@@ -237,90 +269,28 @@ prices = [0.0]*10
 scores = [15, 20, 19, 18, 17, 20, 16, 19, 12]</pre>
         </div>
 
-        <h3>Using elements in the array</h3>
-        <p>Put the index of the element in <strong>square brackets</strong> — and remember, element numbers <strong>start at zero</strong>. So in the scores array above, element 0 is 15, element 1 is 20, and element 7 is 19.</p>
+        <h3>Using individual elements</h3>
+        <p>Put the index in <strong>square brackets</strong>. Remember: counting starts at zero, so in the scores array above, element 0 is 15, element 1 is 20, and element 7 is 19.</p>
         <div class="code-block">
           <div class="code-label">Python — accessing and changing elements</div>
           <pre>scores = [15, 20, 19, 18, 17, 20, 16, 19, 12]
 
-# Get an element by its exact number
-firstitem = scores[0]
-finalitem = scores[8]
+# Get an element by its exact position
+firstitem = scores[0]      # 15
+finalitem = scores[8]      # 12
 
 # Use a variable as the index
-counter = 4
-print(scores[counter])     # would print 17
+position = 4
+print(scores[position])    # prints 17
 
 # Change the values in elements
-scores[0] = 17
-scores[4] = scores[2]
-scores[5] = 5 * 3
-scores[6] = scores[2] + 1</pre>
-        </div>
-
-        <h3>Mixing arrays with loops</h3>
-        <p>We can use a loop to <strong>traverse</strong> the array — that means to travel through it, visiting every element:</p>
-        <div class="code-block">
-          <div class="code-label">Python — traversing an array</div>
-          <pre># An array of seven names
-names = ["Dopey", "Grumpy", "Doc", "Bashful", "Sneezy", "Sleepy", "Happy"]
-
-# The elements are numbered 0 to 6 — loop through and print each name
-for counter in range(len(names)):
-    print(names[counter])
-
-# Fill an array from user input
-scores = []
-for counter in range(5):
-    score = int(input("Please enter score "))
-    scores.append(score)
-print(scores)</pre>
+scores[0] = 17             # overwrite the 15
+scores[4] = scores[2]      # copy element 2 into element 4
+scores[6] = scores[2] + 1  # element 2, plus one</pre>
         </div>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>Traversing an array is a <strong>very useful skill</strong> for National 5 — this sort of problem will probably come up in both the exam and the assignment. See <a href="standard-algorithms.html">Standard Algorithms</a> for more.</div>
-        </div>
-      </article>
-
-      <article>
-        <h2 id="test-yourself">Test Yourself</h2>
-
-        <div class="practice-question">
-          <div class="q-label">Q1 — Identify the data types (4 marks)</div>
-          <p>A cinema booking program stores: the film title, the number of seats booked, the price per seat, and whether the customer is a member. State the most suitable data type for each.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">Film title — string. Number of seats — integer. Price per seat — real. Member — Boolean. (1 mark each)</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q2 — Arrays (2 marks)</div>
-          <p>A program needs to store the test scores of 20 pupils. Explain why an array is a better choice than 20 separate variables.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">One array stores all 20 values under a single name (1 mark), so a loop can be used to process every score with a few lines of code instead of repeating code 20 times — more efficient (1 mark).</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q3 — Reading array code (2 marks)</div>
-          <p>What is displayed by this code?</p>
-          <div class="code-block">
-            <pre>scores = [15, 20, 19, 18, 17]
-scores[1] = scores[4]
-print(scores[1])</pre>
-          </div>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;"><code>17</code> — <code>scores[4]</code> is 17, which overwrites the 20 at index 1 (2 marks; 1 mark if 20 given with correct reasoning about indexes starting at 0).</p>
-            </div>
-          </details>
+          <div>Accessing elements one at a time is only half the story. The real power move — visiting <em>every</em> element with a loop — is one of the three standard algorithms, and it has its own section on the <a href="standard-algorithms.html">Standard Algorithms</a> page.</div>
         </div>
       </article>
 

@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Software Design &amp; Development</div>
     <h1>Iterative Development</h1>
-    <p>The software development process — analysis, design, implementation, testing, documentation and evaluation — and why the phases are repeated rather than done once.</p>
+    <p>The development process — what happens in each phase, the iterative/waterfall model, and why real teams keep going back over their work.</p>
   </div>
 </section>
 <main class="page-content">
@@ -31,9 +31,8 @@
           <li><a href="development-methodologies.html" class="active"><span class="sn-icon">🔄</span>Iterative Development</a></li>
           <li><a href="analysis.html"><span class="sn-icon">🔍</span>Analysis</a></li>
           <li><a href="design.html"><span class="sn-icon">📐</span>Design</a></li>
-          <li><a href="output.html"><span class="sn-icon">📤</span>Output</a></li>
           <li><a href="data-types-structures.html"><span class="sn-icon">🧮</span>Data Types, Variables &amp; Arrays</a></li>
-          <li><a href="user-input.html"><span class="sn-icon">⌨️</span>User Input</a></li>
+          <li><a href="input-output.html"><span class="sn-icon">⌨️</span>User Input &amp; Output</a></li>
           <li><a href="calculations.html"><span class="sn-icon">➗</span>Calculations</a></li>
           <li><a href="selection.html"><span class="sn-icon">🔀</span>Selection</a></li>
           <li><a href="pre-defined-functions.html"><span class="sn-icon">🧰</span>Pre-Defined Functions</a></li>
@@ -48,9 +47,9 @@
         <div class="sidebar-title">On this page</div>
         <ul>
           <li><a href="#intro">Introduction</a></li>
-          <li><a href="#process">The Development Process</a></li>
-          <li><a href="#iteration">Iteration</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#phases">The Development Phases</a></li>
+          <li><a href="#model">The Iterative/Waterfall Model</a></li>
+          <li><a href="#why-iterative">Why Is It Iterative?</a></li>
         </ul>
       </nav>
     </aside>
@@ -58,96 +57,77 @@
 
       <article>
         <h2 id="intro">Introduction</h2>
-        <p>Modern computer software is very complex — it is often worked on by teams of people who can write <strong>millions of lines of code</strong> between them! Even a small project raises tricky questions: What exactly should the program do? How should it look? How will its logic work?</p>
-        <p>The <strong>software development process</strong> is a set of steps that programming teams work through to try and reduce errors. At National 5 you need to be able to <strong>describe and implement the phases of an iterative development process</strong> within general programming problem-solving.</p>
+        <p>Modern computer software is very complex — it is often worked on by teams of people who can write <strong>millions of lines of code</strong> between them! Even a small project raises tricky questions. What exactly should the program do? How should it look? How will its logic work? And how do we know when it's finished?</p>
+        <p>To answer these questions without everything descending into chaos, programming teams work through a set of steps called the <strong>software development process</strong>. Working through the phases in a structured way helps teams reduce errors and stay organised.</p>
 
         <h3>Key Terms</h3>
         <div class="key-terms">
           <div class="key-term"><div class="term">Software development process</div><div class="def">The sequence of phases used to create software: analysis, design, implementation, testing, documentation and evaluation.</div></div>
-          <div class="key-term"><div class="term">Iteration</div><div class="def">Repeating a process. In software development, revisiting phases that have already been worked on — e.g. going back to design after testing finds a problem.</div></div>
-          <div class="key-term"><div class="term">Iterative development</div><div class="def">A development process where the phases are repeated in cycles, with the software improving on each pass.</div></div>
+          <div class="key-term"><div class="term">Phase</div><div class="def">One stage of the development process. Each phase produces something the next phase needs.</div></div>
+          <div class="key-term"><div class="term">Iterative/waterfall model</div><div class="def">The model of development where the phases flow in order — but phases are revisited (repeated) as problems are discovered.</div></div>
+          <div class="key-term"><div class="term">Iteration</div><div class="def">Repeating a process. In software development, going back to a phase that has already been worked on.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe</strong> the phases of an iterative development process, and recognise them at work when you build your own programs — including in the assignment.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="process">The Software Development Process</h2>
-        <p>The phases you need to know, in order:</p>
+        <h2 id="phases">The Development Phases</h2>
+        <p>There are six phases, and they always come in the same order. Here's what actually happens in each one:</p>
 
         <table>
           <thead><tr><th>Phase</th><th>What happens</th></tr></thead>
           <tbody>
-            <tr><td><strong>Analysis</strong></td><td>A systems analyst meets the client to determine what the program is required to do — the overall <strong>purpose</strong> and the <strong>functional requirements</strong> (exactly what steps the program must take to solve the problem).</td></tr>
-            <tr><td><strong>Design</strong></td><td>Planning what the <strong>user interface</strong> will look like, what <strong>data</strong> should be stored, and how the program will carry out its functions (<strong>algorithm designs</strong> using structure diagrams, flowcharts or pseudocode).</td></tr>
-            <tr><td><strong>Implementation</strong></td><td>A programmer (or programming team) creates the software based on the designs, using a high-level programming language such as Python.</td></tr>
-            <tr><td><strong>Testing</strong></td><td>Testers check whether the program works as expected — that it doesn't crash and that it produces correct results, using normal, extreme and exceptional test data.</td></tr>
-            <tr><td><strong>Documentation</strong></td><td>Producing supporting documents such as a user guide and technical guide.</td></tr>
-            <tr><td><strong>Evaluation</strong></td><td>The software is checked to ensure it is <strong>fit for purpose</strong>, makes <strong>efficient use of coding constructs</strong>, and is <strong>robust</strong> and <strong>readable</strong>.</td></tr>
+            <tr><td><strong>Analysis</strong></td><td>A systems analyst meets the client to work out exactly what the program is required to do — its overall <strong>purpose</strong>, and its <strong>functional requirements</strong> (the inputs, processes and outputs it needs).</td></tr>
+            <tr><td><strong>Design</strong></td><td>Planning the solution before any code is written: what the <strong>user interface</strong> will look like, what <strong>data</strong> will be stored, and how the program will work (the <strong>algorithm</strong>, planned using a design technique).</td></tr>
+            <tr><td><strong>Implementation</strong></td><td>A programmer (or a team of programmers) writes the actual code, following the designs, in a high-level language such as Python.</td></tr>
+            <tr><td><strong>Testing</strong></td><td>Checking the program works as expected — that it doesn't crash, and that it gives correct results. This is done with carefully chosen <strong>test data</strong>.</td></tr>
+            <tr><td><strong>Documentation</strong></td><td>Writing the supporting documents — for example a <strong>user guide</strong> (how to use the program) and a <strong>technical guide</strong> (how to install and maintain it).</td></tr>
+            <tr><td><strong>Evaluation</strong></td><td>Stepping back and judging the finished program: is it <strong>fit for purpose</strong>? Does it make <strong>efficient</strong> use of coding constructs? Is it <strong>robust</strong> and <strong>readable</strong>?</td></tr>
           </tbody>
         </table>
 
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>A popular memory aid is <strong>"A Dance In The Dark Every Evening"</strong> — <strong>A</strong>nalysis, <strong>D</strong>esign, <strong>I</strong>mplementation, <strong>T</strong>esting, <strong>D</strong>ocumentation, <strong>E</strong>valuation.</div>
+          <div>A handy way to remember the order: <strong>"A Dance In The Dark Every Evening"</strong> — <strong>A</strong>nalysis, <strong>D</strong>esign, <strong>I</strong>mplementation, <strong>T</strong>esting, <strong>D</strong>ocumentation, <strong>E</strong>valuation.</div>
         </div>
+
+        <p>Notice how each phase feeds the next. You can't design a solution until you know what the problem is (analysis). You can't write the code until you have a design to follow. And you can't test a program that doesn't exist yet. The order matters!</p>
       </article>
 
       <article>
-        <h2 id="iteration">Iteration — Why the Phases Repeat</h2>
-        <p><strong>Iteration means repeating a process.</strong> In software development, it is the term used to describe repeating or revisiting phases that may have been worked on already.</p>
-        <p>Traditionally, teams worked through the phases one after another, only moving on when the previous phase was complete. Modern teams work <strong>iteratively</strong>: the design for part of a program may be created and then implemented; any errors found during <strong>testing</strong> could lead to parts of the <strong>design</strong> and <strong>implementation</strong> changing before further testing is carried out.</p>
+        <h2 id="model">The Iterative/Waterfall Model</h2>
+        <p>Because each phase flows down into the next, the process is often drawn as a staircase of steps, with the work "flowing" from one phase down to the next like a waterfall. This is the <strong>iterative/waterfall model</strong> of software development.</p>
 
         <div class="img-placeholder">
           <span class="ph-icon">📷</span>
-          <em>Image to add</em>
-          Cyclical diagram of the development phases (analysis → design → implementation → testing → documentation → evaluation) drawn as a repeating loop, showing that phases are revisited.
+          <em>Placeholder — diagram</em>
+          Suggestion: waterfall-style staircase diagram of the six phases flowing top-left to bottom-right, with curved arrows flowing back up from Testing to Design/Implementation to show iteration. Could also work as a simple animation — the flow cascades down, then a bug appears at Testing and the arrow loops back up.
         </div>
 
-        <div class="callout callout-info">
-          <div class="callout-icon">ℹ️</div>
-          <div><strong>Exam answer:</strong> if asked why development is described as <em>iterative</em>, say that <strong>phases are revisited/repeated</strong> when new information or errors are found — e.g. testing may reveal a problem that means the design and implementation must change.</div>
-        </div>
+        <p>In a perfect world, a team would do each phase once, finish it, and never look back. But software development doesn't work like that — and that's where the <em>iterative</em> part comes in.</p>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="why-iterative">Why Is It Iterative?</h2>
+        <p><strong>Iteration means repeating a process.</strong> In software development, it describes going back to phases that have already been "finished".</p>
+        <p>Why would a team need to do that? Because things change, and problems get discovered:</p>
+        <ul>
+          <li><strong>Testing finds an error</strong> — the team goes back to the <em>design</em> and <em>implementation</em> phases to fix it, then tests again.</li>
+          <li><strong>The client changes their mind</strong> — new requirements appear, so the team revisits <em>analysis</em> and everything that follows from it.</li>
+          <li><strong>The evaluation shows the program isn't fit for purpose</strong> — back round the loop we go.</li>
+        </ul>
+        <p>For example: the design for part of a program is created and implemented. Errors found during testing mean parts of the design and implementation have to change, and then further testing is carried out. The phases have been <strong>revisited</strong> — that's iteration.</p>
 
-        <div class="practice-question">
-          <div class="q-label">Q1 — Name the phases (2 marks)</div>
-          <p>State the six phases of an iterative development process, in order.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">Analysis, Design, Implementation, Testing, Documentation, Evaluation.</p>
-            </div>
-          </details>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>Exam answer:</strong> if you're asked why development is described as <em>iterative</em>, say that <strong>phases are revisited or repeated</strong> — and give an example, such as returning to design and implementation after testing reveals an error.</div>
         </div>
 
-        <div class="practice-question">
-          <div class="q-label">Q2 — Iterative development (2 marks)</div>
-          <p>A development team describes their process as <em>iterative</em>. Explain what this means, using an example.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">Iterative means phases are <strong>repeated or revisited</strong> (1 mark). Example: errors found during testing cause the team to return to the design and implementation phases before testing again (1 mark).</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q3 — Match the phase (3 marks)</div>
-          <p>For each activity, state the development phase it belongs to:</p>
-          <ol type="a">
-            <li>Drawing a wireframe of the program's screen layout.</li>
-            <li>Checking the program with extreme test data.</li>
-            <li>Meeting the client to agree the functional requirements.</li>
-          </ol>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">a) Design &nbsp; b) Testing &nbsp; c) Analysis</p>
-            </div>
-          </details>
-        </div>
+        <p>You'll live this process yourself in the coursework assignment: you'll analyse a problem, design a solution, implement it, test it — and when a test fails (it happens to everyone), you'll loop back, fix your code, and test again. That <em>is</em> iterative development.</p>
       </article>
 
     </div>

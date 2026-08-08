@@ -35,10 +35,10 @@
     { term: 'Design techniques', desc: 'Structure diagrams, flowcharts and pseudocode — the three N5 design notations', page: 'sdd/design.html', section: 'SDD' },
 
     /* ── SDD: Output ─── */
-    { term: 'print()', desc: 'Python statement that displays messages and variable values on screen', page: 'sdd/output.html', section: 'SDD' },
-    { term: 'Internal commentary', desc: 'Lines starting with # that the computer ignores — they explain the code', page: 'sdd/output.html', section: 'SDD' },
-    { term: 'Comment', desc: 'A # line ignored by the computer, used to make code readable', page: 'sdd/output.html', section: 'SDD' },
-    { term: 'SEND TO DISPLAY', desc: 'SQA reference language for output — SEND "message" & variable TO DISPLAY', page: 'sdd/output.html', section: 'SDD' },
+    { term: 'print()', desc: 'Python statement that displays messages and variable values on screen', page: 'sdd/input-output.html', section: 'SDD' },
+    { term: 'Internal commentary', desc: 'Lines starting with # that the computer ignores — they explain the code', page: 'sdd/input-output.html', section: 'SDD' },
+    { term: 'Comment', desc: 'A # line ignored by the computer, used to make code readable', page: 'sdd/input-output.html', section: 'SDD' },
+    { term: 'SEND TO DISPLAY', desc: 'SQA reference language for output — SEND "message" & variable TO DISPLAY', page: 'sdd/input-output.html', section: 'SDD' },
 
     /* ── SDD: Data Types, Variables & Arrays ─── */
     { term: 'Integer', desc: 'Whole number data type — no decimal point', page: 'sdd/data-types-structures.html', section: 'SDD' },
@@ -56,11 +56,11 @@
     { term: 'Data structure', desc: 'A variable or an array', page: 'sdd/data-types-structures.html', section: 'SDD' },
 
     /* ── SDD: User Input ─── */
-    { term: 'input()', desc: 'Python statement for keyboard input — always returns a string', page: 'sdd/user-input.html', section: 'SDD' },
-    { term: 'Casting', desc: 'Converting input to the right type with int() or float()', page: 'sdd/user-input.html', section: 'SDD' },
-    { term: 'int()', desc: 'Casts input to an integer — needed before whole-number calculations', page: 'sdd/user-input.html', section: 'SDD' },
-    { term: 'float()', desc: 'Casts input to a real number — needed for decimals like prices', page: 'sdd/user-input.html', section: 'SDD' },
-    { term: 'RECEIVE FROM KEYBOARD', desc: 'SQA reference language for input — RECEIVE age FROM (INTEGER) KEYBOARD', page: 'sdd/user-input.html', section: 'SDD' },
+    { term: 'input()', desc: 'Python statement for keyboard input — always returns a string', page: 'sdd/input-output.html', section: 'SDD' },
+    { term: 'Casting', desc: 'Converting input to the right type with int() or float()', page: 'sdd/input-output.html', section: 'SDD' },
+    { term: 'int()', desc: 'Casts input to an integer — needed before whole-number calculations', page: 'sdd/input-output.html', section: 'SDD' },
+    { term: 'float()', desc: 'Casts input to a real number — needed for decimals like prices', page: 'sdd/input-output.html', section: 'SDD' },
+    { term: 'RECEIVE FROM KEYBOARD', desc: 'SQA reference language for input — RECEIVE age FROM (INTEGER) KEYBOARD', page: 'sdd/input-output.html', section: 'SDD' },
 
     /* ── SDD: Calculations ─── */
     { term: 'Arithmetic operators', desc: 'Addition +, subtraction -, multiplication *, division /, exponentiation **', page: 'sdd/calculations.html', section: 'SDD' },
