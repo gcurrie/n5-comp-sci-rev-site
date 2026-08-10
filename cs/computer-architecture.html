@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Computer Systems</div>
     <h1>Computer Architecture</h1>
-    <p>The processor (registers, ALU, control unit), memory locations with unique addresses, buses — and why programs must be translated by interpreters and compilers.</p>
+    <p>The parts of the processor, how data travels to and from memory on the buses, and why every program must be translated by an interpreter or a compiler.</p>
   </div>
 </section>
 <main class="page-content">
@@ -38,85 +38,194 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#components">Components of the Computer</a></li>
-          <li><a href="#processor">Inside the Processor</a></li>
-          <li><a href="#translators">Interpreters &amp; Compilers</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#processor">The Parts of the Processor</a></li>
+          <li><a href="#memory-buses">Memory &amp; the Buses</a></li>
+          <li><a href="#translators">Translators</a></li>
+          <li><a href="#worked">Worked Examples</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="components">Components of the Computer</h2>
-        <p>Computers have a <strong>processor</strong>, which has three parts: <strong>registers</strong>, the <strong>ALU</strong> and the <strong>control unit</strong>. The processor does the computer's "thinking". Data and instructions from the programs you are running are stored in <strong>memory locations</strong>, each with a <strong>unique address</strong>, and are moved between memory and the processor along <strong>buses</strong>.</p>
-        <p>You need to know how these are linked together — this is a simplified version of how it works:</p>
-        <img src="../resources/cs/computer-architecture.svg" alt="Computer architecture diagram: processor containing registers, ALU and control unit, connected to memory locations by the address bus and data bus." class="zoomable" style="max-width:100%;" />
-        <ul>
-          <li>The <strong>address bus</strong> carries the address of the memory location being accessed, from the processor to memory.</li>
-          <li>The <strong>data bus</strong> carries the actual data between the processor and memory.</li>
-        </ul>
-      </article>
+        <h2 id="intro">Introduction</h2>
+        <p>Every program you've written this year was run by the same piece of hardware: the <strong>processor</strong> — the part of the computer that does the "thinking". This page looks inside it: the three parts of the processor, how data travels between the processor and <strong>memory</strong> along the <strong>buses</strong>, and how your Python code gets turned into the only language the processor actually speaks — binary <strong>machine code</strong>.</p>
 
-      <article>
-        <h2 id="processor">Inside the Processor</h2>
+        <h3>Key Terms</h3>
         <div class="key-terms">
-          <div class="key-term"><div class="term">Registers</div><div class="def">A small amount of memory inside the processor that stores data temporarily, especially during calculations.</div></div>
-          <div class="key-term"><div class="term">Control unit</div><div class="def">Decodes and executes instructions, and keeps the other parts of the processor in time with its clock.</div></div>
-          <div class="key-term"><div class="term">ALU (Arithmetic Logic Unit)</div><div class="def">Does all the calculations and logical decisions a program requires — when your if statements use ==, &lt; or &gt;, that's the ALU at work.</div></div>
+          <div class="key-term"><div class="term">Processor</div><div class="def">The part of the computer that carries out instructions — made of the ALU, control unit and registers.</div></div>
+          <div class="key-term"><div class="term">ALU (Arithmetic Logic Unit)</div><div class="def">Does the calculations and logical decisions (comparisons).</div></div>
+          <div class="key-term"><div class="term">Control unit</div><div class="def">Decodes and executes instructions, keeping the parts of the processor in time.</div></div>
+          <div class="key-term"><div class="term">Registers</div><div class="def">A small amount of very fast memory inside the processor for temporarily storing values.</div></div>
+          <div class="key-term"><div class="term">Memory location</div><div class="def">A storage place in main memory, each with its own unique address.</div></div>
+          <div class="key-term"><div class="term">Address bus</div><div class="def">Carries the address of the memory location being accessed, from processor to memory.</div></div>
+          <div class="key-term"><div class="term">Data bus</div><div class="def">Carries the actual data between the processor and memory.</div></div>
+          <div class="key-term"><div class="term">Translator</div><div class="def">Software that converts high-level code into machine code — an interpreter or a compiler.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe</strong> the purpose of the processor's components (registers, ALU, control unit), memory locations with unique addresses, and the data and address buses — and <strong>explain</strong> the need for interpreters and compilers to translate high-level code into binary (machine code).</div>
         </div>
       </article>
 
       <article>
-        <h2 id="translators">Interpreters &amp; Compilers</h2>
-        <p>We write our programs in Python. Python is easy for <em>us</em> to read (it looks a bit like English), but it isn't readable by the computer — the computer only understands <strong>machine code</strong> (binary 1s and 0s). Before a program can run, it must be <strong>translated</strong> into machine code by an <strong>interpreter</strong> or a <strong>compiler</strong>. Both are types of <strong>translator</strong>.</p>
+        <h2 id="processor">The Parts of the Processor</h2>
+        <p>The processor has <strong>three parts</strong>, and each has one clear job. Exam questions describe a task and ask you to <strong>state the part responsible</strong> — so learn these as job descriptions:</p>
+        <table>
+          <thead><tr><th>Part</th><th>Its job</th><th>Spot it in a question by…</th></tr></thead>
+          <tbody>
+            <tr><td><strong>ALU</strong></td><td>Does all the <strong>calculations</strong> (arithmetic) and <strong>logical decisions</strong> (comparisons)</td><td>"perform the calculation", "compare the values", "decide if x &gt; y"</td></tr>
+            <tr><td><strong>Control unit</strong></td><td><strong>Decodes and executes</strong> instructions, and keeps the other parts in time with its clock</td><td>"in charge", "manages", "executes instructions"</td></tr>
+            <tr><td><strong>Registers</strong></td><td><strong>Temporarily store</strong> values inside the processor, especially during calculations</td><td>"temporarily store", "hold the values being worked on"</td></tr>
+          </tbody>
+        </table>
+        <p>Here's the connection to your own programs: every time your Python code does <code>total = num1 + num2</code> or checks <code>if age &gt;= 17:</code>, that's the <strong>ALU</strong> doing the adding and comparing — with the values sitting in <strong>registers</strong> while it works, and the <strong>control unit</strong> conducting the whole orchestra.</p>
+      </article>
+
+      <article>
+        <h2 id="memory-buses">Memory &amp; the Buses</h2>
+        <p>The processor is fast but tiny — it can't hold your whole program. Programs and their data live in <strong>main memory</strong>, which is divided into <strong>memory locations, each with its own unique address</strong> (like houses on a very long street). When the processor needs something, it fetches it from memory — and that transfer happens along two <strong>buses</strong>:</p>
+        <ul>
+          <li>The <strong>address bus</strong> carries the <strong>address</strong> of the memory location being accessed, from the processor <em>to</em> memory — "I want what's at address 3,000,000, please."</li>
+          <li>The <strong>data bus</strong> carries the <strong>actual data</strong> between the processor and that location — the value itself making the journey.</li>
+        </ul>
+        <img src="../resources/cs/computer-architecture.svg" alt="Computer architecture diagram: processor containing registers, ALU and control unit, connected to memory locations by the address bus and data bus." class="zoomable" style="max-width:100%;" />
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>An easy way to keep the buses straight: the address bus asks <strong>where</strong>, the data bus carries <strong>what</strong>. Address = location; data = contents.</div>
+        </div>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎞️</span>
+          <em>Placeholder — animation</em>
+          Suggestion: an animated fetch — the processor sends an address pulse along the address bus to a highlighted memory location, and the value travels back along the data bus into a register. A "store" mode could show the data travelling the other way.
+        </div>
+      </article>
+
+      <article>
+        <h2 id="translators">Translators — Interpreters &amp; Compilers</h2>
+        <p>We write our programs in Python. Python is easy for <em>us</em> to read (it looks a bit like English), but the processor only understands <strong>machine code</strong> — binary 1s and 0s. So before any program can run, it must be <strong>translated</strong>. The software that does this is a <strong>translator</strong>, and there are two kinds:</p>
         <table>
           <thead><tr><th></th><th>Interpreter</th><th>Compiler</th></tr></thead>
           <tbody>
-            <tr><td><strong>How it translates</strong></td><td>Line-by-line, every time the program runs</td><td>The whole program at once, producing a machine-code file</td></tr>
-            <tr><td><strong>Errors</strong></td><td>Shown "live" as they happen — great while developing</td><td>All syntax errors reported together after compiling</td></tr>
-            <tr><td><strong>Speed</strong></td><td>Slower to run — translated every time</td><td>Runs fast once compiled, but you wait for compilation</td></tr>
+            <tr><td><strong>How it translates</strong></td><td><strong>Line-by-line</strong>, every time the program runs</td><td>The <strong>whole program at once</strong>, producing a machine-code version</td></tr>
+            <tr><td><strong>Advantages</strong></td><td>Errors are reported <strong>live</strong>, line by line, as they happen — great while writing and fixing code</td><td>Once compiled, the program <strong>runs fast</strong> — and it can be run again and again <strong>without any further translation</strong></td></tr>
+            <tr><td><strong>Disadvantages</strong></td><td><strong>Slower to run</strong> — every line is re-translated on every run (a loop that repeats 4 times is translated 4 times!)</td><td>You must <strong>wait for the whole program to compile</strong> before running it; all the errors arrive in one big list at the end</td></tr>
           </tbody>
         </table>
-        <p>What we use — Python — is <strong>interpreted</strong>: you see your errors live as they happen. A compiler would find all the syntax errors once at the start, but you'd have to wait for the whole program to compile before running it.</p>
+        <p>What we use — Python — is <strong>interpreted</strong>: that's why you see your errors "live" as they happen. Finished software that you download is <strong>compiled</strong>: it was translated once by the developers, and your machine just runs the machine code.</p>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>These are usually short 1–2 mark questions. Learn a few advantages of each, and remember: <strong>all programs must be translated to machine code before they can run</strong>.</div>
+          <div>The killer fact examiners love: an interpreter translates a loop <strong>every time it repeats</strong>, but a compiler translates it <strong>once</strong>. If a question mentions how often a loop gets translated, that's your clue — see the 2023 worked example below.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="worked">Worked Examples</h2>
+
+        <div class="worked-example">
+          <div class="q-label">2023 Q7(b) — Which Part Compares? (1 mark)</div>
+          <img src="../resources/cs/images/cs_comp-arch_2023_q7b.png" alt="2023 exam question: state the part of the processor used to compare stone_A_distance to stone_B_distance." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the command word is <em>state</em> — name the part, no explanation needed. The key word in the question is "<strong>compare</strong>". Comparing is a logical decision, and logical decisions are the job of the <strong>ALU</strong>.</p>
+          <img src="../resources/cs/images/cs_comp-arch_2023_q7b_ans.png" alt="Marking instructions: ALU (Arithmetic Logic Unit)." class="zoomable" />
+          <p>Either "ALU" or "Arithmetic Logic Unit" earns the mark.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2025 Q9(c) — Calculate and Temporarily Store (2 marks)</div>
+          <img src="../resources/cs/images/cs_comp-arch_2025_q9c.png" alt="2025 exam question: state the part of the processor used during the calculation of the discount to (i) perform the calculation and (ii) temporarily store the values used in the calculation." class="zoomable" />
+          <p><strong>How to tackle it:</strong> two halves, and each contains its own giveaway phrase:</p>
+          <ul>
+            <li>(i) "<strong>perform the calculation</strong>" — arithmetic is the ALU's job → <strong>ALU</strong></li>
+            <li>(ii) "<strong>temporarily store the values</strong>" — temporary storage inside the processor is exactly what <strong>registers</strong> are for → <strong>register(s)</strong></li>
+          </ul>
+          <img src="../resources/cs/images/cs_comp-arch_2025_q9c_ans.png" alt="Marking instructions: (i) ALU (Arithmetic Logic Unit), (ii) Register(s)." class="zoomable" />
+          <p>Notice how the question hands you the job description and asks for the name — that's why learning the parts <em>as</em> job descriptions pays off.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2023 Q11(c) — Complete the Translator Table (2 marks)</div>
+          <img src="../resources/cs/images/cs_transl_2023_q11c.png" alt="2023 exam question: code with a loop that repeats 4 times. Complete the table to identify the type of translator for each effect: loop translated once and converted into machine code; loop translated four times as the program is run." class="zoomable" />
+          <p><strong>How to tackle it:</strong> this is the "killer fact" in exam form. Match each effect to the translator's behaviour:</p>
+          <ul>
+            <li>"Loop will be translated <strong>once</strong> and converted into machine code" — translating everything once is what a <strong>compiler</strong> does.</li>
+            <li>"Loop will be translated <strong>four times</strong> as the program is run" — re-translating each line every time it runs (including every pass of a loop) is the <strong>interpreter</strong>.</li>
+          </ul>
+          <img src="../resources/cs/images/cs_transl_2023_q11c_ans.png" alt="Marking instructions: compiler then interpreter, one mark each in the correct order." class="zoomable" />
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2025 Q11(d) — No Further Translation (1 mark)</div>
+          <img src="../resources/cs/images/cs_transl_2025_q11d.png" alt="2025 exam question: after final testing, the program is run without requiring any further translation. State the type of translator that has been used." class="zoomable" />
+          <p><strong>How to tackle it:</strong> "run <strong>without requiring any further translation</strong>" — only one translator produces a machine-code version you can keep and re-run: the <strong>compiler</strong>. (An interpreter would have to translate the program again on every single run.)</p>
+          <img src="../resources/cs/images/cs_transl_2025_q11d_ans.png" alt="Marking instructions: Compiler." class="zoomable" />
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — Processor parts (3 marks)</div>
-          <p>Name the three parts of the processor and state the purpose of each.</p>
+          <div class="q-label">Practice Question 1 — Parts of the Processor (2 marks)</div>
+          <p>A ferry booking program checks whether the number of cars on board is greater than the ferry's capacity. State the part of the processor used to:</p>
+          <ol type="a">
+            <li>compare the number of cars to the capacity</li>
+            <li>temporarily store both values during the comparison.</li>
+          </ol>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;"><strong>Registers</strong> — temporary storage inside the processor. <strong>Control unit</strong> — decodes/executes instructions and keeps everything in time. <strong>ALU</strong> — performs calculations and logical decisions. (1 mark each)</p>
+              <p style="color:#6A1B9A;">a) <strong>ALU</strong> (Arithmetic Logic Unit) (1 mark)<br/>b) <strong>Register(s)</strong> (1 mark)</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — Buses (2 marks)</div>
-          <p>Describe the purpose of the address bus and the data bus.</p>
+          <div class="q-label">Practice Question 2 — The Control Unit (1 mark)</div>
+          <p>Describe the purpose of the control unit within the processor.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">The address bus carries the unique address of the memory location to be accessed (1 mark); the data bus transfers the data between the processor and that memory location (1 mark).</p>
+              <p style="color:#6A1B9A;">It decodes and executes instructions, and keeps the other parts of the processor in time (synchronised with its clock).</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q3 — Translators (2 marks)</div>
-          <p>Explain why a program written in Python must be translated before it can run, and state which type of translator finds errors line-by-line.</p>
+          <div class="q-label">Practice Question 3 — The Buses (2 marks)</div>
+          <p>When a program needs a value from main memory, two buses are involved in the transfer. Describe the role of the address bus and the data bus in fetching the value.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">The processor only understands machine code (binary), so high-level code must be translated first (1 mark). An <strong>interpreter</strong> translates and reports errors line-by-line (1 mark).</p>
+              <p style="color:#6A1B9A;">The <strong>address bus</strong> carries the unique address of the memory location being accessed from the processor to memory (1 mark). The <strong>data bus</strong> then carries the value itself between memory and the processor (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Identify the Translator (2 marks)</div>
+          <p>A program contains a loop that repeats 10 times. Identify the type of translator being used in each case below:</p>
+          <ol type="a">
+            <li>The loop is translated 10 times while the program runs.</li>
+            <li>The whole program is translated once into machine code, which is then run.</li>
+          </ol>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) <strong>Interpreter</strong> (1 mark) — it re-translates each line every time it is executed.<br/>b) <strong>Compiler</strong> (1 mark) — it translates everything once, in advance.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Explain the Need for Translation (2 marks)</div>
+          <p>A pupil writes a program in Python. Explain why the program must be translated before the processor can run it, and state <strong>one</strong> advantage of using an interpreter while writing the program.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">The processor only understands <strong>machine code</strong> (binary), so the high-level Python code must be translated into machine code before it can be executed (1 mark). An interpreter reports errors <strong>live, line-by-line</strong> as the program runs, which makes finding and fixing mistakes easier during development (1 mark).</p>
             </div>
           </details>
         </div>

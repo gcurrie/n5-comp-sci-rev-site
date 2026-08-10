@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Computer Systems</div>
     <h1>Security</h1>
-    <p>The role of firewalls, and how encryption keeps electronic communications private.</p>
+    <p>Firewalls to keep intruders out of your network, and encryption to keep your messages private even if they're intercepted.</p>
   </div>
 </section>
 <main class="page-content">
@@ -41,7 +41,9 @@
           <li><a href="#intro">Introduction</a></li>
           <li><a href="#firewalls">Firewalls</a></li>
           <li><a href="#encryption">Encryption</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#which">Which One Does the Question Want?</a></li>
+          <li><a href="#worked">Worked Example</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -49,49 +51,114 @@
 
       <article>
         <h2 id="intro">Introduction</h2>
-        <p>Security is a bigger part of the Higher course (and the NPA Cyber Security). For National 5, you only need to be able to briefly describe <strong>the role of a firewall</strong>, and <strong>how encryption is used</strong> in modern communications.</p>
+        <p>Everything you do online — messages, payments, passwords — travels across networks that other people could try to break into or listen in on. National 5 covers two <strong>security precautions</strong> that defend against exactly those two threats: a <strong>firewall</strong> stops intruders getting <em>into</em> your network, and <strong>encryption</strong> makes intercepted data <em>unreadable</em>. (Security gets much bigger at Higher — for N5, these two are all you need, described briefly.)</p>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Firewall</div><div class="def">Software or hardware that restricts access to a network by deciding which connections and data are allowed through.</div></div>
+          <div class="key-term"><div class="term">Encryption</div><div class="def">Scrambling data so that it is unreadable to everyone except the sender and the intended receiver.</div></div>
+          <div class="key-term"><div class="term">Interception</div><div class="def">A third party capturing data as it travels across a network — the threat encryption defends against.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe</strong> the role of firewalls, and <strong>describe</strong> the use made of encryption in electronic communications. These are usually short, 1-mark questions.</div>
+        </div>
       </article>
 
       <article>
         <h2 id="firewalls">Firewalls</h2>
-        <p>A <strong>firewall</strong> is software or hardware that <strong>restricts access to your network</strong>. The firewall decides what data is allowed through the connection, and can block risky connections, or connections from specific computers (e.g. a hacker).</p>
+        <p>A <strong>firewall</strong> is software or hardware that <strong>restricts access to your network</strong>. It sits at the boundary — like a bouncer on the door — inspecting the traffic trying to come in (and go out), and deciding what's allowed through. It can block risky connections, or connections from specific computers (e.g. a hacker).</p>
         <div class="callout callout-warning">
           <div class="callout-icon">⚠️</div>
-          <div>Firewalls protect against <strong>hackers</strong>, not viruses — don't mix them up in an exam answer.</div>
+          <div>Firewalls protect against <strong>hackers and unauthorised access</strong> — not viruses. "A firewall stops viruses" is a classic wrong answer; that's antivirus software's job.</div>
         </div>
       </article>
 
       <article>
         <h2 id="encryption">Encryption</h2>
-        <p><strong>Encryption</strong> protects data by making it <strong>coded, or unreadable</strong>, so that only the intended recipient can understand it.</p>
-        <p>We usually encrypt sensitive data when sending it over the Internet. Even if a criminal got access to the data, it wouldn't make sense to them — it would be scrambled and unreadable. WhatsApp, for example, routinely encrypts all messages sent across its network.</p>
+        <p><strong>Encryption</strong> scrambles data so that it is <strong>only readable by the sender and the intended receiver</strong>. The message still travels across the network — and could still be intercepted — but to anyone else it's meaningless gibberish.</p>
+        <p>We routinely encrypt sensitive data sent over the internet: card details at online checkouts, passwords at login screens — and WhatsApp encrypts every message on its network as standard. Even if a criminal captured the data mid-journey, they couldn't read it.</p>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>In previous National 5 assessments, firewall and encryption questions have been very short — usually <strong>one-mark questions</strong> asking for a brief description of what each does. Sometimes the answer is literally the single word "encryption"!</div>
+          <div>Fans of WWII history: this is the Enigma machine problem. The Germans encrypted their radio messages precisely because they <em>knew</em> the enemy could intercept them — interception without the key is useless. Same idea, now protecting your group chat.</div>
+        </div>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎞️</span>
+          <em>Placeholder — animation</em>
+          Suggestion: an interception animation — a readable message leaves a sender, gets scrambled into ciphertext, an eavesdropper in the middle grabs a copy and sees only gibberish, while the receiver unscrambles it back to plain text. A toggle for "without encryption" showing the eavesdropper reading everything would land the point.
         </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="which">Which One Does the Question Want?</h2>
+        <p>With only two precautions to choose from, the exam question comes down to spotting the threat being described:</p>
+        <table>
+          <thead><tr><th>The question describes…</th><th>Answer</th></tr></thead>
+          <tbody>
+            <tr><td>Someone trying to <strong>access the network/system</strong> without permission — hacking, breaking in, unauthorised connections</td><td><strong>Firewall</strong></td></tr>
+            <tr><td>Data being <strong>intercepted, read or stolen in transit</strong> — emails, messages, payments crossing a network</td><td><strong>Encryption</strong></td></tr>
+          </tbody>
+        </table>
+        <p>In short: <em>getting in</em> → firewall; <em>reading the mail</em> → encryption.</p>
+      </article>
+
+      <article>
+        <h2 id="worked">Worked Example</h2>
+
+        <div class="worked-example">
+          <div class="q-label">2025 Q11(f) — Protecting an Intercepted E-mail (1 mark)</div>
+          <img src="../resources/cs/images/cs_sec_2025_q11f.png" alt="2025 exam question: a member has written an e-mail to the gym manager. State what can be done to ensure that, if intercepted, the e-mail cannot be read by others." class="zoomable" />
+          <p><strong>How to tackle it:</strong> scan for the threat. The e-mail might be "<strong>intercepted</strong>" and must not be "<strong>read by others</strong>" — that's data being read in transit, which is exactly what <strong>encryption</strong> prevents. Nobody is trying to break into a network here, so it isn't a firewall question.</p>
+          <img src="../resources/cs/images/cs_sec_2025_q11f_ans.png" alt="Marking instructions: Encryption." class="zoomable" />
+          <p>The command word is <em>state</em>, and the marking instructions want literally one word: <strong>encryption</strong>. Possibly the fastest mark in the paper — if you know the vocabulary.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — Firewall (1 mark)</div>
-          <p>Describe the role of a firewall.</p>
+          <div class="q-label">Practice Question 1 — Name the Precaution (1 mark)</div>
+          <p>An online shop sends customers' card details across the internet when they pay. State the security precaution used to ensure the details cannot be read if intercepted.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">It restricts access to a network by deciding which data/connections are allowed through, blocking risky or unauthorised connections (e.g. hackers).</p>
+              <p style="color:#6A1B9A;"><strong>Encryption</strong></p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — Encryption (2 marks)</div>
-          <p>A shop's website sends customers' payment details over the Internet. Explain how encryption protects these details.</p>
+          <div class="q-label">Practice Question 2 — The Role of a Firewall (1 mark)</div>
+          <p>A school network uses a firewall. Describe the role of the firewall.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">The details are scrambled/encoded so they are unreadable (1 mark); only the intended recipient can decode and read them, so intercepted data is useless to a criminal (1 mark).</p>
+              <p style="color:#6A1B9A;">It <strong>restricts access to the network</strong> — deciding which data/connections are allowed through and blocking risky or unauthorised ones (e.g. hackers).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Explain Encryption (2 marks)</div>
+          <p>A doctors' surgery e-mails test results to patients. Explain how encryption protects these e-mails.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">The e-mail is <strong>scrambled/encoded so it is unreadable</strong> (1 mark); only the sender and intended receiver can read it, so anyone who intercepts it sees meaningless data (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Choose and Justify (2 marks)</div>
+          <p>A gaming company is worried that hackers may try to gain access to its office network. Identify the most suitable security precaution, and describe how it would protect the network.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">A <strong>firewall</strong> (1 mark). It restricts access to the network by blocking unauthorised/risky connections, such as those from a hacker's computer (1 mark).</p>
+              <p>Encryption gets no marks here — the threat is someone getting <em>in</em>, not data being read in transit.</p>
             </div>
           </details>
         </div>

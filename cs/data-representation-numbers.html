@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Computer Systems</div>
     <h1>Data Representation — Numbers</h1>
-    <p>Storing positive integers in binary, converting between binary and denary, and floating-point representation with mantissa and exponent.</p>
+    <p>8-bit binary conversion in both directions, and picking out the mantissa and exponent of a floating-point number.</p>
   </div>
 </section>
 <main class="page-content">
@@ -38,65 +38,87 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#binary">What Are Binary Numbers?</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#binary">Binary Numbers</a></li>
           <li><a href="#bin-to-den">Binary → Denary</a></li>
           <li><a href="#den-to-bin">Denary → Binary</a></li>
           <li><a href="#converter">Try It — Converter</a></li>
           <li><a href="#floating-point">Floating Point</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#worked">Worked Examples</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="binary">What Are Binary Numbers?</h2>
-        <p>Computers store whole numbers using <strong>binary</strong> — a number system that uses only the digits <strong>1 and 0</strong>. At National 5 you must be able to convert between <strong>denary</strong> (the base-10 numbers we use) and binary, in both directions.</p>
-        <ul>
-          <li><strong>Binary</strong> — what the computer uses, e.g. <code>10011101</code></li>
-          <li><strong>Denary</strong> — what we use, e.g. <code>157</code></li>
-        </ul>
-        <p>We work with <strong>eight place values (columns)</strong>, starting at 1 on the right and doubling each time:</p>
+        <h2 id="intro">Introduction</h2>
+        <p>Deep down, a computer only understands two things: on and off, 1 and 0. Every score, price and age your programs have ever stored ends up as a pattern of 1s and 0s — <strong>binary</strong>. This page covers how whole numbers are stored in binary (and how to convert them in both directions), and how numbers with a decimal point are stored using <strong>floating-point representation</strong>.</p>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Binary</div><div class="def">The base-2 number system — only the digits 1 and 0. What the computer uses.</div></div>
+          <div class="key-term"><div class="term">Denary</div><div class="def">The base-10 number system — digits 0 to 9. What we use.</div></div>
+          <div class="key-term"><div class="term">Bit</div><div class="def">A single binary digit (0 or 1). Eight bits make a <strong>byte</strong>.</div></div>
+          <div class="key-term"><div class="term">Place value</div><div class="def">The value of each binary column: 128, 64, 32, 16, 8, 4, 2, 1 — doubling from the right.</div></div>
+          <div class="key-term"><div class="term">Floating-point representation</div><div class="def">How real (decimal) numbers are stored — with a mantissa and an exponent.</div></div>
+          <div class="key-term"><div class="term">Mantissa</div><div class="def">The digits part of a floating-point number. Governs its <strong>precision</strong>.</div></div>
+          <div class="key-term"><div class="term">Exponent</div><div class="def">The power part of a floating-point number. Governs its <strong>range</strong>.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe and exemplify</strong> the use of binary to represent positive integers, <strong>convert</strong> from binary to denary and vice-versa, and <strong>describe</strong> floating-point representation of positive real numbers using the terms <em>mantissa</em> and <em>exponent</em>.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="binary">Binary Numbers</h2>
+        <p>Computers store whole numbers using <strong>binary</strong> — a number system with only two digits, 1 and 0. To work with 8-bit binary, draw <strong>eight place-value columns</strong>, starting at 1 on the right and <strong>doubling</strong> each time:</p>
         <table style="text-align:center;">
           <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
           <tbody><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td></tr></tbody>
         </table>
-        <p>To convert <code>10011101</code> to denary, add up all the columns with a 1 in them: 128 + 16 + 8 + 4 + 1 = <strong>157</strong>.</p>
+        <p>Every binary number is just a row of 1s and 0s sitting under those columns. A 1 means "this column is switched on"; a 0 means it isn't. That one idea powers both conversions below.</p>
       </article>
 
       <article>
         <h2 id="bin-to-den">Converting Binary → Denary</h2>
-        <div class="worked-example">
-          <div class="q-label">Worked Example — 01011100 to denary</div>
+        <p>To turn a binary number into an ordinary (denary) number: write it under the place-value columns, then <strong>add up every column with a 1 in it</strong>. Done.</p>
+        <div class="example-block">
+          <div class="example-label">Example — 01011100 to denary</div>
           <table style="text-align:center;">
             <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
             <tbody><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr></tbody>
           </table>
-          <p>Add up all the columns with a 1 in them: 64 + 16 + 8 + 4 = <strong>92</strong>.</p>
+          <p>Columns with a 1: 64 + 16 + 8 + 4 = <strong>92</strong>.</p>
         </div>
       </article>
 
       <article>
         <h2 id="den-to-bin">Converting Denary → Binary</h2>
-        <p>You also need to be able to write a denary number in binary. There are a few methods — this one is the simplest:</p>
-        <div class="worked-example">
-          <div class="q-label">Worked Example — 87 to binary</div>
-          <p>Draw the place value columns and ask: <em>which of these columns, when added up, would make 87?</em></p>
+        <p>Going the other way takes slightly more thought. There are a few methods — this one is the simplest. Draw the columns, then work <strong>left to right</strong>, asking of each column: <em>does this fit into what I have left?</em></p>
+        <div class="example-block">
+          <div class="example-label">Example — 87 to binary</div>
           <ol>
-            <li><strong>128</strong> doesn't go into 87, so there must be a <strong>0</strong> in that column.</li>
-            <li><strong>64</strong> does go into 87, so write a <strong>1</strong> in the 64 column. This leaves 87 − 64 = <strong>23</strong>.</li>
-            <li>Which remaining columns add up to 23? 16 + 4 + 2 + 1 — put a <strong>1</strong> in each of those columns.</li>
-            <li>Finally, fill in the empty columns with <strong>0s</strong>.</li>
+            <li>Does <strong>128</strong> fit into 87? No — write a <strong>0</strong>.</li>
+            <li>Does <strong>64</strong> fit into 87? Yes — write a <strong>1</strong>. That leaves 87 − 64 = <strong>23</strong>.</li>
+            <li>Which remaining columns make 23? 16 + 4 + 2 + 1 — write a <strong>1</strong> in each.</li>
+            <li>Fill every other column with <strong>0</strong>.</li>
           </ol>
           <table style="text-align:center;">
             <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
             <tbody><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr></tbody>
           </table>
-          <p>So 87 in binary is <code>01010111</code>. <strong>Check your working</strong> by adding the columns with a 1: 64 + 16 + 4 + 2 + 1 = 87 ✓</p>
+          <p>So 87 is <code>01010111</code>. <strong>Always check your working</strong> by adding the 1-columns back up: 64 + 16 + 4 + 2 + 1 = 87 ✓</p>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Asked for an <strong>8-bit</strong> answer? Give all eight bits, including the leading zeros. <code>1010111</code> is only seven — cheap marks have been lost this way.</div>
         </div>
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
-          <div>At National 5 you only deal with <strong>positive integers</strong> in binary. (Negative numbers using two's complement are a Higher topic.)</div>
+          <div>At National 5, binary conversion only involves <strong>positive whole numbers</strong> up to 255 — negative numbers are a Higher problem.</div>
         </div>
       </article>
 
@@ -116,57 +138,113 @@
 
       <article>
         <h2 id="floating-point">Floating Point — Mantissa &amp; Exponent</h2>
-        <p>Real (decimal) numbers like <code>0.5571257</code> are stored using <strong>floating point representation</strong>. If you are asked <em>how floating point numbers are stored</em>, the answer is: with a <strong>mantissa</strong> and an <strong>exponent</strong>.</p>
-        <p>The idea comes from scientific notation:</p>
+        <p>Binary place values handle whole numbers — but what about <strong>real numbers</strong> like 0.5571257? These are stored using <strong>floating-point representation</strong>. If you're asked <em>how</em> floating-point numbers are stored, the answer is: with a <strong>mantissa</strong> and an <strong>exponent</strong>.</p>
+        <p>The idea comes from scientific notation, which you may know from maths or physics:</p>
         <div class="code-block">
           <div class="code-label">Example</div>
-          <pre>5.8125 = 0.58125 × 10⁴
+          <pre>5.8125  =  0.58125 × 10⁴
 
-mantissa = 58125     (remove the decimal point)
-exponent = 4         (remove the ×10)</pre>
+mantissa = 58125     (the digits — remove the decimal point)
+exponent = 4         (the power — remove the ×10)</pre>
         </div>
-        <div class="key-terms">
-          <div class="key-term"><div class="term">Mantissa</div><div class="def">Governs the <strong>precision</strong> of the number. Pi can be shortened to 3.14, but 3.14159265359 is more precise — the longer the mantissa, the more precise the number.</div></div>
-          <div class="key-term"><div class="term">Exponent</div><div class="def">Governs the <strong>range</strong> of the number. The higher the exponent, the larger the number can be.</div></div>
-        </div>
+        <p>Each part has its own job:</p>
+        <ul>
+          <li>The <strong>mantissa</strong> governs the <strong>precision</strong> of the number. Pi can be shortened to 3.14, but 3.14159265359 is more precise — the longer the mantissa, the more precise the number.</li>
+          <li>The <strong>exponent</strong> governs the <strong>range</strong> — the higher the exponent, the larger the number can be.</li>
+        </ul>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div><strong>Exam gold:</strong> this question has come up in the same way in <em>every</em> N5 exam — you're given a floating point number and asked to pick out the two parts. Practise identifying the mantissa and exponent!</div>
+          <div><strong>Exam gold:</strong> "identify the mantissa and exponent" has appeared in the same form in <em>every</em> N5 exam. Two easy marks — see the worked example below for exactly how it looks.</div>
+        </div>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎞️</span>
+          <em>Placeholder — animation</em>
+          Suggestion: a "floating decimal point" animation — a number like 581.25 with the point visibly sliding left to 0.58125 while a ×10 counter ticks up to 10³, then the mantissa and exponent are highlighted and pulled out into labelled boxes.
         </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="worked">Worked Examples</h2>
+
+        <div class="worked-example">
+          <div class="q-label">2025 Q1(a) — Denary to Binary (1 mark)</div>
+          <img src="../resources/cs/images/cs_bin_2025_q1.png" alt="2025 exam question: a leaderboard shows teams and scores. Convert the denary number 79 to an 8-bit binary number." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the leaderboard is set dressing — all that matters is the number 79 and the words "8-bit binary". Draw the columns and work left to right:</p>
+          <ol>
+            <li>128 into 79? No — <strong>0</strong>.</li>
+            <li>64 into 79? Yes — <strong>1</strong>, leaving 79 − 64 = 15.</li>
+            <li>Which columns make 15? 8 + 4 + 2 + 1 — a <strong>1</strong> in each.</li>
+            <li>Zeros everywhere else.</li>
+          </ol>
+          <table style="text-align:center;">
+            <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
+            <tbody><tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr></tbody>
+          </table>
+          <p>Check: 64 + 8 + 4 + 2 + 1 = 79 ✓ — and count the bits: all eight present.</p>
+          <img src="../resources/cs/images/cs_bin_2025_q1_ans.png" alt="Marking instructions: 01001111, 1 mark." class="zoomable" />
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2025 Q4 — Identify the Mantissa &amp; Exponent (2 marks)</div>
+          <img src="../resources/cs/images/cs_float_2025_Q4.png" alt="2025 exam question: identify the mantissa and exponent in the floating-point representation 0.127 times 10 to the power 2." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the number is 0.127 × 10². Apply the two rules:</p>
+          <ul>
+            <li>Mantissa = the digits, with the decimal point removed → <strong>127</strong></li>
+            <li>Exponent = the power, with the ×10 removed → <strong>2</strong></li>
+          </ul>
+          <p>That's the whole question — two marks for knowing which part is which.</p>
+          <img src="../resources/cs/images/cs_float_2025_Q4_ans.png" alt="Marking instructions: mantissa 127, exponent 2." class="zoomable" />
+          <p>Watch you don't swap them! Writing "mantissa: 2, exponent: 127" scores zero, which would be a sore one.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — Binary to denary (2 marks)</div>
-          <p>Convert the binary number <code>01101001</code> to denary.</p>
+          <div class="q-label">Practice Question 1 — Denary to Binary (1 mark)</div>
+          <p>A quiz program stores each player's score. Convert the denary number <strong>106</strong> to an 8-bit binary number.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">64 + 32 + 8 + 1 = <strong>105</strong>. (2 marks; 1 mark for correct method with one slip)</p>
+              <p style="color:#6A1B9A;"><code>01101010</code></p>
+              <p>Working: 106 = 64 + 32 + 8 + 2. One mark for the correct 8-bit answer — remember the leading zero.</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — Denary to binary (2 marks)</div>
-          <p>Convert the denary number <strong>203</strong> to 8-bit binary.</p>
+          <div class="q-label">Practice Question 2 — Binary to Denary (1 mark)</div>
+          <p>Convert the binary number <code>10110010</code> to denary.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">203 = 128 + 64 + 8 + 2 + 1 → <code>11001011</code>. (2 marks)</p>
+              <p style="color:#6A1B9A;"><strong>178</strong></p>
+              <p>Working: 128 + 32 + 16 + 2 = 178. One mark for the correct answer.</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q3 — Floating point (2 marks)</div>
-          <p>A number is represented as 0.110101 × 2¹⁰¹. Identify the mantissa and the exponent.</p>
+          <div class="q-label">Practice Question 3 — Mantissa &amp; Exponent (2 marks)</div>
+          <p>Identify the mantissa and exponent in the floating-point representation below.</p>
+          <div class="code-block"><pre>0.3945 × 10⁶</pre></div>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">Mantissa: <code>110101</code> (1 mark). Exponent: <code>101</code> (1 mark).</p>
+              <p style="color:#6A1B9A;">Mantissa: <strong>3945</strong> (1 mark)<br/>Exponent: <strong>6</strong> (1 mark)</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Describe Floating Point (2 marks)</div>
+          <p>A weather app stores temperatures such as 18.375. Describe how real numbers like this are stored in a computer system.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Real numbers are stored using floating-point representation, with a <strong>mantissa</strong> (1 mark) and an <strong>exponent</strong> (1 mark).</p>
+              <p>Naming the two parts is what earns the marks — a stronger answer can add that the mantissa holds the number's digits/precision and the exponent holds the power/range.</p>
             </div>
           </details>
         </div>

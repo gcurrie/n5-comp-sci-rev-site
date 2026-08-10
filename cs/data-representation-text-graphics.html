@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Computer Systems</div>
     <h1>Data Representation — Text &amp; Graphics</h1>
-    <p>Extended ASCII for storing characters, and the two ways of representing graphics — bit-mapped and vector.</p>
+    <p>Extended ASCII for storing text, bit-mapped and vector graphics — and choosing the right representation for an image.</p>
   </div>
 </section>
 <main class="page-content">
@@ -38,38 +38,64 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#ascii">ASCII &amp; Extended ASCII</a></li>
-          <li><a href="#ascii-explorer">Try It — ASCII Explorer</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#ascii">Extended ASCII</a></li>
+          <li><a href="#ascii-bits">Calculating Bits for a String</a></li>
           <li><a href="#bitmap">Bitmap Graphics</a></li>
           <li><a href="#vector">Vector Graphics</a></li>
-          <li><a href="#scaling">Try It — Bitmap vs Vector</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#choosing">Which Representation?</a></li>
+          <li><a href="#worked">Worked Examples</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="ascii">ASCII &amp; Extended ASCII</h2>
-        <p>Text is stored by giving each character a <strong>numeric value</strong>, which is then converted to binary. For example, capital <strong>A</strong> has an ASCII code of <strong>65</strong>, which is stored as the binary number <code>01000001</code>. The Space key is 32.</p>
-        <p><strong>Extended ASCII</strong> uses <strong>8 bits per character</strong>, giving 256 possible characters. There are two types:</p>
-        <ul>
-          <li><strong>Printable characters</strong> — letters, numbers and symbols you can see on screen</li>
-          <li><strong>Control characters</strong> — signals without printed symbols, like <em>escape</em> and <em>delete</em></li>
-        </ul>
+        <h2 id="intro">Introduction</h2>
+        <p>Numbers weren't so hard — but how does a machine that only understands 1s and 0s store the letter A? Or a photo of your dog? The answer, both times, is the same trick: <strong>turn it into numbers</strong>. Text gets a number per character (<strong>ASCII</strong>); images get numbers per pixel (<strong>bitmap</strong>) or numbers describing shapes (<strong>vector</strong>).</p>
 
-        <h3>Calculating storage</h3>
-        <div class="code-block">
-          <div class="code-label">Formula</div>
-          <pre>Space needed (in bits) = length of the message × 8
-
-"Hello"  →  5 × 8 = 40 bits  =  40 ÷ 8  =  5 bytes</pre>
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Extended ASCII</div><div class="def">An 8-bit code where every character has its own number — 256 characters in total.</div></div>
+          <div class="key-term"><div class="term">Printable character</div><div class="def">A character you can see on screen — letters, digits and symbols.</div></div>
+          <div class="key-term"><div class="term">Control character</div><div class="def">A character with no printed symbol — a signal such as escape or delete.</div></div>
+          <div class="key-term"><div class="term">Bitmap (bit-mapped) graphic</div><div class="def">An image stored as a grid of pixels, each pixel holding a colour as a binary value.</div></div>
+          <div class="key-term"><div class="term">Pixel</div><div class="def">One square in the bitmap grid — the smallest part of the image.</div></div>
+          <div class="key-term"><div class="term">Vector graphic</div><div class="def">An image stored as a list of objects (rectangle, ellipse, line, polygon), each with attributes.</div></div>
+          <div class="key-term"><div class="term">Attribute</div><div class="def">A stored property of a vector object — its co-ordinates, fill colour and line colour.</div></div>
         </div>
 
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
-          <div><strong>What you need to know:</strong> extended ASCII uses 8 bits per character; it has printable and control characters; every character has an ASCII number; storage = message length × 8 bits (÷ 8 for bytes).</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe</strong> extended ASCII (8-bit) and <strong>calculate</strong> the bits needed for a string; <strong>describe</strong> the bit-mapped method; <strong>describe</strong> the vector method with its four objects and their attributes; and <strong>identify</strong> the representation used for a given image.</div>
         </div>
+      </article>
+
+      <article>
+        <h2 id="ascii">Text — Extended ASCII</h2>
+        <p>Text is stored by giving every character its own <strong>number</strong>, which is then stored in binary. Capital A is <strong>65</strong> (binary <code>01000001</code>), the Space key is <strong>32</strong>, and so on. <strong>Extended ASCII</strong> uses <strong>8 bits per character</strong>, giving 2⁸ = <strong>256 possible characters</strong>.</p>
+        <p>Those 256 characters come in two types:</p>
+        <ul>
+          <li><strong>Printable characters</strong> — everything you can see on screen: letters (capital and lowercase are <em>different</em> characters!), digits and symbols like &amp; and %.</li>
+          <li><strong>Control characters</strong> — signals with no printed symbol, such as <em>escape</em>, <em>delete</em> and <em>tab</em>. They control what happens rather than printing anything.</li>
+        </ul>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>"A" is 65 but "a" is 97 — which is why <code>if password == "Secret"</code> rejects "secret". The computer isn't being fussy; they're genuinely different numbers.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="ascii-bits">Calculating the Bits for a String</h2>
+        <p>Since every character takes exactly 8 bits, working out the storage for a string is one multiplication:</p>
+        <div class="code-block">
+          <div class="code-label">The formula</div>
+          <pre>Space needed (in bits) = number of characters × 8
+
+"Hello"  →  5 × 8  =  40 bits   (= 40 ÷ 8 = 5 bytes)</pre>
+        </div>
+        <p>The only trap is <strong>counting the characters correctly</strong> — spaces, underscores, digits and symbols all count. Count them one at a time with your pencil; don't eyeball it.</p>
       </article>
 
       <article id="ascii-explorer">
@@ -77,7 +103,7 @@
           <div class="ib-label">Visualiser</div>
           <p class="ib-title">ASCII Explorer</p>
           <div class="ib-body">
-            <p class="ib-intro">Type any character (or pick from the table) to see its ASCII code and 8-bit binary pattern — watch how "A" and "a" differ.</p>
+            <p class="ib-intro">Type any character (or pick from the table) to see its ASCII code and 8-bit binary pattern — check out how "A" and "a" differ.</p>
             <iframe src="../resources/cs/visualisers/ascii-explorer.html"
                     title="ASCII Explorer — interactive visualiser"
                     loading="lazy"
@@ -88,8 +114,8 @@
 
       <article>
         <h2 id="bitmap">Bitmap Graphics</h2>
-        <p>A <strong>bitmap is a grid of pixels</strong>, and each pixel has a colour associated with it. In a black and white bitmap, a black pixel is stored as a <strong>1</strong> and a white pixel as a <strong>0</strong>.</p>
-        <p>For colour images, the number of bits per pixel increases — up to <strong>24-bit True Colour</strong>, where each pixel can be one of <strong>16,777,216 colours</strong>.</p>
+        <p>A <strong>bitmap</strong> stores an image as a <strong>grid of pixels</strong>, and <strong>each pixel has a colour stored as a binary value</strong>. That sentence is the whole topic — and worth two marks, so learn it word for word.</p>
+        <p>In a black and white bitmap, one bit per pixel does the job: black is 1, white is 0. For colour, each pixel needs more bits — up to <strong>24-bit True Colour</strong>, where every pixel can be one of <strong>16,777,216 colours</strong>.</p>
         <svg viewBox="0 0 420 160" role="img" aria-label="A black and white bitmap stored as 1s and 0s" style="max-width:420px;width:100%;height:auto;display:block;margin:1rem auto;">
           <style>
             .bm-cell { stroke:#8aa295; stroke-width:1; }
@@ -107,33 +133,36 @@
           <text class="bm-code" x="200" y="132">0 1 1 0</text>
           <text class="bm-code" x="310" y="87" style="fill:#92750A;">← stored in binary</text>
         </svg>
-        <div class="callout callout-tip">
-          <div class="callout-icon">💡</div>
-          <div><strong>Exam answer (2 marks):</strong> a bitmap is stored as a <strong>grid of pixels</strong> (1 mark), and <strong>each pixel has a colour / binary value</strong> assigned to it (1 mark).</div>
-        </div>
       </article>
 
       <article>
         <h2 id="vector">Vector Graphics</h2>
-        <p>A vector graphic <strong>isn't stored as pixels</strong>. Instead, the image is made up of shapes called <strong>objects</strong>, and each object is stored as a list of <strong>attributes</strong>. The four objects at National 5:</p>
+        <p>A vector graphic <strong>isn't stored as pixels at all</strong>. Instead, the image is built from shapes called <strong>objects</strong>, and the computer stores a <em>description</em> of each object — its <strong>attributes</strong>. There are four objects at National 5:</p>
         <table>
-          <thead><tr><th>Object</th><th>Attributes stored</th></tr></thead>
+          <thead><tr><th>Object</th><th>What it is</th><th>Attributes stored</th></tr></thead>
           <tbody>
-            <tr><td><strong>Rectangle</strong></td><td rowspan="2">co-ordinates (X and Y), fill colour, line colour</td></tr>
-            <tr><td><strong>Ellipse</strong> (the name for an oval)</td></tr>
-            <tr><td><strong>Polygon</strong></td><td>co-ordinates of each point, fill colour, line colour</td></tr>
-            <tr><td><strong>Line</strong></td><td>co-ordinates, line colour — <strong>no fill colour!</strong></td></tr>
+            <tr><td><strong>Rectangle</strong></td><td>A four-sided box</td><td>co-ordinates, fill colour, line colour</td></tr>
+            <tr><td><strong>Ellipse</strong></td><td>An oval or circle (the exam word is <em>ellipse</em>)</td><td>co-ordinates, fill colour, line colour</td></tr>
+            <tr><td><strong>Polygon</strong></td><td>Any many-sided shape (triangle, star…)</td><td>co-ordinates of each point, fill colour, line colour</td></tr>
+            <tr><td><strong>Line</strong></td><td>A straight line</td><td>co-ordinates, line colour — <strong>no fill colour!</strong></td></tr>
           </tbody>
         </table>
-        <p>For example, in an image containing a green circle, an orange-edged triangle and a blue line: the circle is an <strong>ellipse</strong> with fill colour green; the polygon has line colour orange; the line object has line colour blue — and all of the objects have X and Y co-ordinates.</p>
+        <p>So a picture of a green circle with a blue border is stored as something like: <em>ellipse, at (200, 150), fill colour green, line colour blue</em>. A whole image is just a list of these descriptions.</p>
         <img src="../resources/cs/vector-objects-attributes.svg" alt="Vector objects and their attributes — rectangle, ellipse, line and polygon with coordinates, fill colour and line colour." class="zoomable" style="max-width:100%;" />
         <div class="callout callout-warning">
           <div class="callout-icon">⚠️</div>
-          <div>Be careful when answering questions about a <strong>line</strong> — it doesn't have a fill colour!</div>
+          <div>Two exam traps: use the proper object names (<strong>ellipse</strong>, not oval; <strong>rectangle</strong>, not square — markers are told not to accept the wrong ones), and remember a <strong>line has no fill colour</strong> — there's nothing to fill!</div>
         </div>
       </article>
 
-      <article id="scaling">
+      <article>
+        <h2 id="choosing">Which Representation? — Identifying Bitmap vs Vector</h2>
+        <p>Exam questions show you an image and ask you to <strong>identify</strong> the representation used to store it. The reasoning:</p>
+        <ul>
+          <li>A <strong>photograph</strong> — millions of colours, no neat shapes — is stored as a <strong>bitmap</strong> (an array of pixels). You can't describe your dog as a list of rectangles.</li>
+          <li>A <strong>logo, diagram or symbol</strong> made of clean shapes — circles, lines, blocks of colour — suits a <strong>vector</strong>: just describe each object.</li>
+        </ul>
+        <p>Watch for the clue words in the question itself: "<em>array of pixels</em>" means bitmap; "<em>objects and attributes</em>" means vector. Sometimes the question hands you the answer if you know the vocabulary.</p>
         <div class="interactive-block">
           <div class="ib-label">Visualiser</div>
           <p class="ib-title">Bitmap vs Vector — Scaling</p>
@@ -145,40 +174,115 @@
                     style="height:600px"></iframe>
           </div>
         </div>
+        <div class="img-placeholder">
+          <span class="ph-icon">🎛️</span>
+          <em>Placeholder — interactive trainer</em>
+          Suggestion: a "bitmap or vector?" sorter — a series of images (photo, cartoon logo, road sign, screenshot, washing symbol) that pupils classify as bitmap or vector, with feedback explaining the giveaway each time.
+        </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="worked">Worked Examples</h2>
+
+        <div class="worked-example">
+          <div class="q-label">2022 Q9(c)(iii) — Bits to Store a Password (1 mark)</div>
+          <img src="../resources/cs/images/cs_ascii_2022_q9c.png" alt="2022 exam question: a user enters the password GRK_0183_J. State how many bits would be required to store the password using extended ASCII code." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the command word is <em>state</em> — they want a number. Count the characters in <code>GRK_0183_J</code> carefully: G, R, K, _, 0, 1, 8, 3, _, J — the underscores count! That's <strong>10 characters</strong>.</p>
+          <div class="code-block">
+            <pre>10 characters × 8 bits = 80 bits</pre>
+          </div>
+          <img src="../resources/cs/images/cs_ascii_2022_q9c_ans.png" alt="Marking instructions: 80 bits." class="zoomable" />
+          <p>The question asked for <strong>bits</strong>, so 80 is the answer. If it had asked for bytes: 80 ÷ 8 = 10 bytes. Always check which unit the question wants.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2025 Q5 — Identify the Representation (1 mark)</div>
+          <img src="../resources/cs/images/cs_graph_2025_q5.png" alt="2025 exam question: a photograph of a dog is stored in a computer system as an array of pixels. State the graphic representation used to store this photograph." class="zoomable" />
+          <p><strong>How to tackle it:</strong> two clues, either of which settles it. It's a <strong>photograph</strong> (photos are always bitmaps), and the question literally says "<em>an array of pixels</em>" — the definition of a bitmap.</p>
+          <img src="../resources/cs/images/cs_graph_2025_q5_ans.png" alt="Marking instructions: Bitmap." class="zoomable" />
+          <p>One word, one mark: <strong>bitmap</strong>. (Good dog, too.)</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2023 Q9(e) — Describe Bitmap Storage (2 marks)</div>
+          <img src="../resources/cs/images/cs_graph_2023_q9e.png" alt="2023 exam question: describe how a bit-mapped graphic is represented in a computer system's memory." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the command word is <em>describe</em>, and it's worth 2 marks — so give two distinct points, not one vague sentence. This is exactly the sentence you memorised earlier:</p>
+          <ul>
+            <li>The image is stored as a grid where <strong>each pixel</strong>… (1 mark)</li>
+            <li>…<strong>is stored as a binary value</strong> representing its colour (1 mark)</li>
+          </ul>
+          <img src="../resources/cs/images/cs_graph_2023_q9e_ans.png" alt="Marking instructions: one mark each for 'each pixel' and 'is stored as a binary value (bits)'." class="zoomable" />
+          <p>Notice how the marking instructions split the sentence in two — mentioning pixels alone only gets you halfway.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2024 Q10(d)(ii) — Vector Object &amp; Attribute (2 marks)</div>
+          <img src="../resources/cs/images/cs_graph_2024_q10dii.png" alt="2024 exam question: a washing label symbol made of a circle with a dot inside a square. Identify an object used to make this symbol and one of its attributes." class="zoomable" />
+          <p><strong>How to tackle it:</strong> <em>identify</em> means name it — no explanation needed. Look at the washing symbol: a circle inside a square. In vector vocabulary that's an <strong>ellipse</strong> inside a <strong>rectangle</strong>. Pick either as your object, then any attribute that fits: co-ordinates, fill colour or line colour.</p>
+          <p>A safe answer: <em>Object — ellipse. Attribute — fill colour.</em></p>
+          <img src="../resources/cs/images/cs_graph_2024_q10dii_ans.png" alt="Marking instructions: objects ellipse/circle, rectangle/rect or line; attributes include x coordinate, y coordinate, line colour, fill colour, line thickness and others. Do not allow oval or square as objects." class="zoomable" />
+          <p>Read that right-hand column: <strong>"Do not allow 'oval' or 'square' as objects."</strong> The correct vocabulary is the difference between 2 marks and 1. (The markers accept extra attributes like line thickness and radius too — but co-ordinates, fill colour and line colour are the three to memorise.)</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — ASCII storage (2 marks)</div>
-          <p>Calculate the number of <strong>bits</strong> needed to store the word "Computing" in extended ASCII, and convert your answer to bytes.</p>
+          <div class="q-label">Practice Question 1 — Bits for a String (1 mark)</div>
+          <p>A shop's till system stores the product code below using extended ASCII. State how many bits are required to store the product code.</p>
+          <div class="code-block"><pre>TILL_44_XY</pre></div>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">9 characters × 8 = <strong>72 bits</strong> (1 mark) = 72 ÷ 8 = <strong>9 bytes</strong> (1 mark).</p>
+              <p style="color:#6A1B9A;"><strong>80 bits</strong></p>
+              <p>10 characters (underscores count!) × 8 bits = 80. Accept working shown as 10 × 8.</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — Bitmap storage (2 marks)</div>
-          <p>Describe how a bit-mapped graphic is stored.</p>
+          <div class="q-label">Practice Question 2 — Printable &amp; Control Characters (2 marks)</div>
+          <p>Extended ASCII contains two types of characters. Name both types and give an example of each.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">As a grid of pixels (1 mark); each pixel is assigned a colour stored as a binary value (1 mark).</p>
+              <p style="color:#6A1B9A;"><strong>Printable characters</strong> — e.g. letters, digits, symbols such as A, 7, % (1 mark).<br/><strong>Control characters</strong> — e.g. escape, delete, tab (1 mark).</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q3 — Vector attributes (2 marks)</div>
-          <p>A vector graphic contains an ellipse. State <strong>two</strong> attributes that would be stored for it.</p>
+          <div class="q-label">Practice Question 3 — Identify the Representation (2 marks)</div>
+          <p>A cycling club uses two images on its website: a <strong>photograph</strong> of the club's last race, and a <strong>club badge</strong> made of a triangle, two circles and a line. Identify the most suitable graphic representation for each image.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">Any two of: co-ordinates (X/Y position), fill colour, line colour. (1 mark each)</p>
+              <p style="color:#6A1B9A;">Photograph — <strong>bitmap</strong> (1 mark). Club badge — <strong>vector</strong> (1 mark).</p>
+              <p>The photo has no describable shapes so must be stored as pixels; the badge is built from objects (polygon, ellipses, line).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Describe Vector Storage (2 marks)</div>
+          <p>A road sign graphic is stored as a vector. Describe how a vector graphic is represented in a computer system's memory.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">The image is stored as a list of <strong>objects</strong> (rectangle, ellipse, line, polygon) (1 mark), with each object's <strong>attributes</strong> stored — its co-ordinates, fill colour and line colour (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Object &amp; Attributes (3 marks)</div>
+          <p>A "no entry" sign is drawn as a red circle with a white horizontal bar across the middle. Identify <strong>two</strong> objects used to create this sign, and state <strong>one attribute</strong> that would be stored for the circle.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Objects: <strong>ellipse</strong> (the circle) and <strong>rectangle</strong> (the bar) (1 mark each).<br/>Attribute of the ellipse: any one of co-ordinates / fill colour / line colour (1 mark).</p>
+              <p>No marks for "oval" or "square" — use the exam vocabulary!</p>
             </div>
           </details>
         </div>
