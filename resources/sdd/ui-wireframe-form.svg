@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="ufTitle ufDesc">
+  <title id="ufTitle">Form-Based UI Wireframe — Edinburgh Castle Ticket Desk</title>
+  <desc id="ufDesc">A wireframe of a form-based (graphical) user interface drawn on a phone screen. The app is the Edinburgh Castle ticket desk program. The screen has an app bar titled Edinburgh Castle Tickets, an entry box labelled Number of adult tickets, an entry box labelled Number of child tickets, a gold Calculate Total Cost button, and an output area showing Total cost of booking followed by a blank. Annotations point to each part: the two entry boxes are inputs where the employee enters the ticket numbers, the button is tapped to run the process that calculates the total, and the output area displays the total cost of the booking with a message.</desc>
+
+  <!-- panel -->
+  <rect x="1" y="1" width="898" height="638" fill="#F8F7F2" stroke="#D1D5DB" stroke-width="2"/>
+
+  <!-- heading -->
+  <text x="450" y="46" text-anchor="middle" font-size="24" font-weight="800" fill="#00442A" letter-spacing="-0.4">Form-Based UI — Wireframe</text>
+  <text x="450" y="72" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="2.2" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">EDINBURGH CASTLE TICKET DESK &#183; ENTRY BOXES, BUTTONS &amp; LABELS</text>
+
+  <!-- ================= phone ================= -->
+  <rect x="70" y="100" width="290" height="500" rx="24" fill="#FFFFFF" stroke="#001810" stroke-width="3"/>
+  <rect x="185" y="112" width="60" height="6" rx="3" fill="#D1D5DB"/>
+
+  <!-- app bar -->
+  <rect x="86" y="130" width="258" height="40" fill="#00442A"/>
+  <text x="215" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Edinburgh Castle Tickets</text>
+
+  <!-- input 1 -->
+  <text x="98" y="198" font-size="12.5" font-weight="600" fill="#1A1A1A">Number of adult tickets</text>
+  <rect x="98" y="206" width="234" height="34" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/>
+  <text x="112" y="228" font-size="13" fill="#9CA3AF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">0</text>
+
+  <!-- input 2 -->
+  <text x="98" y="270" font-size="12.5" font-weight="600" fill="#1A1A1A">Number of child tickets</text>
+  <rect x="98" y="278" width="234" height="34" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/>
+  <text x="112" y="300" font-size="13" fill="#9CA3AF" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">0</text>
+
+  <!-- button -->
+  <rect x="98" y="340" width="234" height="42" fill="#C9A227"/>
+  <text x="215" y="366" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1.4" fill="#002D1C"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">CALCULATE TOTAL COST</text>
+
+  <!-- output -->
+  <rect x="98" y="410" width="234" height="72" fill="#F3E8F9" stroke="#6A1B9A" stroke-width="1.5"/>
+  <text x="112" y="436" font-size="12.5" font-weight="600" fill="#1A1A1A">Total cost of booking:</text>
+  <text x="112" y="462" font-size="14" font-weight="700" fill="#6A1B9A" font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">&#163; ________</text>
+
+  <!-- ================= annotations ================= -->
+  <!-- input 1 -->
+  <line x1="332" y1="223" x2="470" y2="210" stroke="#1B6B45" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="332" cy="223" r="3.5" fill="#1B6B45"/>
+  <text x="480" y="204" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">INPUT</text>
+  <text x="480" y="221" font-size="12.5" fill="#1A1A1A">Entry box — the employee enters the</text>
+  <text x="480" y="237" font-size="12.5" fill="#1A1A1A">number of adult tickets</text>
+
+  <!-- input 2 -->
+  <line x1="332" y1="295" x2="470" y2="288" stroke="#1B6B45" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="332" cy="295" r="3.5" fill="#1B6B45"/>
+  <text x="480" y="282" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">INPUT</text>
+  <text x="480" y="299" font-size="12.5" fill="#1A1A1A">Entry box — the employee enters the</text>
+  <text x="480" y="315" font-size="12.5" fill="#1A1A1A">number of child tickets</text>
+
+  <!-- button -->
+  <line x1="332" y1="361" x2="470" y2="366" stroke="#92750A" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="332" cy="361" r="3.5" fill="#92750A"/>
+  <text x="480" y="360" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#92750A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">BUTTON</text>
+  <text x="480" y="377" font-size="12.5" fill="#1A1A1A">Tapping it runs the process — calculate</text>
+  <text x="480" y="393" font-size="12.5" fill="#1A1A1A">the total cost (adults &#215; &#163;19.50 + children &#215; &#163;11.50)</text>
+
+  <!-- output -->
+  <line x1="332" y1="446" x2="470" y2="446" stroke="#6A1B9A" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="332" cy="446" r="3.5" fill="#6A1B9A"/>
+  <text x="480" y="440" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#6A1B9A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">OUTPUT</text>
+  <text x="480" y="457" font-size="12.5" fill="#1A1A1A">The total cost of the booking is</text>
+  <text x="480" y="473" font-size="12.5" fill="#1A1A1A">displayed here with a message</text>
+
+  <!-- note -->
+  <text x="450" y="624" text-anchor="middle" font-size="12" font-style="italic" fill="#4A5568">A wireframe doesn't need colour or neat drawing — showing the position of each input and output, with annotations, is what earns the marks.</text>
+</svg>

@@ -53,6 +53,8 @@
           <li><a href="#flowcharts">Flowcharts</a></li>
           <li><a href="#pseudocode">Pseudocode</a></li>
           <li><a href="#refinement">Stepwise Refinement</a></li>
+          <li><a href="#design-worked-examples">Design Worked Examples</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -65,7 +67,7 @@
           <li>what the program will <strong>look like</strong> — the <strong>user interface</strong>, designed with a wireframe</li>
           <li>how the program will <strong>work</strong> — the <strong>algorithm</strong>, designed with a design notation</li>
         </ul>
-        <p>Skipping design and diving straight into code feels faster… right up until your program turns into a tangled mess and you can't remember what it was meant to do. Trust the process!</p>
+        <p>Skipping design and diving straight into code feels faster, but normally leads to inefficient, unreadable, or incorrect code.</p>
 
         <h3>Key Terms</h3>
         <div class="key-terms">
@@ -80,7 +82,15 @@
 
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
-          <div><strong>What the exam expects:</strong> you should be able to <strong>describe, identify, read and understand</strong> all three design notations, <strong>use one of them</strong> to design your own solutions, and <strong>describe, exemplify and implement</strong> a user-interface design using a wireframe.</div>
+          <div><strong>What the exam expects:</strong> you should be able to: 
+            <ul>
+              <li><strong>Ddentify</strong> each design notation.</li>
+              <li><strong>Read, Understand and identify</strong> aspects of the design, such as conditions, loops, data types, program output, logic erros, etc</li>
+              <li><strong>Design</strong> solutions using any of the 3 design notations (although Psuedocode is recommended)</li>
+              <li><strong>Design</strong> a user interface/wireframe based on functional requirements</li>
+              <li><strong>Evaluate</strong> a design and/or user interface.</li>
+            </ul>
+            </div>
         </div>
       </article>
 
@@ -88,31 +98,70 @@
         <h2 id="ui-design">User-Interface Design — Wireframes</h2>
         <p>A <strong>user</strong> is anyone operating the program, and the <strong>user interface</strong> is everything they interact with. Think about Netflix: you browse shows, read details, press play — all through its interface. You never see the code underneath, and you don't need to.</p>
         <p>Here's the clever bit: you've already done most of the work for your UI design during analysis. The <strong>inputs</strong> tell you what the user needs to enter, and the <strong>outputs</strong> tell you what the program needs to display. A wireframe is just those inputs and outputs arranged on the screen.</p>
+        <p>There are <strong>two kinds of interface</strong> you can design:</p>
+        <ul>
+          <li><strong>Form-based (graphical)</strong> — the user interacts with on-screen controls: <strong>entry boxes</strong>, <strong>buttons</strong>, <strong>radio buttons</strong>, <strong>drop-down menus</strong> and so on. Think of an app on a phone.</li>
+          <li><strong>Text-based</strong> — the program prints a <strong>prompt</strong>, the user <strong>types</strong> a response, and results appear as lines of text. Think of a program running in the Python shell.</li>
+        </ul>
         <p>A wireframe can be hand-drawn or made with software, and should show:</p>
         <ul>
           <li>the <strong>position</strong> of every input and output on the screen</li>
-          <li><strong>annotations</strong> explaining what each part does</li>
+          <li>what each part does — either <strong>label</strong> each box with a message explaining what is needed ("Enter the number of adult tickets"), or <strong>annotate</strong> the design with notes pointing at each part</li>
         </ul>
 
         <div class="example-block">
-          <div class="example-label">Building a UI from the analysis — Exam Scores program</div>
-          <p>From the analysis page: the inputs are three exam marks, and the output is the total with a message. For a text-based program, the wireframe shows each prompt and the space for the user's response:</p>
+          <div class="example-label">Building a UI from the analysis — Edinburgh Castle</div>
+          <p>Back on the <a href="analysis.html">analysis page</a> we broke the Edinburgh Castle ticket desk problem into its functional requirements:</p>
           <table>
-            <thead><tr><th>Prompt (computer)</th><th>Response (user)</th></tr></thead>
             <tbody>
-              <tr><td>Enter your Physics mark</td><td>___</td></tr>
-              <tr><td>Enter your Computing mark</td><td>___</td></tr>
-              <tr><td>Enter your Maths mark</td><td>___</td></tr>
-              <tr><td>Your total mark is ______</td><td></td></tr>
+              <tr><td style="width:10rem;" class="fr-h-in"><strong>Inputs</strong></td><td class="fr-c-in">Number of adult tickets, number of child tickets</td></tr>
+              <tr><td class="fr-h-pr"><strong>Processes</strong></td><td class="fr-c-pr">Calculate the total cost (adults &times; 19.50 + children &times; 11.50)</td></tr>
+              <tr><td class="fr-h-out"><strong>Outputs</strong></td><td class="fr-c-out">Display the total cost of the booking</td></tr>
             </tbody>
           </table>
-          <p>Every input from the analysis has a prompt, and the output has a clearly marked space. That's all a text-based wireframe needs to show.</p>
+          <p>That analysis is the shopping list for the UI: the design must give the user somewhere to enter <strong>each input</strong>, and somewhere to read <strong>each output</strong>. Here is the same program designed both ways.</p>
         </div>
 
-        <div class="img-placeholder">
-          <span class="ph-icon">📷</span>
-          <em>Placeholder — image</em>
-          Suggestion: side-by-side wireframes of the same Exam Scores program — the text-based version above next to a graphical (window) version with labelled entry boxes, a button annotated "click to calculate total", and an output area. Shows that the same inputs/outputs can be laid out for different kinds of interface.
+        <img src="../resources/sdd/ui-wireframe-form.svg" alt="Form-based UI wireframe: the Edinburgh Castle ticket program drawn on a phone screen, with labelled entry boxes for the number of adult and child tickets, a Calculate Total Cost button, and an output area for the total cost of the booking. Annotations mark the entry boxes as inputs, the button as running the process, and the display area as the output." class="zoomable" style="max-width:100%;" />
+
+        <img src="../resources/sdd/ui-wireframe-text.svg" alt="Text-based UI wireframe: the same Edinburgh Castle program drawn as a shell window. Prompts read 'Enter the number of adult tickets' and 'Enter the number of child tickets', each followed by a blank for the typed response, then 'The total cost of the booking is £' followed by a blank. Annotations mark the prompts as inputs and the final line as the output." class="zoomable" style="max-width:100%;" />
+
+        <p>These 2 designs are perfectly valid for this question. Notice that both wireframes show every input and output from the table, clearly positioned and explained, that's what a UI design question is marked on.</p>
+
+        <p>Here are 2 Past Paper questions, read it and sketch your own answer before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Paper Q10 a) — Cinema Survey UI (4 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_ui_q1.png" alt="Past paper question: a cinema is developing an app to survey customers as they leave. Staff will use a touchscreen on a tablet to input and submit the responses. Customers are asked: which of the two films currently showing did you see, what score would you give the film from 1 to 5, and did you purchase food in the cinema. As many customers as possible should be surveyed, and answers must be input as quickly as possible using a touchscreen. Using the information above, design a user interface for this part of the app. 4 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> The command is <em>design a user interface</em>, so our answer is a <strong>drawing of a screen</strong>, not an algorithm. Before sketching anything, we look through the question for clues about what kind of interface is needed. Two jump out: "Staff will use a <strong>touchscreen</strong> on a tablet" and answers must be input "<strong>as quickly as possible</strong>". That means a form-based UI where every answer is a <strong>tap</strong>. Nothing should need typed.</p>
+          <p>Then we identify inputs & outputs (including any processes) from the questions given. It is roughly a mark each:</p>
+          <ul>
+            <li><strong>Which film?</strong> — INPUT - one button per film (there are only two showing).</li>
+            <li><strong>Score from 1 to 5</strong> - INPUT — five numbered buttons to tap.</li>
+            <li><strong>Food purchased?</strong> - INPUT — Yes / No buttons.</li>
+            <li><strong>Submit</strong> - PROCESS — a button to submit the answers / move on to the next customer.</li>
+          </ul>
+          <p>Here we are only dealing with input, and the ability to submit (could be viewed as a process). There is no need to display anything here.</p>
+          <img src="../resources/sdd/worked_examples/n5_ui_q1_ans.png" alt="Marking instructions: 4 marks for a user interface design showing inputs: selection of film, the numbers 1 to 5, food yes/no, and an option to submit answers or go to the next customer. None of the survey answers should be typed — inputs could be represented as images, drop-down lists, buttons etc. Award 0 marks if the candidate has designed a program (flowchart, structure diagram, pseudocode) rather than a user interface." class="zoomable" />
+          <p>Two traps in the marking instructions are worth memorising. First: "<strong>Award 0 marks</strong> if the candidate has designed a <strong>program</strong>" — draw a flowchart or pseudocode here and you score nothing, no matter how good it is. Second: "<strong>None of the survey answers should be typed</strong>" — an entry box would ignore the touchscreen clue in the question. A text-based UI can be an acceptable answer to some design questions, but when the question names a touchscreen or asks for speed, stick to a graphical UI.</p>
+          <p>An example would be:</p>
+          <img src="../resources/sdd/worked_examples/n5_ui_q1_model.svg" alt="Example full-mark answer drawn as a tablet wireframe: Which film did you see with Film A and Film B buttons, What score would you give the film with buttons 1 to 5, Did you purchase food in the cinema with Yes and No buttons, and a Submit — next customer button. Annotations map each control to one of the four marks and note that every answer is a tap, nothing typed." class="zoomable" />
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Golf App — Why Is This UI Not Fit for Purpose? (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_ui_q2.png" alt="Past paper question: a golf app's user interface for entering a score on each hole. The phone screen shows the player's name and date, a display reading Hole 2 with a large 8, an instruction saying enter a score of 0 if you did not finish a hole, a keypad with buttons 1 to 9, a Previous Hole arrow, and an instruction saying click SUBMIT below once all 9 scores have been entered. Give two reasons why this user interface design is not fit for purpose. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> The previous question asked us to <em>design</em> a UI, this one flips it round and asks us to <em>evaluate</em> one. The process is, read every instruction printed on the screen, then check the screen actually provides the function it promises. Everything missing is a reason in the answer.</p>
+          <ul>
+            <li>"Enter a score of <strong>0</strong> if you did not finish a hole" — but the keypad only has <strong>1 to 9</strong>. There is no 0 button.</li>
+            <li>"Click <strong>SUBMIT</strong> below once all 9 scores have been entered" — look below. There is no submit button.</li>
+            <li>There's a <strong>Previous Hole</strong> arrow, but no <strong>Next Hole</strong> button — no way to move on and enter the next score.</li>
+            <li>Finally, think about mistakes: tap an 8 instead of a 3 and there is no <strong>delete/backspace</strong> to correct it.</li>
+          </ul>
+          <p>That's four valid reasons for a two-mark question — any two will do. Notice none of them are opinions about how the screen <em>looks</em>; "not fit for purpose" means the user <strong>cannot do something the app requires</strong>.</p>
+          <img src="../resources/sdd/worked_examples/n5_ui_q2_ans.png" alt="Marking instructions: one mark each for any two from — no next hole button/enter, no zero button, no submit button, no delete/backspace to delete score." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">Reason 1 — the instructions say to enter a score of 0 if a hole was not finished, but the keypad has no 0 button. Reason 2 — the player is told to click SUBMIT once all scores are entered, but there is no submit button on the screen.</p>
         </div>
       </article>
 
@@ -122,12 +171,12 @@
         <p>Our program: <em>ask the user for two test scores, add them together, and display the total.</em> Watch how each notation describes exactly the same solution in its own way.</p>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>In the exam you can be shown <em>any</em> of the three and asked to read it, complete it or find a mistake in it. When designing your own solution (including in the assignment), you only need to use <strong>one</strong> — whichever suits you.</div>
+          <div>In the exam you can be shown <em>any</em> of the three and asked to read it, complete it or find a mistake in it. When designing your own solution (including in the assignment), you only need to use <strong>one</strong> — whichever suits you, although psuedocode is recommended.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="structure-diagrams">Notation 1 — Structure Diagrams</h2>
+        <h2 id="structure-diagrams">Structure Diagrams</h2>
         <p>A <strong>structure diagram</strong> breaks the task into smaller chunks, arranged in a hierarchy. It is always read <strong>top-to-bottom and left-to-right</strong>. You can draw them on paper or with a free tool such as <a href="https://www.drawio.com/" target="_blank" rel="noopener">draw.io</a>.</p>
 
         <svg viewBox="0 0 640 160" role="img" aria-label="Structure diagram for the add two scores program" style="max-width:640px;width:100%;height:auto;display:block;margin:1rem auto;">
@@ -169,15 +218,55 @@
             <tr><td><strong>Pre-defined process</strong></td><td>Shows the use of a pre-defined function or procedure.</td></tr>
           </tbody>
         </table>
-        <div class="img-placeholder">
-          <span class="ph-icon">📷</span>
-          <em>Placeholder — image</em>
-          Suggestion: the four SQA structure diagram symbols exactly as drawn in exam papers (process, loop, selection, pre-defined process), so pupils recognise them on sight.
-        </div>
+        <p>Here's a bigger example that puts the loop and selection symbols to work. Edinburgh Castle's ticket desk program (from the <a href="analysis.html">analysis page</a>) now serves <strong>20 tour groups</strong> in a row — and any group buying <strong>more than 10 tickets</strong> gets a 10% discount:</p>
+
+        <svg viewBox="0 0 880 340" role="img" aria-label="Structure diagram for the Edinburgh Castle tour groups program. The top box is Castle Ticket Desk. Below it, a rounded loop symbol reads Loop 20 times, once per group. Under the loop are four steps read left to right: get the number of adult and child tickets; calculate the cost of the group; a diamond selection symbol asking more than 10 tickets; and display the total cost of the group. Below the diamond, on the yes branch, is apply 10% discount." style="max-width:880px;width:100%;height:auto;display:block;margin:1rem auto;">
+          <style>
+            .sd2-box { fill:#fff; stroke:#00442A; stroke-width:2; }
+            .sd2-top { fill:#00442A; }
+            .sd2-txt { font:600 12.5px 'Public Sans',sans-serif; fill:#0d1f17; text-anchor:middle; }
+            .sd2-txtw { font:700 14px 'Public Sans',sans-serif; fill:#fff; text-anchor:middle; }
+            .sd2-line { stroke:#00442A; stroke-width:1.6; }
+            .sd2-lab { font:italic 700 11px 'Public Sans',sans-serif; fill:#92750A; }
+          </style>
+          <rect class="sd2-top" x="340" y="12" width="200" height="44" rx="6"/>
+          <text class="sd2-txtw" x="440" y="39">Castle Ticket Desk</text>
+          <line class="sd2-line" x1="440" y1="56" x2="440" y2="76"/>
+          <!-- loop (rounded stadium) -->
+          <rect class="sd2-box" x="290" y="76" width="300" height="44" rx="22"/>
+          <text class="sd2-txt" x="440" y="103">Loop 20 times (once per group)</text>
+          <line class="sd2-line" x1="440" y1="120" x2="440" y2="140"/>
+          <line class="sd2-line" x1="115" y1="140" x2="745" y2="140"/>
+          <line class="sd2-line" x1="115" y1="140" x2="115" y2="160"/>
+          <line class="sd2-line" x1="325" y1="140" x2="325" y2="160"/>
+          <line class="sd2-line" x1="535" y1="140" x2="535" y2="160"/>
+          <line class="sd2-line" x1="745" y1="140" x2="745" y2="160"/>
+          <!-- children -->
+          <rect class="sd2-box" x="20" y="160" width="190" height="50"/>
+          <text class="sd2-txt" x="115" y="181">Get the number of</text>
+          <text class="sd2-txt" x="115" y="197">adult &amp; child tickets</text>
+          <rect class="sd2-box" x="230" y="160" width="190" height="50"/>
+          <text class="sd2-txt" x="325" y="181">Calculate the cost</text>
+          <text class="sd2-txt" x="325" y="197">of the group</text>
+          <!-- selection (diamond) -->
+          <polygon class="sd2-box" points="535,160 635,198 535,236 435,198"/>
+          <text class="sd2-txt" x="535" y="194">More than</text>
+          <text class="sd2-txt" x="535" y="210">10 tickets?</text>
+          <rect class="sd2-box" x="650" y="160" width="190" height="50"/>
+          <text class="sd2-txt" x="745" y="181">Display the total</text>
+          <text class="sd2-txt" x="745" y="197">cost of the group</text>
+          <!-- yes branch -->
+          <line class="sd2-line" x1="535" y1="236" x2="535" y2="266"/>
+          <text class="sd2-lab" x="545" y="258">yes</text>
+          <rect class="sd2-box" x="440" y="266" width="190" height="46"/>
+          <text class="sd2-txt" x="535" y="294">Apply 10% discount</text>
+        </svg>
+
+        <p>Reading it top-to-bottom, left-to-right: everything below the rounded <strong>loop</strong> symbol happens 20 times — once per group. The <strong>diamond</strong> makes a decision partway through each pass: the "Apply 10% discount" step below it only happens when the answer is <em>yes</em>; smaller groups skip it.</p>
       </article>
 
       <article>
-        <h2 id="flowcharts">Notation 2 — Flowcharts</h2>
+        <h2 id="flowcharts">Flowcharts</h2>
         <p>A <strong>flowchart</strong> shows the same sequence of steps, but joined by arrows. You read it from <strong>top to bottom, following the arrows</strong>. Flowcharts work for any program, but they're especially good at showing <strong>decisions</strong> and <strong>loops</strong> clearly.</p>
 
         <p>Here's our two-scores program again — same logic, different notation:</p>
@@ -240,15 +329,66 @@
           <li>A <strong>diamond</strong> makes a decision — and decisions must have <strong>yes/no branches</strong>.</li>
         </ul>
         <p>Flowcharts don't have a special loop symbol. Instead, a loop is drawn as a <strong>decision whose arrow points back up</strong> to an earlier step — the program keeps going round until the decision lets it escape. You'll see this in action on the <a href="loops.html">Loops</a> page.</p>
-        <div class="img-placeholder">
-          <span class="ph-icon">📷</span>
-          <em>Placeholder — diagram</em>
-          Suggestion: a flowchart showing a loop — e.g. a password check where the "No" branch arrows back up to "Ask for password". Could be animated: a dot travels the arrows and visibly goes round the loop until the condition is met.
-        </div>
+        <p>Here's the same Edinburgh Castle tour groups program as a flowchart — the loop and the decision are both easy to spot:</p>
+
+        <svg viewBox="0 0 560 575" role="img" aria-label="Flowchart for the Edinburgh Castle tour groups program. Start flows into an input step: get adult and child tickets. Then a process: calculate cost of the group. Then a decision diamond: more than 10 tickets. The yes branch goes right through a process apply 10% discount and rejoins the main flow. The no branch continues straight down. Next an output step: display cost of the group. Then a second decision diamond: served 20 groups. The no branch arrows all the way back up to the input step, forming the loop. The yes branch flows down to Stop." style="max-width:520px;width:100%;height:auto;display:block;margin:1rem auto;">
+          <style>
+            .fl2-shape { fill:#fff; stroke:#00442A; stroke-width:2; }
+            .fl2-txt { font:600 12px 'Public Sans',sans-serif; fill:#0d1f17; text-anchor:middle; }
+            .fl2-line { stroke:#00442A; stroke-width:1.8; fill:none; marker-end:url(#arr3); }
+            .fl2-join { stroke:#00442A; stroke-width:1.8; fill:none; }
+            .fl2-lab { font:700 11px 'Public Sans',sans-serif; fill:#92750A; }
+          </style>
+          <defs>
+            <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#00442A"/>
+            </marker>
+          </defs>
+          <rect class="fl2-shape" x="140" y="10" width="120" height="38" rx="19"/>
+          <text class="fl2-txt" x="200" y="33">Start</text>
+          <path class="fl2-line" d="M200 48 L200 72"/>
+          <polygon class="fl2-shape" points="150,76 290,76 270,116 130,116"/>
+          <text class="fl2-txt" x="210" y="93">Get adult &amp; child</text>
+          <text class="fl2-txt" x="210" y="108">tickets</text>
+          <path class="fl2-line" d="M200 116 L200 140"/>
+          <rect class="fl2-shape" x="120" y="144" width="160" height="42"/>
+          <text class="fl2-txt" x="200" y="161">Calculate cost</text>
+          <text class="fl2-txt" x="200" y="176">of the group</text>
+          <path class="fl2-line" d="M200 186 L200 208"/>
+          <polygon class="fl2-shape" points="200,212 295,252 200,292 105,252"/>
+          <text class="fl2-txt" x="200" y="248">More than</text>
+          <text class="fl2-txt" x="200" y="263">10 tickets?</text>
+          <!-- yes branch through the discount -->
+          <path class="fl2-line" d="M295 252 L340 252"/>
+          <text class="fl2-lab" x="304" y="244">Yes</text>
+          <rect class="fl2-shape" x="344" y="231" width="150" height="42"/>
+          <text class="fl2-txt" x="419" y="257">Apply 10% discount</text>
+          <path class="fl2-line" d="M419 273 L419 316 L206 316"/>
+          <!-- no branch straight down -->
+          <path class="fl2-line" d="M200 292 L200 344"/>
+          <text class="fl2-lab" x="176" y="310">No</text>
+          <polygon class="fl2-shape" points="150,348 290,348 270,388 130,388"/>
+          <text class="fl2-txt" x="210" y="365">Display cost</text>
+          <text class="fl2-txt" x="210" y="380">of the group</text>
+          <path class="fl2-line" d="M200 388 L200 412"/>
+          <polygon class="fl2-shape" points="200,416 300,456 200,496 100,456"/>
+          <text class="fl2-txt" x="200" y="452">Served 20</text>
+          <text class="fl2-txt" x="200" y="467">groups?</text>
+          <!-- loop back up -->
+          <path class="fl2-line" d="M100 456 L44 456 L44 96 L146 96"/>
+          <text class="fl2-lab" x="62" y="448">No</text>
+          <!-- yes down to stop -->
+          <path class="fl2-line" d="M200 496 L200 520"/>
+          <text class="fl2-lab" x="210" y="512">Yes</text>
+          <rect class="fl2-shape" x="140" y="524" width="120" height="38" rx="19"/>
+          <text class="fl2-txt" x="200" y="547">Stop</text>
+        </svg>
+
+        <p>Follow the arrows: the "More than 10 tickets?" diamond is the <strong>condition</strong> — big groups detour through the discount box, small groups go straight past. The "Served 20 groups?" diamond at the bottom is the <strong>loop</strong>: while the answer is <em>No</em>, the arrow sweeps all the way back up to "Get adult &amp; child tickets" and the whole journey repeats. Only after the twentieth group does the <em>Yes</em> branch let the program reach Stop.</p>
       </article>
 
       <article>
-        <h2 id="pseudocode">Notation 3 — Pseudocode</h2>
+        <h2 id="pseudocode">Pseudocode</h2>
         <p><strong>Pseudocode</strong> plans the program <strong>line-by-line, in English, without writing actual code</strong>. There are no strict formatting rules — what matters is breaking the problem into clear, ordered steps. Here's our two-scores program one more time:</p>
         <div class="code-block">
           <div class="code-label">Pseudocode — the same design again</div>
@@ -257,6 +397,18 @@
 3  Display the total with a message</pre>
         </div>
         <p>Same three steps as the structure diagram, same order as the flowchart. All three notations describe one algorithm — they just draw it differently.</p>
+
+        <p>And the bigger Edinburgh Castle tour groups program? Here it is one more time — compare it line by line with the structure diagram and the flowchart above:</p>
+        <div class="code-block">
+          <div class="code-label">Pseudocode — Edinburgh Castle, 20 tour groups</div>
+          <pre>1  Repeat 20 times (once for each tour group)
+2      Get the number of adult and child tickets
+3      Calculate the cost of the group's tickets
+4      If the group has more than 10 tickets, take 10% off the cost
+5      Display the total cost for the group
+6  End repeat</pre>
+        </div>
+        <p>The <strong>indented</strong> lines are the steps inside the loop — the same four steps that sat below the loop symbol in the structure diagram, and inside the loop-back arrow on the flowchart. Line 4 is the condition: one line of pseudocode, a diamond in both diagrams.</p>
       </article>
 
       <article>
@@ -297,6 +449,298 @@ Refinement
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
           <div>A good refinement test: <em>could I turn this line into code right now?</em> If yes, stop refining. If you're still not sure how you'd code it, break it down further. Get comfortable with this — it's the thinking skill behind every design you'll write in the assignment.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="design-worked-examples">Design Worked Examples</h2>
+        <p>Design questions in the exam rarely stop at "name the notation". Once a diagram is in front of you, SQA can ask about <em>anything in the course</em> through it — loop types, conditions, variables and data types, standard algorithms, even efficiency. The design is just the wrapper.</p>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>Reading this page early in the course?</strong> Work through the wireframes and the three notations above, then <strong>come back to these worked examples later</strong> — they lean on <a href="loops.html">loops</a>, <a href="selection.html">selection</a>, <a href="data-types-structures.html">variables &amp; data types</a> and <a href="standard-algorithms.html">standard algorithms</a>. They'll make far more sense once you've covered those topics.</div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Barbecue Controller — Name the Notation (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_des_q1.png" alt="Past paper question: a flowchart for a program controlling the gas burner on a barbecue. Start flows to set desired temperature, turn gas on, get temperature from sensor, display temperature, then a decision asking if temperature is less than desired temperature. The True branch loops back up to get temperature from sensor; the False branch leads to turn gas off. State the design technique shown above. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> A one-marker, but easy to throw away. The question asks us to name the <em>design technique</em> — so the answer is one of the three notations: structure diagram, flowchart or pseudocode. Symbols joined by arrows, with a decision diamond and a loop-back arrow: this is a <strong>flowchart</strong>.</p>
+          <p>Don't overthink it and start describing what the program does — the question only wants the technique named. And be precise: "flowchart" (or "flow diagram", which the markers accept) earns the mark; "a diagram" or naming individual symbols does not.</p>
+          <img src="../resources/sdd/worked_examples/n5_des_q1_ans.png" alt="Marking instructions: flowchart, 1 mark. Flow diagram also accepted." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">This design technique is a flowchart.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Iron Craig Island Boat — Reading a Structure Diagram (5 marks)</div>
+          <div class="q-intro">
+            <p>A sightseeing boat holds 100 passengers, with Saturday's tickets numbered 1&ndash;100 and Sunday's numbered 101&ndash;200. The program checks each passenger's ticket is valid for today as they board, and counts the passengers. Here is the design — read it carefully before opening each part:</p>
+            <img src="../resources/sdd/worked_examples/n5_des_q2-1.png" alt="Past paper question: a structure diagram titled PROGRAM daily ticket analyser. Its branches are: set number of passengers to 0.00; get ticket range, which refines into get lower ticket number and get upper ticket number; a rounded loop symbol reading repeat until no more passengers, which contains get ticketNumber from passenger and a selection asking is ticketNumber within range for today, with yes leading to add 1 to number of passengers and no leading to display Ticket Refused; and finally display total number of passengers." class="zoomable" />
+            <img src="../resources/sdd/worked_examples/n5_des_q2-2.png" alt="The question parts: a i, state the type of loop required when implementing this design, 1 mark. a ii, state the standard algorithm used in this design, 1 mark. a iii, several different programming constructs will be required when the program code is written — complete the table matching examples from the design to constructs. The table gives Set totalPassengers to 0.00 with a blank construct, a blank example for conditional statement, and a blank example for arithmetic operation. 3 marks." class="zoomable" />
+          </div>
+          <div class="q-parts-heading">Question parts — try each one before opening it</div>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">a·i</span><span class="qp-title">State the type of loop required when implementing this design.</span><span class="qp-marks">1 mark</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> Find the loop symbol and read its wording: "repeat <em>until no more passengers</em>". The program doesn't know in advance how many passengers will board — it keeps going until a condition is met. That's a <strong>conditional loop</strong>. (If it said "repeat 100 times" it would be a fixed loop.)</p>
+              <p>An example would be:</p>
+              <p style="color:#6A1B9A;">A conditional loop — the design repeats until there are no more passengers, not a set number of times.</p>
+            </div>
+          </details>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">a·ii</span><span class="qp-title">State the standard algorithm used in this design.</span><span class="qp-marks">1 mark</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> Look for the fingerprint of a <a href="standard-algorithms.html">standard algorithm</a>. The design sets the number of passengers to 0 at the start, then <strong>adds 1 inside the loop</strong> each time a valid ticket is found. Set a total to zero, add to it inside a loop — that's a <strong>running total</strong>.</p>
+              <p>An example would be:</p>
+              <p style="color:#6A1B9A;">A running total (within a loop) — the passenger count starts at 0 and 1 is added for each valid ticket.</p>
+            </div>
+          </details>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">a·iii</span><span class="qp-title">Complete the table matching examples from the design to programming constructs.</span><span class="qp-marks">3 marks</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> Match each construct by its job. An <strong>assignment</strong> stores a value in a variable. A <strong>conditional statement</strong> asks a yes/no question. An <strong>arithmetic operation</strong> does maths. Now scan the design for each:</p>
+              <table>
+                <tbody>
+                  <tr><td style="width:16rem; color:#6A1B9A;">Set totalPassengers to 0.00</td><td style="color:#6A1B9A;"><strong>Assignment</strong> — a value is stored in a variable</td></tr>
+                  <tr><td style="color:#6A1B9A;">is ticketNumber within range for today?</td><td style="color:#6A1B9A;"><strong>Conditional statement</strong> — a yes/no question</td></tr>
+                  <tr><td style="color:#6A1B9A;">add one to number of passengers</td><td style="color:#6A1B9A;"><strong>Arithmetic operation</strong> — a calculation</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <p>Here are the full marking instructions for all three parts — check your answers:</p>
+          <img src="../resources/sdd/worked_examples/n5_des_q2-2_ans.png" alt="Marking instructions: a i, conditional, 1 mark. a ii, running total within loop, 1 mark. a iii, 3 marks for assignment, is ticketNumber within range for today as the conditional statement, and add one to number of passengers as the arithmetic operation." class="zoomable" />
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Paper Q10 b) — Reading the Cinema App Flowchart (3 marks)</div>
+          <div class="q-intro">
+            <p>Remember the cinema survey app from the <a href="#ui-design">UI worked example</a>? This is the very next part of that same question. Part a) asked us to design the survey screen; part b) shows SQA's own design for calculating each film's average score at the end of the day — and asks us to read it:</p>
+            <img src="../resources/sdd/worked_examples/n5_des_q3-1.png" alt="Past paper question continued: a flowchart for the cinema app. Get film from touchscreen flows into add 1 to total customers, then a decision was film A selected. Yes leads to get score for film A and add score onto film A total. No leads to a second decision, was film B selected, whose yes branch leads to get score for film B and add score onto film B total. The branches merge into a decision, are there any more customers. Yes loops back to the start; no leads to two outputs displaying the average score for film A and film B, each calculated as film total divided by total customers." class="zoomable" />
+            <img src="../resources/sdd/worked_examples/n5_des_q3-2.png" alt="The question parts: b, read the design for the cinema app and identify: i, a value that will be stored as an integer, 1 mark. ii, the condition used in the loop, 1 mark. iii, an inefficient part of the design that could be removed without affecting the solution, 1 mark." class="zoomable" />
+          </div>
+          <div class="q-parts-heading">Question parts — try each one before opening it</div>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">b·i</span><span class="qp-title">Identify a value that will be stored as an integer.</span><span class="qp-marks">1 mark</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> An <a href="data-types-structures.html">integer</a> is a whole number. Hunt the design for values that could never have a decimal point: the <strong>total customers</strong> count, the <strong>score</strong> a customer gives (1&ndash;5), and each film's score <strong>total</strong>. Any one of them earns the mark. Watch out — the <em>average</em> score at the end is the trap: dividing gives a decimal, so that would be stored as a real.</p>
+              <p>An example would be:</p>
+              <p style="color:#6A1B9A;">Total customers — it is a count, so it will always be a whole number.</p>
+            </div>
+          </details>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">b·ii</span><span class="qp-title">Identify the condition used in the loop.</span><span class="qp-marks">1 mark</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> A flowchart loop is a decision whose arrow points back up — so find the arrow that returns to an earlier step and read the diamond it comes from. Only one decision here loops back: "<strong>are there any more customers?</strong>". The other two diamonds (film A / film B) branch forwards, so they're selection, not the loop.</p>
+              <p>An example would be:</p>
+              <p style="color:#6A1B9A;">"Are there any more customers?" — while the answer is yes, the flow returns to the start.</p>
+            </div>
+          </details>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">b·iii</span><span class="qp-title">Identify an inefficient part of the design that could be removed without affecting the solution.</span><span class="qp-marks">1 mark</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> The cinema only shows <strong>two</strong> films. So if the answer to "was film A selected?" is <em>no</em>, it <strong>must</strong> have been film B — there's nothing else it could be. The second decision, "<strong>was film B selected?</strong>", can never answer no, so it can be removed and the design still works.</p>
+              <p>An example would be:</p>
+              <p style="color:#6A1B9A;">The "was film B selected?" decision — with only two films, a customer who didn't pick film A must have picked film B, so the check is unnecessary.</p>
+            </div>
+          </details>
+
+          <p>Here are the full marking instructions for all three parts — check your answers:</p>
+          <img src="../resources/sdd/worked_examples/n5_des_q3-2_ans.png" alt="Marking instructions: b i, one mark for any one of total customers, score for film, film A total, film B total. b ii, are there any more customers. b iii, was film B selected — accept an appropriate description of why the second decision regarding film B is not required." class="zoomable" />
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Flight Booking App — Processes &amp; Refining a Design (7 marks)</div>
+          <div class="q-intro">
+            <p>A flight booking app asks users to enter their departure and destination airports, dates, and the number of adults and children, then displays the total flight cost and trip duration. This question starts in analysis territory, then hands us a pseudocode design to refine — a reminder that one exam question can walk across several phases:</p>
+            <img src="../resources/sdd/worked_examples/n5_des_q4-1.png" alt="Past paper question: in a flight booking app, users enter departure airport, destination airport, departure date, return date, number of adults and number of children. A message displays the total flight cost and trip duration. Part a: describe two processes for the flight booking app. 2 marks." class="zoomable" />
+          </div>
+          <div class="q-parts-heading">Question parts — try each one before opening it</div>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">a</span><span class="qp-title">Describe two processes for the flight booking app.</span><span class="qp-marks">2 marks</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> This is the same skill as the <a href="analysis.html">analysis page</a> — a process is something the program <em>works out</em> from the data, not an input or an output. The stem tells us the app displays "the total flight cost and the duration of the trip", so the program must <strong>calculate</strong> both of those first. Validating the inputs (e.g. checking the return date is after the departure date) is also accepted.</p>
+              <p>An example would be:</p>
+              <p style="color:#6A1B9A;">Process 1 — calculate the total cost of the flights. Process 2 — calculate the duration of the trip from the departure and return dates.</p>
+              <img src="../resources/sdd/worked_examples/n5_des_q4-1_ans.png" alt="Marking instructions: one mark each for any two descriptions of calculate total flight cost, calculate duration of trip, validation of inputs. Additional correct processes interpreted from the problem are allowed, such as find flights." class="zoomable" />
+            </div>
+          </details>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">b</span><span class="qp-title">Each passenger is asked if they want to add a bag (&pound;7 each). Using a design technique of your choice, refine step 4.</span><span class="qp-marks">5 marks</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p>First, the design we're given — step 4 is "Update cost of booking if bag(s) are added":</p>
+              <img src="../resources/sdd/worked_examples/n5_des_q4-2-1.png" alt="The given design. Algorithm: 1 find ticket costs, 2 get quantity of passengers, 3 calculate initial cost of booking, 4 update cost of booking if bags are added, 5 display final cost of booking. Refinements: 2.1 get quantity of adult passengers, 2.2 get quantity of child passengers." class="zoomable" />
+              <img src="../resources/sdd/worked_examples/n5_des_q4-2-2.png" alt="The question: the app provides an option to add bags to the booking. Each passenger is asked if they want to add a bag. The cost is an additional 7 pounds for each passenger who decides to take a bag. Using a design technique of your choice, refine step 4. 5 marks." class="zoomable" />
+              <p><strong>How to tackle it:</strong> "A design technique of your choice" — pseudocode is quickest to write. Five marks means five things the markers want to see, and the stem hands us all of them: <em>each</em> passenger is asked (that's a <strong>loop</strong> over the passengers, and an <strong>ask/input</strong> step), they decide yes or no (an <strong>if</strong> with the right condition), and &pound;7 is added <em>for each yes</em> (a <strong>running total inside the loop</strong>), which must end up on the <strong>cost of the booking</strong>.</p>
+              <p>Number the refinements 4.1, 4.2… to show they expand step 4 — just like the refinement examples above.</p>
+              <p>An example would be:</p>
+              <div class="code-block">
+                <div class="code-label">Refinement of step 4 — pseudocode</div>
+                <pre style="color:#6A1B9A;">4.1  Loop for each passenger
+4.2      Ask if the passenger wants to add a bag
+4.3      If the answer is yes then add &pound;7 onto the bag total
+4.4  End loop
+4.5  Add the bag total onto the cost of the booking</pre>
+              </div>
+              <img src="../resources/sdd/worked_examples/n5_des_q4-2-2_ans.png" alt="Marking instructions: one mark each for a loop for the correct number of passengers, an input statement referring to bags, an if statement with the correct condition, a running total within the loop, and the total cost calculated as bag cost plus booking cost. The running total and total cost could be implemented in one step. Three example solutions are shown in pseudocode." class="zoomable" />
+              <p>Notice from the marking instructions that several layouts score full marks — adding &pound;7 straight onto the booking total inside the loop is fine too. What loses marks is missing a construct: no loop, no ask, no if, or no total.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Canteen Kiosk (4 marks)</div>
+          <p>A school canteen is developing an app that lets pupils order lunch at a kiosk. Pupils will use a touchscreen to input and submit their order.</p>
+          <p>Pupils will be asked the following questions:</p>
+          <ul>
+            <li>Which of the three meal choices on today's menu would you like?</li>
+            <li>Would you like a drink included?</li>
+            <li>What rating would you give yesterday's lunch, from 1 to 5?</li>
+          </ul>
+          <p>Queues must move as quickly as possible at lunchtime, so it is important that orders can be input as quickly as possible using the touchscreen.</p>
+          <p>Using the information above, design a user interface for this part of the app.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for a user interface design showing:</p>
+              <ul style="color:#6A1B9A;">
+                <li><strong>selection of meal</strong> — one control per meal choice (buttons, images or a drop-down list)</li>
+                <li><strong>drink included</strong> — yes/no</li>
+                <li><strong>the numbers 1 to 5</strong> for the rating</li>
+                <li>an option to <strong>submit/confirm the order</strong></li>
+              </ul>
+              <p style="color:#6A1B9A;">None of the answers should be typed — the question says touchscreen and "as quickly as possible". Award 0 marks for a program design (flowchart, structure diagram or pseudocode) rather than a user interface.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Juice Bar Kiosk (2 marks)</div>
+          <p>A juice bar has designed a touchscreen kiosk for customers to order smoothies. The kiosk screen shows the following, and nothing else:</p>
+          <ul>
+            <li>the message "Tap a smoothie, then enter how many you would like (1&ndash;5)"</li>
+            <li>one button for each of the four smoothies on the menu</li>
+            <li>the message "Press PAY to finish your order"</li>
+            <li>a HELP button</li>
+          </ul>
+          <p>Give <strong>two</strong> reasons why this user interface design is not fit for purpose.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for any two from:</p>
+              <ul style="color:#6A1B9A;">
+                <li>no number buttons — there is <strong>no way to enter how many</strong> smoothies are wanted (1&ndash;5), even though the instruction asks for it</li>
+                <li>no <strong>PAY button</strong>, even though the instruction says to press it</li>
+                <li>no way to <strong>remove/cancel</strong> a smoothie tapped by mistake</li>
+              </ul>
+              <p style="color:#6A1B9A;">The technique is the same as the golf app worked example: check every instruction on the screen against the controls actually provided.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Name the Notation (1 mark)</div>
+          <p>A program design for a step-counter app is shown below.</p>
+          <div class="code-block">
+            <div class="code-label">Design</div>
+            <pre>Algorithm
+1  Ask the user to enter their step target
+2  Get today's step count from the sensor
+3  Calculate the percentage of the target reached
+4  Display the percentage with a message
+
+Refinement
+3.1  percentage is calculated as (steps &divide; target) &times; 100</pre>
+          </div>
+          <p>State the design technique shown above.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>Pseudocode</strong> (1 mark) — a line-by-line plan written in structured English, with numbered refinements. Naming a different notation, or describing what the program does, earns no marks.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Reading the Castle Structure Diagram (4 marks)</div>
+          <p>Look back at the Edinburgh Castle tour groups <strong>structure diagram</strong> in the <a href="#structure-diagrams">Structure Diagrams section</a>, then answer:</p>
+          <p>(a) State the type of loop used in the design.<br/>
+             (b) Identify the condition used in the design.<br/>
+             (c) Identify one example from the design of each of the following constructs: an <strong>arithmetic operation</strong>; a <strong>conditional statement</strong>.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">(a) A <strong>fixed loop</strong> — the design repeats exactly 20 times, once per group (1 mark).</p>
+              <p style="color:#6A1B9A;">(b) "<strong>More than 10 tickets?</strong>" (1 mark).</p>
+              <p style="color:#6A1B9A;">(c) Arithmetic operation — <strong>calculate the cost of the group</strong> (or apply the 10% discount) (1 mark). Conditional statement — "<strong>more than 10 tickets?</strong>" (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Reading the Castle Flowchart (3 marks)</div>
+          <p>Look back at the Edinburgh Castle tour groups <strong>flowchart</strong> in the <a href="#flowcharts">Flowcharts section</a>, then answer:</p>
+          <p>(a) Identify a value in the design that will be stored as an integer.<br/>
+             (b) Identify the condition used in the loop.<br/>
+             (c) State what happens to a group buying 8 tickets.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">(a) The <strong>number of adult tickets</strong> or the <strong>number of child tickets</strong> (or the count of groups served) — all whole numbers (1 mark). The cost of the group is the trap: prices have decimal places, so cost would be stored as a real.</p>
+              <p style="color:#6A1B9A;">(b) "<strong>Served 20 groups?</strong>" — while the answer is no, the flow returns to the input step (1 mark).</p>
+              <p style="color:#6A1B9A;">(c) The "more than 10 tickets?" decision answers <strong>no</strong>, so the group <strong>skips the discount</strong> — their cost is displayed unchanged (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 6 — Refine a Step (5 marks)</div>
+          <p>A cinema's snack kiosk program calculates the cost of a group's order. The design is shown below.</p>
+          <div class="code-block">
+            <div class="code-label">Design</div>
+            <pre>Algorithm
+1  Get the number of people in the group
+2  Calculate the ticket cost of the group
+3  Update cost of order if snack combos are added
+4  Display final cost of order</pre>
+          </div>
+          <p>Each person in the group is asked if they would like a snack combo. A combo costs an additional &pound;6 for each person who wants one.</p>
+          <p>Using a design technique of your choice, refine step 3.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li>a <strong>loop</strong> for the correct number of people</li>
+                <li>an <strong>input/ask</strong> step referring to snack combos</li>
+                <li>an <strong>if</strong> statement with the correct condition</li>
+                <li>a <strong>running total</strong> within the loop</li>
+                <li>the <strong>total cost calculated</strong> (combo cost + order cost)</li>
+              </ul>
+              <p style="color:#6A1B9A;">Example solution:</p>
+              <div class="code-block">
+                <pre style="color:#6A1B9A;">3.1  Loop for each person in the group
+3.2      Ask if the person wants a snack combo
+3.3      If the answer is yes then add &pound;6 onto the combo total
+3.4  End loop
+3.5  Add the combo total onto the cost of the order</pre>
+              </div>
+              <p style="color:#6A1B9A;">As in the flight booking worked example, adding the &pound;6 straight onto the order cost inside the loop also scores full marks.</p>
+            </div>
+          </details>
         </div>
       </article>
 

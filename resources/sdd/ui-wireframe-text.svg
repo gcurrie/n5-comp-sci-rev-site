@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="utTitle utDesc">
+  <title id="utTitle">Text-Based UI Wireframe — Edinburgh Castle Ticket Desk</title>
+  <desc id="utDesc">A wireframe of a text-based user interface for the same Edinburgh Castle ticket program, drawn as a shell window like the Python shell. Three mono-spaced lines read: Enter the number of adult tickets, followed by a blank; Enter the number of child tickets, followed by a blank; and The total cost of the booking is pounds, followed by a blank. Annotations mark the first two lines as inputs, where each prompt tells the user exactly what to type, and the last line as the output, where the result is displayed with a clear message.</desc>
+
+  <!-- panel -->
+  <rect x="1" y="1" width="898" height="398" fill="#F8F7F2" stroke="#D1D5DB" stroke-width="2"/>
+
+  <!-- heading -->
+  <text x="450" y="46" text-anchor="middle" font-size="24" font-weight="800" fill="#00442A" letter-spacing="-0.4">Text-Based UI — Wireframe</text>
+  <text x="450" y="72" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="2.2" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">THE SAME PROGRAM &#183; SHELL-STYLE PROMPTS &amp; TYPED RESPONSES</text>
+
+  <!-- ================= shell window ================= -->
+  <rect x="70" y="100" width="520" height="200" fill="#001810" stroke="#001810" stroke-width="2"/>
+  <rect x="70" y="100" width="520" height="30" fill="#002D1C"/>
+  <circle cx="90" cy="115" r="5" fill="#B91C1C"/>
+  <circle cx="108" cy="115" r="5" fill="#C9A227"/>
+  <circle cx="126" cy="115" r="5" fill="#1B6B45"/>
+  <text x="146" y="119" font-size="10" fill="#C7DED2"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">castle_tickets.py &#8212; shell</text>
+
+  <g font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace" font-size="13">
+    <text x="90" y="162" fill="#E8F5EE">Enter the number of adult tickets: <tspan fill="#C9A227">____</tspan></text>
+    <text x="90" y="196" fill="#E8F5EE">Enter the number of child tickets: <tspan fill="#C9A227">____</tspan></text>
+    <text x="90" y="246" fill="#E8F5EE">The total cost of the booking is &#163;<tspan fill="#C9A227">______</tspan></text>
+    <text x="90" y="280" fill="#4A5568">&#9646;</text>
+  </g>
+
+  <!-- ================= annotations ================= -->
+  <!-- inputs -->
+  <line x1="600" y1="176" x2="640" y2="170" stroke="#1B6B45" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="600" cy="176" r="3.5" fill="#1B6B45"/>
+  <text x="650" y="160" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">INPUTS</text>
+  <text x="650" y="177" font-size="12.5" fill="#1A1A1A">Each prompt tells the user exactly</text>
+  <text x="650" y="193" font-size="12.5" fill="#1A1A1A">what to type — their response goes</text>
+  <text x="650" y="209" font-size="12.5" fill="#1A1A1A">in the blank space</text>
+
+  <!-- output -->
+  <line x1="600" y1="242" x2="640" y2="252" stroke="#6A1B9A" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="600" cy="242" r="3.5" fill="#6A1B9A"/>
+  <text x="650" y="246" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#6A1B9A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">OUTPUT</text>
+  <text x="650" y="263" font-size="12.5" fill="#1A1A1A">The result is displayed with a</text>
+  <text x="650" y="279" font-size="12.5" fill="#1A1A1A">clear message</text>
+
+  <!-- note -->
+  <text x="450" y="348" text-anchor="middle" font-size="12" font-style="italic" fill="#4A5568">No buttons or entry boxes here — the user reads each prompt and types a response,</text>
+  <text x="450" y="366" text-anchor="middle" font-size="12" font-style="italic" fill="#4A5568">exactly like a program running in the Python shell.</text>
+</svg>
