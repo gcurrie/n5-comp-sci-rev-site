@@ -50,6 +50,7 @@
           <li><a href="#purpose">Purpose</a></li>
           <li><a href="#requirements">Functional Requirements</a></li>
           <li><a href="#identifying">Identifying Inputs, Processes &amp; Outputs</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -57,7 +58,7 @@
 
       <article>
         <h2 id="intro">Introduction</h2>
-        <p><strong>Analysis</strong> is the first phase of the development process. Before anyone writes a single line of code, we have to work out exactly what the program is supposed to do. Get this wrong, and everything that follows is built on sand — you could write a beautiful program that solves the wrong problem!</p>
+        <p><strong>Analysis</strong> is the first phase of the development process. Before anyone writes a single line of code, we have to work out exactly what the program is supposed to do. Get this wrong, and everything that follows is on a shakey foundation, you could write an elegant program that solves the wrong problem!</p>
         <p>At National 5, analysis comes down to reading a problem carefully and picking out two things: the <strong>purpose</strong> of the program, and its <strong>functional requirements</strong>.</p>
 
         <h3>Key Terms</h3>
@@ -112,38 +113,163 @@
 
         <div class="example-block">
           <div class="example-label">Example 1 — Exam Scores</div>
-          <p><strong>Problem:</strong> A program is needed to help a student work out their total score across three exams. The student should <em>enter</em> their Physics, Computing and Maths marks. The program should <em>add</em> the scores together and <em>display</em> the total with a suitable message.</p>
+          <p><strong>Problem:</strong> A program is needed to help a student work out their total score across three exams. The student should <span class="fr-in"><em>enter</em> their Physics, Computing and Maths marks</span>. The program should <span class="fr-pr"><em>add</em> the scores together</span> and <span class="fr-out"><em>display</em> the total with a suitable message</span>.</p>
           <table>
             <tbody>
-              <tr><td style="width:10rem;"><strong>Inputs</strong></td><td>The three exam marks (Physics, Computing, Maths)</td></tr>
-              <tr><td><strong>Processes</strong></td><td>Add the three scores together</td></tr>
-              <tr><td><strong>Outputs</strong></td><td>Display the total score with a message</td></tr>
+              <tr><td style="width:10rem;" class="fr-h-in"><strong>Inputs</strong></td><td class="fr-c-in">The three exam marks (Physics, Computing, Maths)</td></tr>
+              <tr><td class="fr-h-pr"><strong>Processes</strong></td><td class="fr-c-pr">Add the three scores together</td></tr>
+              <tr><td class="fr-h-out"><strong>Outputs</strong></td><td class="fr-c-out">Display the total score with a message</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="example-block">
           <div class="example-label">Example 2 — Edinburgh Castle</div>
-          <p><strong>Problem:</strong> Edinburgh Castle needs a program for its ticket desk. The employee <em>enters</em> the number of adult tickets and the number of child tickets sold for a tour group. The program <em>calculates</em> the total cost of the group (adult tickets cost &pound;19.50, child tickets cost &pound;11.50) and <em>displays</em> the total cost of the booking.</p>
+          <p><strong>Problem:</strong> Edinburgh Castle needs a program for its ticket desk. The employee <span class="fr-in"><em>enters</em> the number of adult tickets and the number of child tickets</span> sold for a tour group. The program <span class="fr-pr"><em>calculates</em> the total cost of the group</span> (adult tickets cost &pound;19.50, child tickets cost &pound;11.50) and <span class="fr-out"><em>displays</em> the total cost of the booking</span>.</p>
           <table>
             <tbody>
-              <tr><td style="width:10rem;"><strong>Inputs</strong></td><td>Number of adult tickets, number of child tickets</td></tr>
-              <tr><td><strong>Processes</strong></td><td>Calculate the total cost (adults &times; 19.50 + children &times; 11.50)</td></tr>
-              <tr><td><strong>Outputs</strong></td><td>Display the total cost of the booking</td></tr>
+              <tr><td style="width:10rem;" class="fr-h-in"><strong>Inputs</strong></td><td class="fr-c-in">Number of adult tickets, number of child tickets</td></tr>
+              <tr><td class="fr-h-pr"><strong>Processes</strong></td><td class="fr-c-pr">Calculate the total cost (adults &times; 19.50 + children &times; 11.50)</td></tr>
+              <tr><td class="fr-h-out"><strong>Outputs</strong></td><td class="fr-c-out">Display the total cost of the booking</td></tr>
             </tbody>
           </table>
           <p>One thing worth noticing: the ticket <em>prices</em> are not inputs. The user never types them in — they're fixed values built into the program. Only data the user enters counts as an input.</p>
         </div>
 
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — interactive trainer</em>
-          Suggestion: a drag-and-drop requirement sorter — pupils are shown a short problem description and drag statements ("enter the number of nights", "calculate the bill", "display the total") into Input / Process / Output buckets, with instant feedback. The Higher site's functional-requirement trainer could be adapted for this.
+        <p>Now try it on two real past paper questions — read each question and jot down your own answer before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Old Specimen Q16 a) — Tax Rate App (3 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_frs_q1.png" alt="Past paper question: Pam is creating an application that will find and display a person's tax rate based on their salary. A table shows salary bands 0–12000, 12001–40000 and 40001 upwards with tax rates 0, 20 and 40. Analyse the problem and identify the input, the process and the output. 3 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> The question asks for one input, one process and one output — a mark for each. We work through the description in order and match each part to its category.</p>
+          <ul>
+            <li><strong>Input</strong> — what does the user type in? The only piece of data the program needs from the user is their <strong>salary</strong>.</li>
+            <li><strong>Process</strong> — what does the program do with the salary? It <strong>decides which tax rate applies</strong> by checking the salary against the bands. Notice a process doesn't have to be arithmetic — making a <em>decision</em> counts.</li>
+            <li><strong>Output</strong> — what appears on screen? The <strong>tax rate</strong> is displayed.</li>
+          </ul>
+          <p>Watch the trap: the table of salary bands is <em>not</em> an input. The user never types those numbers in — they are fixed values built into the program.</p>
+          <img src="../resources/sdd/worked_examples/n5_frs_q1_ans.png" alt="Marking instructions: one mark each for input — salary, process — decide which tax rate based on salary, output — tax rate." class="zoomable" />
+          <p>An example would be:</p>
+          <table>
+            <tbody>
+              <tr><td style="width:10rem;" class="fr-h-in"><strong>Input</strong></td><td class="fr-c-in">The user enters their salary</td></tr>
+              <tr><td class="fr-h-pr"><strong>Process</strong></td><td class="fr-c-pr">Decide which tax rate applies based on the salary</td></tr>
+              <tr><td class="fr-h-out"><strong>Output</strong></td><td class="fr-c-out">Display the tax rate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Q11 a) — Spelling Game Processes (3 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_frs_q2.png" alt="Past paper question: a spelling game stores 20 words, each with a sound file spoken by an actor. The program repeats 20 times: selects one of the 20 words, loads a sound file matching the selected word, plays the sound file through a speaker, asks the user to type in the word, compares the user's entry to the stored word, and informs the user if they have spelled the word correctly. When the game is over it displays the total number of words spelled correctly. Complete the table by identifying three processes from the description. The table already shows the input — user enters the word — and the outputs — play matching sound file through speaker, display whether or not the user spelled the word correctly, display the total number of correctly spelled words. 3 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> This one only asks for <strong>processes</strong> — the inputs and outputs are already filled in for us. That's actually a gift: anything already listed in the table can't be an answer, so we cross those bullets off and see what's left.</p>
+          <ul>
+            <li>"Plays the sound file through a speaker" — already in the table as an <em>output</em>. Crossed off.</li>
+            <li>"Asks the user to type in the word" — that's the <em>input</em> row. Crossed off.</li>
+            <li>What remains are things the program works out internally: it <strong>selects a word</strong>, <strong>loads/locates the matching sound file</strong>, <strong>compares the entry to the stored word</strong>, and <strong>keeps count of correct answers</strong>.</li>
+          </ul>
+          <p>Any three of those earn the marks. The counting process is easy to miss — the program must be <em>incrementing a total</em> for it to display the number correct at the end, even though the description never uses the word "add".</p>
+          <img src="../resources/sdd/worked_examples/n5_frs_q2_ans.png" alt="Marking instructions: award 1 mark for each bullet, maximum 3 marks — select a stored word; compare stored word to user's input; increment the total if user is correct; locates matching sound file; loads matching sound file." class="zoomable" />
+          <p>An example would be:</p>
+          <table>
+            <tbody>
+              <tr>
+                <td style="width:10rem;" class="fr-h-pr"><strong>Processes</strong></td>
+                <td class="fr-c-pr">
+                  <ul style="margin:0; padding-left:1.1rem;">
+                    <li>Select one of the 20 stored words</li>
+                    <li>Compare the user's entry with the stored word</li>
+                    <li>Add 1 to the total if the word was spelled correctly</li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Requirement Sorter</p>
+          <div class="ib-body">
+            <p class="ib-intro">Four short problems — read each description, then drag every statement into the Input, Process or Output bucket. Instant feedback explains each one, and sorting them all builds the functional requirements table.</p>
+            <iframe src="../resources/sdd/visualisers/functional-requirements-sorter.html"
+                    title="Functional requirements sorter — interactive trainer"
+                    loading="lazy"
+                    style="height:900px"></iframe>
+          </div>
         </div>
 
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
           <div>These identified inputs, processes and outputs don't just disappear after analysis — they become the skeleton of your <a href="design.html">design</a>. The inputs and outputs shape your user interface, and the processes shape your algorithm.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Swimming Pool (3 marks)</div>
+          <p>A swimming pool needs a program for its front desk. The receptionist enters the number of adult swimmers and the number of child swimmers in a group. The program calculates the total entry fee (adults &pound;5.50, children &pound;2.75) and displays the total cost for the group.</p>
+          <p>Analyse the problem above and identify the inputs, the process and the output.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li><strong>Inputs</strong> — number of adult swimmers and number of child swimmers</li>
+                <li><strong>Process</strong> — calculate the total entry fee (adults &times; &pound;5.50 + children &times; &pound;2.75)</li>
+                <li><strong>Output</strong> — display the total cost for the group</li>
+              </ul>
+              <p style="color:#6A1B9A;">The entry prices are <em>not</em> inputs — they are fixed values built into the program.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Reaction Quiz (2 marks)</div>
+          <p>A quiz app stores 10 questions. The program repeats the following 10 times:</p>
+          <ul>
+            <li>displays a question</li>
+            <li>asks the player to enter an answer</li>
+            <li>compares the player's answer with the stored answer</li>
+            <li>adds 1 to the score if the answer is correct.</li>
+          </ul>
+          <p>When the quiz is over, the program displays the player's final score out of 10.</p>
+          <p>Identify <strong>two</strong> processes from the above description of the app.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Any two of (1 mark each): <strong>compare the player's answer with the stored answer</strong>; <strong>add 1 to the score</strong> if the answer is correct; <strong>select/choose the next question</strong> from the 10 stored.</p>
+              <p style="color:#6A1B9A;">Do not accept "displays a question" or "displays the final score" (outputs), or "enter an answer" (input).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Bus Fares (3 marks)</div>
+          <p>A bus company is creating an application that will find and display a passenger's fare type based on their age.</p>
+          <table>
+            <thead><tr><th>Age</th><th>Fare type</th></tr></thead>
+            <tbody>
+              <tr><td>0&ndash;4</td><td>Free</td></tr>
+              <tr><td>5&ndash;15</td><td>Child</td></tr>
+              <tr><td>16 upwards</td><td>Adult</td></tr>
+            </tbody>
+          </table>
+          <p>Analyse the problem above and identify the input, the process and the output.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li><strong>Input</strong> — the passenger's age</li>
+                <li><strong>Process</strong> — decide which fare type applies based on the age</li>
+                <li><strong>Output</strong> — display the fare type</li>
+              </ul>
+              <p style="color:#6A1B9A;">The age bands in the table are built into the program — the only input is the age.</p>
+            </div>
+          </details>
         </div>
       </article>
 

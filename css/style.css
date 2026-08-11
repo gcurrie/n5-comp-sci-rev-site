@@ -1250,6 +1250,27 @@ details.worked-example .pq-body > *:first-child { margin-top: 0; }
   .q-part .qp-title { flex-basis: 100%; order: 3; }
 }
 
+/* Functional requirement colour coding (analysis) — inputs green,
+   processes gold, outputs purple, matching the requirement sorter's buckets.
+   .fr-in/.fr-pr/.fr-out highlight phrases in a problem description;
+   .fr-h-*/.fr-c-* colour a table's heading and content cells. */
+.fr-in, .fr-pr, .fr-out { padding: .02em .28em; font-weight: 600; }
+.fr-in  { background: #E8F5EE; color: #00442A; }
+.fr-pr  { background: #FEF3C7; color: #92750A; }
+.fr-out { background: #F3E8F9; color: #6A1B9A; }
+
+/* tbody tr in the selector outweighs the .page-content zebra-striping rule,
+   which would otherwise repaint even rows cream. */
+.page-content tbody tr td.fr-h-in,
+.page-content tbody tr td.fr-h-pr,
+.page-content tbody tr td.fr-h-out { color: var(--white); }
+.page-content tbody tr td.fr-h-in  { background: var(--green-primary); }
+.page-content tbody tr td.fr-h-pr  { background: var(--gold-dark); }
+.page-content tbody tr td.fr-h-out { background: #6A1B9A; }
+.page-content tbody tr td.fr-c-in  { background: #E8F5EE; }
+.page-content tbody tr td.fr-c-pr  { background: #FEF3C7; }
+.page-content tbody tr td.fr-c-out { background: #F3E8F9; }
+
 .worked-example .q-label {
   font-family: var(--font-mono);
   font-size: .72rem;
@@ -1264,7 +1285,8 @@ details.worked-example .pq-body > *:first-child { margin-top: 0; }
 .worked-example p + p { margin-top: .6rem; }
 
 .worked-example img {
-  margin: .75rem 0;
+  display: block;
+  margin: .75rem auto;
   max-width: 100%;
   background: var(--white);
   border: 1px solid var(--border);

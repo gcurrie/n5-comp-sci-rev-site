@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Functional Requirements Sorter — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  /* Reserve the scrollbar gutter so the content width does not change when a
+     scrollbar appears — otherwise auto-sizing the embed oscillates. */
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:1080px;margin:0 auto}
+  header h1{font-family:var(--sans);font-size:clamp(22px,3.2vw,32px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:860px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  /* ---- controls / HUD ---- */
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:14px 18px;margin:18px 0 14px}
+  .statebar{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:var(--mono);font-size:12px;padding:6px 10px;border:1px solid var(--line);background:#fff;display:flex;gap:7px;align-items:center}
+  .chip .k{color:var(--ink-soft);letter-spacing:.06em}
+  .chip b{color:var(--ink)}
+  .chip.good{border-color:var(--active);background:var(--active-bg)}
+  .chip.good .k{color:var(--active);opacity:.85}
+  .chip.good b{color:var(--active-strong)}
+  .chip.bad{border-color:var(--warn);background:var(--warn-bg)}
+  .chip.bad .k{color:var(--warn);opacity:.85}
+  .chip.bad b{color:var(--warn)}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap}
+  button{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);transition:background .15s,border-color .15s}
+  button:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+  button.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C}
+  button.primary:hover:not(:disabled){filter:brightness(1.06);background:var(--match-accent)}
+  /* Placed cards stay disabled so they are inert, but must keep full contrast. */
+  button:disabled:not(.card){opacity:.4;cursor:not-allowed}
+
+  .probs{display:flex;border:1px solid var(--line)}
+  .probs button{border:0;border-right:1px solid var(--line);background:#fff;padding:9px 14px}
+  .probs button:last-child{border-right:0}
+  .probs button.on{background:var(--active-strong);color:#fff}
+  .probs button.on:hover{background:var(--active-strong)}
+  .probs button.done-prob::after{content:" \2713";color:var(--match-accent)}
+
+  .progress{height:6px;background:var(--tint);border:1px solid var(--line);border-top:0;margin:-14px 0 18px;overflow:hidden}
+  .progress i{display:block;height:100%;width:0;background:var(--active);transition:width .25s}
+
+  /* ---- panels ---- */
+  .panel{border:1px solid var(--line);background:var(--panel)}
+  .panelbar{background:var(--bar);padding:11px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+  .panelbar .dim{color:rgba(255,255,255,.45);letter-spacing:.12em}
+  .panelbody{padding:16px 18px}
+
+  /* ---- problem description ---- */
+  .problem{margin-bottom:14px}
+  .problem .panelbody{font-size:15px;line-height:1.65}
+  .problem b{color:var(--active-strong)}
+
+  /* ---- tray of statement cards ---- */
+  .deck{display:flex;flex-wrap:wrap;gap:9px;min-height:64px}
+  .deck.empty::after{content:"Tray empty — every statement has been sorted.";font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-soft);text-transform:uppercase;align-self:center}
+
+  .card{
+    font-family:var(--sans);font-size:13.5px;font-weight:600;line-height:1.45;text-transform:none;letter-spacing:normal;
+    text-align:left;color:var(--ink);background:#fff;border:1px solid var(--line);border-left:3px solid var(--ink-soft);
+    padding:10px 12px;max-width:300px;cursor:grab;transition:border-color .15s,background .15s,transform .12s,box-shadow .15s;
+  }
+  .card:hover:not(:disabled){background:var(--active-bg);border-color:var(--active);border-left-color:var(--active)}
+  .card:active{cursor:grabbing}
+  .card.selected{background:var(--active-bg);border-color:var(--active);border-left-color:var(--active);box-shadow:0 0 0 3px var(--active-bg);transform:translateY(-1px)}
+  .card.dragging{opacity:.45}
+  .card.wrong{animation:shake .38s;border-color:var(--warn);border-left-color:var(--warn);background:var(--warn-bg)}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+
+  /* ---- columns ---- */
+  .stage{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;margin-top:14px}
+  .col{flex:1 1 250px;display:flex;flex-direction:column}
+  .col .panelbody{flex:1;display:flex;flex-direction:column;gap:10px}
+  .zone{
+    min-height:140px;display:flex;flex-direction:column;gap:8px;
+    border:2px dashed var(--line);background:#FAFBFA;padding:10px;flex:1;transition:border-color .15s,background .15s;
+  }
+  .zone.over{border-style:solid}
+  .zone .ghost{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:auto;text-align:center;padding:8px}
+  .zone.filled{border-style:solid;background:#fff}
+  .zone.filled .ghost{display:none}
+
+  .col.input .panelbar{background:var(--active-strong)}
+  .col.input .panelbar span{color:#fff}
+  .col.input .panelbar .dim{color:rgba(255,255,255,.55)}
+  .col.input .zone.armed,.col.input .zone.over{border-color:var(--active);background:var(--active-bg)}
+  .col.input .card.placed{border-color:var(--active);border-left-color:var(--active);background:var(--active-bg);color:var(--active-strong)}
+
+  .col.process .panelbar{background:var(--match)}
+  .col.process .panelbar span{color:#fff}
+  .col.process .panelbar .dim{color:rgba(255,255,255,.55)}
+  .col.process .zone.armed,.col.process .zone.over{border-color:var(--match-accent);background:var(--match-bg)}
+  .col.process .card.placed{border-color:var(--match-accent);border-left-color:var(--match-accent);background:var(--match-bg);color:var(--match)}
+
+  .col.output .panelbar{background:var(--out)}
+  .col.output .panelbar span{color:#fff}
+  .col.output .panelbar .dim{color:rgba(255,255,255,.55)}
+  .col.output .zone.armed,.col.output .zone.over{border-color:var(--out);background:var(--out-bg)}
+  .col.output .card.placed{border-color:var(--out);border-left-color:var(--out);background:var(--out-bg);color:var(--out)}
+
+  .card.placed{max-width:none;cursor:default;position:relative;padding-right:30px}
+  .card.placed::after{content:"\2713";position:absolute;top:9px;right:10px;font-family:var(--mono);font-size:13px;font-weight:700}
+
+  .place-btn{width:100%}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:16px;font-size:14.5px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:12px 16px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate b{font-weight:700}
+
+  /* ---- completion recap ---- */
+  .done{display:none;margin-top:16px}
+  .done.show{display:block}
+  .done .panelbody{padding:18px 20px}
+  .scoreline{font-size:15px;margin:0 0 14px}
+  .scoreline b{color:var(--active-strong)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  tbody th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:700;width:120px}
+  tr.r-input th{background:var(--active-strong)}
+  tr.r-input td{background:var(--active-bg)}
+  tr.r-process th{background:var(--match)}
+  tr.r-process td{background:var(--match-bg)}
+  tr.r-output th{background:var(--out)}
+  tr.r-output td{background:var(--out-bg)}
+  td ul{margin:0;padding-left:18px}
+  td li{margin:2px 0}
+  .recap-note{font-size:12.5px;color:var(--ink-soft);margin:14px 0 0;line-height:1.6}
+  .next-row{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .sw{width:13px;height:13px;border:1px solid var(--line);display:inline-block}
+  .sw.in{background:var(--active-bg);border-color:var(--active)}
+  .sw.pr{background:var(--match-bg);border-color:var(--match-accent)}
+  .sw.ou{background:var(--out-bg);border-color:var(--out)}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  @media(max-width:700px){
+    .controls{flex-direction:column;align-items:stretch}
+    .card{max-width:none;width:100%}
+    tbody th{width:auto}
+  }
+  @media print{.controls,.legend,.btnrow{display:none} body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Analysis</p>
+    <h1>Functional Requirements — Requirement Sorter</h1>
+    <p class="sub">Read the problem, then drag each statement into the right bucket — or click a card, then click <b>Place here</b>. Every statement is an input, a process or an output. Sort them all to build the functional requirements table.</p>
+  </header>
+
+  <div class="controls">
+    <div class="statebar">
+      <div class="probs" id="probs" role="group" aria-label="Choose a problem"></div>
+      <div class="chip"><span class="k">placed</span><b id="c-placed">0 / 6</b></div>
+      <div class="chip bad"><span class="k">mistakes</span><b id="c-mistakes">0</b></div>
+      <div class="chip good"><span class="k">first-time correct</span><b id="c-acc">—</b></div>
+    </div>
+    <div class="btnrow">
+      <button id="shuffle">Shuffle ⇄</button>
+      <button id="restart" class="primary">Restart problem</button>
+    </div>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <section class="panel problem">
+    <div class="panelbar"><span id="prob-title">PROBLEM</span><span class="dim">READ THIS FIRST — THEN SORT THE STATEMENTS</span></div>
+    <div class="panelbody" id="prob-text"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>STATEMENTS</span><span class="dim">DRAG OR CLICK TO SELECT</span></div>
+    <div class="panelbody">
+      <div class="deck" id="deck"></div>
+    </div>
+  </section>
+
+  <div class="stage">
+    <section class="panel col input">
+      <div class="panelbar"><span>INPUT</span><span class="dim" id="n-input">0 / 2</span></div>
+      <div class="panelbody">
+        <div class="zone" id="zone-input" data-col="input" aria-label="Input column">
+          <p class="ghost">Data the user enters</p>
+        </div>
+        <button class="place-btn" id="place-input" disabled>Place here</button>
+      </div>
+    </section>
+
+    <section class="panel col process">
+      <div class="panelbar"><span>PROCESS</span><span class="dim" id="n-process">0 / 2</span></div>
+      <div class="panelbody">
+        <div class="zone" id="zone-process" data-col="process" aria-label="Process column">
+          <p class="ghost">Calculations &amp; decisions the program makes</p>
+        </div>
+        <button class="place-btn" id="place-process" disabled>Place here</button>
+      </div>
+    </section>
+
+    <section class="panel col output">
+      <div class="panelbar"><span>OUTPUT</span><span class="dim" id="n-output">0 / 2</span></div>
+      <div class="panelbody">
+        <div class="zone" id="zone-output" data-col="output" aria-label="Output column">
+          <p class="ghost">Results &amp; messages displayed</p>
+        </div>
+        <button class="place-btn" id="place-output" disabled>Place here</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="narrate idle" id="narrate" aria-live="polite">Pick a statement from the tray to begin.</div>
+
+  <div class="legend">
+    <span><i class="sw in"></i>input</span>
+    <span><i class="sw pr"></i>process</span>
+    <span><i class="sw ou"></i>output</span>
+  </div>
+
+  <section class="panel done" id="done">
+    <div class="panelbar"><span>PROBLEM COMPLETE</span><span class="dim">THE FUNCTIONAL REQUIREMENTS TABLE YOU JUST BUILT</span></div>
+    <div class="panelbody">
+      <p class="scoreline" id="scoreline"></p>
+      <table>
+        <tbody id="recap"></tbody>
+      </table>
+      <p class="recap-note"><b>Exam tip:</b> fixed values written into the problem — prices, charges, fee bands — are <em>not</em> inputs. The user never types them in; they are built into the program. Only data the user enters counts as an input.</p>
+      <div class="next-row">
+        <button id="next" class="primary">Next problem ▶</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Each scenario is a short SQA-style problem description plus the statements
+     a pupil should extract from it. Sorting them all rebuilds the functional
+     requirements table the exam asks for. */
+  const SCENARIOS = [
+    {
+      title:"PROBLEM 1 OF 4 — HOLIDAY COTTAGE",
+      text:'A holiday cottage owner needs a booking program. The guest is asked to <b>enter the number of nights</b> they want to stay and <b>the number of pets</b> they are bringing. The program <b>calculates the cost of the nights</b> (&pound;80 per night), <b>adds the pet supplement</b> (&pound;15 per pet), and <b>displays the total bill</b> along with <b>a thank-you message</b>.',
+      cards:[
+        {text:"Enter the number of nights", cat:"input",
+         why:"The guest types this in — data going into the program is an input."},
+        {text:"Enter the number of pets", cat:"input",
+         why:"Again the guest supplies this value, so it is an input."},
+        {text:"Calculate the cost of the nights at £80 per night", cat:"process",
+         why:"The program works this out from the input — a calculation is a process. The £80 price is not an input: it is fixed inside the program."},
+        {text:"Add the £15-per-pet supplement to the bill", cat:"process",
+         why:"Another calculation the program performs on the data — a process."},
+        {text:"Display the total bill", cat:"output",
+         why:"The result is shown to the user — displaying results is an output."},
+        {text:"Display a thank-you message", cat:"output",
+         why:"Messages shown on screen are outputs, even when they contain no numbers."}
+      ]
+    },
+    {
+      title:"PROBLEM 2 OF 4 — CAFÉ ORDERS",
+      text:'A caf&eacute; needs a program to total a table’s order. The server <b>enters the number of drinks</b> and <b>the number of cakes</b> ordered. The program <b>calculates the cost of the order</b> (drinks &pound;2.80, cakes &pound;3.50) and <b>works out a 10% service charge</b>. It then <b>displays the service charge</b> and <b>the final amount to pay</b>.',
+      cards:[
+        {text:"Enter the number of drinks", cat:"input",
+         why:"The server types this in at the till — an input."},
+        {text:"Enter the number of cakes", cat:"input",
+         why:"Data entered by the user — an input."},
+        {text:"Calculate the cost of the order", cat:"process",
+         why:"drinks × £2.80 + cakes × £3.50 — a calculation, so a process. The menu prices themselves are fixed in the program, not inputs."},
+        {text:"Work out the 10% service charge", cat:"process",
+         why:"The program generates this new value from the order cost — a process."},
+        {text:"Display the service charge", cat:"output",
+         why:"A result shown to the user — an output."},
+        {text:"Display the final amount to pay", cat:"output",
+         why:"The end result on screen — an output."}
+      ]
+    },
+    {
+      title:"PROBLEM 3 OF 4 — QUIZ GAME",
+      text:'A quiz game stores 20 questions. Each round the program <b>chooses one of the stored questions</b>, <b>displays the question</b>, and the player <b>enters an answer</b>. The program <b>compares the answer with the stored answer</b> and <b>adds 1 to the score</b> if it is correct. After 20 rounds it <b>displays the final score</b>.',
+      cards:[
+        {text:"Player enters an answer", cat:"input",
+         why:"The player types the answer in — the only input in this problem."},
+        {text:"Choose one of the 20 stored questions", cat:"process",
+         why:"The program selects this internally — nothing is entered and nothing is displayed, so it is a process."},
+        {text:"Compare the player's answer with the stored answer", cat:"process",
+         why:"A check the program carries out on the data — a process."},
+        {text:"Add 1 to the score if the answer is correct", cat:"process",
+         why:"Updating a running total is a calculation — a process."},
+        {text:"Display the question", cat:"output",
+         why:"Careful — the question appears on screen, so it is an output, even though it happens near the start."},
+        {text:"Display the final score", cat:"output",
+         why:"The result shown at the end — an output."}
+      ]
+    },
+    {
+      title:"PROBLEM 4 OF 4 — GYM MEMBERSHIP",
+      text:'A gym’s app works out a member’s monthly fee. The receptionist <b>enters the member’s age</b> and <b>the number of classes</b> they want each week. The program <b>decides the fee band</b> from the age (junior under 16, adult 16&ndash;64, senior 65+), <b>calculates the monthly fee</b> (band price plus &pound;3 per class), then <b>displays the fee band</b> and <b>the monthly fee</b>.',
+      cards:[
+        {text:"Enter the member's age", cat:"input",
+         why:"Typed in by the receptionist — an input."},
+        {text:"Enter the number of classes per week", cat:"input",
+         why:"Data the user supplies — an input."},
+        {text:"Decide the fee band from the age", cat:"process",
+         why:"A decision is a process too — processes are not only calculations. The band boundaries are fixed in the program."},
+        {text:"Calculate the monthly fee", cat:"process",
+         why:"band price + £3 × classes — a calculation, so a process."},
+        {text:"Display the fee band", cat:"output",
+         why:"Shown to the user — an output."},
+        {text:"Display the monthly fee", cat:"output",
+         why:"The final result on screen — an output."}
+      ]
+    }
+  ];
+
+  const CATS = ["input","process","output"];
+  const LABEL = { input:"an input", process:"a process", output:"an output" };
+  const ROWLABEL = { input:"Input(s)", process:"Process(es)", output:"Output(s)" };
+
+  const $ = id => document.getElementById(id);
+  const deck = $("deck"), narrate = $("narrate"), bar = $("bar"), doneBox = $("done");
+  const zones = { input:$("zone-input"), process:$("zone-process"), output:$("zone-output") };
+  const placeBtns = { input:$("place-input"), process:$("place-process"), output:$("place-output") };
+  const counts = { input:$("n-input"), process:$("n-process"), output:$("n-output") };
+  const cPlaced = $("c-placed"), cMistakes = $("c-mistakes"), cAcc = $("c-acc");
+  const probsBar = $("probs");
+  const GHOST = { input:"Data the user enters", process:"Calculations &amp; decisions the program makes", output:"Results &amp; messages displayed" };
+
+  let scenario = 0, cards = [], selected = null, placed = 0, mistakes = 0, firstTry = 0;
+  const completed = SCENARIOS.map(() => false);
+
+  const probBtns = SCENARIOS.map((s, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = String(i + 1);
+    b.setAttribute("aria-label", "Problem " + (i + 1));
+    b.addEventListener("click", () => { scenario = i; deal(); });
+    probsBar.appendChild(b);
+    return b;
+  });
+
+  function total(){ return SCENARIOS[scenario].cards.length; }
+  function catTotal(cat){ return SCENARIOS[scenario].cards.filter(c => c.cat === cat).length; }
+
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  function makeEl(card){
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = "card";
+    el.draggable = true;
+    el.dataset.id = card.id;
+    el.textContent = card.text;
+    el.addEventListener("click", () => selectCard(card.id));
+    el.addEventListener("dragstart", e => {
+      if(el.classList.contains("placed")){ e.preventDefault(); return; }
+      selectCard(card.id, true);
+      el.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+      try { e.dataTransfer.setData("text/plain", card.id); } catch(_){}
+    });
+    el.addEventListener("dragend", () => el.classList.remove("dragging"));
+    card.el = el;
+    return el;
+  }
+
+  function selectCard(id, silent){
+    const card = cards.find(c => c.id === id);
+    if(!card || card.done) return;
+    if(selected === id && !silent){ clearSelection(); return; }
+    selected = id;
+    cards.forEach(c => c.el.classList.toggle("selected", c.id === id));
+    CATS.forEach(k => { zones[k].classList.add("armed"); placeBtns[k].disabled = false; });
+    if(!silent) say("Selected: <b>" + esc(card.text) + "</b> — now choose a bucket.", "");
+  }
+
+  function clearSelection(){
+    selected = null;
+    cards.forEach(c => c.el.classList.remove("selected"));
+    CATS.forEach(k => { zones[k].classList.remove("armed"); placeBtns[k].disabled = true; });
+  }
+
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  function attempt(id, col){
+    const card = cards.find(c => c.id === id);
+    if(!card || card.done) return;
+
+    if(card.cat !== col){
+      mistakes++;
+      card.tried = true;
+      card.el.classList.add("wrong");
+      setTimeout(() => card.el.classList.remove("wrong"), 400);
+      say('<b>✗ Not ' + LABEL[col] + '.</b> "' + esc(card.text) + '" — look at the verb and try again.', "warn");
+      updateHud();
+      return;
+    }
+
+    card.done = true;
+    if(!card.tried) firstTry++;
+    placed++;
+    card.el.classList.remove("selected","wrong");
+    card.el.classList.add("placed");
+    card.el.draggable = false;
+    card.el.disabled = true;
+    zones[col].appendChild(card.el);
+    zones[col].classList.add("filled");
+    clearSelection();
+    deck.classList.toggle("empty", deck.children.length === 0);
+    say('<b>✓ ' + esc(card.text) + ' — ' + LABEL[col] + '.</b> ' + esc(card.why),
+        col === "process" ? "match" : "");
+    updateHud();
+    if(placed === total()) finish();
+  }
+
+  function updateHud(){
+    cPlaced.textContent = placed + " / " + total();
+    cMistakes.textContent = mistakes;
+    cAcc.textContent = placed ? Math.round(firstTry / placed * 100) + "%" : "—";
+    CATS.forEach(k => {
+      counts[k].textContent = zones[k].querySelectorAll(".card").length + " / " + catTotal(k);
+    });
+    bar.style.width = (placed / total() * 100) + "%";
+  }
+
+  function finish(){
+    completed[scenario] = true;
+    probBtns[scenario].classList.add("done-prob");
+    const pct = Math.round(firstTry / total() * 100);
+    let verdict;
+    if(mistakes === 0)      verdict = "A clean sweep — every statement first time.";
+    else if(pct >= 80)      verdict = "Strong. Re-read the ones you slipped on and move on.";
+    else if(pct >= 55)      verdict = "Getting there. Restart this problem and aim for a clean sweep.";
+    else                    verdict = "Worth another go — read the table below first, then restart.";
+    $("scoreline").innerHTML = "All <b>" + total() + "</b> statements sorted with <b>" + mistakes +
+      "</b> mistake" + (mistakes === 1 ? "" : "s") + " — <b>" + pct + "%</b> placed first time. " + verdict;
+
+    const tb = $("recap");
+    tb.innerHTML = "";
+    CATS.forEach(cat => {
+      const items = SCENARIOS[scenario].cards.filter(c => c.cat === cat)
+        .map(c => "<li>" + esc(c.text) + "</li>").join("");
+      const tr = document.createElement("tr");
+      tr.className = "r-" + cat;
+      tr.innerHTML = "<th>" + ROWLABEL[cat] + "</th><td><ul>" + items + "</ul></td>";
+      tb.appendChild(tr);
+    });
+
+    const allDone = completed.every(Boolean);
+    $("next").style.display = allDone ? "none" : "";
+    doneBox.classList.add("show");
+    say(allDone
+      ? "<b>All four problems complete.</b> That table format below is exactly what a 'complete the table' exam question wants."
+      : "<b>Problem complete.</b> Check the functional requirements table you built below, then try the next problem.", "match");
+    postHeight();
+  }
+
+  function deal(){
+    doneBox.classList.remove("show");
+    deck.innerHTML = "";
+    CATS.forEach(k => {
+      zones[k].innerHTML = '<p class="ghost">' + GHOST[k] + '</p>';
+      zones[k].classList.remove("filled");
+    });
+    probBtns.forEach((b, i) => b.classList.toggle("on", i === scenario));
+    $("prob-title").textContent = SCENARIOS[scenario].title;
+    $("prob-text").innerHTML = SCENARIOS[scenario].text;
+    cards = shuffle(SCENARIOS[scenario].cards.map((c, i) => ({
+      id: "c" + i, text: c.text, cat: c.cat, why: c.why, tried: false, done: false
+    })));
+    cards.forEach(c => deck.appendChild(makeEl(c)));
+    deck.classList.remove("empty");
+    selected = null; placed = 0; mistakes = 0; firstTry = 0;
+    clearSelection();
+    updateHud();
+    say("Pick a statement from the tray to begin.", "idle");
+    postHeight();
+  }
+
+  /* ---- drop targets ---- */
+  CATS.forEach(col => {
+    const z = zones[col];
+    z.addEventListener("dragover", e => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; z.classList.add("over"); });
+    z.addEventListener("dragleave", e => { if(!z.contains(e.relatedTarget)) z.classList.remove("over"); });
+    z.addEventListener("drop", e => {
+      e.preventDefault();
+      z.classList.remove("over");
+      let id = "";
+      try { id = e.dataTransfer.getData("text/plain"); } catch(_){}
+      attempt(id || selected, col);
+    });
+    z.addEventListener("click", () => { if(selected) attempt(selected, col); });
+    placeBtns[col].addEventListener("click", () => {
+      if(!selected){ say("Choose a statement from the tray first.", "warn"); return; }
+      attempt(selected, col);
+    });
+  });
+
+  $("restart").addEventListener("click", deal);
+  $("shuffle").addEventListener("click", () => {
+    const remaining = cards.filter(c => !c.done);
+    shuffle(remaining).forEach(c => deck.appendChild(c.el));
+    say("Tray shuffled.", "idle");
+  });
+  $("next").addEventListener("click", () => {
+    for(let i = 1; i <= SCENARIOS.length; i++){
+      const j = (scenario + i) % SCENARIOS.length;
+      if(!completed[j]){ scenario = j; break; }
+    }
+    deal();
+  });
+
+  /* Measure the body, not documentElement: once the parent has grown the
+     iframe, documentElement stretches to that new height, so re-reporting it
+     would ratchet the frame taller every time the deck reflows.
+     Declared before deal(), which calls postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    // Grow freely, but ignore shrinks of a few px: those are the scrollbar
+    // appearing and disappearing, and acting on them makes the frame oscillate
+    // forever. A real shrink (restarting the round) clears the threshold.
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      // Resizing can rewrap the content, so measure again once the size lands.
+      requestAnimationFrame(postHeight);
+    }
+  }
+  deal();
+
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>
