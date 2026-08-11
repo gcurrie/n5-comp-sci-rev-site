@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 770" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="wfTitle wfDesc">
+  <title id="wfTitle">The Iterative (Waterfall) Development Process</title>
+  <desc id="wfDesc">A staircase diagram showing the five phases of software development flowing downwards in sequence: Analysis, Design, Implementation, Testing and Evaluation. Solid arrows show the forward flow from each phase down to the next. Three dashed curved arrows sweep back up to show iteration: one from Testing back up to Implementation, for example when testing finds a syntax error; one from Testing back up to Design, for example when testing finds a logic error; and one from Evaluation all the way back up to Analysis, for example when the program is not fit for purpose or the client asks for new features. A legend explains that solid arrows mean flow down to the next phase and dashed arrows mean going back to repeat an earlier phase.</desc>
+
+  <defs>
+    <marker id="wfFlow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#00442A"/>
+    </marker>
+    <marker id="wfBack" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#92750A"/>
+    </marker>
+  </defs>
+
+  <!-- panel -->
+  <rect x="1" y="1" width="1038" height="768" fill="#F8F7F2" stroke="#D1D5DB" stroke-width="2"/>
+
+  <!-- heading -->
+  <text x="520" y="50" text-anchor="middle" font-size="30" font-weight="800" fill="#00442A" letter-spacing="-0.5">The Iterative (Waterfall) Development Process</text>
+  <text x="520" y="80" text-anchor="middle" font-size="11.5" font-weight="700" letter-spacing="2.4" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">WORK FLOWS <tspan fill="#92750A">DOWNWARDS</tspan> &#183; DASHED ARROWS = PHASES REVISITED</text>
+
+  <!-- ================= forward flow arrows (solid, down) ================= -->
+  <line x1="200" y1="170" x2="200" y2="218" stroke="#00442A" stroke-width="3" marker-end="url(#wfFlow)"/>
+  <line x1="305" y1="288" x2="305" y2="336" stroke="#00442A" stroke-width="3" marker-end="url(#wfFlow)"/>
+  <line x1="410" y1="406" x2="410" y2="454" stroke="#00442A" stroke-width="3" marker-end="url(#wfFlow)"/>
+  <line x1="515" y1="524" x2="515" y2="572" stroke="#00442A" stroke-width="3" marker-end="url(#wfFlow)"/>
+
+  <!-- ================= iteration arrows (dashed, curved, back up) ================= -->
+  <!-- Testing back up to Design -->
+  <path d="M 607,483 C 745,438 725,272 404,250" fill="none" stroke="#92750A" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#wfBack)"/>
+  <text x="452" y="296" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#92750A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">BACK TO DESIGN</text>
+  <text x="452" y="314" font-size="12" font-style="italic" fill="#4A5568">e.g. testing finds a logic error</text>
+
+  <!-- Testing back up to Implementation (left side) -->
+  <path d="M 353,503 C 270,503 240,440 249,388" fill="none" stroke="#92750A" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#wfBack)"/>
+  <text x="48" y="468" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#92750A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">BACK TO IMPLEMENTATION</text>
+  <text x="48" y="486" font-size="12" font-style="italic" fill="#4A5568">e.g. testing finds a syntax error</text>
+
+  <!-- Evaluation all the way back up to Analysis -->
+  <path d="M 712,598 C 1010,535 1010,168 300,130" fill="none" stroke="#92750A" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#wfBack)"/>
+  <text x="728" y="360" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#92750A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">BACK TO ANALYSIS</text>
+  <text x="728" y="378" font-size="12" font-style="italic" fill="#4A5568">e.g. the program is not fit</text>
+  <text x="728" y="394" font-size="12" font-style="italic" fill="#4A5568">for purpose, or the client</text>
+  <text x="728" y="410" font-size="12" font-style="italic" fill="#4A5568">asks for new features</text>
+
+  <!-- ================= phase boxes ================= -->
+  <!-- 1 Analysis -->
+  <rect x="40" y="100" width="250" height="70" fill="#001810"/>
+  <text x="165" y="132" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">Analysis</text>
+  <text x="165" y="153" text-anchor="middle" font-size="11" fill="#FFFFFF">Work out exactly what the program must do</text>
+  <circle cx="40" cy="100" r="15" fill="#FFFFFF" stroke="#001810" stroke-width="3"/>
+  <text x="40" y="106" text-anchor="middle" font-size="15" font-weight="700" fill="#001810">1</text>
+
+  <!-- 2 Design -->
+  <rect x="145" y="218" width="250" height="70" fill="#002D1C"/>
+  <text x="270" y="250" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">Design</text>
+  <text x="270" y="271" text-anchor="middle" font-size="11" fill="#FFFFFF">Plan the UI, the data and the algorithm</text>
+  <circle cx="145" cy="218" r="15" fill="#FFFFFF" stroke="#002D1C" stroke-width="3"/>
+  <text x="145" y="224" text-anchor="middle" font-size="15" font-weight="700" fill="#002D1C">2</text>
+
+  <!-- 3 Implementation -->
+  <rect x="250" y="336" width="250" height="70" fill="#00442A"/>
+  <text x="375" y="368" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">Implementation</text>
+  <text x="375" y="389" text-anchor="middle" font-size="11" fill="#FFFFFF">Write the code in a high-level language</text>
+  <circle cx="250" cy="336" r="15" fill="#FFFFFF" stroke="#00442A" stroke-width="3"/>
+  <text x="250" y="342" text-anchor="middle" font-size="15" font-weight="700" fill="#00442A">3</text>
+
+  <!-- 4 Testing -->
+  <rect x="355" y="454" width="250" height="70" fill="#14573A"/>
+  <text x="480" y="486" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">Testing</text>
+  <text x="480" y="507" text-anchor="middle" font-size="11" fill="#FFFFFF">Check it gives correct results with test data</text>
+  <circle cx="355" cy="454" r="15" fill="#FFFFFF" stroke="#14573A" stroke-width="3"/>
+  <text x="355" y="460" text-anchor="middle" font-size="15" font-weight="700" fill="#14573A">4</text>
+
+  <!-- 5 Evaluation -->
+  <rect x="460" y="572" width="250" height="70" fill="#1B6B45"/>
+  <text x="585" y="604" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">Evaluation</text>
+  <text x="585" y="625" text-anchor="middle" font-size="11" fill="#FFFFFF">Fit for purpose? Efficient? Robust? Readable?</text>
+  <circle cx="460" cy="572" r="15" fill="#FFFFFF" stroke="#1B6B45" stroke-width="3"/>
+  <text x="460" y="578" text-anchor="middle" font-size="15" font-weight="700" fill="#1B6B45">5</text>
+
+  <!-- ================= legend ================= -->
+  <g transform="translate(40, 700)">
+    <line x1="0" y1="10" x2="34" y2="10" stroke="#00442A" stroke-width="3" marker-end="url(#wfFlow)"/>
+    <text x="46" y="14" font-size="12.5" fill="#1A1A1A">Flow down to the next phase (sequential)</text>
+
+    <path d="M 380,16 C 392,2 408,2 420,16" fill="none" stroke="#92750A" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#wfBack)"/>
+    <text x="434" y="14" font-size="12.5" fill="#1A1A1A">Go back and repeat an earlier phase (iteration)</text>
+  </g>
+</svg>

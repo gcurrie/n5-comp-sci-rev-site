@@ -50,6 +50,7 @@
           <li><a href="#phases">The Development Phases</a></li>
           <li><a href="#model">The Iterative/Waterfall Model</a></li>
           <li><a href="#why-iterative">Why Is It Iterative?</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -62,7 +63,7 @@
 
         <h3>Key Terms</h3>
         <div class="key-terms">
-          <div class="key-term"><div class="term">Software development process</div><div class="def">The sequence of phases used to create software: analysis, design, implementation, testing, documentation and evaluation.</div></div>
+          <div class="key-term"><div class="term">Software development process</div><div class="def">The sequence of phases used to create software: analysis, design, implementation, testing and evaluation.</div></div>
           <div class="key-term"><div class="term">Phase</div><div class="def">One stage of the development process. Each phase produces something the next phase needs.</div></div>
           <div class="key-term"><div class="term">Iterative/waterfall model</div><div class="def">The model of development where the phases flow in order — but phases are revisited (repeated) as problems are discovered.</div></div>
           <div class="key-term"><div class="term">Iteration</div><div class="def">Repeating a process. In software development, going back to a phase that has already been worked on.</div></div>
@@ -70,13 +71,13 @@
 
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
-          <div><strong>What the exam expects:</strong> you should be able to <strong>describe</strong> the phases of an iterative development process, and recognise them at work when you build your own programs — including in the assignment.</div>
+          <div><strong>What to know for the exam:</strong> you should be able to <strong>describe</strong> the phases of an iterative development process, and be able to explain and give examples of how the process is iterative.</div>
         </div>
       </article>
 
       <article>
         <h2 id="phases">The Development Phases</h2>
-        <p>There are six phases, and they always come in the same order. Here's what actually happens in each one:</p>
+        <p>There are five phases, and they always come in the same order. Here's what actually happens in each one:</p>
 
         <table>
           <thead><tr><th>Phase</th><th>What happens</th></tr></thead>
@@ -85,15 +86,9 @@
             <tr><td><strong>Design</strong></td><td>Planning the solution before any code is written: what the <strong>user interface</strong> will look like, what <strong>data</strong> will be stored, and how the program will work (the <strong>algorithm</strong>, planned using a design technique).</td></tr>
             <tr><td><strong>Implementation</strong></td><td>A programmer (or a team of programmers) writes the actual code, following the designs, in a high-level language such as Python.</td></tr>
             <tr><td><strong>Testing</strong></td><td>Checking the program works as expected — that it doesn't crash, and that it gives correct results. This is done with carefully chosen <strong>test data</strong>.</td></tr>
-            <tr><td><strong>Documentation</strong></td><td>Writing the supporting documents — for example a <strong>user guide</strong> (how to use the program) and a <strong>technical guide</strong> (how to install and maintain it).</td></tr>
             <tr><td><strong>Evaluation</strong></td><td>Stepping back and judging the finished program: is it <strong>fit for purpose</strong>? Does it make <strong>efficient</strong> use of coding constructs? Is it <strong>robust</strong> and <strong>readable</strong>?</td></tr>
           </tbody>
         </table>
-
-        <div class="callout callout-tip">
-          <div class="callout-icon">💡</div>
-          <div>A handy way to remember the order: <strong>"A Dance In The Dark Every Evening"</strong> — <strong>A</strong>nalysis, <strong>D</strong>esign, <strong>I</strong>mplementation, <strong>T</strong>esting, <strong>D</strong>ocumentation, <strong>E</strong>valuation.</div>
-        </div>
 
         <p>Notice how each phase feeds the next. You can't design a solution until you know what the problem is (analysis). You can't write the code until you have a design to follow. And you can't test a program that doesn't exist yet. The order matters!</p>
       </article>
@@ -102,11 +97,7 @@
         <h2 id="model">The Iterative/Waterfall Model</h2>
         <p>Because each phase flows down into the next, the process is often drawn as a staircase of steps, with the work "flowing" from one phase down to the next like a waterfall. This is the <strong>iterative/waterfall model</strong> of software development.</p>
 
-        <div class="img-placeholder">
-          <span class="ph-icon">📷</span>
-          <em>Placeholder — diagram</em>
-          Suggestion: waterfall-style staircase diagram of the six phases flowing top-left to bottom-right, with curved arrows flowing back up from Testing to Design/Implementation to show iteration. Could also work as a simple animation — the flow cascades down, then a bug appears at Testing and the arrow loops back up.
-        </div>
+        <img src="../resources/sdd/waterfall-iterative-process.svg" alt="The iterative (waterfall) development process: five phases — Analysis, Design, Implementation, Testing and Evaluation — drawn as a staircase flowing from top-left to bottom-right, joined by solid downward arrows. Dashed curved arrows sweep back up to show iteration: from Testing back to Design when testing finds a logic error, and from Evaluation all the way back to Analysis when the program is not fit for purpose or the client asks for new features." class="zoomable" style="max-width:100%;" />
 
         <p>In a perfect world, a team would do each phase once, finish it, and never look back. But software development doesn't work like that — and that's where the <em>iterative</em> part comes in.</p>
       </article>
@@ -127,7 +118,96 @@
           <div><strong>Exam answer:</strong> if you're asked why development is described as <em>iterative</em>, say that <strong>phases are revisited or repeated</strong> — and give an example, such as returning to design and implementation after testing reveals an error.</div>
         </div>
 
-        <p>You'll live this process yourself in the coursework assignment: you'll analyse a problem, design a solution, implement it, test it — and when a test fails (it happens to everyone), you'll loop back, fix your code, and test again. That <em>is</em> iterative development.</p>
+        <p>You'll go through a basic version of this process yourself in the coursework assignment: you'll analyse a problem, design a solution, implement it, test it — and when a test fails (it happens to everyone), you'll loop back, fix your code, and test again. That <em>is</em> iterative development.</p>
+
+        <p>Here are two past paper questions on exactly this idea — read the question, think about your answer, then check it against the real marking instructions.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Why Is Development Iterative? (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_dm_q2.png" alt="Past paper question 5: Explain why the development of software is called an iterative process. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> The command word is <em>explain</em>, so a one-word answer won't do. We need to say what <strong>iteration</strong> actually means in the development process. So we need to fit "<strong>previous stages/phases are often revisited (repeated)</strong>" into our answer.</p>
+          <ul>
+            <li>Don't just write "it repeats" — say <em>what</em> repeats. The <strong>stages</strong> of development are returned to.</li>
+            <li>Adding a quick example is a safe way to make your explanation clear, e.g. "returning to design and implementation after testing finds an error".</li>
+          </ul>
+          <img src="../resources/sdd/worked_examples/n5_dm_q2_ans.png" alt="Marking instructions: one mark for previous stages in development are often revisited. Suitable examples are acceptable for the mark." class="zoomable" />
+          <p>Notice the marking instructions accept a suitable <strong>example</strong> for the mark too — so if you blank on the wording, describing a concrete loop-back (testing → design) can still score.</p>
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">The development process is iterative as you can return to previous stages if errors are identified. For example, errors are found in testing and you return to design to fix them.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Returning to the Design Stage (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_dm_q1.png" alt="Past paper question: The software development process is described as iterative. Explain why it may be necessary to return to the design stage. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> This one is more specific. It names the <strong>design</strong> stage and asks why you'd go <em>back</em> to it. So the general "stages are revisited" line isn't enough here, you must give a <strong>reason</strong> the design would need to change. Any one of these earns the mark:</p>
+          <ul>
+            <li><strong>Logic errors were found at a later stage</strong> — the program runs but gives wrong results, so the algorithm design itself must be fixed.</li>
+            <li><strong>New functionality is requested</strong> — the client wants something extra, so it has to be designed before it can be coded.</li>
+            <li><strong>The program is not fit for purpose</strong> — evaluation shows it doesn't do what was required.</li>
+          </ul>
+          <img src="../resources/sdd/worked_examples/n5_dm_q1_ans.png" alt="Marking instructions: one mark for any one from — logic errors were found at a later stage, new functionality is requested, the program is not fit for purpose. Do not accept 'check for errors'." class="zoomable" />
+          <p>Watch the trap: "<strong>Do not accept 'check for errors'</strong>". Checking for errors is what <em>testing</em> does — you return to design because a problem has already been <strong>found</strong> and the plan needs to change. Make sure your answer gives a cause, not an activity.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Specimen Paper Q5 (1 mark)</div>
+          <p>The software development process is described as <strong>iterative</strong>. Explain what this means.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Stages/phases of development that have already been completed are <strong>revisited (repeated)</strong> (1 mark). A suitable example is also acceptable, e.g. returning to design and implementation after testing finds an error.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — 2022 Q9 a) (ii) (1 mark)</div>
+          <p>During testing, a quiz program keeps awarding the wrong scores. Explain why the development team may need to return to the <strong>design</strong> stage.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">A <strong>logic error</strong> has been found at a later stage — the planned algorithm is wrong, so the design must be changed before the code can be fixed (1 mark). <em>Do not accept</em> "to check for errors".</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Name the Phase (2 marks)</div>
+          <p>State the phase of the development process in which each of the following takes place:</p>
+          <p>(a) The program is checked using carefully chosen test data.<br/>(b) The functional requirements (inputs, processes and outputs) are identified.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">(a) <strong>Testing</strong> (1 mark) &nbsp; (b) <strong>Analysis</strong> (1 mark)</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — What Happens in a Phase (2 marks)</div>
+          <p>Describe <strong>two</strong> tasks carried out during the <strong>design</strong> phase of the software development process.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Any two of (1 mark each): design the <strong>user interface</strong>; identify the <strong>data</strong> to be stored/used; plan the <strong>algorithm/logic</strong> of the program using a design technique (e.g. pseudocode, structure diagram, flowchart).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — The Client Changes Their Mind (2 marks)</div>
+          <p>A finished program is shown to the client, who asks for an extra feature to be added. State which phase the development team should return to <strong>first</strong>, and explain why this situation shows that development is iterative.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>Analysis</strong> — the new requirement must be agreed/added to the requirements first (1 mark). It shows iteration because phases that were already completed are being <strong>revisited</strong>/the team goes back through design, implementation and testing again for the new feature (1 mark).</p>
+            </div>
+          </details>
+        </div>
       </article>
 
     </div>

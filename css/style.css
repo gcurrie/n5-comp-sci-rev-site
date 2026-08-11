@@ -1142,7 +1142,7 @@ details.worked-example[open] .pq-chevron::before { content: '\25BC'; }
 details.worked-example .pq-body {
   padding: 1.1rem 1.25rem;
   border-top: 1px solid var(--gold);
-  background: var(--white);
+  background: var(--gold-light);
 }
 
 details.worked-example .pq-body > *:first-child { margin-top: 0; }
