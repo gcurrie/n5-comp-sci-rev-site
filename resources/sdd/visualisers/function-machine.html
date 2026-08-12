@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Function Machine — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:880px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:780px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 12px}
+  .grp{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+  .probs{display:flex;border:1px solid var(--line)}
+  .probs button{font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 13px;color:var(--ink)}
+  .probs button:last-child{border-right:0}
+  .probs button.on{background:var(--active-strong);color:#fff}
+  .preset{
+    font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;
+    padding:8px 11px;border:1px solid var(--line);background:#fff;color:var(--ink);border-left:3px solid var(--ink-soft);
+  }
+  .preset:hover:not(:disabled){background:var(--active-bg);border-color:var(--active);border-left-color:var(--active)}
+  .preset.on{background:var(--active-strong);border-color:var(--active-strong);border-left-color:var(--match-accent);color:#fff}
+  .preset:disabled{opacity:.5;cursor:not-allowed}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 18px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  button.ctrl:hover:not(:disabled){filter:brightness(1.06)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+
+  .panel{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- the machine stage ---- */
+  .stage{padding:20px 16px 24px;display:flex;flex-direction:column;align-items:center;gap:0}
+  .callline{
+    font-family:var(--mono);font-size:clamp(14px,2.6vw,18px);font-weight:700;color:var(--ink);
+    background:var(--bg);border:1px solid var(--line);padding:10px 16px;margin-bottom:18px;max-width:100%;overflow-x:auto;white-space:nowrap;
+  }
+  .callline .var{color:var(--out)}
+  .callline .fn{color:var(--active-strong)}
+  .callline .pm{background:var(--match-bg);border-bottom:2px solid var(--match-accent);padding:0 3px}
+  .importline{font-family:var(--mono);font-size:11px;color:var(--active);margin:-8px 0 12px;visibility:hidden}
+  .importline.show{visibility:visible}
+
+  .chips{display:flex;gap:10px;min-height:44px;align-items:flex-start}
+  .chip{
+    font-family:var(--mono);font-size:14px;font-weight:700;color:#002D1C;background:var(--match-accent);
+    border:2px solid var(--match);padding:7px 12px;position:relative;z-index:2;
+  }
+  .chip.fall{animation:fall .6s cubic-bezier(.5,.05,.8,.5) forwards}
+  @keyframes fall{to{transform:translateY(120px) scale(.4);opacity:0}}
+  .chiplabel{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--match);font-weight:700;margin:6px 0 2px}
+
+  .funnel{width:150px;height:26px;background:var(--ink-soft);clip-path:polygon(0 0,100% 0,68% 100%,32% 100%);opacity:.85;margin-top:10px}
+  .machine{
+    width:min(320px,86vw);border:3px solid var(--active-strong);background:var(--active-strong);
+    padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:12px;
+  }
+  .machine .gear{font-size:26px;line-height:1;display:inline-block}
+  .machine .fname{font-family:var(--mono);font-size:19px;font-weight:700;color:#fff;letter-spacing:.02em}
+  .machine.whir{animation:whir .95s}
+  .machine.whir .gear{animation:spin .95s linear}
+  @keyframes whir{10%,50%,90%{transform:translateX(-4px)}30%,70%{transform:translateX(4px)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .chute{width:22px;height:26px;background:var(--ink-soft);opacity:.85}
+
+  .varwrap{text-align:center;margin-top:6px}
+  .varname{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--active-strong);margin-bottom:5px}
+  .varbox{
+    width:170px;height:64px;border:2.5px solid var(--active-strong);background:#fff;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .varbox .v{
+    font-family:var(--mono);font-size:17px;font-weight:700;color:var(--active-strong);
+    background:var(--active-bg);border:2px solid var(--active);padding:4px 12px;max-width:158px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .varbox .v.empty{background:none;border:none;color:var(--line);font-size:24px}
+  .varbox .v.drop{animation:drop .5s cubic-bezier(.3,.7,.4,1.15)}
+  @keyframes drop{from{transform:translateY(-80px)}to{transform:translateY(0)}}
+  .vartype{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:7px}
+
+  /* ---- randint history ---- */
+  .history{display:none;gap:6px;align-items:center;flex-wrap:wrap;margin-top:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+  .history.show{display:flex}
+  .history .h{
+    font-size:12.5px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--active-strong);
+    background:var(--active-bg);border:1.5px solid var(--active);padding:2px 8px;
+  }
+  .history .h.edge{background:var(--match-bg);border-color:var(--match-accent);color:var(--match)}
+
+  /* ---- narration ---- */
+  .narrate{font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Pre-Defined Functions</p>
+    <h1>The Function Machine</h1>
+    <p class="sub">Every pre-defined function works the same way: <b>parameters</b> go in the top, the machine does its ready-made job, and a <b>returned value</b> drops out into your variable. Pick a function, pick a call, and press Run.</p>
+  </header>
+
+  <div class="controls">
+    <div class="grp">
+      <span class="lbl">Function</span>
+      <div class="probs" id="probs" role="group" aria-label="Choose a function"></div>
+    </div>
+    <div class="grp">
+      <span class="lbl">Call</span>
+      <div class="grp" id="presets"></div>
+    </div>
+    <button class="ctrl" id="run" type="button">Run ▶</button>
+  </div>
+
+  <section class="panel">
+    <div class="panelbar"><span>PARAMETERS IN → RETURNED VALUE OUT</span></div>
+    <div class="stage">
+      <div class="callline" id="callline"></div>
+      <p class="importline" id="importline">✓ import random — already at the top of the program</p>
+      <div class="chiplabel">the parameter(s)</div>
+      <div class="chips" id="chips"></div>
+      <div class="funnel"></div>
+      <div class="machine" id="machine"><span class="gear" aria-hidden="true">⚙</span><span class="fname" id="fname"></span></div>
+      <div class="chute"></div>
+      <div class="varwrap">
+        <div class="varname" id="varname"></div>
+        <div class="varbox" id="varbox"><span class="v empty">?</span></div>
+        <div class="vartype">the returned value</div>
+      </div>
+      <div class="history" id="history"><span>previous runs:</span></div>
+    </div>
+  </section>
+
+  <div class="narrate idle" id="narrate">Pick a call and press <b>Run ▶</b>.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const FUNCS = [
+    {
+      tab:"round()", fname:"round", varName:"answer",
+      presets:[
+        { label:"round(3.14159, 2)", params:["3.14159","2"], result:() => "3.14",
+          note:'Two parameters went in: the <b>value to round</b> and the <b>number of decimal places to keep</b>. The machine returned <b>3.14</b>, and the assignment stored it in <code>answer</code>.' },
+        { label:"round(23.3123, 1)", params:["23.3123","1"], result:() => "23.3",
+          note:'Second parameter <b>1</b> — one decimal place. This is the exact call from the 2023 exam question: <b>23.3123 → 23.3</b>.' },
+        { label:"round(15.6667)", params:["15.6667"], result:() => "16",
+          note:'Only <b>one</b> parameter this time — with no second parameter, round goes to the <b>nearest whole number</b>: 15.6667 → 16.' }
+      ]
+    },
+    {
+      tab:"len()", fname:"len", varName:"howLong",
+      presets:[
+        { label:'len("hello")', params:['"hello"'], result:() => "5",
+          note:'One parameter — the string to measure. The machine counted the characters and returned <b>5</b>. Notice the returned value is a <b>number</b>, even though a string went in.' },
+        { label:'len("KA7 2RG")', params:['"KA7 2RG"'], result:() => "7",
+          note:'Count them: K-A-7-space-2-R-G. <b>7</b> — the <b>space counts as a character</b>. That catches people out every year.' },
+        { label:'len("DEMOCRACY")', params:['"DEMOCRACY"'], result:() => "9",
+          note:'<b>9</b> characters — exactly how the word game in the 2023 exam question awarded a point for each letter.' }
+      ]
+    },
+    {
+      tab:"randint()", fname:"random.randint", varName:"num", random:true,
+      presets:[
+        { label:"random.randint(1, 6)", params:["1","6"], lo:1, hi:6 },
+        { label:"random.randint(0, 19)", params:["0","19"], lo:0, hi:19 },
+        { label:"random.randint(1, 10)", params:["1","10"], lo:1, hi:10 }
+      ]
+    }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const narrate = $("narrate"), runBtn = $("run");
+  let fi = 0, pi = 0, playing = false;
+  let tabBtns = [], presetBtns = [];
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  tabBtns = FUNCS.map((f, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = f.tab;
+    b.addEventListener("click", () => { if(playing) return; fi = i; pi = 0; deal(); });
+    $("probs").appendChild(b);
+    return b;
+  });
+
+  function callHTML(){
+    const f = FUNCS[fi], p = f.presets[pi];
+    const inner = p.params.map(x => '<span class="pm">' + esc(x) + '</span>').join(", ");
+    return '<span class="var">' + f.varName + '</span> = <span class="fn">' + f.fname + '</span>(' + inner + ')';
+  }
+
+  function resetRun(){
+    const f = FUNCS[fi], p = f.presets[pi];
+    tabBtns.forEach((b, i) => b.classList.toggle("on", i === fi));
+    presetBtns.forEach((b, i) => b.classList.toggle("on", i === pi));
+    $("callline").innerHTML = callHTML();
+    $("importline").classList.toggle("show", !!f.random);
+    $("fname").textContent = f.fname;
+    $("varname").textContent = f.varName;
+    $("varbox").innerHTML = '<span class="v empty">?</span>';
+    $("chips").innerHTML = "";
+    p.params.forEach(x => {
+      const c = document.createElement("span");
+      c.className = "chip";
+      c.textContent = x;
+      $("chips").appendChild(c);
+    });
+    runBtn.disabled = false;
+    runBtn.textContent = "Run ▶";
+    say("Ready: <code>" + esc(f.varName) + " = " + esc(p.label) + "</code>. The highlighted values are the <b>parameters</b>. Press <b>Run ▶</b>.", "idle");
+    postHeight();
+  }
+
+  function deal(){
+    const f = FUNCS[fi];
+    $("presets").innerHTML = "";
+    presetBtns = f.presets.map((p, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "preset";
+      b.textContent = p.label;
+      b.addEventListener("click", () => { if(playing) return; pi = i; resetRun(); });
+      $("presets").appendChild(b);
+      return b;
+    });
+    $("history").classList.toggle("show", !!f.random);
+    if(f.random){
+      $("history").innerHTML = "<span>previous runs:</span>";
+    }
+    resetRun();
+  }
+
+  function play(){
+    if(playing) return;
+    resetRun();
+    playing = true;
+    runBtn.disabled = true;
+    presetBtns.forEach(b => b.disabled = true);
+    tabBtns.forEach(b => b.disabled = true);
+
+    const f = FUNCS[fi], p = f.presets[pi];
+    const chips = Array.from($("chips").children);
+
+    // 1. parameters fall into the hopper
+    chips.forEach((c, i) => setTimeout(() => c.classList.add("fall"), 150 + i * 170));
+    const t1 = 150 + chips.length * 170 + 300;
+
+    // 2. the machine whirs
+    setTimeout(() => {
+      $("machine").classList.add("whir");
+      say("The parameters are inside — <code>" + esc(f.fname) + "</code> runs its ready-made code. You never see how; you only get the answer.", "idle");
+    }, t1);
+
+    // 3. the returned value drops out
+    setTimeout(() => {
+      $("machine").classList.remove("whir");
+      let result, note;
+      if(f.random){
+        const n = p.lo + Math.floor(Math.random() * (p.hi - p.lo + 1));
+        result = String(n);
+        const edge = (n === p.lo || n === p.hi);
+        note = 'Out came <b>' + n + '</b>' +
+          (edge ? ' — an <b>end value</b>! Both parameters are <em>included</em> in the range, so ' + p.lo + ' and ' + p.hi + ' are both possible.'
+                : '. Press <b>Run ▶</b> again — you\'ll likely get a different number. Every value from ' + p.lo + ' to ' + p.hi + ', <b>both ends included</b>, is possible.') +
+          ' Remember <code>import random</code> must be the first line of the program.';
+        const h = document.createElement("span");
+        h.className = "h" + (edge ? " edge" : "");
+        h.textContent = n;
+        $("history").appendChild(h);
+      } else {
+        result = p.result();
+        note = p.note;
+      }
+      $("varbox").innerHTML = '<span class="v drop">' + esc(result) + '</span>';
+      say(note, "match");
+      playing = false;
+      runBtn.disabled = false;
+      runBtn.textContent = "Run again ↺";
+      presetBtns.forEach(b => b.disabled = false);
+      tabBtns.forEach(b => b.disabled = false);
+      postHeight();
+    }, t1 + 1000);
+  }
+
+  runBtn.addEventListener("click", play);
+
+  /* Auto-size the parent iframe. Declared before deal(), which calls
+     postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  deal();
+})();
+</script>
+</body>
+</html>

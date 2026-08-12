@@ -50,6 +50,7 @@
           <li><a href="#round">Round</a></li>
           <li><a href="#length">Length</a></li>
           <li><a href="#random">Random</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -59,6 +60,7 @@
         <h2 id="intro">Introduction</h2>
         <p>Some jobs come up so often in programming — rounding a number, measuring a string, picking a random value — that Python has them <strong>built in</strong>. These are <strong>pre-defined functions</strong>: someone has already written the code, so you don't have to reinvent the wheel. You just call the function, hand it the values it needs, and catch the answer it gives back.</p>
         <p>The values you hand over (inside the brackets) are the <strong>parameters</strong>, and the answer that comes back is the <strong>returned value</strong> — which you'll almost always store in a variable.</p>
+        <p>Learn the word <strong>parameter</strong> properly — exam questions use it directly, and marking instructions award marks for "correct parameters". In <code>round(3.14159, 2)</code> there are <em>two</em> parameters: the value to round, and the number of decimal places to keep. Choosing the right function is often only half the marks; the other half is getting its parameters right.</p>
 
         <h3>Key Terms</h3>
         <div class="key-terms">
@@ -94,6 +96,23 @@ print(num3)              # 3.14159 — five decimal places</pre>
 average = round(average, 2)
 print("Average mark: " + str(average))</pre>
         </div>
+
+        <p>Here's exactly that skill in a real past paper question — write your own answer before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2023 Q10 c) — Display 23.3 (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_predef_q3.png" alt="Past paper question: a customer's average monthly data usage is displayed using the code SEND aveData TO DISPLAY, which displays the value 23.3123. Using a programming language of your choice, re-write this code so the customer's average monthly data usage will display as 23.3. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Compare the two outputs. <code>23.3123</code> has four decimal places; the target <code>23.3</code> has one. Trimming a real number to a set number of decimal places is exactly what <code>round()</code> is for — and the two marks are one for the <strong>function</strong> and one for its <strong>parameters</strong>:</p>
+          <ul>
+            <li><strong>First parameter</strong> — the value to round: the variable <code>aveData</code>.</li>
+            <li><strong>Second parameter</strong> — <code>1</code>, because the target has <strong>one</strong> decimal place.</li>
+          </ul>
+          <p>Watch the traps: round the <em>variable</em>, not the number — <code>round(23.3123, 1)</code> only works for this one customer, and the program must work for them all. And don't drop the second parameter: <code>round(aveData)</code> on its own goes to the nearest whole number and would display 23.</p>
+          <img src="../resources/sdd/worked_examples/n5_predef_q3_ans.png" alt="Marking instructions: one mark each for the round function and the correct parameters aveData and 1. Display, print or assignment not required in the answer as given in the question. Example answer: round(aveData, 1)." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">round(aveData, 1)</p>
+          <p style="color:#6A1B9A;">The display statement was already given in the question, so SEND round(aveData, 1) TO DISPLAY and plain round(aveData, 1) both earn full marks.</p>
+        </div>
       </article>
 
       <article>
@@ -118,6 +137,18 @@ else:
     print("Your password is NOT long enough")</pre>
         </div>
         <p>Later, this exact check gets upgraded into a loop that <em>keeps asking</em> until the password is long enough — that's <a href="standard-algorithms.html">input validation</a>, one of the standard algorithms.</p>
+
+        <p>Length questions can be worth just one mark — but only if you name the function precisely. Try this one before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2023 Q6 b) — Points for Each Letter (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_predef_q2.png" alt="Past paper question: if the correct word is entered, a point is awarded for each letter of the word as shown below. A table shows the word DEMOCRACY earning 9 points and SERVER earning 6 points. State the predefined function used to count the number of characters in the player's correct answer. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> A point for each letter means the program must <em>count the characters</em> in the word — DEMOCRACY has 9, SERVER has 6, and that's exactly the points awarded. Counting the characters in a string is the length function's whole job, so the answer is <strong>length</strong> (<code>len</code> in Python).</p>
+          <p>Watch the trap: the marking instructions explicitly refuse <strong>"length check"</strong> — that's the name of a <em>validation technique</em>, not a function. When a question says "state the pre-defined function", name the function itself and nothing else.</p>
+          <img src="../resources/sdd/worked_examples/n5_predef_q2_ans.png" alt="Marking instructions: length or len, 1 mark. Not length check." class="zoomable" />
+          <p>The answer is:</p>
+          <p style="color:#6A1B9A;"><strong>length</strong> (accept len)</p>
+        </div>
       </article>
 
       <article>
@@ -153,10 +184,107 @@ else:
           <div class="callout-icon">⚠️</div>
           <div>Forgetting the <code>import random</code> line is the number one mistake with this function — the program crashes the moment it reaches <code>random.randint()</code>. First line of the program, every time.</div>
         </div>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — visualiser</em>
-          Suggestion: a "function machine" animation — parameters go in a hopper (e.g. 1 and 6), the machine whirs, and a returned value drops out into a labelled variable box. Switchable between round, len and randint to hammer home the same in→out pattern for all three.
+
+        <p>You've met this spelling game before — its processes on the <a href="analysis.html">Analysis</a> page, its array of words on the <a href="data-types-structures.html">arrays</a> page. Now the same program needs a random word picked. Write your own Line 28 before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Q11 c) (ii) — Generate the Choice (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_predef_q1-1.png" alt="Past paper code for the spelling game: Line 27 REPEAT 20 TIMES. Line 28 SET choice TO a number between 0 to 19. Line 29 load selected sound file. Line 30 SEND sound file TO speaker. Line 31 RECEIVE usersWord FROM KEYBOARD. Line 32 IF usersWord = NOT storedWords index choice THEN. Line 33 SEND Sorry, the correct spelling is and storedWords index choice TO DISPLAY. Line 34 ELSE. Line 35 SEND Well Done TO DISPLAY. Line 36 SET correctGuesses TO correctGuesses + 1. Line 37 END IF. Line 38 END REPEAT. Line 39 SEND You guessed and correctGuesses and words correctly TO DISPLAY." class="zoomable" />
+          <img src="../resources/sdd/worked_examples/n5_predef_q1-2.png" alt="Past paper question part c ii: using a programming language of your choice, re-write Line 28 to show how the value stored in the variable choice would be generated. Your answer should use a function. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Line 28 needs "a number between 0 to 19", picked fresh every time the loop runs — and the question even nudges us with "your answer should use a function". A value that's different every run is <strong>random</strong>, so the two marks are:</p>
+          <ul>
+            <li><strong>The random function</strong> — <code>random.randint()</code> in Python.</li>
+            <li><strong>The correct values created</strong> — the <strong>parameters</strong> <code>0</code> and <code>19</code>, the smallest and largest values allowed.</li>
+          </ul>
+          <p>Why 0 to 19 and not 1 to 20? Because <code>choice</code> is used as an <strong>array index</strong> on line 32 — <code>storedWords[choice]</code> — and the 20 stored words live at indexes <strong>0 to 19</strong>. Zero-indexing strikes again.</p>
+          <p>Watch the trap: <code>randint</code> includes <strong>both ends</strong>, so <code>random.randint(0, 19)</code> can produce 0 and can produce 19. Writing <code>randint(1, 20)</code> or <code>randint(0, 20)</code> creates the wrong values and loses the second mark.</p>
+          <img src="../resources/sdd/worked_examples/n5_predef_q1-2_ans.png" alt="Marking instructions: one mark each for the random function and the correct values created, 0 to 19. 2 marks." class="zoomable" />
+          <p>An example would be (in Python):</p>
+          <p style="color:#6A1B9A;">choice = random.randint(0, 19)</p>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">The Function Machine</p>
+          <div class="ib-body">
+            <p class="ib-intro">All three functions work the same way: <strong>parameters in, returned value out</strong>. Pick a function and a call, press Run, and watch the parameters drop into the hopper and the returned value land in the variable. The randint machine is genuinely random — run it a few times and see both end values appear.</p>
+            <iframe src="../resources/sdd/visualisers/function-machine.html"
+                    title="The function machine — parameters in, returned value out"
+                    loading="lazy"
+                    style="height:760px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>Each of these tests the same skill as one of the worked examples above. Write your answer down before opening the marking instructions.</p>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Average Rainfall (2 marks)</div>
+          <p>A weather app displays a town's average monthly rainfall using the following code.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>SEND aveRain TO DISPLAY</pre>
+          </div>
+          <p>The above code displays the following value:</p>
+          <div class="code-block">
+            <div class="code-label">Output</div>
+            <pre>7.66666</pre>
+          </div>
+          <p>Using a programming language of your choice, re-write this code so the average rainfall will display as the following.</p>
+          <div class="code-block">
+            <div class="code-label">Output</div>
+            <pre>7.67</pre>
+          </div>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li>the round() function</li>
+                <li>correct parameters — aveRain, 2</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer: round(aveRain, 2)</p>
+              <p style="color:#6A1B9A;">The target has two decimal places, so the second parameter is 2. Round the variable, not the number — round(7.66666, 2) only works for this one value. A display or assignment statement is not required.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Text Message Counter (1 mark)</div>
+          <p>A messaging app counts the number of characters in a message as it is typed, so the user knows when they are close to the 160-character limit.</p>
+          <p>State the pre-defined function used to count the number of characters in the message.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>length</strong> (accept len) — 1 mark</p>
+              <p style="color:#6A1B9A;">Do not accept "length check" — that is a validation technique, not the name of a function. Spaces count as characters, which is why "length check" and counting by eye both go wrong.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Raffle Draw (2 marks)</div>
+          <p>A school fair sells 300 raffle tickets, numbered 1 to 300. Part of the program that picks the winner is shown below.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 12  SET winner TO &lt;a number between 1 and 300&gt;
+Line 13  SEND "The winning ticket is " &amp; winner TO DISPLAY</pre>
+          </div>
+          <p>Using a programming language of your choice, re-write Line 12 to show how the value stored in the variable winner would be generated. Your answer should use a function.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li>the random function</li>
+                <li>correct values created — 1 to 300</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer (Python): winner = random.randint(1, 300)</p>
+              <p style="color:#6A1B9A;">Both parameters are included in the range, so randint(1, 300) can produce ticket 1 and ticket 300. Unlike the spelling game, the tickets are numbered from 1 — the parameters must always match the values the question asks for, not a memorised pattern.</p>
+            </div>
+          </details>
         </div>
       </article>
 

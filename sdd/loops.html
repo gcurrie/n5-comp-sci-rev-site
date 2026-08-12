@@ -51,6 +51,8 @@
           <li><a href="#counter">Using the Loop Variable</a></li>
           <li><a href="#conditional">Conditional Loops</a></li>
           <li><a href="#infinite">Infinite Loops</a></li>
+          <li><a href="#designs">Loops in Designs</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -175,6 +177,165 @@ while 100 &gt; 5:
           <span class="ph-icon">📷</span>
           <em>Placeholder — image/clip</em>
           Suggestion: the Sheldon "friendship algorithm" flowchart image (or clip link), plus a clean flowchart of the guessing game loop showing the backwards arrow — the two make the loop-as-flowchart idea concrete.
+        </div>
+      </article>
+
+      <article>
+        <h2 id="designs">Spotting Loops in a Design</h2>
+        <p>In the exam, loops are usually tested through <a href="design.html">designs</a>: you're shown a structure diagram, flowchart or pseudocode and asked to <strong>state the type of loop</strong>. Each notation hides its loop in a different place, but the test is always the same — read the loop's wording and ask the question from the tip above: <em>is the number of repeats known in advance?</em></p>
+        <table>
+          <thead><tr><th>Notation</th><th>Where the loop hides</th><th>Fixed looks like</th><th>Conditional looks like</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Structure diagram</strong></td><td>The rounded loop symbol</td><td>"Loop 20 times"</td><td>"Repeat until no more passengers"</td></tr>
+            <tr><td><strong>Flowchart</strong></td><td>A decision whose arrow points back up</td><td>"Served 20 groups?"</td><td>"Any more customers?"</td></tr>
+            <tr><td><strong>Pseudocode</strong></td><td>A loop line with indented steps below it</td><td>"Loop 20 times … End loop"</td><td>"While … End while"</td></tr>
+          </tbody>
+        </table>
+        <p>Notice the flowchart trap: flowcharts draw <strong>every</strong> loop as a decision, even fixed ones — "Served 20 groups?" is still a fixed loop, because 20 is known before the loop starts. Don't let the question mark fool you into writing "conditional".</p>
+
+        <p>Here's exactly this skill in a past paper question — you may recognise it from the <a href="design.html">Design</a> page, where the full three-part question is walked through. This is the loop part:</p>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Q12 a) i) — Iron Craig Island Boat (1 mark)</div>
+          <p>A sightseeing boat holds 100 passengers, with Saturday's tickets numbered 1&ndash;100 and Sunday's numbered 101&ndash;200. The program checks each passenger's ticket is valid for today as they board, and counts the passengers. Here is the design:</p>
+          <img src="../resources/sdd/worked_examples/n5_des_q2-1.png" alt="Past paper question: a structure diagram titled PROGRAM daily ticket analyser. Its branches are: set number of passengers to 0.00; get ticket range, which refines into get lower ticket number and get upper ticket number; a rounded loop symbol reading repeat until no more passengers, which contains get ticketNumber from passenger and a selection asking is ticketNumber within range for today, with yes leading to add 1 to number of passengers and no leading to display Ticket Refused; and finally display total number of passengers." class="zoomable" />
+          <p>State the type of loop required when implementing this design. <strong>(1 mark)</strong></p>
+          <p><strong>How to tackle it:</strong> Find the rounded loop symbol and read its wording: "repeat <em>until no more passengers</em>". Does the program know in advance how many passengers will board? No — it could be 3 or 100. It keeps going until a condition is met, so this is a <strong>conditional loop</strong>. If the symbol said "repeat 100 times", it would be a fixed loop.</p>
+          <p>Watch the trap: don't be distracted by the boat holding 100 passengers — the design never says "loop 100 times". The loop's own wording decides, not the numbers in the story.</p>
+          <img src="../resources/sdd/worked_examples/n5_des_q2-2_ans.png" alt="Marking instructions: part a i, conditional, 1 mark. The other rows shown cover parts a ii and a iii, which are walked through on the Design page." class="zoomable" />
+          <p>Only the first row applies here — a) ii) and iii) are covered in the full walkthrough on the <a href="design.html">Design</a> page. The answer is:</p>
+          <p style="color:#6A1B9A;">A conditional loop</p>
+        </div>
+
+        <p>Now the fixed-loop version — and this one is sneakier, because the loop's wording contains <em>no number at all</em>.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2024 Q10 a) &amp; b) — Children's Parties (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_loop_q1.png" alt="Past paper question: an event company organises children's parties and would like a program to help calculate the costs of parties. Part of the structure diagram design is shown. The top box reads Program Party Cost. Its branches are: child buffet = £2.00; a selection asking is cake required, with yes leading to cake = £15.00 and no to cake = £0; get number of adults; get number of children; a rounded loop symbol reading start loop for each child, containing get dietary requirements; a selection asking is number of adults plus number of children greater than 20, with yes leading to venue = £0 and no to venue = £50; and cost = child buffet times number of children, plus cake, plus venue. Part a: state another design technique that could be used to design this program, 1 mark. Part b: state the type of loop shown in the design above, 1 mark." class="zoomable" />
+          <p><strong>How to tackle part a):</strong> "Another design technique" means one of the three notations that <em>isn't</em> the one shown. This is a structure diagram — the giveaway symbols are the branching tree, the selection diamonds and the rounded loop. So the answer is either of the other two: <strong>pseudocode</strong> or a <strong>flowchart</strong>. (A wireframe designs the user interface, not the program logic, so it doesn't earn the mark here.)</p>
+          <p><strong>How to tackle part b):</strong> Find the loop symbol: "Start loop <em>for each child</em>". No number appears in the wording — but don't jump to "conditional". Ask the real question: <em>is the number of repeats known before the loop starts?</em> Look left: "Get number of children" happens <strong>before</strong> the loop runs. By the time the program reaches the loop, it knows exactly how many children there are — one pass each. That's a <strong>fixed loop</strong>.</p>
+          <p>Watch the trap: this is the mirror image of the Iron Craig boat. There, "repeat until no more passengers" meant the count was <em>never</em> known in advance — conditional. Here the count is a variable rather than a written number, but it's known before the loop begins — fixed. The test is <em>when the program knows</em>, not whether a number is printed on the page.</p>
+          <img src="../resources/sdd/worked_examples/n5_loop_q1_ans.png" alt="Marking instructions: part a, pseudocode or flowchart, 1 mark. Part b, fixed, 1 mark." class="zoomable" />
+          <p>The answers are:</p>
+          <p style="color:#6A1B9A;">a) Pseudocode (or a flowchart)<br/>b) A fixed loop</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>One design in each notation — read the loop's wording, decide the type, and write your answer down before opening the marking instructions.</p>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — House Points (1 mark)</div>
+          <p>A teacher's program collects the house points earned by each of the 30 pupils in a class, then displays the class total. The design is shown below.</p>
+          <div class="code-block">
+            <div class="code-label">Pseudocode</div>
+            <pre>1. Set classTotal to 0
+2. Loop 30 times
+2.1     Ask for the pupil's house points
+2.2     Add the points onto classTotal
+3. End loop
+4. Display classTotal</pre>
+          </div>
+          <p>State the type of loop used in the design.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>A fixed loop</strong> (1 mark)</p>
+              <p style="color:#6A1B9A;">"Loop 30 times" — the number of repeats is known before the loop starts, because there are exactly 30 pupils in the class.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Car Wash (1 mark)</div>
+          <p>A car wash charges &pound;6.50 per car and keeps a running total of the day's takings. The design is shown below.</p>
+
+          <svg viewBox="0 0 760 280" role="img"
+               aria-label="A structure diagram. The top box reads Car Wash Takings. It has three branches: a box reading set takings to 0.00, a rounded loop symbol reading repeat until no more cars, and a box reading display takings. Below the loop symbol are two boxes: wash the car, and add £6.50 to takings."
+               style="max-width:760px;width:100%;height:auto;display:block;margin:1rem auto;">
+            <style>
+              .lp2-box { fill:#fff; stroke:#00442A; stroke-width:2; }
+              .lp2-loop { fill:#FEF3C7; stroke:#C9A227; stroke-width:2; }
+              .lp2-txt { font:600 13px 'Public Sans',sans-serif; fill:#1A1A1A; text-anchor:middle; }
+              .lp2-ln { fill:none; stroke:#4A5568; stroke-width:1.8; }
+            </style>
+            <rect class="lp2-box" x="300" y="16" width="160" height="44"/>
+            <text class="lp2-txt" x="380" y="43">Car Wash Takings</text>
+            <path class="lp2-ln" d="M380,60 V84 M130,84 H630 M130,84 V110 M380,84 V110 M630,84 V110"/>
+            <rect class="lp2-box" x="40" y="110" width="180" height="48"/>
+            <text class="lp2-txt" x="130" y="139">Set takings to 0.00</text>
+            <rect class="lp2-loop" x="270" y="110" width="220" height="48" rx="24"/>
+            <text class="lp2-txt" x="380" y="139">Repeat until no more cars</text>
+            <rect class="lp2-box" x="540" y="110" width="180" height="48"/>
+            <text class="lp2-txt" x="630" y="139">Display takings</text>
+            <path class="lp2-ln" d="M380,158 V182 M265,182 H495 M265,182 V208 M495,182 V208"/>
+            <rect class="lp2-box" x="175" y="208" width="180" height="48"/>
+            <text class="lp2-txt" x="265" y="237">Wash the car</text>
+            <rect class="lp2-box" x="405" y="208" width="180" height="48"/>
+            <text class="lp2-txt" x="495" y="237">Add &pound;6.50 to takings</text>
+          </svg>
+
+          <p>State the type of loop used in the design.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>A conditional loop</strong> (1 mark)</p>
+              <p style="color:#6A1B9A;">"Repeat until no more cars" — the program cannot know in advance how many cars will turn up; it keeps going until a condition is met.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Name Badges (1 mark)</div>
+          <p>A machine prints a name badge for each of the 50 pupils attending a school trip. The design is shown below.</p>
+
+          <svg viewBox="0 0 480 510" role="img"
+               aria-label="A flowchart. Start flows down to an input step, get pupil name, then to a process box, print name badge, then to a decision diamond asking printed 50 badges question mark. The No branch loops back up the left side to get pupil name. The Yes branch flows down to Stop."
+               style="max-width:480px;width:100%;height:auto;display:block;margin:1rem auto;">
+            <style>
+              .lp3-term { fill:#E8F5EE; stroke:#1B6B45; stroke-width:2; }
+              .lp3-io { fill:#fff; stroke:#00442A; stroke-width:2; }
+              .lp3-proc { fill:#fff; stroke:#00442A; stroke-width:2; }
+              .lp3-dec { fill:#FEF3C7; stroke:#C9A227; stroke-width:2; }
+              .lp3-txt { font:600 13px 'Public Sans',sans-serif; fill:#1A1A1A; text-anchor:middle; }
+              .lp3-lbl { font:700 12px 'Public Sans',sans-serif; text-anchor:middle; }
+              .lp3-ln { fill:none; stroke:#4A5568; stroke-width:1.8; }
+            </style>
+            <defs>
+              <marker id="lp3arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+              </marker>
+            </defs>
+            <rect class="lp3-term" x="170" y="16" width="140" height="44" rx="22"/>
+            <text class="lp3-txt" x="240" y="43">Start</text>
+            <path class="lp3-ln" d="M240,60 V94" marker-end="url(#lp3arr)"/>
+            <polygon class="lp3-io" points="160,100 340,100 320,146 140,146"/>
+            <text class="lp3-txt" x="240" y="128">Get pupil name</text>
+            <path class="lp3-ln" d="M240,146 V184" marker-end="url(#lp3arr)"/>
+            <rect class="lp3-proc" x="150" y="190" width="180" height="46"/>
+            <text class="lp3-txt" x="240" y="218">Print name badge</text>
+            <path class="lp3-ln" d="M240,236 V274" marker-end="url(#lp3arr)"/>
+            <polygon class="lp3-dec" points="240,280 360,336 240,392 120,336"/>
+            <text class="lp3-txt" x="240" y="341">Printed 50 badges?</text>
+            <!-- No: loop back up the left side -->
+            <path class="lp3-ln" d="M120,336 H60 V123 H134" marker-end="url(#lp3arr)"/>
+            <text class="lp3-lbl" x="90" y="326" fill="#B91C1C">No</text>
+            <!-- Yes: down to Stop -->
+            <path class="lp3-ln" d="M240,392 V434" marker-end="url(#lp3arr)"/>
+            <text class="lp3-lbl" x="262" y="418" fill="#1B6B45">Yes</text>
+            <rect class="lp3-term" x="170" y="440" width="140" height="44" rx="22"/>
+            <text class="lp3-txt" x="240" y="467">Stop</text>
+          </svg>
+
+          <p>State the type of loop used in the design.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>A fixed loop</strong> (1 mark)</p>
+              <p style="color:#6A1B9A;">50 badges are needed, so the number of repeats is known before the loop starts. Flowcharts draw every loop as a decision, but a decision that counts to a set number is still a fixed loop.</p>
+            </div>
+          </details>
         </div>
       </article>
 
