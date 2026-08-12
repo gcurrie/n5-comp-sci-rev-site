@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condition Evaluator — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:920px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:800px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 14px}
+  .probs{display:flex;border:1px solid var(--line);flex-wrap:wrap}
+  .probs button{font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 14px;color:var(--ink)}
+  .probs button:last-child{border-right:0}
+  .probs button.on{background:var(--active-strong);color:#fff}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 18px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  button.ctrl:hover:not(:disabled){filter:brightness(1.06)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button.ctrl:focus-visible{outline:3px solid var(--match-bg);outline-offset:1px}
+
+  .panel{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+  .panelbody{padding:16px}
+
+  .context{font-size:14.5px;margin:0 0 12px}
+  .context b{color:var(--active-strong)}
+  .valrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 4px}
+  .valrow .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-right:2px}
+  .preset{
+    font-family:var(--mono);font-size:12.5px;font-weight:700;cursor:pointer;
+    padding:8px 12px;border:1px solid var(--line);background:#fff;color:var(--ink);
+    border-left:3px solid var(--ink-soft);
+  }
+  .preset:hover:not(:disabled){background:var(--active-bg);border-color:var(--active);border-left-color:var(--active)}
+  .preset.on{background:var(--active-strong);border-color:var(--active-strong);border-left-color:var(--match-accent);color:#fff}
+  .preset:disabled{opacity:.5;cursor:not-allowed}
+  .preset:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+
+  /* ---- the condition lane ---- */
+  .condstatic{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin:14px 0 8px}
+  .condstatic b{color:var(--ink);font-weight:700}
+  .lane{
+    display:flex;align-items:center;flex-wrap:wrap;gap:8px;row-gap:12px;
+    border:2px solid var(--line);background:var(--bg);padding:16px 14px;min-height:76px;transition:border-color .4s,background .4s;
+  }
+  .lane.v-true{border-color:var(--active);background:var(--active-bg)}
+  .lane.v-false{border-color:var(--warn);background:var(--warn-bg)}
+  .tok{font-family:var(--mono);font-weight:700;font-size:clamp(13px,2.4vw,16.5px)}
+  .tok.op{color:var(--out);background:var(--out-bg);padding:6px 10px}
+  .tok.br{color:var(--ink-soft);font-size:clamp(16px,2.8vw,20px)}
+  .tok.cmp{
+    background:#fff;border:2px solid var(--line);padding:8px 11px;color:var(--ink);
+    transition:background .35s,border-color .35s,color .35s;position:relative;
+  }
+  .tok.cmp .tag{
+    display:none;font-size:9px;letter-spacing:.12em;margin-left:8px;padding:2px 5px;vertical-align:2px;
+  }
+  .tok.cmp.t{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+  .tok.cmp.t .tag{display:inline;background:var(--active);color:#fff}
+  .tok.cmp.f{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+  .tok.cmp.f .tag{display:inline;background:var(--warn);color:#fff}
+  .tok.cmp.now{border-color:var(--match-accent);background:var(--match-bg);animation:pulse .5s}
+  @keyframes pulse{50%{transform:scale(1.06)}}
+  .grp{display:flex;align-items:center;gap:8px;padding:8px;border:2px dashed transparent;transition:border-color .35s,background .35s}
+  .grp.t{border-color:var(--active);background:rgba(27,107,69,.07)}
+  .grp.f{border-color:var(--warn);background:rgba(185,28,28,.06)}
+  .verdict{
+    margin-left:auto;font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.1em;
+    padding:9px 16px;display:none;
+  }
+  .verdict.t{display:block;background:var(--active);color:#fff}
+  .verdict.f{display:block;background:var(--warn);color:#fff}
+
+  /* ---- working log ---- */
+  .consbody{background:#0d1f17;min-height:96px;padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:2}
+  .consbody .ghost{color:rgba(255,255,255,.35);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .consbody .ln{display:block;color:rgba(255,255,255,.8)}
+  .consbody .ln .T{color:#7CE3AC;font-weight:700}
+  .consbody .ln .F{color:#F3A0A0;font-weight:700}
+  .consbody .ln.final{border-top:1px solid rgba(255,255,255,.15);margin-top:4px;padding-top:6px;color:#fff;font-weight:700}
+
+  /* ---- narration ---- */
+  .narrate{font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Selection</p>
+    <h1>Condition Evaluator</h1>
+    <p class="sub">Watch a complex condition being evaluated the way the computer does it: each comparison first — <b style="color:var(--active)">green for true</b>, <b style="color:var(--warn)">red for false</b> — then the logical operator combines the colours into one final answer.</p>
+  </header>
+
+  <div class="controls">
+    <div class="probs" id="probs" role="group" aria-label="Choose an example"></div>
+    <button class="ctrl" id="play" type="button">Evaluate ▶</button>
+  </div>
+
+  <section class="panel">
+    <div class="panelbar"><span id="scname">EXAMPLE</span></div>
+    <div class="panelbody">
+      <p class="context" id="context"></p>
+      <div class="valrow" id="valrow"></div>
+      <p class="condstatic" id="condstatic"></p>
+      <div class="lane" id="lane"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>THE WORKING — ONE STEP AT A TIME</span></div>
+    <div class="consbody" id="cons"><span class="ghost">press evaluate to begin</span></div>
+  </section>
+
+  <div class="narrate idle" id="narrate" aria-live="polite">Pick a test value, then press <b>Evaluate ▶</b>.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* tokens: cmp (comparison, index i), op (AND/OR/NOT), br (bracket).
+     group: [startTokenIndex, endTokenIndex] wrapped in a dashed box that
+     takes the bracketed result's colour. Steps are precomputed per preset. */
+  const SCENARIOS = [
+    {
+      name:"1 · AND", barname:"EXAMPLE 1 — AND · THEME PARK RIDE",
+      context:'A theme park ride: riders must be <b>at least 120 cm</b> tall and <b>no taller than 200 cm</b>.',
+      tokens:[ {t:"cmp",i:0,txt:"height ≥ 120"}, {t:"op",txt:"AND"}, {t:"cmp",i:1,txt:"height ≤ 200"} ],
+      group:null,
+      presets:[
+        { label:"height = 150", steps:[
+          {type:"cmp",i:0,sub:"150 ≥ 120",val:true},
+          {type:"cmp",i:1,sub:"150 ≤ 200",val:true},
+          {type:"final",val:true,calc:"TRUE AND TRUE → TRUE",
+           note:"<b>AND needs both sides green</b> — and both are. On you get!"} ]},
+        { label:"height = 110", steps:[
+          {type:"cmp",i:0,sub:"110 ≥ 120",val:false},
+          {type:"cmp",i:1,sub:"110 ≤ 200",val:true},
+          {type:"final",val:false,calc:"FALSE AND TRUE → FALSE",
+           note:"One red side is enough to sink an AND — <b>false AND anything is false</b>. No ride today."} ]},
+        { label:"height = 210", steps:[
+          {type:"cmp",i:0,sub:"210 ≥ 120",val:true},
+          {type:"cmp",i:1,sub:"210 ≤ 200",val:false},
+          {type:"final",val:false,calc:"TRUE AND FALSE → FALSE",
+           note:"Same rule from the other end — the first side passed, but AND needs <b>both</b>. Too tall to ride."} ]}
+      ]
+    },
+    {
+      name:"2 · OR", barname:"EXAMPLE 2 — OR · VALID ANSWER CHECK",
+      context:'A program checks the user typed a valid answer — it must be <b>"Yes"</b> or <b>"No"</b>.',
+      tokens:[ {t:"cmp",i:0,txt:'answer = "Yes"'}, {t:"op",txt:"OR"}, {t:"cmp",i:1,txt:'answer = "No"'} ],
+      group:null,
+      presets:[
+        { label:'answer = "Yes"', steps:[
+          {type:"cmp",i:0,sub:'"Yes" = "Yes"',val:true},
+          {type:"cmp",i:1,sub:'"Yes" = "No"',val:false},
+          {type:"final",val:true,calc:"TRUE OR FALSE → TRUE",
+           note:"<b>OR only needs one green side.</b> The second comparison being red doesn't matter."} ]},
+        { label:'answer = "No"', steps:[
+          {type:"cmp",i:0,sub:'"No" = "Yes"',val:false},
+          {type:"cmp",i:1,sub:'"No" = "No"',val:true},
+          {type:"final",val:true,calc:"FALSE OR TRUE → TRUE",
+           note:"Still true — with OR it makes no difference <b>which</b> side is green, as long as one is."} ]},
+        { label:'answer = "maybe"', steps:[
+          {type:"cmp",i:0,sub:'"maybe" = "Yes"',val:false},
+          {type:"cmp",i:1,sub:'"maybe" = "No"',val:false},
+          {type:"final",val:false,calc:"FALSE OR FALSE → FALSE",
+           note:"An OR only fails when <b>every</b> side is red — which is exactly what makes it a good validity check."} ]}
+      ]
+    },
+    {
+      name:"3 · NOT", barname:"EXAMPLE 3 — NOT · GAME OVER CHECK",
+      context:'A game keeps running as long as the player is <b>not out of lives</b>.',
+      tokens:[ {t:"op",txt:"NOT"}, {t:"br",txt:"("}, {t:"cmp",i:0,txt:"lives = 0"}, {t:"br",txt:")"} ],
+      group:null,
+      presets:[
+        { label:"lives = 3", steps:[
+          {type:"cmp",i:0,sub:"3 = 0",val:false},
+          {type:"final",val:true,calc:"NOT FALSE → TRUE",
+           note:"<b>NOT flips the answer.</b> The comparison inside the brackets came out red, so NOT turns the whole condition green — the game keeps running."} ]},
+        { label:"lives = 0", steps:[
+          {type:"cmp",i:0,sub:"0 = 0",val:true},
+          {type:"final",val:false,calc:"NOT TRUE → FALSE",
+           note:"The inside is green this time — and NOT flips it to red. Condition false: game over."} ]}
+      ]
+    },
+    {
+      name:"4 · Brackets", barname:"EXAMPLE 4 — BRACKETS · HILLWALKING",
+      context:'Go hillwalking if it\'s <b>the weekend</b> and the weather is <b>dry</b>.',
+      tokens:[ {t:"br",txt:"("}, {t:"cmp",i:0,txt:'day = "Sat"'}, {t:"op",txt:"OR"}, {t:"cmp",i:1,txt:'day = "Sun"'}, {t:"br",txt:")"}, {t:"op",txt:"AND"}, {t:"cmp",i:2,txt:'weather = "dry"'} ],
+      group:[0,4],
+      presets:[
+        { label:'day = "Sat", weather = "dry"', steps:[
+          {type:"cmp",i:0,sub:'"Sat" = "Sat"',val:true},
+          {type:"cmp",i:1,sub:'"Sat" = "Sun"',val:false},
+          {type:"group",val:true,calc:"( TRUE OR FALSE ) → TRUE"},
+          {type:"cmp",i:2,sub:'"dry" = "dry"',val:true},
+          {type:"final",val:true,calc:"TRUE AND TRUE → TRUE",
+           note:"<b>Brackets first, just like arithmetic.</b> The OR inside the brackets becomes a single answer, and only then does the AND combine it with the weather. Boots on."} ]},
+        { label:'day = "Sun", weather = "wet"', steps:[
+          {type:"cmp",i:0,sub:'"Sun" = "Sat"',val:false},
+          {type:"cmp",i:1,sub:'"Sun" = "Sun"',val:true},
+          {type:"group",val:true,calc:"( FALSE OR TRUE ) → TRUE"},
+          {type:"cmp",i:2,sub:'"wet" = "dry"',val:false},
+          {type:"final",val:false,calc:"TRUE AND FALSE → FALSE",
+           note:"The weekend half passed — but the AND still needs the weather side green too. Rained off."} ]},
+        { label:'day = "Tue", weather = "dry"', steps:[
+          {type:"cmp",i:0,sub:'"Tue" = "Sat"',val:false},
+          {type:"cmp",i:1,sub:'"Tue" = "Sun"',val:false},
+          {type:"group",val:false,calc:"( FALSE OR FALSE ) → FALSE"},
+          {type:"cmp",i:2,sub:'"dry" = "dry"',val:true},
+          {type:"final",val:false,calc:"FALSE AND TRUE → FALSE",
+           note:"Dry skies can't rescue a Tuesday — the bracketed OR came out red, and <b>false AND anything is false</b>."} ]}
+      ]
+    }
+  ];
+
+  const probsBar = document.getElementById("probs");
+  const valrow = document.getElementById("valrow");
+  const lane = document.getElementById("lane");
+  const cons = document.getElementById("cons");
+  const narrate = document.getElementById("narrate");
+  const playBtn = document.getElementById("play");
+
+  let scenario = 0, preset = 0, playing = false;
+  let cmpEls = [], grpEl = null, verdictEl = null, presetBtns = [];
+
+  const probBtns = SCENARIOS.map((s, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = s.name;
+    b.addEventListener("click", () => { if(playing) return; scenario = i; preset = 0; deal(); });
+    probsBar.appendChild(b);
+    return b;
+  });
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function colourise(calc){
+    return esc(calc).replace(/TRUE/g, '<span class="T">TRUE</span>').replace(/FALSE/g, '<span class="F">FALSE</span>');
+  }
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+  function log(html, final){
+    const ghost = cons.querySelector(".ghost");
+    if(ghost) ghost.remove();
+    const ln = document.createElement("span");
+    ln.className = "ln" + (final ? " final" : "");
+    ln.innerHTML = html;
+    cons.appendChild(ln);
+    postHeight();
+  }
+
+  function buildLane(){
+    const sc = SCENARIOS[scenario];
+    lane.className = "lane";
+    lane.innerHTML = "";
+    cmpEls = []; grpEl = null;
+    let target = lane;
+    sc.tokens.forEach((tok, idx) => {
+      if(sc.group && idx === sc.group[0]){
+        grpEl = document.createElement("span");
+        grpEl.className = "grp";
+        lane.appendChild(grpEl);
+        target = grpEl;
+      }
+      const el = document.createElement("span");
+      el.className = "tok " + tok.t;
+      el.textContent = tok.txt;
+      if(tok.t === "cmp"){
+        el.innerHTML = esc(tok.txt) + '<span class="tag"></span>';
+        cmpEls[tok.i] = el;
+      }
+      target.appendChild(el);
+      if(sc.group && idx === sc.group[1]) target = lane;
+    });
+    verdictEl = document.createElement("span");
+    verdictEl.className = "verdict";
+    lane.appendChild(verdictEl);
+  }
+
+  function deal(){
+    const sc = SCENARIOS[scenario];
+    probBtns.forEach((b, i) => b.classList.toggle("on", i === scenario));
+    document.getElementById("scname").textContent = sc.barname;
+    document.getElementById("context").innerHTML = sc.context;
+    document.getElementById("condstatic").innerHTML = "The condition: <b>" +
+      esc(sc.tokens.map(t => t.txt).join(" ")).replace(/\( /g,"(").replace(/ \)/g,")") + "</b>";
+    valrow.innerHTML = '<span class="lbl">Test with:</span>';
+    presetBtns = sc.presets.map((p, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "preset";
+      b.textContent = p.label;
+      b.addEventListener("click", () => { if(playing) return; preset = i; resetRun(); });
+      valrow.appendChild(b);
+      return b;
+    });
+    resetRun();
+  }
+
+  function resetRun(){
+    presetBtns.forEach((b, i) => b.classList.toggle("on", i === preset));
+    buildLane();
+    cons.innerHTML = '<span class="ghost">press evaluate to begin</span>';
+    playBtn.disabled = false;
+    playBtn.textContent = "Evaluate ▶";
+    say("Testing with <b>" + esc(SCENARIOS[scenario].presets[preset].label) + "</b> — press <b>Evaluate ▶</b> to watch it happen.", "idle");
+    postHeight();
+  }
+
+  function play(){
+    if(playing) return;
+    resetRun();
+    playing = true;
+    playBtn.disabled = true;
+    presetBtns.forEach(b => b.disabled = true);
+    probBtns.forEach(b => b.disabled = true);
+
+    const steps = SCENARIOS[scenario].presets[preset].steps;
+    let t = 200;
+    steps.forEach(st => {
+      if(st.type === "cmp"){
+        setTimeout(() => {
+          const el = cmpEls[st.i];
+          el.classList.add("now");
+          say("Evaluating <code>" + el.textContent.trim() + "</code> …", "idle");
+        }, t);
+        t += 650;
+        setTimeout(() => {
+          const el = cmpEls[st.i];
+          el.classList.remove("now");
+          el.classList.add(st.val ? "t" : "f");
+          el.innerHTML = esc(st.sub) + '<span class="tag">' + (st.val ? "TRUE" : "FALSE") + '</span>';
+          log(colourise(st.sub + "  →  " + (st.val ? "TRUE" : "FALSE")));
+        }, t);
+        t += 750;
+      } else if(st.type === "group"){
+        setTimeout(() => {
+          grpEl.classList.add(st.val ? "t" : "f");
+          log(colourise(st.calc));
+          say("<b>Brackets first.</b> The bracketed part collapses to a single answer before the rest is looked at.", "idle");
+        }, t);
+        t += 1000;
+      } else {
+        setTimeout(() => {
+          lane.classList.add(st.val ? "v-true" : "v-false");
+          verdictEl.classList.add(st.val ? "t" : "f");
+          verdictEl.textContent = st.val ? "TRUE" : "FALSE";
+          log(colourise(st.calc), true);
+          say(st.note, st.val ? "" : "warn");
+          playing = false;
+          playBtn.disabled = false;
+          playBtn.textContent = "Replay ↺";
+          presetBtns.forEach(b => b.disabled = false);
+          probBtns.forEach(b => b.disabled = false);
+          postHeight();
+        }, t);
+      }
+    });
+  }
+
+  playBtn.addEventListener("click", play);
+
+  /* Auto-size the parent iframe. Declared before deal(), which calls
+     postHeight() on the first render — embedded, that would otherwise hit
+     sentH before its declaration and throw. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  deal();
+})();
+</script>
+</body>
+</html>

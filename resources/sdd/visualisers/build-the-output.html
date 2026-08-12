@@ -345,9 +345,9 @@
   document.getElementById("undo").addEventListener("click", () => { seq.pop(); renderBuilder(); });
   document.getElementById("clear").addEventListener("click", () => { seq = []; renderBuilder(); });
 
-  deal();
-
-  /* Auto-size the parent iframe. */
+  /* Auto-size the parent iframe. Declared before deal(), which calls
+     postHeight() on the first render — embedded, that would otherwise hit
+     sentH before its declaration and throw. */
   let sentH = 0;
   function postHeight(){
     if(window.parent === window) return;
@@ -361,7 +361,8 @@
   window.addEventListener("load", postHeight);
   window.addEventListener("resize", postHeight);
   if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
-  postHeight();
+
+  deal();
 })();
 </script>
 </body>

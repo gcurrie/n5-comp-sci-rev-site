@@ -52,6 +52,7 @@
           <li><a href="#complex">Complex Conditions</a></li>
           <li><a href="#elif">Else-If (elif)</a></li>
           <li><a href="#nested">Nested IFs</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -95,6 +96,66 @@
 4.     Go shopping
 5. END IF</pre>
         </div>
+        <svg viewBox="0 0 660 430" role="img"
+             aria-label="A flowchart of an IF ELSE statement. An arrow leads into a diamond holding the condition today equals weekday. A green arrow labelled TRUE leaves the left of the diamond to a box reading Go to school. A red arrow labelled FALSE leaves the right of the diamond to a box reading Go shopping. Only one branch runs. Both branches then rejoin at END IF and the rest of the program continues."
+             style="max-width:660px;width:100%;height:auto;display:block;margin:1.25rem auto;">
+          <style>
+            .sc-dia   { fill:#FEF3C7; stroke:#C9A227; stroke-width:2.5; }
+            .sc-cond  { font:700 15px 'JetBrains Mono',monospace; fill:#1A1A1A; text-anchor:middle; }
+            .sc-box-t { fill:#E8F5EE; stroke:#1B6B45; stroke-width:2.5; }
+            .sc-box-f { fill:#FDECEA; stroke:#B91C1C; stroke-width:2.5; }
+            .sc-box-n { fill:#FFFFFF; stroke:#D1D5DB; stroke-width:2; }
+            .sc-txt-t { font:700 14px 'Public Sans',sans-serif; fill:#00442A; text-anchor:middle; }
+            .sc-txt-f { font:700 14px 'Public Sans',sans-serif; fill:#B91C1C; text-anchor:middle; }
+            .sc-txt-n { font:600 13px 'Public Sans',sans-serif; fill:#4A5568; text-anchor:middle; }
+            .sc-lbl-t { font:700 12px 'Public Sans',sans-serif; fill:#1B6B45; letter-spacing:.12em; text-anchor:middle; }
+            .sc-lbl-f { font:700 12px 'Public Sans',sans-serif; fill:#B91C1C; letter-spacing:.12em; text-anchor:middle; }
+            .sc-note  { font:italic 12.5px 'Public Sans',sans-serif; fill:#4A5568; text-anchor:middle; }
+            .sc-ln-t  { fill:none; stroke:#1B6B45; stroke-width:2.5; }
+            .sc-ln-f  { fill:none; stroke:#B91C1C; stroke-width:2.5; }
+            .sc-ln-n  { fill:none; stroke:#4A5568; stroke-width:2; }
+          </style>
+          <defs>
+            <marker id="sc-ah-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#1B6B45"/>
+            </marker>
+            <marker id="sc-ah-f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#B91C1C"/>
+            </marker>
+            <marker id="sc-ah-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+            </marker>
+          </defs>
+
+          <!-- entry -->
+          <path class="sc-ln-n" d="M330,8 V44" marker-end="url(#sc-ah-n)"/>
+
+          <!-- the condition -->
+          <polygon class="sc-dia" points="330,44 480,92 330,140 180,92"/>
+          <text class="sc-cond" x="330" y="98">today = "weekday"</text>
+
+          <!-- true branch -->
+          <path class="sc-ln-t" d="M180,92 H110 V200" marker-end="url(#sc-ah-t)"/>
+          <text class="sc-lbl-t" x="145" y="82">TRUE</text>
+          <rect class="sc-box-t" x="25" y="200" width="170" height="60"/>
+          <text class="sc-txt-t" x="110" y="236">Go to school</text>
+
+          <!-- false branch -->
+          <path class="sc-ln-f" d="M480,92 H550 V200" marker-end="url(#sc-ah-f)"/>
+          <text class="sc-lbl-f" x="515" y="82">FALSE</text>
+          <rect class="sc-box-f" x="465" y="200" width="170" height="60"/>
+          <text class="sc-txt-f" x="550" y="236">Go shopping</text>
+
+          <!-- the branches rejoin -->
+          <text class="sc-note" x="330" y="300">only one branch ever runs</text>
+          <path class="sc-ln-t" d="M110,260 V330 H330"/>
+          <path class="sc-ln-f" d="M550,260 V330 H330"/>
+          <circle cx="330" cy="330" r="4.5" fill="#4A5568"/>
+          <path class="sc-ln-n" d="M330,330 V370" marker-end="url(#sc-ah-n)"/>
+          <rect class="sc-box-n" x="175" y="370" width="310" height="48"/>
+          <text class="sc-txt-n" x="330" y="400">END IF — the program carries on</text>
+        </svg>
+
         <p><strong>Exactly one</strong> branch runs — school or shopping, never both, never neither. Conditions are built with the comparison operators:</p>
         <table>
           <thead><tr><th>Meaning</th><th>Exam papers</th><th>Python</th></tr></thead>
@@ -107,6 +168,28 @@
             <tr><td>Greater than or equal to</td><td>≥</td><td><code>&gt;=</code></td></tr>
           </tbody>
         </table>
+
+        <p>Here's a single IF doing real work in a past paper question — try it yourself before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Parking Fine (3 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_if_q1.png" alt="Past paper question: a parking fine is £130. If this fine is paid within 14 days the fine is halved. A design for a program to calculate the fine depending on when it is paid is shown below. Step 1, set fine to 130. Step 2, get number of days since fine was issued. Step 3, calculate and store fine. Using a design technique of your choice, refine step 3 of the design. 3 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> "Refine step 3" means breaking that one step down into the smaller steps that actually carry it out — the <a href="design.html">stepwise refinement</a> we met on the Design page. Three marks means the marker is looking for three ingredients, so we work out what each one is:</p>
+          <ul>
+            <li><strong>The condition</strong> — was it paid within 14 days? That's <code>days ≤ 14</code>.</li>
+            <li><strong>The calculation</strong> — "halved" means <code>fine / 2</code>.</li>
+            <li><strong>The assignment</strong> — the answer has to be stored back in <code>fine</code>, or it's lost.</li>
+          </ul>
+          <p>Notice what <em>isn't</em> needed: an ELSE. If the fine is paid late it simply stays at £130, and step 1 already put 130 there. A branch with nothing to do doesn't need writing.</p>
+          <p>Watch the trap: don't just write <code>SET fine TO 65</code>. The marking instructions are explicit — if you show a calculation and then assign 65 anyway, ignoring your own working, you lose the third mark. Work from the variable, not from the number in your head.</p>
+          <img src="../resources/sdd/worked_examples/n5_if_q1_ans.png" alt="Marking instructions: one mark each for an if with the condition days is less than or equal to 14, the calculation fine divided by 2, and assigning the calculated value to a variable. Also accept less than 14. The calculation may be done other ways but must always use fine." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">
+            3.1&nbsp;&nbsp;IF days &le; 14 THEN<br/>
+            3.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET fine TO fine / 2<br/>
+            3.3&nbsp;&nbsp;END IF
+          </p>
+        </div>
       </article>
 
       <article>
@@ -167,10 +250,34 @@ IF NOT (num1 = 5) THEN</pre>
           </ul>
           <p>Now try <code>height</code> = <strong>110</strong>: the first condition is false, and false AND anything is false. No ride today.</p>
         </div>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — interactive trainer</em>
-          Suggestion: a condition predictor — pupils are shown a complex condition and variable values, predict TRUE or FALSE, then reveal the step-by-step evaluation (each side evaluated, then combined with AND/OR/NOT). Great low-stakes practice for reading code.
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Condition Evaluator</p>
+          <div class="ib-body">
+            <p class="ib-intro">Four examples of increasing difficulty — AND, OR, NOT, then brackets combining them. Pick a test value and press Evaluate: each comparison is checked in turn and coloured <strong style="color:#1B6B45;">green for true</strong> or <strong style="color:#B91C1C;">red for false</strong>, then the logical operator combines the colours into the final answer.</p>
+            <iframe src="../resources/sdd/visualisers/condition-evaluator.html"
+                    title="Condition evaluator — colour-coded evaluation of complex conditions"
+                    loading="lazy"
+                    style="height:640px"></iframe>
+          </div>
+        </div>
+
+        <p>Now a past paper question on exactly this. It looks almost too easy — which is precisely why it's worth being sure about.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Name a Logical Operator (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_logic_op_q1-1.png" alt="Past paper code: Line 3 RECEIVE score FROM KEYBOARD. Line 4 IF score = 5 OR score = 10 OR score = 15 THEN. Line 5 IF NOT open bracket score is greater than or equal to 3 AND score is less than or equal to 12 close bracket THEN. Line 6 SEND Success TO DISPLAY. Line 7 END IF. Line 8 END IF." class="zoomable" />
+          <img src="../resources/sdd/worked_examples/n5_logic_op_q1-2.png" alt="Past paper question part b: state one logical operator used in the code above. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> There are only <strong>three</strong> logical operators at National 5 — AND, OR and NOT — so this is pure recall, as long as you can spot them. We scan the code for them:</p>
+          <ul>
+            <li>Line 4 uses <strong>OR</strong> twice.</li>
+            <li>Line 5 uses <strong>NOT</strong> and <strong>AND</strong>.</li>
+          </ul>
+          <p>This code happens to contain all three, so any one of them earns the mark. Write one — the question says "state <em>one</em>", so there's nothing to gain from listing all three.</p>
+          <p>Watch the trap: <code>=</code>, <code>&ge;</code> and <code>&le;</code> are <strong>comparison</strong> operators, not logical ones. That's the easy mark thrown away here. The difference is worth remembering: comparison operators <em>build</em> a condition, logical operators <em>join</em> conditions together.</p>
+          <img src="../resources/sdd/worked_examples/n5_logic_op_q1-2_ans.png" alt="Marking instructions: one mark for any one from AND, OR, NOT." class="zoomable" />
+          <p>The answer is:</p>
+          <p style="color:#6A1B9A;"><strong>OR</strong> (or AND, or NOT — any one of the three)</p>
         </div>
       </article>
 
@@ -199,6 +306,34 @@ print(grade)</pre>
           <div class="callout-icon">💡</div>
           <div>Notice <code>elif mark &gt;= 60:</code> doesn't need to say "and less than 70" — anything 70 or above was already caught by the first branch. The chain does the "less than" for free. This also makes elif chains more <strong>efficient</strong> than separate ifs — see <a href="evaluation.html">Evaluation</a> for why that earns marks.</div>
         </div>
+
+        <p>That efficiency point is worth a whole mark in the following past paper question — and you may recognise the problem, because we analysed this very app on the <a href="analysis.html">Analysis</a> page. Now we design it.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Old Specimen Q16 b) — Tax Rate App (4 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_elseif_q1.png" alt="Past paper question: Pam is creating an application that will find and display a person's tax rate based on their salary. A table shows salary bands 0 to 12000 with a tax rate of 0, 12001 to 40000 with a tax rate of 20, and 40001 upwards with a tax rate of 40." class="zoomable" />
+          <img src="../resources/sdd/worked_examples/n5_elseif_q1-2.png" alt="Past paper question part b: using a design technique of your choice, design an efficient solution to the problem of finding a person's tax rate. 4 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Four marks, and the marking instructions split neatly into four things to get right — so we build the answer one mark at a time:</p>
+          <ul>
+            <li><strong>Selection constructs</strong> — three outcomes means an <code>IF … ELSE IF … ELSE</code> chain.</li>
+            <li><strong>Conditions correct</strong> — the boundaries must match the table exactly.</li>
+            <li><strong>Tax rate assigned</strong> — each branch has to <em>store</em> the rate in a variable, not just mention it.</li>
+            <li><strong>Efficient solution</strong> — a whole mark for the word "efficient" in the question.</li>
+          </ul>
+          <p>That last mark is the one to think about. Three <em>separate</em> IF statements would test all three conditions for every single person, and each condition would need two comparisons joined with AND (<code>salary &ge; 12001 AND salary &le; 40000</code>). An else-if chain does neither: a band is only checked when the ones above it have already failed, so <code>salary &le; 40000</code> is enough on its own — anything 12000 or under was caught by the first branch.</p>
+          <p>Watch the trap: get the boundaries right. The bands are 0&ndash;12000 and 12001&ndash;40000, so the first test is <code>&le; 12000</code>, not <code>&lt; 12000</code> — otherwise someone earning exactly £12,000 gets taxed at 20%.</p>
+          <img src="../resources/sdd/worked_examples/n5_elseif_q1-2_ans.png" alt="Marking instructions: one mark each for selection constructs, conditions correct, tax rate assigned, and an efficient solution. 4 marks." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">
+            1&nbsp;&nbsp;IF salary &le; 12000 THEN<br/>
+            2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET taxRate TO 0<br/>
+            3&nbsp;&nbsp;ELSE IF salary &le; 40000 THEN<br/>
+            4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET taxRate TO 20<br/>
+            5&nbsp;&nbsp;ELSE<br/>
+            6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET taxRate TO 40<br/>
+            7&nbsp;&nbsp;END IF
+          </p>
+        </div>
       </article>
 
       <article>
@@ -223,6 +358,194 @@ else:
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
           <div>In the exam you're more likely to <strong>read</strong> a nested if than write one. Trace it slowly, level by level, and keep your finger on the indentation — it tells you exactly which else belongs to which if.</div>
+        </div>
+
+        <p>Here are two past paper questions that do exactly that — one asks you to read a nested if, the other to improve one. Work through each yourself before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Which Score Displays "Success"? (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_nested_if_q1.png" alt="Past paper question: the code below is being tested to ensure it produces the correct output. Line 3 RECEIVE score FROM KEYBOARD. Line 4 IF score = 5 OR score = 10 OR score = 15 THEN. Line 5 IF NOT open bracket score is greater than or equal to 3 AND score is less than or equal to 12 close bracket THEN. Line 6 SEND Success TO DISPLAY. Line 7 END IF. Line 8 END IF. Part a: state the score that should be input in Line 3 to display Success. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> "Success" is buried two levels deep, so it only appears when <strong>both</strong> conditions are true — the inner IF is never even reached unless the outer one passes. The trick is that the outer condition does us a favour: it narrows the whole of maths down to three candidates.</p>
+          <ul>
+            <li><strong>Line 4</strong> — the score must be 5, 10 or 15. Nothing else gets past this line, so we only need to test those three.</li>
+            <li><strong>Line 5</strong> — <code>NOT(score &ge; 3 AND score &le; 12)</code>. The bracket is true for anything from 3 to 12, and NOT flips it. So this line is true only when the score is <em>outside</em> 3&ndash;12.</li>
+          </ul>
+          <p>Now we test each candidate against that second condition: <strong>5</strong> is inside 3&ndash;12, so the bracket is true and NOT makes it false. <strong>10</strong> is inside too — same result. <strong>15</strong> is outside 3&ndash;12, so the bracket is false and NOT flips it to true. Both conditions pass, and "Success" is displayed.</p>
+          <p>Watch the trap: it's tempting to read line 4 and answer "5, 10 or 15". The nested IF is there precisely to narrow it to one. If you found the NOT hard to read, the Condition Evaluator further up this page steps through this exact shape of condition.</p>
+          <img src="../resources/sdd/worked_examples/n5_nested_if_q1_ans.png" alt="Marking instructions: 15. 1 mark." class="zoomable" />
+          <p>The answer is:</p>
+          <p style="color:#6A1B9A;"><strong>15</strong></p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Ferry Tickets, Made Efficient (3 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_nested_if_q2-1.png" alt="Past paper question: the program is edited to calculate the total value of the passengers' tickets. The price of a ticket is different for each deck. A table shows Deck 1 with Saturday ticket numbers 1 to 50, Sunday ticket numbers 101 to 150 and a ticket price of £5; Deck 2 with Saturday ticket numbers 51 to 100, Sunday ticket numbers 151 to 200 and a ticket price of £10. The edited code reads: Line 5 RECEIVE lower FROM KEYBOARD. Line 6 RECEIVE upper FROM KEYBOARD. Line 14 IF ticketNumber is less than lower OR ticketNumber is greater than upper THEN. Line 15 SEND Ticket Refused TO DISPLAY. Line 16 ELSE. Line 17 SET numberOfPassengers TO numberOfPassengers + 1. Line 18 IF ticketNumber is less than or equal to open bracket lower + 49 close bracket THEN. Line 19 SET totalValue TO totalValue + 5. Line 20 END IF. Line 21 IF ticketNumber is greater than or equal to open bracket lower + 50 close bracket THEN. Line 22 SET totalValue TO totalValue + 10. Line 23 END IF. Line 24 END IF." class="zoomable" />
+          <img src="../resources/sdd/worked_examples/n5_nested_if_q2-2.png" alt="Past paper question part c continued: using a programming language of your choice, re-write lines 18 to 23 in a more efficient way. 3 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> First we work out what lines 18&ndash;23 actually do. Both IFs test the <em>same</em> ticket number against two halves of the same range: line 18 catches the first 50 tickets (Deck 1, £5), line 21 catches the rest (Deck 2, £10).</p>
+          <p>Then comes the insight the question is fishing for: every ticket that <em>isn't</em> in the first 50 must be in the second 50 — the program has already refused anything outside the range back on line 14. So the second condition is guaranteed to be the exact opposite of the first, and that is precisely what <strong>ELSE</strong> is for.</p>
+          <p>Why is that more efficient? As written, <em>every</em> ticket is tested twice, even when the first test already succeeded. With IF … ELSE, once the first condition is true the program never looks at the second one at all.</p>
+          <p>Three marks, three things to keep: a suitable condition for one deck, an ELSE for the other, and the running total calculations untouched.</p>
+          <p>Watch the trap: you're changing the <em>structure</em>, not the behaviour. Keep the same condition and the same <code>+ 5</code> and <code>+ 10</code> — an "efficient" rewrite that charges the wrong prices earns nothing.</p>
+          <img src="../resources/sdd/worked_examples/n5_nested_if_q2-2_ans.png" alt="Marking instructions: one mark each for a suitable condition for one ticket, use of else for the other type of ticket, and calculating the running total. 3 marks. Example answer: IF ticketNumber is less than or equal to open bracket lower + 49 close bracket THEN, SET totalValue TO totalValue + 5, ELSE, SET totalValue TO totalValue + 10, END IF." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">
+            IF ticketNumber &le; (lower + 49) THEN<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET totalValue TO totalValue + 5<br/>
+            ELSE<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET totalValue TO totalValue + 10<br/>
+            END IF
+          </p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>Each of these tests the same skill as one of the worked examples above. Write your answer down before opening the marking instructions.</p>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Concert Ticket (3 marks)</div>
+          <p>A concert ticket costs &pound;48. If the ticket is bought more than 30 days before the concert, the price is reduced by a quarter.</p>
+          <p>A design for a program to calculate the price depending on when the ticket is bought is shown below.</p>
+          <ol style="font-family:inherit;">
+            <li>Set price to 48</li>
+            <li>Get number of days before the concert</li>
+            <li>Calculate and store price</li>
+          </ol>
+          <p>Using a design technique of your choice, refine step 3 of the design.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li>an IF with the condition <code>days &gt; 30</code></li>
+                <li>a calculation reducing the price by a quarter (<code>price / 4</code> subtracted, or <code>price * 0.75</code>)</li>
+                <li>assigning the calculated value back to <code>price</code></li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer:</p>
+              <p style="color:#6A1B9A;">
+                3.1&nbsp;&nbsp;IF days &gt; 30 THEN<br/>
+                3.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET price TO price - (price / 4)<br/>
+                3.3&nbsp;&nbsp;END IF
+              </p>
+              <p style="color:#6A1B9A;">No ELSE is needed — a ticket bought within 30 days simply keeps the &pound;48 set in step 1. Do not award the third mark for assigning 36 while ignoring your own calculation.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Name a Logical Operator (1 mark)</div>
+          <p>The code below is used to check whether someone may enter a competition.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 5   RECEIVE age FROM KEYBOARD
+Line 6   IF age &gt;= 12 AND age &lt;= 15 THEN
+Line 7     IF NOT(age = 13) THEN
+Line 8       SEND "Eligible" TO DISPLAY
+Line 9     END IF
+Line 10  END IF</pre>
+          </div>
+          <p>State <strong>one</strong> logical operator used in the code above.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark for either <strong>AND</strong> or <strong>NOT</strong>.</p>
+              <p style="color:#6A1B9A;">Do not accept <code>&gt;=</code>, <code>&lt;=</code> or <code>=</code> — those are <em>comparison</em> operators. Logical operators join conditions together; comparison operators build them.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Parcel Delivery (4 marks)</div>
+          <p>A delivery company is creating an application that will find and display the delivery charge for a parcel based on its weight.</p>
+          <table style="max-width:26rem;">
+            <thead><tr><th>Weight (kg)</th><th>Delivery charge</th></tr></thead>
+            <tbody>
+              <tr><td>0&ndash;2</td><td>&pound;3.50</td></tr>
+              <tr><td>2.01&ndash;10</td><td>&pound;6.00</td></tr>
+              <tr><td>10.01 upwards</td><td>&pound;11.00</td></tr>
+            </tbody>
+          </table>
+          <p>Using a design technique of your choice, design an <strong>efficient</strong> solution to the problem of finding the delivery charge for a parcel.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li>selection constructs</li>
+                <li>conditions correct</li>
+                <li>delivery charge assigned</li>
+                <li>efficient solution</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer:</p>
+              <p style="color:#6A1B9A;">
+                1&nbsp;&nbsp;IF weight &le; 2 THEN<br/>
+                2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET charge TO 3.50<br/>
+                3&nbsp;&nbsp;ELSE IF weight &le; 10 THEN<br/>
+                4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET charge TO 6.00<br/>
+                5&nbsp;&nbsp;ELSE<br/>
+                6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET charge TO 11.00<br/>
+                7&nbsp;&nbsp;END IF
+              </p>
+              <p style="color:#6A1B9A;">The efficiency mark needs an else-if chain: three separate IFs would test every condition for every parcel, and each middle condition would then need an AND to set its lower boundary.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Which Number Displays "Accepted"? (1 mark)</div>
+          <p>The code below is being tested to ensure it produces the correct output.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 3  RECEIVE number FROM KEYBOARD
+Line 4  IF number = 2 OR number = 8 OR number = 20 THEN
+Line 5    IF NOT(number &lt; 10) THEN
+Line 6      SEND "Accepted" TO DISPLAY
+Line 7    END IF
+Line 8  END IF</pre>
+          </div>
+          <p>State the number that should be input in Line 3 to display 'Accepted'.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>20</strong> (1 mark)</p>
+              <p style="color:#6A1B9A;">Line 4 narrows the options to 2, 8 and 20. Line 5 is true only when the number is <em>not</em> less than 10 — so 2 and 8 both fail, leaving 20 as the only value that reaches line 6.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Car Park Takings (3 marks)</div>
+          <p>A car park program charges &pound;4 for a vehicle 2 metres tall or under, and &pound;7 for a vehicle over 2 metres. Part of the program is shown below.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 10  IF vehicleHeight &lt;= 2 THEN
+Line 11    SET totalTakings TO totalTakings + 4
+Line 12  END IF
+Line 13  IF vehicleHeight &gt; 2 THEN
+Line 14    SET totalTakings TO totalTakings + 7
+Line 15  END IF</pre>
+          </div>
+          <p>Using a programming language of your choice, re-write lines 10 to 15 in a more efficient way.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li>a suitable condition for one type of vehicle</li>
+                <li>use of ELSE for the other type of vehicle</li>
+                <li>the running total calculations kept correct</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer:</p>
+              <p style="color:#6A1B9A;">
+                IF vehicleHeight &le; 2 THEN<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET totalTakings TO totalTakings + 4<br/>
+                ELSE<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET totalTakings TO totalTakings + 7<br/>
+                END IF
+              </p>
+              <p style="color:#6A1B9A;">Every vehicle is either 2 metres or under, or over 2 metres — there is no third possibility, so the second condition is simply the opposite of the first. As originally written, every vehicle is tested twice.</p>
+            </div>
+          </details>
         </div>
       </article>
 
