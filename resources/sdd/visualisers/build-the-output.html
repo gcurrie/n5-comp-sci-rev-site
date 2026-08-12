@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build the Output — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:960px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:800px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 14px}
+  .probs{display:flex;border:1px solid var(--line)}
+  .probs button{font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 14px;color:var(--ink)}
+  .probs button:last-child{border-right:0}
+  .probs button.on{background:var(--active-strong);color:#fff}
+  .probs button.done-prob::after{content:" \2713";color:var(--match-accent)}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+  }
+  button.ctrl:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button.ctrl.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C}
+  button.ctrl.primary:hover:not(:disabled){filter:brightness(1.06);background:var(--match-accent)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button.ctrl:focus-visible{outline:3px solid var(--match-bg);outline-offset:1px}
+
+  .panel{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  .panelbar{background:var(--bar);padding:10px 16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+  .panelbar .dim{color:rgba(255,255,255,.45);letter-spacing:.12em}
+  .panelbody{padding:14px 16px}
+
+  .varline{font-family:var(--mono);font-size:13px;color:var(--ink)}
+  .varline b{color:var(--active-strong)}
+  .varline i{font-style:normal;color:var(--ink-soft);font-size:11.5px}
+  .target{font-family:var(--mono);font-size:15px;font-weight:700;color:#7CE3AC;background:#0d1f17;padding:12px 14px}
+
+  /* ---- tray ---- */
+  .tray{display:flex;flex-wrap:wrap;gap:8px;min-height:52px}
+  .piece{
+    font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;
+    padding:9px 12px;border:1px solid var(--line);background:#fff;color:var(--ink);
+    border-left:3px solid var(--ink-soft);transition:background .15s,border-color .15s,opacity .15s;
+  }
+  .piece:hover:not(:disabled){background:var(--active-bg);border-color:var(--active);border-left-color:var(--active)}
+  .piece:disabled{opacity:.25;cursor:not-allowed}
+  .piece.p-str{border-left-color:var(--match-accent);color:var(--match)}
+  .piece.p-var{border-left-color:var(--active);color:var(--active-strong)}
+  .piece.p-conn{border-left-color:var(--out);color:var(--out);padding:9px 16px}
+  .piece:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+
+  /* ---- builder ---- */
+  .builder{
+    font-family:var(--mono);font-size:14.5px;font-weight:700;min-height:56px;display:flex;align-items:center;flex-wrap:wrap;gap:2px;
+    border:2px dashed var(--line);background:#FAFBFA;padding:10px 12px;
+  }
+  .builder.filled{border-style:solid;background:#fff}
+  .builder .fixed{color:var(--ink-soft)}
+  .builder .chip{padding:3px 6px;margin:2px}
+  .builder .chip.p-str{background:var(--match-bg);color:var(--match)}
+  .builder .chip.p-var{background:var(--active-bg);color:var(--active-strong)}
+  .builder .chip.p-conn{background:var(--out-bg);color:var(--out)}
+  .builder .ghost{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:400}
+
+  /* ---- console ---- */
+  .consbody{background:#0d1f17;min-height:64px;padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:1.9}
+  .consbody .ghost{color:rgba(255,255,255,.35);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .consbody .ln{display:block;color:#7CE3AC;font-weight:700;overflow-wrap:anywhere}
+  .consbody .ln.err{color:#F3A0A0}
+  .consbody .ln.echo{color:rgba(255,255,255,.55);font-weight:400}
+
+  /* ---- narration ---- */
+  .narrate{font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Concatenation</p>
+    <h1>Build the Output</h1>
+    <p class="sub">Build the <b>print line</b> that produces the target output exactly. Click pieces to add them — variables hold the data, quoted strings supply the extra words (␣ shows every space), and <b>+</b> or <b>,</b> joins them. Both styles can work&hellip; if you're careful.</p>
+  </header>
+
+  <div class="controls">
+    <div class="probs" id="probs" role="group" aria-label="Choose a round"></div>
+    <div class="btnrow">
+      <button class="ctrl primary" id="run" type="button">Run ▶</button>
+      <button class="ctrl" id="undo" type="button">Undo ⌫</button>
+      <button class="ctrl" id="clear" type="button">Clear</button>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panelbar"><span>THE PROGRAM SO FAR</span><span class="dim" id="varbar"></span></div>
+    <div class="panelbody">
+      <p class="varline" id="varline"></p>
+      <p class="varline" style="margin-top:6px;color:var(--ink-soft);">Target output:</p>
+      <div class="target" id="target"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>PIECES — CLICK TO ADD</span></div>
+    <div class="panelbody"><div class="tray" id="tray"></div></div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>YOUR PRINT LINE</span></div>
+    <div class="panelbody"><div class="builder" id="builder"></div></div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>CONSOLE — WHAT IT ACTUALLY PRINTS</span></div>
+    <div class="consbody" id="cons"><span class="ghost">nothing run yet</span></div>
+  </section>
+
+  <div class="narrate idle" id="narrate" aria-live="polite">Build the line, then press <b>Run ▶</b>. There's more than one correct answer — concatenate with <b>+</b>, or let commas add the spaces.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Piece kinds: str (quoted literal), var (variable), conn (+ or ,).
+     "disp" is the label; str values keep real spaces, shown as ␣. */
+  const ROUNDS = [
+    {
+      name:"1 · Hello",
+      vars:'name = "Zara"',
+      types:"name is a string",
+      target:"Hello Zara",
+      pieces:[
+        {disp:'"Hello␣"', kind:"str", val:"Hello "},
+        {disp:'"Hello"', kind:"str", val:"Hello"},
+        {disp:'name', kind:"var", val:"Zara", num:false},
+        {disp:'"name"', kind:"str", val:"name"},
+        {disp:'+', kind:"conn", val:"+"},
+        {disp:',', kind:"conn", val:","}
+      ]
+    },
+    {
+      name:"2 · Goals",
+      vars:'player = "Ava"   goals = 3',
+      types:"player is a string · goals is an integer",
+      target:"Ava scored 3 goals",
+      pieces:[
+        {disp:'player', kind:"var", val:"Ava", num:false},
+        {disp:'"player"', kind:"str", val:"player"},
+        {disp:'"␣scored␣"', kind:"str", val:" scored "},
+        {disp:'"scored"', kind:"str", val:"scored"},
+        {disp:'goals', kind:"var", val:"3", num:true},
+        {disp:'str(goals)', kind:"var", val:"3", num:false},
+        {disp:'"␣goals"', kind:"str", val:" goals"},
+        {disp:'"goals"', kind:"str", val:"goals"},
+        {disp:'+', kind:"conn", val:"+"},
+        {disp:',', kind:"conn", val:","}
+      ]
+    },
+    {
+      name:"3 · Weather",
+      vars:'town = "Ayr"   temp = 21.5',
+      types:"town is a string · temp is a real",
+      target:"Ayr is 21.5 degrees today",
+      pieces:[
+        {disp:'town', kind:"var", val:"Ayr", num:false},
+        {disp:'"town"', kind:"str", val:"town"},
+        {disp:'"␣is␣"', kind:"str", val:" is "},
+        {disp:'"is"', kind:"str", val:"is"},
+        {disp:'temp', kind:"var", val:"21.5", num:true},
+        {disp:'str(temp)', kind:"var", val:"21.5", num:false},
+        {disp:'"␣degrees today"', kind:"str", val:" degrees today"},
+        {disp:'"degrees today"', kind:"str", val:"degrees today"},
+        {disp:'+', kind:"conn", val:"+"},
+        {disp:',', kind:"conn", val:","}
+      ]
+    }
+  ];
+
+  const tray = document.getElementById("tray");
+  const builder = document.getElementById("builder");
+  const cons = document.getElementById("cons");
+  const narrate = document.getElementById("narrate");
+  const probsBar = document.getElementById("probs");
+
+  let round = 0, seq = [];   // seq: indexes into current round's pieces
+  const completed = ROUNDS.map(() => false);
+  let pieceBtns = [];
+
+  const probBtns = ROUNDS.map((r, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = r.name;
+    b.addEventListener("click", () => { round = i; deal(); });
+    probsBar.appendChild(b);
+    return b;
+  });
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  function renderBuilder(){
+    const r = ROUNDS[round];
+    builder.classList.toggle("filled", seq.length > 0);
+    let html = '<span class="fixed">print(</span>';
+    if(seq.length === 0) html += '<span class="ghost">&nbsp;click pieces to build the line&nbsp;</span>';
+    seq.forEach(pi => {
+      const p = r.pieces[pi];
+      html += '<span class="chip p-' + (p.kind === "conn" ? "conn" : p.kind) + '">' + esc(p.disp) + '</span>';
+    });
+    html += '<span class="fixed">)</span>';
+    builder.innerHTML = html;
+    // value pieces are single-use; connectors are reusable
+    pieceBtns.forEach((b, i) => {
+      const p = r.pieces[i];
+      b.disabled = p.kind !== "conn" && seq.indexOf(i) !== -1;
+    });
+    postHeight();
+  }
+
+  function consoleShow(lines){
+    cons.innerHTML = "";
+    lines.forEach(l => {
+      const ln = document.createElement("span");
+      ln.className = "ln" + (l.cls ? " " + l.cls : "");
+      ln.textContent = l.text;
+      cons.appendChild(ln);
+    });
+    postHeight();
+  }
+
+  function run(){
+    const r = ROUNDS[round];
+    const toks = seq.map(pi => r.pieces[pi]);
+    const lineEcho = ">>> print(" + toks.map(t => t.disp.replace(/␣/g, " ")).join(" ") + ")";
+
+    if(toks.length === 0){ say("The line is empty — add some pieces first.", "warn"); return; }
+    // structural checks: values and connectors must alternate, starting and ending on a value
+    for(let i = 0; i < toks.length; i++){
+      const isConn = toks[i].kind === "conn";
+      if(i % 2 === 0 ? isConn : !isConn){
+        consoleShow([{text:lineEcho, cls:"echo"}, {text:"SyntaxError: invalid syntax", cls:"err"}]);
+        say("<b>SyntaxError.</b> Pieces must alternate: value, joiner, value, joiner&hellip; — two values (or two joiners) can't sit next to each other.", "warn");
+        return;
+      }
+    }
+    if(toks[toks.length - 1].kind === "conn"){
+      consoleShow([{text:lineEcho, cls:"echo"}, {text:"SyntaxError: invalid syntax", cls:"err"}]);
+      say("<b>SyntaxError.</b> The line can't end on a <code>+</code> or <code>,</code> — it's waiting for another value.", "warn");
+      return;
+    }
+
+    // split into comma-separated arguments, evaluate + within each
+    const args = [[]];
+    toks.forEach(t => {
+      if(t.kind === "conn" && t.val === ",") args.push([]);
+      else if(t.kind !== "conn") args[args.length - 1].push(t);
+    });
+    for(const arg of args){
+      if(arg.length > 1){
+        const bad = arg.find(t => t.num);
+        if(bad){
+          consoleShow([{text:lineEcho, cls:"echo"},
+            {text:'TypeError: can only concatenate str (not "' + (bad.val.indexOf(".") === -1 ? "int" : "float") + '") to str', cls:"err"}]);
+          say("<b>The program crashed!</b> <code>" + esc(bad.disp) + "</code> is a <em>number</em>, and <code>+</code> can only join strings to strings. Wrap it — <code>str(" + esc(bad.disp) + ")</code> — or use a comma instead.", "warn");
+          return;
+        }
+      }
+    }
+    const output = args.map(arg => arg.map(t => t.val).join("")).join(" ");
+    const ok = output === r.target;
+    consoleShow([{text:lineEcho, cls:"echo"}, {text:output}]);
+
+    if(ok){
+      if(!completed[round]){ completed[round] = true; probBtns[round].classList.add("done-prob"); }
+      const allDone = completed.every(Boolean);
+      say("<b>✓ Exactly right.</b> Your line printed <b>" + esc(output) + "</b>." +
+        (allDone ? " That's all three rounds — you're ready for the past paper questions below."
+                 : " Try the next round — or rebuild this one in the <em>other</em> style."), "match");
+    } else {
+      const squash = s => s.replace(/ /g, "");
+      if(squash(output) === squash(r.target)){
+        say("<b>So close — count the spaces.</b> You printed <code>" + esc(output.replace(/ /g, "␣")) +
+            "</code> but the target is <code>" + esc(r.target.replace(/ /g, "␣")) +
+            "</code>. Remember: <code>+</code> adds nothing between pieces, and a comma always adds exactly one space.", "warn");
+      } else if(r.pieces.some(p => p.kind === "str" && output.indexOf(p.val) !== -1 && '"' + p.val + '"' === p.disp && r.target.indexOf(p.val) === -1)){
+        say("<b>Not quite.</b> It printed <b>" + esc(output) + "</b> — a quoted piece like <code>\"name\"</code> prints the <em>word itself</em>, not the variable's contents. Variables go in without quotation marks.", "warn");
+      } else {
+        say("<b>Not quite.</b> It printed <b>" + esc(output) + "</b> but the target is <b>" + esc(r.target) + "</b>. Compare them piece by piece and adjust.", "warn");
+      }
+    }
+  }
+
+  function deal(){
+    const r = ROUNDS[round];
+    seq = [];
+    probBtns.forEach((b, i) => b.classList.toggle("on", i === round));
+    document.getElementById("varline").innerHTML =
+      "The program has already run: <b>" + esc(r.vars) + "</b> &nbsp;<i>(" + esc(r.types) + ")</i>";
+    document.getElementById("varbar").textContent = "ROUND " + (round + 1) + " OF " + ROUNDS.length;
+    document.getElementById("target").textContent = r.target;
+    tray.innerHTML = "";
+    pieceBtns = r.pieces.map((p, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "piece p-" + (p.kind === "conn" ? "conn" : p.kind);
+      b.textContent = p.disp;
+      b.addEventListener("click", () => { seq.push(i); renderBuilder(); });
+      tray.appendChild(b);
+      return b;
+    });
+    cons.innerHTML = '<span class="ghost">nothing run yet</span>';
+    say("Build the line, then press <b>Run ▶</b>. There's more than one correct answer — concatenate with <b>+</b>, or let commas add the spaces.", "idle");
+    renderBuilder();
+  }
+
+  document.getElementById("run").addEventListener("click", run);
+  document.getElementById("undo").addEventListener("click", () => { seq.pop(); renderBuilder(); });
+  document.getElementById("clear").addEventListener("click", () => { seq = []; renderBuilder(); });
+
+  deal();
+
+  /* Auto-size the parent iframe. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

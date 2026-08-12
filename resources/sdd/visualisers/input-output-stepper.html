@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Input &amp; Output Stepper — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:960px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:800px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .layout{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch;margin-top:16px}
+  .panel{border:1px solid var(--line);background:var(--panel)}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- code panel ---- */
+  .codepanel{flex:1 1 340px;display:flex;flex-direction:column}
+  .codebody{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .line{
+    display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;
+    font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--ink);
+    background:#fff;border:1px solid var(--line);border-left:3px solid var(--line);padding:9px 11px;
+    transition:background .15s,border-color .15s;
+  }
+  .line .no{font-size:11px;color:var(--ink-soft);font-weight:400;width:14px;flex:none}
+  .line .tick{margin-left:auto;font-size:13px;color:var(--active);visibility:hidden}
+  .line.comment{cursor:default;border:1px dashed var(--line);border-left:3px dashed var(--line);color:var(--ink-soft);font-weight:400;background:var(--bg)}
+  .line.next{border-color:var(--match-accent);border-left-color:var(--match-accent);background:var(--match-bg)}
+  .line.next:hover{filter:brightness(1.03)}
+  .line.waiting{border-color:var(--out);border-left-color:var(--out);background:var(--out-bg);cursor:default}
+  .line.done{border-left-color:var(--active);background:var(--active-bg);color:var(--active-strong);cursor:default}
+  .line.done .tick{visibility:visible}
+  .line.locked{opacity:.55;cursor:not-allowed}
+  .line:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+  .btnrow{padding:0 14px 14px}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 16px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  button.ctrl:hover{filter:brightness(1.06)}
+  button.ctrl:focus-visible{outline:3px solid var(--match-bg);outline-offset:1px}
+
+  /* ---- right column: variables + console ---- */
+  .rightcol{flex:1 1 340px;display:flex;flex-direction:column;gap:14px}
+
+  .vars{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:18px 14px 14px}
+  .varwrap{text-align:center}
+  .varname{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--active-strong);margin-bottom:5px}
+  .varbox{
+    width:104px;height:64px;border:2.5px solid var(--active-strong);background:#fff;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .varbox .v{
+    font-family:var(--mono);font-size:15px;font-weight:700;color:var(--active-strong);
+    background:var(--active-bg);border:2px solid var(--active);padding:3px 9px;max-width:96px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .varbox .v.empty{background:none;border:none;color:var(--line);font-size:24px}
+  .varbox .v.drop{animation:drop .5s cubic-bezier(.3,.7,.4,1.15)}
+  .varbox .v.read{background:var(--out-bg);border-color:var(--out);color:var(--out)}
+  @keyframes drop{from{transform:translateY(-90px)}to{transform:translateY(0)}}
+  .vartype{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--match);margin-top:6px}
+
+  .console{flex:1;display:flex;flex-direction:column}
+  .consbody{
+    background:#0d1f17;flex:1;min-height:180px;max-height:300px;overflow-y:auto;padding:12px 14px;
+    font-family:var(--mono);font-size:13px;line-height:1.9;
+  }
+  .consbody .ghost{color:rgba(255,255,255,.35);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .consbody .ln{display:block;color:rgba(255,255,255,.85);overflow-wrap:anywhere}
+  .consbody .ln .typed{color:#F5D66B}
+  .consbody .ln.outln{color:#7CE3AC;font-weight:700}
+  .consbody .ln.outln .var{background:rgba(124,227,172,.16);padding:0 3px}
+  .prompt-entry{display:flex;gap:8px;align-items:center;margin-top:2px}
+  .prompt-entry input{
+    font-family:var(--mono);font-size:13px;font-weight:700;color:#F5D66B;background:transparent;
+    border:none;border-bottom:2px solid var(--match-accent);padding:2px 4px;flex:1;min-width:80px;outline:none;
+  }
+  .prompt-entry button{
+    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+    padding:5px 12px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  .cursor{display:inline-block;width:8px;height:15px;background:#7CE3AC;vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:14px;font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate.out{border-left-color:var(--out);background:var(--out-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Input &amp; Output</p>
+    <h1>Input &amp; Output Stepper</h1>
+    <p class="sub">Click each highlighted line to run it. <code style="font-family:var(--mono)">input()</code> lines wait in the console for <b>you</b> to type an answer; <code style="font-family:var(--mono)">print()</code> lines send the variables' contents back out.</p>
+  </header>
+
+  <div class="layout">
+    <section class="panel codepanel">
+      <div class="panelbar"><span>THE PROGRAM — CLICK THE HIGHLIGHTED LINE</span></div>
+      <div class="codebody" id="codebody"></div>
+      <div class="btnrow"><button class="ctrl" id="restart" type="button">Restart ↺</button></div>
+    </section>
+
+    <div class="rightcol">
+      <section class="panel">
+        <div class="panelbar"><span>MEMORY — THE VARIABLES</span></div>
+        <div class="vars">
+          <div class="varwrap">
+            <div class="varname">name</div>
+            <div class="varbox" id="box-name"><span class="v empty">?</span></div>
+            <div class="vartype">string</div>
+          </div>
+          <div class="varwrap">
+            <div class="varname">age</div>
+            <div class="varbox" id="box-age"><span class="v empty">?</span></div>
+            <div class="vartype">integer</div>
+          </div>
+          <div class="varwrap">
+            <div class="varname">height</div>
+            <div class="varbox" id="box-height"><span class="v empty">?</span></div>
+            <div class="vartype">real</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel console">
+        <div class="panelbar"><span>CONSOLE — WHAT THE USER SEES</span></div>
+        <div class="consbody" id="cons"><span class="ghost">program not started</span></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="narrate idle" id="narrate" aria-live="polite">Every variable starts as <b>?</b> — nothing has been input yet. Click line 2 to run the first input.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Executable program lines. Comment rows are display-only. */
+  const LINES = [
+    { text:'# Ask the user about themselves', comment:true },
+    { text:'name = input("Please enter your name: ")', input:"name",
+      prompt:"Please enter your name: " },
+    { text:'age = int(input("Please enter your age: "))', input:"age",
+      prompt:"Please enter your age: " },
+    { text:'height = float(input("Please enter your height in metres: "))', input:"height",
+      prompt:"Please enter your height in metres: " },
+    { text:'# Play it all back to them', comment:true },
+    { text:'print("Hello " + name)', print:true,
+      out: v => ['Hello ', ['name']],
+      note: v => '<b>Output.</b> <code>print</code> joined the two strings with <code>+</code> and sent <b>Hello ' + esc(v.name) + '</b> to the display. The box still holds its value — printing is a copy, not a move.' },
+    { text:'print("You are", age, "years old")', print:true,
+      out: v => ['You are ', ['age'], ' years old'],
+      note: v => '<b>Output.</b> The commas let text and a <em>number</em> share one <code>print()</code> — Python adds the spaces, giving <b>You are ' + v.age + ' years old</b>. (Joining with <code>+</code> would crash: <code>+</code> only joins strings.)' },
+    { text:'print("You are", height, "metres tall")', print:true,
+      out: v => ['You are ', ['height'], ' metres tall'],
+      note: v => '<b>Output.</b> Same again with the real number: <b>You are ' + v.height + ' metres tall</b>. That\'s the whole program — data in, data straight back out, no processing. Press Restart and try different answers.' }
+  ];
+
+  const NOTES = {
+    name:  v => '<b>Input.</b> The program paused until you typed something. Whatever you typed — <b>' + esc(v) + '</b> — is now stored in the box called <code>name</code>.',
+    age:   v => '<b>Input.</b> Keyboard input arrives as text, so <code>int()</code> turned your "' + v + '" into the whole number <b>' + v + '</b> before it landed in <code>age</code>.',
+    height:v => '<b>Input.</b> <code>float()</code> turned your typing into the real number <b>' + v + '</b> and stored it in <code>height</code>.'
+  };
+
+  const codebody = document.getElementById("codebody");
+  const cons = document.getElementById("cons");
+  const narrate = document.getElementById("narrate");
+  const boxes = { name:document.getElementById("box-name"), age:document.getElementById("box-age"), height:document.getElementById("box-height") };
+
+  const vars = { name:null, age:null, height:null };
+  let step = 0;            // index into EXEC
+  let awaiting = null;     // line currently waiting for console input
+  const EXEC = LINES.map((l, i) => l.comment ? null : i).filter(i => i !== null);
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  const rows = LINES.map((l, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "line" + (l.comment ? " comment" : "");
+    b.innerHTML = '<span class="no">' + (i + 1) + '</span><span>' + esc(l.text) + '</span>' + (l.comment ? '' : '<span class="tick">✓</span>');
+    if(l.comment){
+      b.addEventListener("click", () => say("That line is an <b>internal comment</b> — the computer skips it completely. Only the highlighted line runs next.", "idle"));
+    } else {
+      b.addEventListener("click", () => run(i));
+    }
+    codebody.appendChild(b);
+    return b;
+  });
+
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  function paint(){
+    const nextIdx = step < EXEC.length ? EXEC[step] : -1;
+    LINES.forEach((l, i) => {
+      if(l.comment) return;
+      const r = rows[i];
+      r.classList.toggle("done", EXEC.indexOf(i) < step);
+      r.classList.toggle("next", i === nextIdx && !awaiting);
+      r.classList.toggle("waiting", i === nextIdx && !!awaiting);
+      r.classList.toggle("locked", EXEC.indexOf(i) > step);
+    });
+  }
+
+  function consLine(html, cls){
+    const ghost = cons.querySelector(".ghost");
+    if(ghost) ghost.remove();
+    const ln = document.createElement("span");
+    ln.className = "ln" + (cls ? " " + cls : "");
+    ln.innerHTML = html;
+    cons.appendChild(ln);
+    cons.scrollTop = cons.scrollHeight;
+    postHeight();
+    return ln;
+  }
+
+  function setVar(key, display){
+    vars[key] = display;
+    const box = boxes[key];
+    box.innerHTML = "";
+    const v = document.createElement("span");
+    v.className = "v drop";
+    v.textContent = display;
+    box.appendChild(v);
+  }
+
+  function flashVar(key){
+    const v = boxes[key].querySelector(".v");
+    v.classList.remove("drop");
+    v.classList.add("read");
+    setTimeout(() => v.classList.remove("read"), 900);
+  }
+
+  function run(i){
+    const nextIdx = step < EXEC.length ? EXEC[step] : -1;
+    if(awaiting){ say("The program is still <b>waiting for input</b> — answer the prompt in the console first.", "warn"); return; }
+    if(i !== nextIdx){
+      if(EXEC.indexOf(i) < step) say("Line " + (i + 1) + " has already run — the highlighted line is next.", "warn");
+      else say("A program runs in order — line <b>" + (nextIdx + 1) + "</b> is next.", "warn");
+      return;
+    }
+
+    const l = LINES[i];
+    if(l.input){
+      awaiting = l;
+      paint();
+      const ln = consLine(esc(l.prompt));
+      const entry = document.createElement("span");
+      entry.className = "prompt-entry";
+      entry.innerHTML = '<input type="text" aria-label="' + esc(l.prompt) + '"><button type="button">Enter ⏎</button>';
+      ln.appendChild(entry);
+      const field = entry.querySelector("input");
+      const btn = entry.querySelector("button");
+      const submit = () => attemptInput(l, ln, field);
+      btn.addEventListener("click", submit);
+      field.addEventListener("keydown", e => { if(e.key === "Enter") submit(); });
+      field.focus();
+      say("<b>The program has paused.</b> <code>input()</code> is waiting in the console — type your answer and press Enter.", "out");
+      postHeight();
+    } else {
+      const parts = l.out(vars);
+      let html = "";
+      parts.forEach(p => {
+        if(Array.isArray(p)){ html += '<span class="var">' + esc(vars[p[0]]) + '</span>'; flashVar(p[0]); }
+        else html += esc(p);
+      });
+      consLine(html, "outln");
+      step++;
+      paint();
+      say(l.note(vars), "match");
+    }
+  }
+
+  function attemptInput(l, ln, field){
+    const raw = field.value.trim();
+    if(l.input === "name"){
+      if(raw === ""){ say("Type something first — the program is waiting for a name.", "warn"); field.focus(); return; }
+      commit(l, ln, raw, raw);
+    } else if(l.input === "age"){
+      if(!/^\d+$/.test(raw)){
+        say('<b>That would crash the program!</b> <code>int()</code> can only convert whole numbers — "' + esc(raw || " ") + '" would cause a ValueError. Try something like 15.', "warn");
+        field.focus(); return;
+      }
+      commit(l, ln, raw, String(parseInt(raw, 10)));
+    } else {
+      const v = Number(raw);
+      if(raw === "" || isNaN(v)){
+        say('<b>That would crash the program!</b> <code>float()</code> needs a number like 1.62 — "' + esc(raw || " ") + '" would cause a ValueError.', "warn");
+        field.focus(); return;
+      }
+      // float("2") is 2.0 in Python — show it the way Python would print it.
+      commit(l, ln, raw, Number.isInteger(v) ? v.toFixed(1) : String(v));
+    }
+  }
+
+  function commit(l, ln, typed, stored){
+    ln.querySelector(".prompt-entry").remove();
+    ln.innerHTML = esc(l.prompt) + '<span class="typed">' + esc(typed) + '</span>';
+    awaiting = null;
+    setVar(l.input, stored);
+    step++;
+    paint();
+    say(NOTES[l.input](stored), "");
+    postHeight();
+  }
+
+  document.getElementById("restart").addEventListener("click", () => {
+    step = 0; awaiting = null;
+    Object.keys(vars).forEach(k => {
+      vars[k] = null;
+      boxes[k].innerHTML = '<span class="v empty">?</span>';
+    });
+    cons.innerHTML = '<span class="ghost">program not started</span>';
+    paint();
+    say("Back to the start — every box holds <b>?</b> again. Click line 2 to run the first input.", "idle");
+    postHeight();
+  });
+
+  paint();
+
+  /* Auto-size the parent iframe. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

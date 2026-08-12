@@ -50,6 +50,7 @@
           <li><a href="#operators">The Arithmetic Operators</a></li>
           <li><a href="#using">Using Them in Programs</a></li>
           <li><a href="#concatenation">String Concatenation</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -70,6 +71,10 @@
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
           <div><strong>What the exam expects:</strong> you should be able to <strong>describe, exemplify and implement</strong> expressions using addition, subtraction, multiplication, division and exponentiation, and expressions that concatenate strings — plus <strong>read and explain</strong> code that uses them.</div>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>One thing to know before you start:</strong> calculations and arithmetic operators are rarely asked about on their own. They normally appear inside other, more complex questions — a running total updated inside a loop, a formula sitting inside an IF, a calculation on an array element. So don't just learn this page and move on: keep an eye out for calculations hiding in questions throughout the rest of the Software Design &amp; Development section.</div>
         </div>
       </article>
 
@@ -95,6 +100,24 @@ cube = num1 ** 3        # num1 cubed</pre>
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
           <div>Two things to note: division <strong>always gives a real number</strong> (5 / 2 is 2.5 — another reason averages are reals!), and in SQA reference language exponentiation is written with <code>^</code>, e.g. <code>SET square TO num1 ^ 2</code>.</div>
+        </div>
+
+        <p>Here's exactly that <code>^</code> operator in a real past paper question — trace it through and jot down your answer before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Q4 — State the Output (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_calc_q1.png" alt="Past paper question: a user enters the value 2 when running the program below. Line 1 DECLARE answer INITIALLY 0. Line 2 DECLARE numOne INITIALLY 3. Line 3 RECEIVE numTwo FROM KEYBOARD. Line 4 SET answer TO numOne caret numTwo. Line 5 SEND answer TO DISPLAY. State the output. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> We trace the program one line at a time, keeping track of what each variable holds — exactly like the variable boxes from the last two pages.</p>
+          <ul>
+            <li>Lines 1 and 2 — <code>answer</code> starts at 0, <code>numOne</code> starts at 3.</li>
+            <li>Line 3 — the user enters 2, so <code>numTwo</code> is 2.</li>
+            <li>Line 4 — <code>^</code> is exponentiation: <code>numOne ^ numTwo</code> is 3², which is 9. The 0 in <code>answer</code> is overwritten.</li>
+            <li>Line 5 — the current contents of <code>answer</code> are displayed.</li>
+          </ul>
+          <p>Watch the traps: <code>^</code> means "to the power of", not multiply — 3 &times; 2 = 6 is wrong. And the order matters: it's <code>numOne ^ numTwo</code> (3²&nbsp;=&nbsp;9), not <code>numTwo ^ numOne</code> (2³&nbsp;=&nbsp;8).</p>
+          <img src="../resources/sdd/worked_examples/n5_calc_q1_ans.png" alt="Marking instructions: 9. 1 mark." class="zoomable" />
+          <p>The answer is:</p>
+          <p style="color:#6A1B9A;"><strong>9</strong></p>
         </div>
       </article>
 
@@ -127,6 +150,36 @@ total = physics + computing + maths
 print("Your total mark is " + str(total))</pre>
         </div>
         <p>That's the same program we analysed and designed earlier in the topic — three inputs, one process, one output. Everything connects!</p>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Expression Stepper</p>
+          <div class="ib-body">
+            <p class="ib-intro">Watch the pattern happen: three expressions of increasing difficulty, stepped through one stage at a time — variable names swapped for their values, brackets worked out, then the finished result dropping into the variable box on the left.</p>
+            <iframe src="../resources/sdd/visualisers/expression-stepper.html"
+                    title="Expression stepper — watch the right-hand side evaluated first"
+                    loading="lazy"
+                    style="height:560px"></iframe>
+          </div>
+        </div>
+
+        <p>Now a bigger past paper question — this is what the intro warned about: a calculation hiding inside a loop question. Try writing the line yourself first.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2023 Q8 a) — Window Replacement (4 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_calc_q2.png" alt="Past paper question: a window replacement company employs a programmer to write a program that calculates how much it will cost to fit triple glazed windows. Small windows cost £299.99 and large windows cost £499.99 to replace. The algorithm sets totalCost to 0, asks for the number of rooms, then loops through the rooms asking for the number of small and large windows and calculating and updating totalCost, before displaying totalCost. Part a: step 6 in the algorithm calculates and updates the total cost. Using a programming language of your choice, write the code for step 6. 4 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Four marks means the markers are looking for four separate ingredients in one line (or a few lines) of code. We build it up piece by piece:</p>
+          <ul>
+            <li><strong>Cost of the small windows</strong> — <code>numSmall * 299.99</code>.</li>
+            <li><strong>Cost of the large windows</strong> — <code>numLarge * 499.99</code>.</li>
+            <li><strong>Update the running total</strong> — step 6 sits <em>inside the loop</em>, so each room's windows must be <em>added on</em> to what's there already: <code>totalCost + …</code>.</li>
+            <li><strong>Assign the result</strong> — store it back in <code>totalCost</code>.</li>
+          </ul>
+          <p>The killer detail is <code>totalCost</code> appearing on <strong>both sides</strong>. The right-hand side is worked out first using the <em>old</em> total, then the answer overwrites it — that's what "update" means. Writing <code>totalCost = numSmall * 299.99 + numLarge * 499.99</code> would <em>overwrite</em> the total with just this room's cost and lose a mark.</p>
+          <img src="../resources/sdd/worked_examples/n5_calc_q2_ans.png" alt="Marking instructions: one mark each for calculation of small windows cost, calculation of large windows cost, running total updated, and assignment to totalCost. Sample one line answer: SET totalCost TO totalCost + (numSmall * 299.99) + (numLarge * 499.99). A sample three line answer is also accepted." class="zoomable" />
+          <p>An example would be (in Python):</p>
+          <p style="color:#6A1B9A;">totalCost = totalCost + (numSmall * 299.99) + (numLarge * 499.99)</p>
+        </div>
       </article>
 
       <article>
@@ -157,6 +210,140 @@ print(name)          # prints "MrCurrie" — where should the space go?</pre>
           <div>You can only concatenate <strong>strings with strings</strong>. To join a number onto a message, convert it first with <code>str()</code> — e.g. <code>print("Total: " + str(total))</code>. Try it without the <code>str()</code> and Python will complain loudly.</div>
         </div>
         <p>In reference language, concatenation uses the <code>&amp;</code> symbol: <code>SEND "Total is " &amp; total TO DISPLAY</code>.</p>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Build the Output</p>
+          <div class="ib-body">
+            <p class="ib-intro">Three rounds — each shows a target output and a tray of pieces: variables, quoted strings (with every space visible as ␣), <code>+</code>, <code>,</code> and <code>str()</code>. Assemble the print line that produces the target exactly. Wrong quotes, missing spaces and un-converted numbers all fail exactly the way real Python does.</p>
+            <iframe src="../resources/sdd/visualisers/build-the-output.html"
+                    title="Build the output — assemble the print line that matches the target"
+                    loading="lazy"
+                    style="height:760px"></iframe>
+          </div>
+        </div>
+
+        <p>Here's how concatenation actually gets examined — building one output line from variables and text. Write your own Line 7 before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2022 Q2 — Scotland Scored 27 Points (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_concat_q1.png" alt="Past paper question: the following code is used to input and display the points in a game. Line 5 RECEIVE teamName FROM KEYBOARD. Line 6 RECEIVE totalPoints FROM KEYBOARD. Line 7 display output. When Scotland and 27 are input, the output Scotland scored 27 points is produced. Using a programming language of your choice write Line 7 of the program. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> We compare the output with the variables. <code>Scotland</code> and <code>27</code> came from the variables; <code>scored</code> and <code>points</code> didn't — they're literal text the program must supply. So Line 7 alternates: variable, string, variable, string.</p>
+          <ul>
+            <li><strong>Variables without quotes</strong> — <code>teamName</code> and <code>totalPoints</code> must use their exact names, no quotation marks, or you'd print the words instead of the contents.</li>
+            <li><strong>Strings with quotes</strong> — <code>" scored "</code> and <code>" points"</code> are literal text, so they need quotation marks.</li>
+            <li><strong>Spaces</strong> — concatenation joins <em>exactly</em> what you give it, so the spaces must live inside the quoted strings.</li>
+          </ul>
+          <p>One Python-specific catch: if <code>totalPoints</code> was cast to a number on input, it needs <code>str()</code> before it can be joined with <code>+</code> — or sidestep the whole issue with commas.</p>
+          <img src="../resources/sdd/worked_examples/n5_concat_q1_ans.png" alt="Marking instructions: one mark for correct variable names teamName and totalPoints without quotations, one mark for an output statement with the two additional strings scored and points with quotations. Single or double quotations may be used dependent on language." class="zoomable" />
+          <p>An example would be (in Python):</p>
+          <p style="color:#6A1B9A;">print(teamName + " scored " + str(totalPoints) + " points")</p>
+          <p style="color:#6A1B9A;">or, using commas: print(teamName, "scored", totalPoints, "points")</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>Each of these tests the same skill as one of the worked examples above. Write your answer down before opening the marking instructions.</p>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — State the Output (1 mark)</div>
+          <p>A user enters the value 2 when running the program below.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 1  DECLARE result INITIALLY 0
+Line 2  DECLARE numOne INITIALLY 9
+Line 3  RECEIVE numTwo FROM KEYBOARD
+Line 4  SET result TO numOne / numTwo
+Line 5  SEND result TO DISPLAY</pre>
+          </div>
+          <p>State the output.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>4.5</strong> (1 mark)</p>
+              <p style="color:#6A1B9A;"><code>numOne / numTwo</code> is 9 &divide; 2 = 4.5 — division always gives a <em>real</em> number. Do not accept 4 or "4 remainder 1".</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Floor Fitters (4 marks)</div>
+          <p>A flooring company employs a programmer to write a program that calculates the cost of fitting laminate flooring in a square room. Laminate costs &pound;11.50 per square metre, and there is a fixed fitting fee of &pound;30.</p>
+          <p>The algorithm to calculate the cost is shown below.</p>
+          <ol style="font-family:inherit;">
+            <li>Ask for the length of the room in metres</li>
+            <li>Calculate the floor area</li>
+            <li>Calculate the total cost</li>
+            <li>Display the total cost</li>
+          </ol>
+          <p>Steps 2 and 3 in the algorithm calculate the floor area and the total cost. Using a programming language of your choice, write the code for steps 2 and 3.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark for each of the following:</p>
+              <ul style="color:#6A1B9A;">
+                <li>floor area calculated using exponentiation (length ** 2)</li>
+                <li>cost of the laminate (area &times; 11.50)</li>
+                <li>fitting fee of &pound;30 added</li>
+                <li>assignment to appropriately named variables</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer (Python):</p>
+              <p style="color:#6A1B9A;">area = length ** 2<br/>totalCost = area * 11.50 + 30</p>
+              <p style="color:#6A1B9A;">Accept length * length for the area, and a one-line answer such as totalCost = (length ** 2) * 11.50 + 30.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Rainfall Report (2 marks)</div>
+          <p>The following code is used to input and display rainfall readings.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 3  RECEIVE townName FROM KEYBOARD
+Line 4  RECEIVE rainfall FROM KEYBOARD
+Line 5  &lt;display output&gt;</pre>
+          </div>
+          <p>When 'Oban' and '12' are input the following output is produced by the program.</p>
+          <div class="code-block">
+            <div class="code-label">Output</div>
+            <pre>Oban had 12 mm of rain</pre>
+          </div>
+          <p>Using a programming language of your choice, write Line 5 of the program.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark for each of the following in the correct place/order:</p>
+              <ul style="color:#6A1B9A;">
+                <li>correct variable names — townName, rainfall — without quotations</li>
+                <li>output statement with the two additional strings "had" and "mm of rain" — with quotations</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer (Python):</p>
+              <p style="color:#6A1B9A;">print(townName + " had " + str(rainfall) + " mm of rain")</p>
+              <p style="color:#6A1B9A;">or, using commas: print(townName, "had", rainfall, "mm of rain")</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Joined-Up Thinking (1 mark)</div>
+          <p>The following program runs without errors.</p>
+          <div class="code-block">
+            <div class="code-label">Python</div>
+            <pre>fName = "Ben"
+lName = "Nevis"
+fullName = fName + lName
+print(fullName)</pre>
+          </div>
+          <p>State the exact output of the program.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>BenNevis</strong> (1 mark)</p>
+              <p style="color:#6A1B9A;">Concatenation joins <em>exactly</em> what it is given — no space was included in either string, so no space appears in the output. "Ben Nevis" with a space is not the output this program produces.</p>
+            </div>
+          </details>
+        </div>
       </article>
 
     </div>

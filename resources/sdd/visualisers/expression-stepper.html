@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expression Stepper — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:900px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:780px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 14px}
+  .probs{display:flex;border:1px solid var(--line)}
+  .probs button{font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 14px;color:var(--ink)}
+  .probs button:last-child{border-right:0}
+  .probs button.on{background:var(--active-strong);color:#fff}
+  .probs button.done-prob::after{content:" \2713";color:var(--match-accent)}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+  }
+  button.ctrl:hover{border-color:var(--active);background:var(--active-bg)}
+  button.ctrl.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C}
+  button.ctrl.primary:hover{filter:brightness(1.06);background:var(--match-accent)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button.ctrl:focus-visible{outline:3px solid var(--match-bg);outline-offset:1px}
+
+  .layout{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch}
+  .panel{border:1px solid var(--line);background:var(--panel)}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- expression panel ---- */
+  .exprpanel{flex:1 1 380px;display:flex;flex-direction:column}
+  .exprbody{padding:22px 18px;flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center}
+  .exprline{
+    font-family:var(--mono);font-size:clamp(17px,3.2vw,24px);font-weight:700;color:var(--ink);
+    background:var(--bg);border:1px solid var(--line);padding:16px 18px;text-align:center;overflow-x:auto;white-space:nowrap;
+  }
+  .exprline .lhs{color:var(--active-strong)}
+  .exprline .hl{background:var(--match-bg);border-bottom:3px solid var(--match-accent);padding:1px 4px}
+  .exprline .donev{color:var(--out);background:var(--out-bg);padding:1px 6px}
+  .steplist{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+  .steplist .st{
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    padding:5px 10px;border:1px solid var(--line);color:var(--ink-soft);background:#fff;
+  }
+  .steplist .st.now{border-color:var(--match-accent);background:var(--match-bg);color:var(--match);font-weight:700}
+  .steplist .st.past{border-color:var(--active);background:var(--active-bg);color:var(--active-strong)}
+
+  /* ---- variables panel ---- */
+  .varpanel{flex:1 1 260px;display:flex;flex-direction:column}
+  .vars{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:20px 14px;flex:1;align-content:center}
+  .varwrap{text-align:center}
+  .varname{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--active-strong);margin-bottom:5px}
+  .varbox{
+    width:104px;height:64px;border:2.5px solid var(--active-strong);background:#fff;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .varbox .v{
+    font-family:var(--mono);font-size:16px;font-weight:700;color:var(--active-strong);
+    background:var(--active-bg);border:2px solid var(--active);padding:3px 10px;
+  }
+  .varbox .v.empty{background:none;border:none;color:var(--line);font-size:24px}
+  .varbox .v.drop{animation:drop .5s cubic-bezier(.3,.7,.4,1.15)}
+  .varbox .v.read{background:var(--match-bg);border-color:var(--match-accent);color:var(--match)}
+  @keyframes drop{from{transform:translateY(-90px)}to{transform:translateY(0)}}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:14px;font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate.out{border-left-color:var(--out);background:var(--out-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Calculations</p>
+    <h1>Expression Stepper</h1>
+    <p class="sub">The pattern is always <b>expression on the right, variable on the left</b> — and the right-hand side is completely finished before the left-hand side even matters. Step through each expression and watch it happen.</p>
+  </header>
+
+  <div class="controls">
+    <div class="probs" id="probs" role="group" aria-label="Choose an expression"></div>
+    <div class="btnrow">
+      <button class="ctrl primary" id="next" type="button">Next step ▶</button>
+      <button class="ctrl" id="restart" type="button">Restart ↺</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <section class="panel exprpanel">
+      <div class="panelbar"><span>THE ASSIGNMENT LINE</span></div>
+      <div class="exprbody">
+        <div class="exprline" id="expr"></div>
+        <div class="steplist" id="steps"></div>
+      </div>
+    </section>
+
+    <section class="panel varpanel">
+      <div class="panelbar"><span>MEMORY — THE VARIABLES</span></div>
+      <div class="vars" id="vars"></div>
+    </section>
+  </div>
+
+  <div class="narrate idle" id="narrate" aria-live="polite"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Each scenario: variables (target last, starts empty), the step labels,
+     and per-step {expr HTML, note, reads[], assign}. */
+  const SCENARIOS = [
+    {
+      name:"1 · Add",
+      vars:[ {n:"num1", v:"5"}, {n:"num2", v:"7"}, {n:"total", v:null} ],
+      target:"total",
+      stepNames:["Start","Substitute","Evaluate","Assign"],
+      steps:[
+        { expr:'<span class="lhs">total</span> = num1 + num2',
+          note:'Here\'s the line as written. <b>Nothing on the left happens yet</b> — Python starts with the expression on the right. Click Next step.' },
+        { expr:'<span class="lhs">total</span> = <span class="hl">5</span> + <span class="hl">7</span>', reads:["num1","num2"],
+          note:'<b>Substitute.</b> The variable names are swapped for their current contents — <code>num1</code> becomes 5, <code>num2</code> becomes 7. The boxes are only <em>read</em>; nothing in memory changes.' },
+        { expr:'<span class="lhs">total</span> = <span class="hl">12</span>',
+          note:'<b>Evaluate.</b> 5 + 7 collapses to a single value: 12. The right-hand side is finished.' },
+        { expr:'<span class="lhs">total</span> = <span class="donev">12</span>', assign:"12",
+          note:'<b>Assign.</b> Only now does the left-hand side matter — the finished value drops into <code>total</code>. Try expression 2 next.' }
+      ]
+    },
+    {
+      name:"2 · Power",
+      vars:[ {n:"num1", v:"5"}, {n:"square", v:null} ],
+      target:"square",
+      stepNames:["Start","Substitute","Evaluate","Assign"],
+      steps:[
+        { expr:'<span class="lhs">square</span> = num1 ** 2',
+          note:'One variable this time, and the <code>**</code> operator — "to the power of". (In reference language this line would use <code>^</code>.) Click Next step.' },
+        { expr:'<span class="lhs">square</span> = <span class="hl">5</span> ** 2', reads:["num1"],
+          note:'<b>Substitute.</b> <code>num1</code> is read and its contents, 5, take its place. The 2 was already a value — nothing to substitute there.' },
+        { expr:'<span class="lhs">square</span> = <span class="hl">25</span>',
+          note:'<b>Evaluate.</b> 5 ** 2 means 5² = 5 &times; 5 = 25 — <em>not</em> 5 &times; 2 = 10. That mix-up costs marks every year.' },
+        { expr:'<span class="lhs">square</span> = <span class="donev">25</span>', assign:"25",
+          note:'<b>Assign.</b> 25 drops into <code>square</code>. One more — expression 3 adds brackets and a division.' }
+      ]
+    },
+    {
+      name:"3 · Brackets",
+      vars:[ {n:"num1", v:"5"}, {n:"num2", v:"7"}, {n:"average", v:null} ],
+      target:"average",
+      stepNames:["Start","Substitute","Brackets","Evaluate","Assign"],
+      steps:[
+        { expr:'<span class="lhs">average</span> = (num1 + num2) / 2',
+          note:'The hardest of the three: brackets <em>and</em> a division. Same rule though — right-hand side first. Click Next step.' },
+        { expr:'<span class="lhs">average</span> = (<span class="hl">5</span> + <span class="hl">7</span>) / 2', reads:["num1","num2"],
+          note:'<b>Substitute.</b> Both variables are read and replaced by their contents.' },
+        { expr:'<span class="lhs">average</span> = <span class="hl">12</span> / 2',
+          note:'<b>Brackets first.</b> Just like in maths, the bracketed part is worked out before anything else: (5 + 7) becomes 12.' },
+        { expr:'<span class="lhs">average</span> = <span class="hl">6.0</span>',
+          note:'<b>Evaluate.</b> 12 / 2 gives <b>6.0</b>, not 6 — division <em>always</em> produces a real number, even when it divides exactly. That\'s why averages are reals.' },
+        { expr:'<span class="lhs">average</span> = <span class="donev">6.0</span>', assign:"6.0",
+          note:'<b>Assign.</b> The real number 6.0 drops into <code>average</code>. That\'s the full pattern: substitute → brackets → evaluate → assign.' }
+      ]
+    }
+  ];
+
+  const exprEl = document.getElementById("expr");
+  const stepsEl = document.getElementById("steps");
+  const varsEl = document.getElementById("vars");
+  const narrate = document.getElementById("narrate");
+  const nextBtn = document.getElementById("next");
+  const probsBar = document.getElementById("probs");
+
+  let scenario = 0, step = 0;
+  const boxes = {};
+  const completed = SCENARIOS.map(() => false);
+
+  const probBtns = SCENARIOS.map((s, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = s.name;
+    b.addEventListener("click", () => { scenario = i; deal(); });
+    probsBar.appendChild(b);
+    return b;
+  });
+
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  function paintSteps(){
+    const names = SCENARIOS[scenario].stepNames;
+    stepsEl.innerHTML = "";
+    names.forEach((n, i) => {
+      const s = document.createElement("span");
+      s.className = "st" + (i < step ? " past" : i === step ? " now" : "");
+      s.textContent = n;
+      stepsEl.appendChild(s);
+    });
+  }
+
+  function render(){
+    const sc = SCENARIOS[scenario];
+    const st = sc.steps[step];
+    exprEl.innerHTML = st.expr;
+    paintSteps();
+
+    (st.reads || []).forEach(name => {
+      const v = boxes[name].querySelector(".v");
+      v.classList.add("read");
+      setTimeout(() => v.classList.remove("read"), 1100);
+    });
+    if(st.assign !== undefined){
+      const box = boxes[sc.target];
+      box.innerHTML = "";
+      const v = document.createElement("span");
+      v.className = "v drop";
+      v.textContent = st.assign;
+      box.appendChild(v);
+    }
+    say(st.note, st.assign !== undefined ? "out" : step === 0 ? "idle" : "");
+    nextBtn.disabled = step >= sc.steps.length - 1;
+    if(step >= sc.steps.length - 1 && !completed[scenario]){
+      completed[scenario] = true;
+      probBtns[scenario].classList.add("done-prob");
+    }
+    postHeight();
+  }
+
+  function deal(){
+    const sc = SCENARIOS[scenario];
+    step = 0;
+    probBtns.forEach((b, i) => b.classList.toggle("on", i === scenario));
+    varsEl.innerHTML = "";
+    Object.keys(boxes).forEach(k => delete boxes[k]);
+    sc.vars.forEach(v => {
+      const w = document.createElement("div");
+      w.className = "varwrap";
+      w.innerHTML = '<div class="varname">' + v.n + '</div><div class="varbox">' +
+        (v.v === null ? '<span class="v empty">?</span>' : '<span class="v">' + v.v + '</span>') + '</div>';
+      varsEl.appendChild(w);
+      boxes[v.n] = w.querySelector(".varbox");
+    });
+    render();
+  }
+
+  nextBtn.addEventListener("click", () => {
+    if(step < SCENARIOS[scenario].steps.length - 1){ step++; render(); }
+  });
+  document.getElementById("restart").addEventListener("click", deal);
+
+  deal();
+
+  /* Auto-size the parent iframe. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

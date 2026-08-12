@@ -88,8 +88,8 @@ print("Welcome to National 5")</pre>
         <p>To display what's <em>inside</em> a variable, use its name <strong>without</strong> quotation marks. With quotes, Python prints the literal text; without, it prints the contents:</p>
         <div class="code-block">
           <div class="code-label">Python — printing a variable</div>
-          <pre>name = "Aisha"
-print(name)        # displays: Aisha
+          <pre>name = "Blair"
+print(name)        # displays: Blair
 print("name")      # displays: name  (probably not what you wanted!)</pre>
         </div>
         <p>In SQA reference language — which is how output appears in exam papers — the same idea is written as:</p>
@@ -172,14 +172,21 @@ height = float(input("Please enter your height in metres: "))
 
 # Play it all back to them
 print("Hello " + name)
-print(age)
-print(height)</pre>
+print("You are", age, "years old")
+print("You are", height, "metres tall")</pre>
         </div>
-        <p>Notice there's no processing here at all — data in, data straight back out. The interesting bit in the middle (doing something with the data) starts on the <a href="calculations.html">Calculations</a> page.</p>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — try it yourself</em>
-          Suggestion: an embedded runnable Python editor (e.g. a Trinket/Skulpt-style widget) preloaded with the program above, so pupils can run it, change the prompts and break the casts to see what happens.
+        <p>Notice the <strong>commas</strong> in the last two prints — commas let you mix text and numbers in a single <code>print()</code>, and Python adds the spaces between them for you. (Joining a number to text with <code>+</code> would crash — <code>+</code> only joins strings to strings.)</p>
+        <p>There's no processing here at all — data in, data straight back out. The interesting bit in the middle (doing something with the data) starts on the <a href="calculations.html">Calculations</a> page.</p>
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Input &amp; Output Stepper</p>
+          <div class="ib-body">
+            <p class="ib-intro">Run the program above one line at a time. When an <code>input()</code> line runs, type your own answer in the console and watch it land in the variable box; when a <code>print()</code> line runs, watch the variable's contents come back out in the message.</p>
+            <iframe src="../resources/sdd/visualisers/input-output-stepper.html"
+                    title="Input and output stepper — step through the program line by line"
+                    loading="lazy"
+                    style="height:640px"></iframe>
+          </div>
         </div>
       </article>
 
