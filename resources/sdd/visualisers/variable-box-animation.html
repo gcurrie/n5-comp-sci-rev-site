@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Variable is a Box — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:900px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:760px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .layout{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch;margin-top:16px}
+  .panel{border:1px solid var(--line);background:var(--panel)}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- code panel ---- */
+  .codepanel{flex:1 1 300px;display:flex;flex-direction:column}
+  .codebody{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .line{
+    display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;
+    font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--ink);
+    background:#fff;border:1px solid var(--line);border-left:3px solid var(--line);padding:11px 12px;
+    transition:background .15s,border-color .15s;
+  }
+  .line .no{font-size:11px;color:var(--ink-soft);font-weight:400;width:14px}
+  .line .tick{margin-left:auto;font-size:13px;color:var(--active);visibility:hidden}
+  .line.next{border-color:var(--match-accent);border-left-color:var(--match-accent);background:var(--match-bg)}
+  .line.next:hover{filter:brightness(1.03)}
+  .line.done{border-left-color:var(--active);background:var(--active-bg);color:var(--active-strong);cursor:default}
+  .line.done .tick{visibility:visible}
+  .line.locked{opacity:.55;cursor:not-allowed}
+  .line:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+  .hint{font-size:12.5px;color:var(--ink-soft);margin:6px 0 0}
+  .hint b{color:var(--match)}
+  .btnrow{padding:0 14px 14px}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 16px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  button.ctrl:hover{filter:brightness(1.06)}
+  button.ctrl:focus-visible{outline:3px solid var(--match-bg);outline-offset:1px}
+
+  /* ---- stage ---- */
+  .stagepanel{flex:1 1 320px;display:flex;flex-direction:column}
+  .stage{flex:1;padding:22px 18px 18px;display:flex;gap:24px;align-items:flex-start;justify-content:center;flex-wrap:wrap;position:relative}
+  .boxwrap{text-align:center}
+  .varname{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--active-strong);margin-bottom:6px}
+  .box{
+    width:130px;height:110px;border:3px solid var(--active-strong);background:#fff;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;
+  }
+  .token{
+    font-family:var(--mono);font-size:34px;font-weight:700;color:var(--active-strong);
+    background:var(--active-bg);border:2px solid var(--active);padding:6px 16px;
+  }
+  .token.empty{background:none;border:none;color:var(--line);font-size:40px}
+  .token.drop{animation:drop .55s cubic-bezier(.3,.7,.4,1.15)}
+  .token.eject{animation:eject .5s ease-in forwards}
+  @keyframes drop{from{transform:translateY(-130px)}to{transform:translateY(0)}}
+  @keyframes eject{to{transform:translateY(140px) rotate(16deg);opacity:0}}
+  .boxlabel{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:8px}
+
+  .screenwrap{text-align:center}
+  .screen{width:170px;border:3px solid var(--ink);background:#0d1f17}
+  .screenbar{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--match-accent);background:var(--bar);padding:6px 8px;text-align:left}
+  .screenbody{min-height:82px;display:flex;align-items:center;justify-content:center;padding:10px}
+  .screenbody .ghost{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+  .screenbody .shown{font-family:var(--mono);font-size:34px;font-weight:700;color:#7CE3AC}
+  .screenbody .shown.pop{animation:pop .45s ease-out}
+  @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* flying copy for the display step */
+  .flyer{
+    position:absolute;font-family:var(--mono);font-size:22px;font-weight:700;color:var(--active-strong);
+    background:var(--active-bg);border:2px solid var(--active);padding:4px 12px;pointer-events:none;
+    transition:transform .8s cubic-bezier(.5,.1,.4,1),opacity .8s;z-index:5;
+  }
+
+  /* ---- narration ---- */
+  .narrate{margin-top:14px;font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate b{font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Variables</p>
+    <h1>A Variable is a Box</h1>
+    <p class="sub">The variable <b>score</b> is a labelled box that holds one value at a time. Click each highlighted line of code in order and watch what happens to the box.</p>
+  </header>
+
+  <div class="layout">
+    <section class="panel codepanel">
+      <div class="panelbar"><span>THE PROGRAM — CLICK THE HIGHLIGHTED LINE</span></div>
+      <div class="codebody" id="codebody"></div>
+      <div class="btnrow"><button class="ctrl" id="restart" type="button">Restart ↺</button></div>
+    </section>
+
+    <section class="panel stagepanel">
+      <div class="panelbar"><span>MEMORY &amp; SCREEN</span></div>
+      <div class="stage" id="stage">
+        <div class="boxwrap">
+          <div class="varname">score</div>
+          <div class="box" id="box"><span class="token empty" id="token">?</span></div>
+          <div class="boxlabel">one box · one value</div>
+        </div>
+        <div class="screenwrap">
+          <div class="screen">
+            <div class="screenbar">DISPLAY</div>
+            <div class="screenbody" id="screenbody"><span class="ghost">nothing yet</span></div>
+          </div>
+          <div class="boxlabel" style="margin-top:8px">what the user sees</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="narrate idle" id="narrate" aria-live="polite">Before line 1 runs, the box holds <b>?</b> — an uninitialised variable could contain anything. Click line 1 to begin.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const STEPS = [
+    { code:"SET score TO 0",
+      note:"<b>Initialise.</b> The 0 drops into the box, so the program starts with a known value instead of ?." },
+    { code:"SET score TO 15",
+      note:"<b>Assign.</b> A new value drops in — the 0 is knocked out. The box can only hold one value." },
+    { code:"SET score TO 20",
+      note:"<b>Overwrite.</b> The 15 is knocked out and is gone forever. There is no undo — the box now holds 20." },
+    { code:"SEND score TO DISPLAY",
+      note:"<b>Display.</b> A <em>copy</em> of the current contents floats out to the screen. The box still holds 20 — displaying a variable doesn't empty it." }
+  ];
+
+  const codebody = document.getElementById("codebody");
+  const box = document.getElementById("box");
+  const stage = document.getElementById("stage");
+  const screenbody = document.getElementById("screenbody");
+  const narrate = document.getElementById("narrate");
+  let step = 0, busy = false, token = document.getElementById("token");
+
+  const lines = STEPS.map((s, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "line";
+    b.innerHTML = '<span class="no">' + (i + 1) + '</span>' + s.code + '<span class="tick">✓</span>';
+    b.addEventListener("click", () => run(i));
+    codebody.appendChild(b);
+    return b;
+  });
+  const hint = document.createElement("p");
+  hint.className = "hint";
+  hint.innerHTML = "Line 3 is the one to watch — what happens to the <b>15</b>?";
+  codebody.appendChild(hint);
+
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  function paint(){
+    lines.forEach((b, i) => {
+      b.classList.toggle("done", i < step);
+      b.classList.toggle("next", i === step);
+      b.classList.toggle("locked", i > step);
+    });
+  }
+
+  function newToken(v){
+    token = document.createElement("span");
+    token.className = "token drop";
+    token.textContent = v;
+    box.appendChild(token);
+    postHeight();
+  }
+
+  function run(i){
+    if(busy) return;
+    if(i < step){ say("Line " + (i + 1) + " has already run — the highlighted line is next.", "warn"); return; }
+    if(i > step){ say("A program runs in order — line <b>" + (step + 1) + "</b> is next.", "warn"); return; }
+
+    busy = true;
+    const s = STEPS[i];
+
+    if(i === 0){
+      token.remove();
+      newToken(0);
+      finish(s, "");
+    } else if(i === 1 || i === 2){
+      token.classList.remove("drop");
+      token.classList.add("eject");
+      const old = token;
+      setTimeout(() => { old.remove(); newToken(i === 1 ? 15 : 20); }, 380);
+      finish(s, i === 2 ? "match" : "");
+    } else {
+      // Display: a copy flies from the box to the screen; the box keeps its value.
+      const flyer = document.createElement("span");
+      flyer.className = "flyer";
+      flyer.textContent = "20";
+      const sr = stage.getBoundingClientRect();
+      const br = box.getBoundingClientRect();
+      const dr = screenbody.getBoundingClientRect();
+      flyer.style.left = (br.left - sr.left + br.width / 2 - 24) + "px";
+      flyer.style.top = (br.top - sr.top + br.height / 2 - 18) + "px";
+      stage.appendChild(flyer);
+      requestAnimationFrame(() => {
+        flyer.style.transform = "translate(" +
+          (dr.left - br.left + (dr.width - br.width) / 2) + "px," +
+          (dr.top - br.top + (dr.height - br.height) / 2) + "px) scale(.9)";
+        flyer.style.opacity = "0.15";
+      });
+      setTimeout(() => {
+        flyer.remove();
+        screenbody.innerHTML = '<span class="shown pop">20</span>';
+      }, 780);
+      finish(s, "match");
+    }
+  }
+
+  function finish(s, cls){
+    step++;
+    paint();
+    setTimeout(() => {
+      busy = false;
+      let html = s.note;
+      if(step === STEPS.length){
+        html += " <b>Finished</b> — the display shows 20, not 15, because a variable always gives its <em>current</em> contents.";
+      }
+      say(html, cls);
+    }, 420);
+  }
+
+  document.getElementById("restart").addEventListener("click", () => {
+    step = 0; busy = false;
+    box.innerHTML = '<span class="token empty">?</span>';
+    token = box.firstChild;
+    screenbody.innerHTML = '<span class="ghost">nothing yet</span>';
+    paint();
+    say("Back to the start — the box holds <b>?</b> again. Click line 1 to begin.", "idle");
+  });
+
+  paint();
+
+  /* Auto-size the parent iframe. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Array Visualiser — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:900px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:760px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .panel{border:1px solid var(--line);background:var(--panel)}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- controls ---- */
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);padding:14px 16px;margin:16px 0 14px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+  .field input{
+    font-family:var(--mono);font-size:16px;font-weight:700;color:var(--active-strong);
+    width:104px;padding:9px 10px;border:1px solid var(--line);background:#fff;
+  }
+  .field input:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px;border-color:var(--active)}
+  button{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:11px 18px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+    transition:background .15s,border-color .15s;
+  }
+  button:hover{border-color:var(--active);background:var(--active-bg)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+  button.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C}
+  button.primary:hover{filter:brightness(1.06);background:var(--match-accent)}
+  button.display{background:var(--out);border-color:var(--out);color:#fff}
+  button.display:hover{filter:brightness(1.12);background:var(--out)}
+  .spacer{flex:1}
+
+  /* ---- the array ---- */
+  .arraypanel .body{padding:22px 16px 16px}
+  .arrname{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--active-strong);margin:0 0 10px}
+  .arrname i{font-style:normal;color:var(--ink-soft);font-weight:400;font-size:12px}
+  .cells{display:flex;justify-content:center;gap:0;flex-wrap:nowrap;overflow-x:auto}
+  .slot{text-align:center}
+  .cell{
+    width:clamp(58px,13vw,104px);height:88px;border:2.5px solid var(--active-strong);margin-left:-2.5px;
+    background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;
+    transition:background .2s;
+  }
+  .slot:first-child .cell{margin-left:0}
+  .cell .val{
+    font-family:var(--mono);font-size:clamp(18px,3vw,26px);font-weight:700;color:var(--active-strong);
+    background:var(--active-bg);border:2px solid var(--active);padding:4px 10px;
+  }
+  .cell .val.drop{animation:drop .5s cubic-bezier(.3,.7,.4,1.15)}
+  .cell .val.eject{animation:eject .45s ease-in forwards}
+  .cell.read{background:var(--out-bg)}
+  .cell.read .val{border-color:var(--out);color:var(--out);background:#fff}
+  @keyframes drop{from{transform:translateY(-110px)}to{transform:translateY(0)}}
+  @keyframes eject{to{transform:translateY(110px) rotate(14deg);opacity:0}}
+  .idx{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--match);margin-top:7px}
+  .noslot{align-self:stretch;display:flex;flex-direction:column;justify-content:flex-start;margin-left:10px;text-align:center}
+  .noslot .cell{
+    border:2.5px dashed var(--line);background:transparent;color:var(--line);
+    font-family:var(--mono);font-size:22px;font-weight:700;
+  }
+  .noslot .cell.flash{border-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .noslot .idx{color:var(--ink-soft)}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:14px;font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate.out{border-left-color:var(--out);background:var(--out-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  /* ---- program output console ---- */
+  .console{margin-top:14px}
+  .consbody{background:#0d1f17;min-height:86px;max-height:190px;overflow-y:auto;padding:12px 14px;font-family:var(--mono);font-size:12.5px;line-height:1.9}
+  .consbody .ghost{color:rgba(255,255,255,.35);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .consbody .ln{color:rgba(255,255,255,.55);display:block}
+  .consbody .ln b{color:#7CE3AC;font-weight:700}
+  .consbody .ln.err{color:#F3A0A0}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  @media(max-width:560px){
+    .controls{align-items:stretch;flex-direction:column}
+    .field input{width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Arrays</p>
+    <h1>Array Visualiser</h1>
+    <p class="sub"><b>scores</b> is an integer array with five elements. Type an index and a value, press <b>Assign</b> and watch the value land in the right box — or knock out the one already there. Press <b>Display</b> to see what comes out. Then try index <b>5</b>&hellip;</p>
+  </header>
+
+  <div class="controls">
+    <div class="field">
+      <label for="idx">Index</label>
+      <input id="idx" type="number" inputmode="numeric" placeholder="0–4" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="val">Value</label>
+      <input id="val" type="number" inputmode="numeric" placeholder="e.g. 15" autocomplete="off">
+    </div>
+    <button class="primary" id="assign" type="button">Assign ⬇</button>
+    <button class="display" id="display" type="button">Display ▶</button>
+    <div class="spacer"></div>
+    <button id="reset" type="button">Reset array</button>
+  </div>
+
+  <section class="panel arraypanel">
+    <div class="panelbar"><span>MEMORY — THE ARRAY</span></div>
+    <div class="body">
+      <p class="arrname">scores <i>— an integer array, 5 elements, indexes 0 to 4</i></p>
+      <div class="cells" id="cells"></div>
+    </div>
+  </section>
+
+  <div class="narrate idle" id="narrate" aria-live="polite">Every box starts empty. Try assigning a value to index <b>0</b> — then to index <b>4</b>. Where does the <em>fifth</em> box live?</div>
+
+  <section class="panel console">
+    <div class="panelbar"><span>PROGRAM OUTPUT — WHAT YOUR CODE JUST DID</span></div>
+    <div class="consbody" id="cons"><span class="ghost">no lines run yet</span></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const SIZE = 5;
+  const cellsBox = document.getElementById("cells");
+  const narrate = document.getElementById("narrate");
+  const cons = document.getElementById("cons");
+  const idxIn = document.getElementById("idx");
+  const valIn = document.getElementById("val");
+
+  const store = new Array(SIZE).fill(null);
+  const cells = [];
+  let phantom;   // the dashed "index 5" box that doesn't exist
+
+  for(let i = 0; i < SIZE; i++){
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.innerHTML = '<div class="cell"></div><div class="idx">index ' + i + '</div>';
+    cellsBox.appendChild(slot);
+    cells.push(slot.querySelector(".cell"));
+  }
+  const ph = document.createElement("div");
+  ph.className = "slot noslot";
+  ph.innerHTML = '<div class="cell">✗</div><div class="idx">no index 5!</div>';
+  cellsBox.appendChild(ph);
+  phantom = ph.querySelector(".cell");
+
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  function log(html, err){
+    const ghost = cons.querySelector(".ghost");
+    if(ghost) ghost.remove();
+    const ln = document.createElement("span");
+    ln.className = "ln" + (err ? " err" : "");
+    ln.innerHTML = html;
+    cons.appendChild(ln);
+    cons.scrollTop = cons.scrollHeight;
+    postHeight();
+  }
+
+  function readIndex(){
+    const raw = idxIn.value.trim();
+    if(raw === ""){
+      say("Type an <b>index</b> first — which box do you mean?", "warn");
+      idxIn.focus();
+      return null;
+    }
+    const i = Number(raw);
+    if(!Number.isInteger(i)){
+      say("An index must be a whole number — there's no box " + raw + ".", "warn");
+      return null;
+    }
+    if(i < 0 || i >= SIZE){
+      phantom.classList.add("flash");
+      setTimeout(() => phantom.classList.remove("flash"), 900);
+      log("index out of range: scores(" + i + ")", true);
+      if(i === SIZE){
+        say("<b>✗ Index out of range.</b> There are five boxes, but because counting starts at <b>0</b> the last one is <code>scores(4)</code> — there is no <code>scores(5)</code>. This is the classic <em>off-by-one</em> mistake.", "warn");
+      } else {
+        say("<b>✗ Index out of range.</b> This array's boxes are numbered <b>0 to 4</b> — index " + i + " doesn't exist.", "warn");
+      }
+      return null;
+    }
+    return i;
+  }
+
+  function assign(){
+    const i = readIndex();
+    if(i === null) return;
+    const raw = valIn.value.trim();
+    if(raw === ""){
+      say("Type a <b>value</b> to put in the box.", "warn");
+      valIn.focus();
+      return;
+    }
+    const v = Number(raw);
+    if(!Number.isInteger(v)){
+      say("<code>scores</code> is an <b>integer</b> array — every element must be a whole number, so " + raw + " won't fit.", "warn");
+      return;
+    }
+
+    const cell = cells[i];
+    const old = store[i];
+    store[i] = v;
+    log("SET scores(" + i + ") TO " + v);
+
+    const place = () => {
+      const t = document.createElement("span");
+      t.className = "val drop";
+      t.textContent = v;
+      cell.appendChild(t);
+    };
+    if(old !== null){
+      const oldEl = cell.querySelector(".val");
+      oldEl.classList.remove("drop");
+      oldEl.classList.add("eject");
+      setTimeout(() => { oldEl.remove(); place(); }, 340);
+      say("<b>✓ Overwritten.</b> The " + old + " in box " + i + " was knocked out — gone forever. <code>scores(" + i + ")</code> now holds <b>" + v + "</b>.", "match");
+    } else {
+      place();
+      say("<b>✓ Assigned.</b> The " + v + " landed in box " + i + ". <code>scores(" + i + ")</code> now holds <b>" + v + "</b>.", "");
+    }
+  }
+
+  function display(){
+    const i = readIndex();
+    if(i === null) return;
+    const cell = cells[i];
+    if(store[i] === null){
+      log("SEND scores(" + i + ") TO DISPLAY", true);
+      say("<b>Box " + i + " is empty</b> — nothing has been assigned to <code>scores(" + i + ")</code> yet, so there's nothing to display.", "warn");
+      return;
+    }
+    cell.classList.add("read");
+    setTimeout(() => cell.classList.remove("read"), 900);
+    log("SEND scores(" + i + ") TO DISPLAY&nbsp;&nbsp;▸&nbsp;&nbsp;<b>" + store[i] + "</b>");
+    say("<b>✓ Displayed.</b> A <em>copy</em> of <code>scores(" + i + ")</code> came out — the box still holds <b>" + store[i] + "</b>. Displaying never empties a box.", "out");
+  }
+
+  document.getElementById("assign").addEventListener("click", assign);
+  document.getElementById("display").addEventListener("click", display);
+  valIn.addEventListener("keydown", e => { if(e.key === "Enter") assign(); });
+  idxIn.addEventListener("keydown", e => { if(e.key === "Enter") assign(); });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    store.fill(null);
+    cells.forEach(c => c.innerHTML = "");
+    cons.innerHTML = '<span class="ghost">no lines run yet</span>';
+    say("Array cleared — every box is empty again.", "idle");
+  });
+
+  /* Auto-size the parent iframe. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

@@ -53,6 +53,7 @@
           <li><a href="#variables-python">Variables in Python</a></li>
           <li><a href="#arrays">Arrays</a></li>
           <li><a href="#arrays-python">Arrays in Python</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -96,21 +97,17 @@
 
       <article>
         <h2 id="choosing">Choosing the Most Suitable Data Type</h2>
-        <p>Exam questions love to describe a program and ask you to identify the most suitable data type for each piece of data. Think about what the data <em>is</em>, not what it looks like:</p>
+        <p>Exam questions will describe a program and ask you to identify the most suitable data type for each piece of data. Think about what the data <em>is</em>, not what it looks like:</p>
         <div class="example-block">
           <div class="example-label">Example — spotting data types on a game screen</div>
+          <img src="../resources/sdd/images/dt_1.png" alt="A screenshot from the game Fortnite with labels pointing at on-screen values: the compass direction E at the top of the screen, the numbers 45 and 2 beside the minimap, the number 122 in the materials counter, and the player names in the top-left corner." class="zoomable" style="display:block;margin:.75rem auto;max-width:100%;" />
           <ul>
-            <li>The grade <strong>"E"</strong> is a <strong>character</strong> — a single letter.</li>
-            <li><strong>45, 2 and 122</strong> (lives, level, coins) are <strong>integers</strong> — whole numbers.</li>
+            <li>The compass direction <strong>"E"</strong> is a <strong>character</strong> — a single letter.</li>
+            <li><strong>45, 2 and 122</strong> (players left, eliminations, wood collected) are <strong>integers</strong> — whole numbers.</li>
             <li>The <strong>player names</strong> are <strong>strings</strong> — we use a string whenever we want to store text.</li>
-            <li>The rating <strong>8.1</strong> is a <strong>real</strong> — it has a decimal point.</li>
-            <li>Whether the game is <strong>saved</strong> is a <strong>Boolean</strong> — it can only be true or false.</li>
+            <li>Two types aren't labelled on screen, but the game still uses them: its review rating of <strong>8.1</strong> would be a <strong>real</strong> — it has a decimal point…</li>
+            <li>…and whether the game has been <strong>saved</strong> would be a <strong>Boolean</strong> — it can only be true or false.</li>
           </ul>
-          <div class="img-placeholder">
-            <span class="ph-icon">📷</span>
-            <em>Placeholder — image</em>
-            Suggestion: annotated video game screenshot(s) with arrows labelling each on-screen value with its data type — the character grade, integer scores, string names, real rating and Boolean save status.
-          </div>
         </div>
 
         <div class="example-block">
@@ -129,7 +126,42 @@
         </div>
 
         <h3>Watch out for "numbers" that are really text</h3>
-        <p>A phone number like <code>07700 900123</code> looks numeric, but you'd store it as a <strong>string</strong> — you never do maths with it, and storing it as a number would lose the leading 0. Same goes for postcodes. Ask yourself: <em>will the program ever calculate with this?</em> If not, it's probably a string.</p>
+        <p>A phone number like <code>07700 900123</code> looks numeric, but you'd store it as a <strong>string</strong>. Storing it as a number would lose the leading 0. Same goes for postcodes. Ask yourself: <em>will the program ever calculate with this?</em> If not, it's probably a string.</p>
+
+        <p>Now try three past paper questions — read each one and jot down your own answer before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Q1 — True or False Response (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_dt_q1.png" alt="Past paper question: a question in a program requires a true or false response. State the most suitable data type for storing this response. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> The words "true or false" are the giveaway. Only one data type exists purely to store TRUE or FALSE and nothing else. We don't overthink a 1-mark question — one word is the answer.</p>
+          <p>Watch the trap: "yes/no" or "true" is a <em>value</em>, not a data type. The exam wants the name of the type itself.</p>
+          <img src="../resources/sdd/worked_examples/n5_dt_q1_ans.png" alt="Marking instructions: Boolean, 1 mark." class="zoomable" />
+          <p>The answer is:</p>
+          <p style="color:#6A1B9A;"><strong>Boolean</strong></p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Paper Q12 b) — Total Number of Passengers (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_dt_q2.png" alt="Past paper question: the total number of passengers is set to 0.00 in the design. State a more appropriate data type to store the total number of passengers. Give a reason for your answer. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> The design used <code>0.00</code> — a value with a decimal point, which means a real. So we ask the key question: does a total number of passengers ever need a decimal point? No. Passengers are people, and you can't have half a person — a whole-number count means <strong>integer</strong>.</p>
+          <p>Two marks means two parts: one for the data type, one for the reason. The reason must talk about the <em>data itself</em> — "passengers are whole numbers" — not just "it's more suitable". Notice this is the average trap in reverse: there, whole numbers produce a real; here, a real was wrongly used for a whole-number count.</p>
+          <img src="../resources/sdd/worked_examples/n5_dt_q2_ans.png" alt="Marking instructions: data type — integer; reason — passengers/people are whole numbers. 2 marks." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;"><strong>Data type</strong> — integer<br/><strong>Reason</strong> — passengers are people, so the total will always be a whole number.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2024 Q1 — Boxed Chocolates (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_dt_q3.png" alt="Past paper question: a confectionery company requires a program to store information about boxed chocolates. Complete the table below to state which types of variable should be used. The table lists the variables chocolateName, inStock — already completed as Boolean — and numberOfChocolatesInBox. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> One row is already filled in for us — <code>inStock</code> is a Boolean, because a box either is in stock or it isn't. That leaves two rows, worth a mark each. For each variable we ask the same question: what kind of data would it hold?</p>
+          <ul>
+            <li><code>chocolateName</code> holds text — a name like "Salted Caramel" — so it's a <strong>string</strong>.</li>
+            <li><code>numberOfChocolatesInBox</code> is a count — you can't have 12.5 chocolates in a box — so it's an <strong>integer</strong>.</li>
+          </ul>
+          <img src="../resources/sdd/worked_examples/n5_dt_q3_ans.png" alt="Marking instructions: string and integer, accept str and int. chocolateName: string, numberOfChocolatesInBox: integer. 2 marks." class="zoomable" />
+          <p>The answer would be:</p>
+          <p style="color:#6A1B9A;">chocolateName — string<br/>numberOfChocolatesInBox — integer</p>
+        </div>
       </article>
 
       <article>
@@ -166,10 +198,16 @@ SET found TO FALSE          SET found TO TRUE</pre>
 
         <h3>How variables fit into a program</h3>
         <p>Declare one variable for <strong>each piece of information</strong> the program needs to remember. A program that asks 100m sprinters for their name and their times in two heats, then works out their best time, needs four variables: <code>runnerName</code>, <code>heat1Time</code>, <code>heat2Time</code> and <code>bestTime</code>.</p>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎞️</span>
-          <em>Placeholder — animation</em>
-          Suggestion: "variable as a box" animation — a labelled box called score; a value drops in (assign), a new value knocks the old one out (overwrite), and a copy floats out to the screen (display). Simple but makes the overwrite behaviour stick.
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">A Variable is a Box</p>
+          <div class="ib-body">
+            <p class="ib-intro">The variable's life story, animated. Run the four lines of code one at a time and watch the box called <code>score</code>: a value drops in when you assign, the old value gets knocked out when you overwrite, and a copy floats out to the screen when you display.</p>
+            <iframe src="../resources/sdd/visualisers/variable-box-animation.html"
+                    title="A variable is a box — click-to-step animation"
+                    loading="lazy"
+                    style="height:560px"></iframe>
+          </div>
         </div>
       </article>
 
@@ -188,12 +226,11 @@ teacher = True            # Boolean
 print(name)
 print(age)</pre>
         </div>
-        <p>(Yes, all entirely accurate data. No further questions.)</p>
       </article>
 
       <article>
         <h2 id="arrays">Arrays</h2>
-        <p>Variables are great — until you need to store the test scores of a whole class. Thirty variables called <code>score1</code> to <code>score30</code>? No thanks. When you have <strong>several similar items of the same type</strong>, you want an <strong>array</strong>.</p>
+        <p>Variables are useful, until you need to store the test scores of a whole class. Twenty variables called <code>score1</code> to <code>score20</code> are inefficient, and easy to make a mistake with. When you have <strong>several similar items of the same type</strong>, you want an <strong>array</strong>.</p>
         <p>An array is a <strong>data structure</strong>: one name, holding a whole list of values. Declaring an array needs three things:</p>
         <ul>
           <li>a <strong>meaningful name</strong> — e.g. <code>ages</code> for storing pupil ages</li>
@@ -235,10 +272,29 @@ SET ages(3) TO 14        &lt;# the 12 is overwritten — position 3 now holds 14
 SEND ages(3) TO DISPLAY  &lt;# displays 14 #&gt;</pre>
         </div>
         <p>Everything you know about variables still applies: assigning to a position overwrites what was there, and using a position gives you its current contents.</p>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — visualiser</em>
-          Suggestion: an interactive array visualiser — a row of boxes where pupils type an index and a value, click "assign", and watch the value land in (or overwrite) the right box; a "display" button shows what comes out. Reinforces zero-indexing by making off-by-one mistakes visible.
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Array Visualiser</p>
+          <div class="ib-body">
+            <p class="ib-intro">Five boxes, indexes 0 to 4. Type an index and a value, press <strong>Assign</strong> and watch the value land in — or overwrite — the right box; press <strong>Display</strong> to see what comes out. Then try index 5 and see exactly why off-by-one mistakes lose marks.</p>
+            <iframe src="../resources/sdd/visualisers/array-visualiser.html"
+                    title="Array visualiser — assign and display elements"
+                    loading="lazy"
+                    style="height:620px"></iframe>
+          </div>
+        </div>
+
+        <p>Now try a real past paper question — jot down your own answer before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Specimen Q11 b) — Spelling Game Words (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_array_q1.png" alt="Past paper question: the spelling game stores 20 words. State the data structure and data type that will be required to store the 20 words. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> There are two clues, one for each mark. "20 words" means twenty similar items stored together — a variable only holds a <em>single</em> value, so we need a data structure that holds several: an <strong>array</strong>. And the items themselves are words — text — so the data type is <strong>string</strong>.</p>
+          <p>Watch the trap: "array" alone isn't the full answer, and neither is "string". The question asks for the structure <em>and</em> the type — an array <em>of strings</em>.</p>
+          <img src="../resources/sdd/worked_examples/n5_array_q1_ans.png" alt="Marking instructions: data structure — array; data type — string. 2 marks." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;"><strong>Data structure</strong> — array<br/><strong>Data type</strong> — string</p>
         </div>
       </article>
 
@@ -291,6 +347,83 @@ scores[6] = scores[2] + 1  # element 2, plus one</pre>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
           <div>Accessing elements one at a time is only half the story. The real power move — visiting <em>every</em> element with a loop — is one of the three standard algorithms, and it has its own section on the <a href="standard-algorithms.html">Standard Algorithms</a> page.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>Each of these follows the style of one of the worked examples above. Write your answer down before opening the marking instructions.</p>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Taxi Booking App (1 mark)</div>
+          <p>A taxi booking app stores each customer's mobile phone number.</p>
+          <p>State the most suitable data type for storing a mobile phone number.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>String</strong> (1 mark)</p>
+              <p style="color:#6A1B9A;">A phone number looks numeric, but the program never calculates with it — and storing it as a number would lose the leading 0. Do not accept integer.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Football Statistics (2 marks)</div>
+          <p>A program works out the average number of goals a team scores per match over a season. In the design, the average is set to 0 and stored as an integer.</p>
+          <p>State a more appropriate data type to store the average number of goals. Give a reason for your answer.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li><strong>Data type</strong> — real</li>
+                <li><strong>Reason</strong> — an average involves division, so the result will usually have a decimal point (e.g. 1.4 goals per match)</li>
+              </ul>
+              <p style="color:#6A1B9A;">The reason must mention the data itself — "real is better" or "it's more suitable" earns nothing on its own.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — T-Shirt Shop (2 marks)</div>
+          <p>An online shop requires a program to store information about its T-shirts. Sizes are stored as a single letter — S, M or L.</p>
+          <p>Complete the table below to state which types of variable should be used.</p>
+          <table style="max-width:34rem;">
+            <thead><tr><th>Variable</th><th>Type of variable</th></tr></thead>
+            <tbody>
+              <tr><td><code>sizeCode</code></td><td></td></tr>
+              <tr><td><code>numberInStock</code></td><td>Integer</td></tr>
+              <tr><td><code>price</code></td><td></td></tr>
+            </tbody>
+          </table>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li><code>sizeCode</code> — <strong>character</strong> (a single letter — S, M or L)</li>
+                <li><code>price</code> — <strong>real</strong> (prices like &pound;12.99 need a decimal point)</li>
+              </ul>
+              <p style="color:#6A1B9A;">Accept char. Do not accept string for sizeCode — the question states the size is a single letter.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Sports Day (2 marks)</div>
+          <p>A sports day program stores the finishing times, in seconds, of the 30 pupils who ran the 100&nbsp;m sprint.</p>
+          <p>State the data structure and data type that will be required to store the 30 finishing times.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li><strong>Data structure</strong> — array</li>
+                <li><strong>Data type</strong> — real</li>
+              </ul>
+              <p style="color:#6A1B9A;">Thirty similar items under one name means an array — but the times are measured values like 14.62 seconds, so each element is a real, not an integer or a string.</p>
+            </div>
+          </details>
         </div>
       </article>
 
