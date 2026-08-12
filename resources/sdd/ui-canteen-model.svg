@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 570" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="ckTitle ckDesc">
+  <title id="ckTitle">Example Answer — Canteen Kiosk User Interface</title>
+  <desc id="ckDesc">An example full-mark answer for the canteen kiosk question, drawn as a touchscreen wireframe. The screen shows three questions, each answered by tapping buttons: Which meal would you like today, with Pizza, Pasta and Salad buttons; Would you like a drink included, with Yes and No buttons; and What rating would you give yesterday's lunch, with buttons numbered 1 to 5. A gold Submit order button sits at the bottom. Annotations map each control to one of the four marks: selection of meal, drink yes or no, the numbers 1 to 5, and the option to submit the order. A note says every answer is a tap, so nothing needs to be typed.</desc>
+
+  <!-- panel -->
+  <rect x="1" y="1" width="898" height="568" fill="#F8F7F2" stroke="#D1D5DB" stroke-width="2"/>
+
+  <!-- heading -->
+  <text x="450" y="46" text-anchor="middle" font-size="24" font-weight="800" fill="#00442A" letter-spacing="-0.4">Example Answer — Canteen Kiosk UI</text>
+  <text x="450" y="72" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="2.2" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">EVERY ANSWER IS A TAP &#183; NOTHING IS TYPED</text>
+
+  <!-- ================= kiosk screen ================= -->
+  <rect x="60" y="95" width="510" height="430" rx="14" fill="#FFFFFF" stroke="#001810" stroke-width="3"/>
+  <rect x="74" y="107" width="482" height="36" fill="#00442A"/>
+  <text x="315" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Lunch Order</text>
+
+  <!-- Q1 -->
+  <text x="88" y="175" font-size="13.5" font-weight="600" fill="#1A1A1A">Which meal would you like today?</text>
+  <rect x="88" y="186" width="140" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="158" y="211" text-anchor="middle" font-size="13" font-weight="700" fill="#00442A">Pizza</text>
+  <rect x="238" y="186" width="140" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="308" y="211" text-anchor="middle" font-size="13" font-weight="700" fill="#00442A">Pasta</text>
+  <rect x="388" y="186" width="140" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="458" y="211" text-anchor="middle" font-size="13" font-weight="700" fill="#00442A">Salad</text>
+
+  <!-- Q2 -->
+  <text x="88" y="262" font-size="13.5" font-weight="600" fill="#1A1A1A">Would you like a drink included?</text>
+  <rect x="88" y="273" width="100" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="138" y="298" text-anchor="middle" font-size="13" font-weight="700" fill="#00442A">Yes</text>
+  <rect x="200" y="273" width="100" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="250" y="298" text-anchor="middle" font-size="13" font-weight="700" fill="#00442A">No</text>
+
+  <!-- Q3 -->
+  <text x="88" y="349" font-size="13.5" font-weight="600" fill="#1A1A1A">What rating would you give yesterday's lunch?</text>
+  <g font-size="13.5" font-weight="700">
+    <rect x="88"  y="360" width="40" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+    <text x="108" y="385" text-anchor="middle" fill="#00442A">1</text>
+    <rect x="138" y="360" width="40" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+    <text x="158" y="385" text-anchor="middle" fill="#00442A">2</text>
+    <rect x="188" y="360" width="40" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+    <text x="208" y="385" text-anchor="middle" fill="#00442A">3</text>
+    <rect x="238" y="360" width="40" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+    <text x="258" y="385" text-anchor="middle" fill="#00442A">4</text>
+    <rect x="288" y="360" width="40" height="40" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+    <text x="308" y="385" text-anchor="middle" fill="#00442A">5</text>
+  </g>
+
+  <!-- Submit -->
+  <rect x="88" y="436" width="312" height="44" fill="#C9A227"/>
+  <text x="244" y="463" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1.4" fill="#002D1C"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">SUBMIT ORDER &#9656;</text>
+
+  <!-- ================= annotations (one per mark) ================= -->
+  <line x1="528" y1="206" x2="620" y2="196" stroke="#1B6B45" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="528" cy="206" r="3.5" fill="#1B6B45"/>
+  <text x="630" y="190" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">MARK 1 &#183; INPUT</text>
+  <text x="630" y="207" font-size="12.5" fill="#1A1A1A">Selection of meal — one button</text>
+  <text x="630" y="223" font-size="12.5" fill="#1A1A1A">per choice on today's menu</text>
+
+  <line x1="300" y1="293" x2="620" y2="282" stroke="#1B6B45" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="300" cy="293" r="3.5" fill="#1B6B45"/>
+  <text x="630" y="276" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">MARK 2 &#183; INPUT</text>
+  <text x="630" y="293" font-size="12.5" fill="#1A1A1A">Drink included — a simple</text>
+  <text x="630" y="309" font-size="12.5" fill="#1A1A1A">yes/no choice of buttons</text>
+
+  <line x1="328" y1="380" x2="620" y2="368" stroke="#1B6B45" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="328" cy="380" r="3.5" fill="#1B6B45"/>
+  <text x="630" y="362" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#1B6B45"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">MARK 3 &#183; INPUT</text>
+  <text x="630" y="379" font-size="12.5" fill="#1A1A1A">The numbers 1 to 5 — tapped,</text>
+  <text x="630" y="395" font-size="12.5" fill="#1A1A1A">not typed</text>
+
+  <line x1="400" y1="458" x2="620" y2="452" stroke="#92750A" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="400" cy="458" r="3.5" fill="#92750A"/>
+  <text x="630" y="446" font-size="10.5" font-weight="700" letter-spacing="1.6" fill="#92750A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">MARK 4 &#183; BUTTON</text>
+  <text x="630" y="463" font-size="12.5" fill="#1A1A1A">Submit the order so the</text>
+  <text x="630" y="479" font-size="12.5" fill="#1A1A1A">next pupil can start</text>
+
+  <!-- note -->
+  <text x="450" y="552" text-anchor="middle" font-size="12" font-style="italic" fill="#4A5568">The question said "touchscreen" and "as quickly as possible" — so every answer is a tap on a button. Nothing needs to be typed.</text>
+</svg>

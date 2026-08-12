@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 540" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="jbTitle jbDesc">
+  <title id="jbTitle">Juice Bar Kiosk — User Interface Design</title>
+  <desc id="jbDesc">A touchscreen kiosk interface for ordering smoothies. The screen shows an instruction reading tap a smoothie, then enter how many you would like, from 1 to 5. Below are four smoothie buttons: Berry Blast, Mango Magic, Green Machine and Tropical Twist. A second instruction reads press PAY to finish your order. At the bottom is a single HELP button. Nothing else appears on the screen.</desc>
+
+  <!-- panel -->
+  <rect x="1" y="1" width="558" height="538" fill="#F8F7F2" stroke="#D1D5DB" stroke-width="2"/>
+
+  <!-- ================= kiosk screen ================= -->
+  <rect x="110" y="30" width="340" height="480" rx="14" fill="#FFFFFF" stroke="#001810" stroke-width="3"/>
+  <rect x="124" y="42" width="312" height="36" fill="#00442A"/>
+  <text x="280" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Smoothie Kiosk</text>
+
+  <!-- instruction 1 -->
+  <text x="280" y="112" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A1A">Tap a smoothie, then enter how</text>
+  <text x="280" y="130" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A1A">many you would like (1&#8211;5)</text>
+
+  <!-- smoothie buttons (2 x 2) -->
+  <rect x="138" y="152" width="135" height="48" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="205" y="181" text-anchor="middle" font-size="12.5" font-weight="700" fill="#00442A">Berry Blast</text>
+  <rect x="287" y="152" width="135" height="48" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="354" y="181" text-anchor="middle" font-size="12.5" font-weight="700" fill="#00442A">Mango Magic</text>
+  <rect x="138" y="214" width="135" height="48" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="205" y="243" text-anchor="middle" font-size="12.5" font-weight="700" fill="#00442A">Green Machine</text>
+  <rect x="287" y="214" width="135" height="48" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>
+  <text x="354" y="243" text-anchor="middle" font-size="12.5" font-weight="700" fill="#00442A">Tropical Twist</text>
+
+  <!-- instruction 2 -->
+  <text x="280" y="320" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A1A">Press PAY to finish your order</text>
+
+  <!-- help button -->
+  <rect x="200" y="410" width="160" height="48" fill="#FEF3C7" stroke="#C9A227" stroke-width="1.5"/>
+  <text x="280" y="439" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="1.4" fill="#92750A"
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">HELP</text>
+</svg>
