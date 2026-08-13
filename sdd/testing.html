@@ -100,7 +100,7 @@
         <p>Here's a past paper question that looks easy and catches people out constantly. Write your two values down before opening it.</p>
 
         <div class="worked-example">
-          <div class="q-label">Past Paper — Rolling Two Dice (2 marks)</div>
+          <div class="q-label">2019 Q7 a) — Rolling Two Dice (2 marks)</div>
           <img src="../resources/sdd/worked_examples/n5_test_data_q2.png" alt="Past paper question: part of a program requires a user to input the total score achieved when they roll a pair of six-sided dice. For example, if the user rolled a 4 and a 1 they would input 5. Part a: state the extreme values required to test this part of the program. 2 marks." class="zoomable" />
           <p><strong>How to tackle it:</strong> Extreme data sits on the <em>edges of what is allowed</em>, so our job is to find the smallest and largest values the program should accept. Before we can do that we have to be clear about one thing: <strong>what is the user actually typing in?</strong></p>
           <p>Read the question again. The user isn't entering one dice roll — they're entering the <strong>total</strong> of two. So we work the edges out from there:</p>
@@ -281,7 +281,7 @@ print("Hello", age, ". You are", name, "years old.")
         <p>Exam questions often hand you a short piece of code containing more than one fault and ask you to name both. Read the code below and write down your two answers before opening the walkthrough.</p>
 
         <div class="worked-example">
-          <div class="q-label">Past Paper — Displaying a Name (2 marks)</div>
+          <div class="q-label">Specimen Paper Q2 — Displaying a Name (2 marks)</div>
           <img src="../resources/sdd/worked_examples/n5_err_types_q1.png" alt="Past paper question: the code below should receive input and display a user's name. Line 3 DECLARE name INITIALLY empty string. Line 4 SEND Please type in your name TO DISPLAY. Line 5 SD Your name is and name TO DISPLAY. Line 6 RECEIVE name FROM KEYBOARD. Identify the syntax error and logic error in the program code above. 2 marks." class="zoomable" />
           <p><strong>How to tackle it:</strong> Two marks, and the question names the two error types for us — one syntax, one logic. That's a useful hint in itself: we're looking for one thing that <em>breaks the rules of the language</em>, and one thing that is perfectly legal but <em>does the wrong thing</em>. They will not be the same line.</p>
           <p><strong>The syntax error — check the keywords.</strong> Line 3's <code>DECLARE … INITIALLY</code> is fine. Line 4's <code>SEND … TO DISPLAY</code> is fine. Line 6's <code>RECEIVE … FROM KEYBOARD</code> is fine. Line 5 begins <code>SD</code> — and there is no such keyword. It should be <code>SEND</code>. The translator would stop right there and refuse to run the program.</p>
@@ -378,7 +378,7 @@ print("Hello", age, ". You are", name, "years old.")
         <p>These questions are usually worth a single mark and take about ten seconds — <em>if</em> you keep the two questions in your head. Here's one where the wording is deliberately slippery.</p>
 
         <div class="worked-example">
-          <div class="q-label">Past Paper — AND Instead of OR (1 mark)</div>
+          <div class="q-label">2022 Q9 c) (iv) — AND Instead of OR (1 mark)</div>
           <img src="../resources/sdd/worked_examples/n5_err_types_q2.png" alt="Past paper question, part four: line 11 should have used AND instead of OR. State the type of error that using OR would cause when the program is executed. 1 mark." class="zoomable" />
           <p><strong>How to tackle it:</strong> Run the two questions in order.</p>
           <p><em>Did it run?</em> Yes. <code>OR</code> is a real logical operator, correctly spelled and in a sensible place — the translator has nothing to complain about. So it isn't a syntax error.</p>

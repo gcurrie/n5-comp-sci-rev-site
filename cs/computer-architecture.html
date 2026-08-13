@@ -42,7 +42,6 @@
           <li><a href="#processor">The Parts of the Processor</a></li>
           <li><a href="#memory-buses">Memory &amp; the Buses</a></li>
           <li><a href="#translators">Translators</a></li>
-          <li><a href="#worked">Worked Examples</a></li>
           <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
@@ -83,47 +82,9 @@
           </tbody>
         </table>
         <p>Here's the connection to your own programs: every time your Python code does <code>total = num1 + num2</code> or checks <code>if age &gt;= 17:</code>, that's the <strong>ALU</strong> doing the adding and comparing — with the values sitting in <strong>registers</strong> while it works, and the <strong>control unit</strong> conducting the whole orchestra.</p>
-      </article>
 
-      <article>
-        <h2 id="memory-buses">Memory &amp; the Buses</h2>
-        <p>The processor is fast but tiny — it can't hold your whole program. Programs and their data live in <strong>main memory</strong>, which is divided into <strong>memory locations, each with its own unique address</strong> (like houses on a very long street). When the processor needs something, it fetches it from memory — and that transfer happens along two <strong>buses</strong>:</p>
-        <ul>
-          <li>The <strong>address bus</strong> carries the <strong>address</strong> of the memory location being accessed, from the processor <em>to</em> memory — "I want what's at address 3,000,000, please."</li>
-          <li>The <strong>data bus</strong> carries the <strong>actual data</strong> between the processor and that location — the value itself making the journey.</li>
-        </ul>
-        <img src="../resources/cs/computer-architecture.svg" alt="Computer architecture diagram: processor containing registers, ALU and control unit, connected to memory locations by the address bus and data bus." class="zoomable" style="max-width:100%;" />
-        <div class="callout callout-tip">
-          <div class="callout-icon">💡</div>
-          <div>An easy way to keep the buses straight: the address bus asks <strong>where</strong>, the data bus carries <strong>what</strong>. Address = location; data = contents.</div>
-        </div>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎞️</span>
-          <em>Placeholder — animation</em>
-          Suggestion: an animated fetch — the processor sends an address pulse along the address bus to a highlighted memory location, and the value travels back along the data bus into a register. A "store" mode could show the data travelling the other way.
-        </div>
-      </article>
-
-      <article>
-        <h2 id="translators">Translators — Interpreters &amp; Compilers</h2>
-        <p>We write our programs in Python. Python is easy for <em>us</em> to read (it looks a bit like English), but the processor only understands <strong>machine code</strong> — binary 1s and 0s. So before any program can run, it must be <strong>translated</strong>. The software that does this is a <strong>translator</strong>, and there are two kinds:</p>
-        <table>
-          <thead><tr><th></th><th>Interpreter</th><th>Compiler</th></tr></thead>
-          <tbody>
-            <tr><td><strong>How it translates</strong></td><td><strong>Line-by-line</strong>, every time the program runs</td><td>The <strong>whole program at once</strong>, producing a machine-code version</td></tr>
-            <tr><td><strong>Advantages</strong></td><td>Errors are reported <strong>live</strong>, line by line, as they happen — great while writing and fixing code</td><td>Once compiled, the program <strong>runs fast</strong> — and it can be run again and again <strong>without any further translation</strong></td></tr>
-            <tr><td><strong>Disadvantages</strong></td><td><strong>Slower to run</strong> — every line is re-translated on every run (a loop that repeats 4 times is translated 4 times!)</td><td>You must <strong>wait for the whole program to compile</strong> before running it; all the errors arrive in one big list at the end</td></tr>
-          </tbody>
-        </table>
-        <p>What we use — Python — is <strong>interpreted</strong>: that's why you see your errors "live" as they happen. Finished software that you download is <strong>compiled</strong>: it was translated once by the developers, and your machine just runs the machine code.</p>
-        <div class="callout callout-tip">
-          <div class="callout-icon">💡</div>
-          <div>The killer fact examiners love: an interpreter translates a loop <strong>every time it repeats</strong>, but a compiler translates it <strong>once</strong>. If a question mentions how often a loop gets translated, that's your clue — see the 2023 worked example below.</div>
-        </div>
-      </article>
-
-      <article>
-        <h2 id="worked">Worked Examples</h2>
+        <h3>Worked examples</h3>
+        <p>Both of these hand you a job description and ask for the name of the part. Write your answer down before opening each one.</p>
 
         <div class="worked-example">
           <div class="q-label">2023 Q7(b) — Which Part Compares? (1 mark)</div>
@@ -144,6 +105,52 @@
           <img src="../resources/cs/images/cs_comp-arch_2025_q9c_ans.png" alt="Marking instructions: (i) ALU (Arithmetic Logic Unit), (ii) Register(s)." class="zoomable" />
           <p>Notice how the question hands you the job description and asks for the name — that's why learning the parts <em>as</em> job descriptions pays off.</p>
         </div>
+      </article>
+
+      <article>
+        <h2 id="memory-buses">Memory &amp; the Buses</h2>
+        <p>The processor is fast but tiny — it can't hold your whole program. Programs and their data live in <strong>main memory</strong>, which is divided into <strong>memory locations, each with its own unique address</strong> (like houses on a very long street). When the processor needs something, it fetches it from memory — and that transfer happens along two <strong>buses</strong>:</p>
+        <ul>
+          <li>The <strong>address bus</strong> carries the <strong>address</strong> of the memory location being accessed, from the processor <em>to</em> memory — "I want what's at address 3,000,000, please."</li>
+          <li>The <strong>data bus</strong> carries the <strong>actual data</strong> between the processor and that location — the value itself making the journey.</li>
+        </ul>
+        <img src="../resources/cs/computer-architecture.svg" alt="Computer architecture diagram: processor containing registers, ALU and control unit, connected to memory locations by the address bus and data bus." class="zoomable" style="max-width:100%;" />
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>An easy way to keep the buses straight: the address bus asks <strong>where</strong>, the data bus carries <strong>what</strong>. Address = location; data = contents.</div>
+        </div>
+        <div class="interactive-block">
+          <div class="ib-label">Animation</div>
+          <p class="ib-title">The Address &amp; Data Buses</p>
+          <div class="ib-body">
+            <p class="ib-intro">Step through a value's journey between the processor and memory. Fetch a value and it comes back along the data bus into a register; switch to <strong>Store</strong> and watch the data bus reverse — while the address bus carries on running the same way it always does. Pick any address to prove that each location is found by its own unique number.</p>
+            <iframe src="../resources/cs/visualisers/address-data-buses.html"
+                    title="Address and data buses — step through a fetch and a store"
+                    loading="lazy"
+                    style="height:720px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="translators">Translators — Interpreters &amp; Compilers</h2>
+        <p>We write our programs in Python. Python is easy for <em>us</em> to read (it looks a bit like English), but the processor only understands <strong>machine code</strong> — binary 1s and 0s. So before any program can run, it must be <strong>translated</strong>. The software that does this is a <strong>translator</strong>, and there are two kinds:</p>
+        <table>
+          <thead><tr><th></th><th>Interpreter</th><th>Compiler</th></tr></thead>
+          <tbody>
+            <tr><td><strong>How it translates</strong></td><td><strong>Line-by-line</strong>, every time the program runs</td><td>The <strong>whole program at once</strong>, producing a machine-code version</td></tr>
+            <tr><td><strong>Advantages</strong></td><td>Errors are reported <strong>live</strong>, line by line, as they happen — great while writing and fixing code</td><td>Once compiled, the program <strong>runs fast</strong> — and it can be run again and again <strong>without any further translation</strong></td></tr>
+            <tr><td><strong>Disadvantages</strong></td><td><strong>Slower to run</strong> — every line is re-translated on every run (a loop that repeats 4 times is translated 4 times!)</td><td>You must <strong>wait for the whole program to compile</strong> before running it; all the errors arrive in one big list at the end</td></tr>
+          </tbody>
+        </table>
+        <p>What we use — Python — is <strong>interpreted</strong>: that's why you see your errors "live" as they happen. Finished software that you download is <strong>compiled</strong>: it was translated once by the developers, and your machine just runs the machine code.</p>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>The killer fact examiners love: an interpreter translates a loop <strong>every time it repeats</strong>, but a compiler translates it <strong>once</strong>. If a question mentions how often a loop gets translated, that's your clue — as the first worked example below shows.</div>
+        </div>
+
+        <h3>Worked examples</h3>
+        <p>Translator questions are nearly always decided by a single phrase in the question. See if you can spot it in each of these before opening the walkthrough.</p>
 
         <div class="worked-example">
           <div class="q-label">2023 Q11(c) — Complete the Translator Table (2 marks)</div>

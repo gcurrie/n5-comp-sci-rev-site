@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Database Design &amp; Development</div>
     <h1>Database Introduction</h1>
-    <p>Fields, records and tables — the key terminology of databases, and the attribute types used at National 5.</p>
+    <p>What a database actually is, where you have been using them without noticing — and the key terminology of fields, records, tables and attribute types.</p>
   </div>
 </section>
 <main class="page-content">
@@ -41,6 +41,8 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#real-world">Databases You Already Use</a></li>
           <li><a href="#terminology">Key Terminology</a></li>
           <li><a href="#types">Attribute Types</a></li>
           <li><a href="#test-yourself">Test Yourself</a></li>
@@ -50,8 +52,77 @@
     <div class="content-area">
 
       <article>
+        <h2 id="intro">Introduction</h2>
+        <p>You have almost certainly used a dozen databases already today — you just never saw one. Every time you searched for a song, checked a bus time, logged into a game, scanned something at a self-checkout or scrolled a shop for trainers in your size, an app went away and <em>looked something up</em> for you. The thing it looked in was a <strong>database</strong>.</p>
+        <p>A <strong>database</strong> is a collection of information about a particular topic, stored in a <strong>structured</strong> way so that a computer can find, sort and update it quickly. That word "structured" is what separates a database from a pile of notes in your bag: every piece of information is kept in a strict, predictable pattern, so the computer always knows exactly where to look.</p>
+        <p>That is also why it can be so fast. A streaming service holding a hundred million songs can find the one you typed in a fraction of a second — not because the computer reads all hundred million, but because the information was <em>organised</em> before you ever went looking.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>An app is only the <strong>window</strong> onto the data — the database is what's behind the glass. The screen you swipe is not where the information lives, which is why your account, your playlists and your messages are all still there when you log in on a different phone.</div>
+        </div>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Database</div><div class="def">A structured collection of information about a particular topic, stored so a computer can search, sort and update it quickly.</div></div>
+          <div class="key-term"><div class="term">Field</div><div class="def">A <strong>single piece of information</strong> about a person or thing — e.g. a pupil's name, date of birth or address. A field is also known as an <strong>attribute</strong>.</div></div>
+          <div class="key-term"><div class="term">Record</div><div class="def">A <strong>collection of fields</strong> about one particular person or thing — e.g. one record for each pupil in a school.</div></div>
+          <div class="key-term"><div class="term">Table</div><div class="def">A <strong>collection of records</strong> on a particular topic — e.g. a table containing a record for every pupil in the school.</div></div>
+          <div class="key-term"><div class="term">Attribute type</div><div class="def">What kind of data a field is allowed to hold — text, number, date, time or Boolean.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe and identify</strong> the terms <em>field (attribute)</em>, <em>record</em> and <em>table</em>, and <strong>select and justify</strong> a suitable attribute type for a given piece of data.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="real-world">Databases You Already Use</h2>
+        <p>Databases feel abstract until you spot the ones you use without thinking. In every case below, the pattern is identical: there is a long list of <em>things</em>, and the same set of questions is asked about every single one of them.</p>
+
+        <div style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>The app or service</th><th>One entry holds…</th><th>…and what it stores about it</th></tr></thead>
+            <tbody>
+              <tr><td>A music streaming app</td><td>one <strong>song</strong></td><td>title, artist, album, length, release date</td></tr>
+              <tr><td>Your school's system</td><td>one <strong>pupil</strong></td><td>forename, surname, date of birth, year group, registration class</td></tr>
+              <tr><td>An online clothes shop</td><td>one <strong>item of stock</strong></td><td>description, price, size, colour, number left</td></tr>
+              <tr><td>The school library</td><td>one <strong>book</strong></td><td>title, author, ISBN, whether it is currently on loan</td></tr>
+              <tr><td>A supermarket self-checkout</td><td>one <strong>product</strong></td><td>barcode, product name, price, whether it is age-restricted</td></tr>
+              <tr><td>A bus or train app</td><td>one <strong>departure</strong></td><td>service number, destination, departure time, platform or stance</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Look down the middle column. Every one is a single, countable <em>thing</em> — one song, one pupil, one product. That is the idea a database is built on, and it is the idea the next section gives a proper name to.</p>
+
+        <h3>What people actually do with them</h3>
+        <p>Whatever the app, almost everything you do with it comes down to four jobs:</p>
+        <ul>
+          <li><strong>Search</strong> — find one thing among millions, by typing part of what you want.</li>
+          <li><strong>Sort</strong> — put them in an order: price low to high, newest first, A to Z.</li>
+          <li><strong>Filter</strong> — cut the list down to the ones that matter: only size 8, only in stock, only today's trains.</li>
+          <li><strong>Add, change and remove</strong> — a new follower appears, you change your username, you delete a photo.</li>
+        </ul>
+        <p>Every one of those is you giving the database an instruction through a nice-looking screen. Later in this topic you will write those same instructions yourself, in a language called <strong>SQL</strong> — so the search box you have used a thousand times is about to become something you can build.</p>
+
+        <div class="example-block">
+          <div class="example-label">Example — the self-checkout, step by step</div>
+          <p>You scan a bottle of juice. The barcode is just a number, and the till has no idea what it means — so it goes and looks that number up. Back comes the entry stored for that one product: the name to print on your receipt, the price to add to your total, and whether it needs staff approval. The screen updates in well under a second.</p>
+          <p>Nothing on the screen mentioned a database, and you never saw the list of thousands of products it searched. That is what almost every database looks like from the outside: <strong>invisible, and doing all the work</strong>.</p>
+        </div>
+
+        <div class="img-placeholder">
+          <span class="ph-icon">🖼️</span>
+          <em>Placeholder — diagram</em>
+          Suggestion: the app and the database behind it — a phone screen on the left showing a music app's search results, and the same information on the right as a plain table, with lines joining each result on screen to its row in the table. The caption makes the point directly: <strong>the row you are looking at on the screen is a record</strong>. This is the diagram that turns "database" from a word into a thing pupils can picture.
+        </div>
+      </article>
+
+      <article>
         <h2 id="terminology">Databases — Key Terminology</h2>
-        <p>A <strong>database</strong> is a collection of information on a particular topic that is structured in some way — a database of football teams, a CD collection, or the books in a library. Databases are organised into <strong>fields</strong>, <strong>records</strong> and <strong>tables</strong>:</p>
+        <p>Now the proper names. That "one countable thing" from the last section — one song, one pupil, one product — is called a <strong>record</strong>, and databases are organised into <strong>fields</strong>, <strong>records</strong> and <strong>tables</strong>:</p>
 
         <div class="key-terms">
           <div class="key-term"><div class="term">Field</div><div class="def">A <strong>single piece of information</strong> about a person or thing — e.g. a pupil's name, date of birth or address. A field is also known as an <strong>attribute</strong>.</div></div>
@@ -72,6 +143,14 @@
             </table>
           </div>
           <p>Each <strong>column</strong> is a field (attribute); each <strong>row</strong> is a record; the whole thing is a table.</p>
+        </div>
+
+        <p>It is worth checking you can say that the other way round too, because the exam asks it both ways: <em>Aisha Khan's whole row</em> is a record; <em>the DateOfBirth column</em> is a field; <em>04/02/2010</em> is one piece of data sitting where a record and a field meet. Swap "field" and "record" over and you lose the mark, so it is worth a minute to make it stick.</p>
+
+        <div class="img-placeholder">
+          <span class="ph-icon">🖼️</span>
+          <em>Placeholder — diagram</em>
+          Suggestion: the anatomy of a table — the pupil table above redrawn with labelled brackets pointing at it: a bracket down one column reading <strong>FIELD (attribute) — one piece of information about every pupil</strong>, a bracket across one row reading <strong>RECORD — everything about one pupil</strong>, and a box round the whole thing reading <strong>TABLE</strong>. The three terms are examined directly and get mixed up constantly, so having them labelled on the actual grid is worth more than any amount of prose.
         </div>
       </article>
 

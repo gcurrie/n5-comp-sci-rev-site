@@ -75,15 +75,120 @@
       <article>
         <h2 id="ascii">Text — Extended ASCII</h2>
         <p>Text is stored by giving every character its own <strong>number</strong>, which is then stored in binary. Capital A is <strong>65</strong> (binary <code>0100 0001</code>), the Space key is <strong>32</strong>, and so on. <strong>Extended ASCII</strong> uses <strong>8 bits per character</strong>, giving 2⁸ = <strong>256 possible characters</strong>.</p>
+        <p>So storing a character is really a two-step journey — <strong>character → number → binary</strong>:</p>
+
+        <svg viewBox="0 0 760 262" role="img"
+             aria-label="A diagram showing how a character is stored. Capital A has the ASCII code 65, which is stored as the eight bits 0100 0001. Lowercase a has the ASCII code 97, which is stored as the eight bits 0110 0001. Each row moves from the character, to its code, to its 8-bit binary pattern."
+             style="max-width:760px;width:100%;height:auto;display:block;margin:1.25rem auto;">
+          <style>
+            .ac-head { font:700 10.5px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#4A5568; letter-spacing:.14em; text-anchor:middle; }
+            .ac-key  { fill:#fff; stroke:#00442A; stroke-width:2; }
+            .ac-ch   { font:700 34px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#0d1f17; text-anchor:middle; }
+            .ac-cbox { fill:#E8F5EE; stroke:#1B6B45; stroke-width:2; }
+            .ac-code { font:700 30px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#00442A; text-anchor:middle; }
+            .ac-bbox { fill:#FEF3C7; stroke:#C9A227; stroke-width:2; }
+            .ac-bin  { font:700 24px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#92750A; text-anchor:middle; }
+            .ac-line { stroke:#4A5568; stroke-width:2; }
+            .ac-note { font:600 11px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#92750A; letter-spacing:.08em; }
+            .ac-cap  { font:600 12.5px 'Public Sans',sans-serif; fill:#4A5568; text-anchor:middle; }
+          </style>
+          <defs>
+            <marker id="ac-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A5568" />
+            </marker>
+          </defs>
+
+          <text class="ac-head" x="90"  y="28">CHARACTER</text>
+          <text class="ac-head" x="254" y="28">ASCII CODE</text>
+          <text class="ac-head" x="494" y="28">STORED AS 8 BITS</text>
+
+          <!-- row 1: A -->
+          <rect class="ac-key"  x="52"  y="44" width="76"  height="72" rx="8" />
+          <text class="ac-ch"   x="90"  y="92">A</text>
+          <line class="ac-line" x1="136" y1="80" x2="198" y2="80" marker-end="url(#ac-arrow)" />
+          <rect class="ac-cbox" x="206" y="44" width="96"  height="72" />
+          <text class="ac-code" x="254" y="90">65</text>
+          <line class="ac-line" x1="310" y1="80" x2="372" y2="80" marker-end="url(#ac-arrow)" />
+          <rect class="ac-bbox" x="380" y="44" width="228" height="72" />
+          <text class="ac-bin"  x="494" y="89">0100 0001</text>
+          <text class="ac-note" x="622" y="85">= 1 byte</text>
+
+          <!-- row 2: a -->
+          <rect class="ac-key"  x="52"  y="150" width="76"  height="72" rx="8" />
+          <text class="ac-ch"   x="90"  y="198">a</text>
+          <line class="ac-line" x1="136" y1="186" x2="198" y2="186" marker-end="url(#ac-arrow)" />
+          <rect class="ac-cbox" x="206" y="150" width="96"  height="72" />
+          <text class="ac-code" x="254" y="196">97</text>
+          <line class="ac-line" x1="310" y1="186" x2="372" y2="186" marker-end="url(#ac-arrow)" />
+          <rect class="ac-bbox" x="380" y="150" width="228" height="72" />
+          <text class="ac-bin"  x="494" y="195">0110 0001</text>
+          <text class="ac-note" x="622" y="191">= 1 byte</text>
+
+          <text class="ac-cap" x="380" y="250">Every character gets its own number, and every number is stored in 8 bits — so &quot;A&quot; and &quot;a&quot; are genuinely different characters.</text>
+        </svg>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>"A" is 65 but "a" is 97 — which is why <code>if password == "Secret"</code> rejects "secret". The computer isn't being fussy; they're genuinely different numbers.</div>
+        </div>
+
         <p>Those 256 characters come in two types:</p>
         <ul>
           <li><strong>Printable characters</strong> — everything you can see on screen: letters (capital and lowercase are <em>different</em> characters!), digits and symbols like &amp; and %.</li>
           <li><strong>Control characters</strong> — signals with no printed symbol, such as <em>escape</em>, <em>delete</em> and <em>tab</em>. They control what happens rather than printing anything.</li>
         </ul>
-        <div class="callout callout-tip">
-          <div class="callout-icon">💡</div>
-          <div>"A" is 65 but "a" is 97 — which is why <code>if password == "Secret"</code> rejects "secret". The computer isn't being fussy; they're genuinely different numbers.</div>
-        </div>
+
+        <svg viewBox="0 0 760 250" role="img"
+             aria-label="A diagram comparing the two types of Extended ASCII character. Printable characters, such as capital A, lowercase a, the digit 7, ampersand and percent, can be seen on the screen and cover letters, digits and symbols. Control characters, such as tab, escape, delete and enter, print nothing at all and instead make something happen."
+             style="max-width:760px;width:100%;height:auto;display:block;margin:1.25rem auto;">
+          <style>
+            .pc-top   { font:600 13px 'Public Sans',sans-serif; fill:#4A5568; text-anchor:middle; }
+            .pc-panel { fill:#fff; stroke-width:2; }
+            .pc-hd    { font:700 12px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#fff; letter-spacing:.18em; text-anchor:middle; }
+            .pc-chip  { fill:#E8F5EE; stroke:#1B6B45; stroke-width:2; }
+            .pc-glyph { font:700 24px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#00442A; text-anchor:middle; }
+            .pc-kchip { fill:#F3E8F9; stroke:#6A1B9A; stroke-width:2; stroke-dasharray:5 4; }
+            .pc-klab  { font:700 12px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#6A1B9A; letter-spacing:.06em; text-anchor:middle; }
+            .pc-test  { font:700 13.5px 'Public Sans',sans-serif; text-anchor:middle; }
+            .pc-eg    { font:600 12px 'Public Sans',sans-serif; fill:#4A5568; text-anchor:middle; }
+          </style>
+
+          <text class="pc-top" x="380" y="26">All 256 Extended ASCII characters are one of two types</text>
+
+          <!-- printable -->
+          <rect class="pc-panel" x="24" y="44" width="344" height="176" stroke="#1B6B45" />
+          <rect x="24" y="44" width="344" height="34" fill="#1B6B45" />
+          <text class="pc-hd" x="196" y="67">PRINTABLE</text>
+          <rect class="pc-chip" x="46"  y="100" width="52" height="52" />
+          <text class="pc-glyph" x="72"  y="135">A</text>
+          <rect class="pc-chip" x="108" y="100" width="52" height="52" />
+          <text class="pc-glyph" x="134" y="135">a</text>
+          <rect class="pc-chip" x="170" y="100" width="52" height="52" />
+          <text class="pc-glyph" x="196" y="135">7</text>
+          <rect class="pc-chip" x="232" y="100" width="52" height="52" />
+          <text class="pc-glyph" x="258" y="135">&amp;</text>
+          <rect class="pc-chip" x="294" y="100" width="52" height="52" />
+          <text class="pc-glyph" x="320" y="135">%</text>
+          <text class="pc-test" x="196" y="180" fill="#00442A">You can see it on the screen</text>
+          <text class="pc-eg"   x="196" y="202">letters · digits · symbols</text>
+
+          <!-- control -->
+          <rect class="pc-panel" x="392" y="44" width="344" height="176" stroke="#6A1B9A" />
+          <rect x="392" y="44" width="344" height="34" fill="#6A1B9A" />
+          <text class="pc-hd" x="564" y="67">CONTROL</text>
+          <rect class="pc-kchip" x="401" y="100" width="74" height="52" />
+          <text class="pc-klab" x="438" y="132">TAB</text>
+          <rect class="pc-kchip" x="485" y="100" width="74" height="52" />
+          <text class="pc-klab" x="522" y="132">ESC</text>
+          <rect class="pc-kchip" x="569" y="100" width="74" height="52" />
+          <text class="pc-klab" x="606" y="132">DELETE</text>
+          <rect class="pc-kchip" x="653" y="100" width="74" height="52" />
+          <text class="pc-klab" x="690" y="132">ENTER</text>
+          <text class="pc-test" x="564" y="180" fill="#6A1B9A">Nothing appears — it makes something happen</text>
+          <text class="pc-eg"   x="564" y="202">tab · escape · delete</text>
+
+          <text class="pc-top" x="380" y="242">Both types still take up 8 bits each — a control character costs exactly as much to store as a letter.</text>
+        </svg>
       </article>
 
       <article>
@@ -96,20 +201,6 @@
 "Hello"  →  5 × 8  =  40 bits   (= 40 ÷ 8 = 5 bytes)</pre>
         </div>
         <p>The only trap is <strong>counting the characters correctly</strong> — spaces, underscores, digits and symbols all count. Count them one at a time with your pencil; don't eyeball it.</p>
-      </article>
-
-      <article id="ascii-explorer">
-        <div class="interactive-block">
-          <div class="ib-label">Visualiser</div>
-          <p class="ib-title">ASCII Explorer</p>
-          <div class="ib-body">
-            <p class="ib-intro">Type any character (or pick from the table) to see its ASCII code and 8-bit binary pattern — check out how "A" and "a" differ.</p>
-            <iframe src="../resources/cs/visualisers/ascii-explorer.html"
-                    title="ASCII Explorer — interactive visualiser"
-                    loading="lazy"
-                    style="height:600px"></iframe>
-          </div>
-        </div>
       </article>
 
       <article>
@@ -178,10 +269,16 @@
                     style="height:600px"></iframe>
           </div>
         </div>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — interactive trainer</em>
-          Suggestion: a "bitmap or vector?" sorter — a series of images (photo, cartoon logo, road sign, screenshot, washing symbol) that pupils classify as bitmap or vector, with feedback explaining the giveaway each time.
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Bitmap or Vector?</p>
+          <div class="ib-body">
+            <p class="ib-intro">Ten images in a random order — decide how each would be <strong>stored</strong>, and get the giveaway explained every time. Two of them hand you the answer in the wording, and one is a deliberate trap: something hand-drawn that is still a bitmap.</p>
+            <iframe src="../resources/cs/visualisers/bitmap-or-vector.html"
+                    title="Bitmap or vector — sort images by how they would be stored"
+                    loading="lazy"
+                    style="height:640px"></iframe>
+          </div>
         </div>
       </article>
 

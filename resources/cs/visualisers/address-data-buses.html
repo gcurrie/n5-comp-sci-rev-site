@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Address &amp; Data Buses — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --addr:#92750A; --addr-accent:#C9A227; --addr-bg:#FEF3C7;
+    --data:#6A1B9A; --data-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  /* JetBrains Mono fuses >= <= != into single glyphs. Exam notation is two
+     characters, so ligatures stay off. Inherited, so it reaches SVG text too;
+     form controls are listed because the font shorthand resets them. */
+  body,input,button,select,textarea{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:1000px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:840px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  /* ---- controls ---- */
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 12px}
+  .probs{display:flex;border:1px solid var(--line)}
+  .probs button{font-family:var(--sans);font-size:13.5px;font-weight:700;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 16px;color:var(--ink)}
+  .probs button:last-child{border-right:0}
+  .probs button.on{background:var(--active-strong);color:#fff}
+  .grp{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+  }
+  button.ctrl:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button.go{border-color:var(--addr-accent);background:var(--addr-accent);color:#002D1C}
+  button.go:hover:not(:disabled){filter:brightness(1.06);background:var(--addr-accent)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+
+  .picker{display:flex;gap:7px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--line);border-top:0;padding:11px 16px;margin:0 0 14px}
+  .picker b{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+  .picker button{
+    font-family:var(--mono);font-size:12.5px;font-weight:700;cursor:pointer;
+    padding:6px 11px;border:1px dashed var(--line);background:var(--bg);color:var(--active-strong);
+  }
+  .picker button:hover:not(:disabled){border-style:solid;border-color:var(--addr-accent);background:var(--addr-bg)}
+  .picker button.on{border-style:solid;border-color:var(--addr-accent);background:var(--addr-bg);color:var(--addr)}
+  .picker button:disabled{opacity:.4;cursor:not-allowed}
+
+  /* ---- stage ---- */
+  .stage{display:flex;gap:0;align-items:stretch;flex-wrap:wrap;border:1px solid var(--line);background:var(--panel)}
+  .cpu{flex:1 1 230px;min-width:210px;border-right:1px solid var(--line)}
+  .mem{flex:1 1 210px;min-width:190px;border-left:1px solid var(--line)}
+  .buses{flex:2 1 300px;min-width:260px;padding:16px 10px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+  .boxbar{background:var(--bar);padding:10px 14px}
+  .boxbar span{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--addr-accent)}
+  .boxbody{padding:14px}
+
+  .unit{border:1px solid var(--line);background:var(--bg);padding:9px 11px;margin-bottom:9px;transition:background .25s,border-color .25s}
+  .unit .un{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+  .unit .ud{font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+  .unit.lit{background:var(--active-bg);border-color:var(--active)}
+  .unit.lit .un{color:var(--active-strong)}
+
+  .regs{display:flex;gap:8px}
+  .reg{flex:1;border:2px solid var(--line);background:#fff;text-align:center;padding:8px 4px}
+  .reg .rn{font-family:var(--mono);font-size:10px;color:var(--ink-soft);letter-spacing:.1em}
+  .reg .rv{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink-soft);min-height:1.2em}
+  .reg.full{border-color:var(--data);background:var(--data-bg)}
+  .reg.full .rv{color:var(--data)}
+  .reg.pulse{animation:pop .5s ease-out}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+  /* ---- memory ---- */
+  .cell{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;margin-bottom:6px;padding:6px 8px;transition:background .25s,border-color .25s}
+  .cell .ca{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--addr);flex:0 0 auto}
+  .cell .cv{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--ink);margin-left:auto}
+  .cell.sel{background:var(--addr-bg);border-color:var(--addr-accent);border-width:2px}
+  .cell.wrote{background:var(--data-bg);border-color:var(--data);border-width:2px}
+  .cell.wrote .cv{color:var(--data)}
+
+  /* ---- the two bus lanes ---- */
+  .lane{position:relative;height:72px}
+  .lanehead{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .lanehead .ln{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .lanehead .lq{font-size:11.5px;font-weight:700;color:var(--ink-soft)}
+  .lane.addr .lanehead .ln{color:var(--addr)}
+  .lane.data .lanehead .ln{color:var(--data)}
+  .rail{position:absolute;top:46px;left:0;right:0;height:8px;background:var(--line);transition:background .25s}
+  .lane.addr .rail.lit{background:var(--addr-accent)}
+  .lane.data .rail.lit{background:var(--data)}
+  .dir{position:absolute;top:38px;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--line);transition:color .25s}
+  .dir.right{right:-4px} .dir.left{left:-4px}
+  .lane.addr .dir.lit{color:var(--addr)}
+  .lane.data .dir.lit{color:var(--data)}
+  .tok{
+    position:absolute;top:28px;left:0;width:84px;text-align:center;padding:6px 0;
+    font-family:var(--mono);font-size:15px;font-weight:700;border:2px solid;opacity:0;
+    transition:left .95s ease,opacity .3s ease;
+  }
+  .lane.addr .tok{background:var(--addr-bg);border-color:var(--addr-accent);color:var(--addr)}
+  .lane.data .tok{background:var(--data-bg);border-color:var(--data);color:var(--data)}
+  .tok.show{opacity:1}
+  @media(prefers-reduced-motion:reduce){.tok{transition:opacity .2s}}
+
+  /* ---- steps + narration ---- */
+  .steps{display:flex;gap:0;flex-wrap:wrap;border:1px solid var(--line);border-top:0;background:var(--panel)}
+  .steps div{
+    flex:1 1 25%;min-width:130px;padding:9px 12px;border-right:1px solid var(--line);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--line);
+  }
+  .steps div:last-child{border-right:0}
+  .steps div.done{color:var(--ink-soft)}
+  .steps div.now{background:var(--active-strong);color:#fff}
+
+  .narrate{margin-top:14px;font-size:14.5px;min-height:3.2em;border:1px solid var(--line);border-left:3px solid var(--active);padding:12px 16px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.addr{border-left-color:var(--addr-accent);background:var(--addr-bg)}
+  .narrate.data{border-left-color:var(--data);background:var(--data-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · Computer Systems · Computer Architecture</p>
+    <h1>The Address &amp; Data Buses</h1>
+    <p class="sub">Watch a value travel between the processor and memory, one stage at a time. The thing to keep your eye on: the <b style="color:var(--addr)">address bus</b> runs one way <em>every single time</em>, but the <b style="color:var(--data)">data bus</b> changes direction depending on whether the processor is fetching or storing.</p>
+  </header>
+
+  <div class="controls">
+    <div class="probs" id="probs" role="group" aria-label="Choose fetch or store"></div>
+    <div class="grp">
+      <button class="ctrl go" id="step" type="button">Step ▶</button>
+      <button class="ctrl" id="play" type="button">Play all ▶▶</button>
+      <button class="ctrl" id="reset" type="button">Reset ↺</button>
+    </div>
+  </div>
+
+  <div class="picker" id="picker"><b>Address</b></div>
+
+  <div class="stage">
+    <section class="cpu">
+      <div class="boxbar"><span>PROCESSOR</span></div>
+      <div class="boxbody">
+        <div class="unit" id="u-cu"><div class="un">Control unit</div><div class="ud">Decodes and executes instructions</div></div>
+        <div class="unit" id="u-alu"><div class="un">ALU</div><div class="ud">Calculations and comparisons</div></div>
+        <div class="unit" id="u-reg" style="margin-bottom:0">
+          <div class="un" style="margin-bottom:7px">Registers</div>
+          <div class="regs">
+            <div class="reg" id="r1"><div class="rn">R1</div><div class="rv" id="r1v">—</div></div>
+            <div class="reg" id="r2"><div class="rn">R2</div><div class="rv" id="r2v">—</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="buses">
+      <div class="lane addr" id="laneAddr">
+        <div class="lanehead"><span class="ln">Address bus</span><span class="lq">carries <em>where</em></span></div>
+        <div class="rail" id="railAddr"></div>
+        <span class="dir right" id="dirAddr">▶</span>
+        <div class="tok" id="tokAddr"></div>
+      </div>
+      <div class="lane data" id="laneData">
+        <div class="lanehead"><span class="ln">Data bus</span><span class="lq">carries <em>what</em></span></div>
+        <div class="rail" id="railData"></div>
+        <span class="dir right" id="dirDataR">▶</span>
+        <span class="dir left" id="dirDataL">◀</span>
+        <div class="tok" id="tokData"></div>
+      </div>
+    </div>
+
+    <section class="mem">
+      <div class="boxbar"><span>MAIN MEMORY</span></div>
+      <div class="boxbody" id="cells"></div>
+    </section>
+  </div>
+
+  <div class="steps" id="steps"></div>
+
+  <div class="narrate idle" id="narrate" aria-live="polite"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const START = [
+    {addr:3000, val:12},
+    {addr:3001, val:8},
+    {addr:3002, val:27},
+    {addr:3003, val:91},
+    {addr:3004, val:60},
+    {addr:3005, val:5}
+  ];
+  const STORE_VALUE = 45;
+
+  let mem = START.map(c => Object.assign({}, c));
+  let mode = "fetch";           // "fetch" | "store"
+  let target = 3002;            // chosen address
+  let stage = 0;                // 0 = ready, 1..4 = mid-sequence, 5 = done
+  let playing = false;
+  let timer = null;
+
+  const $ = id => document.getElementById(id);
+  const cellsEl = $("cells"), narrate = $("narrate");
+  const tokAddr = $("tokAddr"), tokData = $("tokData");
+  const railAddr = $("railAddr"), railData = $("railData");
+  const dirAddr = $("dirAddr"), dirDataR = $("dirDataR"), dirDataL = $("dirDataL");
+
+  const STEPS = {
+    fetch:["1 · Address out","2 · Location found","3 · Data back","4 · Into a register"],
+    store:["1 · Address out","2 · Location found","3 · Data out","4 · Written to memory"]
+  };
+
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+    postHeight();
+  }
+
+  /* ---------- rendering ---------- */
+  function cellOf(a){ return mem.find(c => c.addr === a); }
+
+  function drawCells(){
+    cellsEl.innerHTML = "";
+    mem.forEach(c => {
+      const d = document.createElement("div");
+      d.className = "cell";
+      d.id = "cell" + c.addr;
+      d.innerHTML = '<span class="ca">' + c.addr + '</span>' +
+                    '<span class="cv">' + c.val + '</span>';
+      cellsEl.appendChild(d);
+    });
+  }
+
+  function drawPicker(){
+    $("picker").innerHTML = "<b>Address</b>";
+    mem.forEach(c => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = c.addr;
+      b.className = (c.addr === target) ? "on" : "";
+      b.disabled = playing || stage > 0;
+      b.addEventListener("click", () => { target = c.addr; reset(); });
+      $("picker").appendChild(b);
+    });
+  }
+
+  function drawSteps(){
+    const s = $("steps");
+    s.innerHTML = "";
+    STEPS[mode].forEach((label, n) => {
+      const d = document.createElement("div");
+      d.textContent = label;
+      if(stage === n + 1) d.className = "now";
+      else if(stage > n + 1) d.className = "done";
+      s.appendChild(d);
+    });
+  }
+
+  function clearHighlights(){
+    ["u-cu","u-alu","u-reg"].forEach(id => $(id).classList.remove("lit"));
+    mem.forEach(c => {
+      const el = $("cell" + c.addr);
+      if(el) el.classList.remove("sel","wrote");
+    });
+    railAddr.classList.remove("lit"); railData.classList.remove("lit");
+    dirAddr.classList.remove("lit"); dirDataR.classList.remove("lit"); dirDataL.classList.remove("lit");
+  }
+
+  /* ---------- the sequence ---------- */
+  function advance(){
+    if(stage >= 5) return;
+    stage++;
+    const c = cellOf(target);
+
+    if(stage === 1){
+      clearHighlights();
+      $("u-cu").classList.add("lit");
+      railAddr.classList.add("lit"); dirAddr.classList.add("lit");
+      tokAddr.textContent = target;
+      tokAddr.style.left = "0";
+      tokAddr.classList.add("show");
+      // next frame so the transition has a start value to move from
+      requestAnimationFrame(() => { tokAddr.style.left = "calc(100% - 84px)"; });
+      say('The <b>control unit</b> puts the address <code>' + target + '</code> onto the <b>address bus</b>. ' +
+          'It is travelling <b>processor → memory</b> — and on the address bus that is the <em>only</em> direction it ever goes.', "addr");
+
+    } else if(stage === 2){
+      $("cell" + target).classList.add("sel");
+      say('The address arrives and memory selects location <code>' + target + '</code>. ' +
+          'Every location has its own <b>unique address</b>, which is how the right one gets picked out of millions.', "addr");
+
+    } else if(stage === 3){
+      railData.classList.add("lit");
+      if(mode === "fetch"){
+        dirDataL.classList.add("lit");
+        tokData.textContent = c.val;
+        tokData.style.left = "calc(100% - 84px)";
+        tokData.classList.add("show");
+        requestAnimationFrame(() => { tokData.style.left = "0"; });
+        say('The value <code>' + c.val + '</code> stored at that location is put onto the <b>data bus</b> and travels back ' +
+            '<b>memory → processor</b>. Notice the data bus is running <em>right to left</em> this time.', "data");
+      } else {
+        dirDataR.classList.add("lit");
+        tokData.textContent = STORE_VALUE;
+        tokData.style.left = "0";
+        tokData.classList.add("show");
+        requestAnimationFrame(() => { tokData.style.left = "calc(100% - 84px)"; });
+        say('The processor puts the value <code>' + STORE_VALUE + '</code> onto the <b>data bus</b>, travelling ' +
+            '<b>processor → memory</b>. Same bus as last time, <em>opposite</em> direction — because we are storing, not fetching.', "data");
+      }
+
+    } else if(stage === 4){
+      if(mode === "fetch"){
+        tokData.classList.remove("show");
+        $("u-reg").classList.add("lit");
+        $("r1v").textContent = c.val;
+        $("r1").classList.add("full","pulse");
+        setTimeout(() => $("r1").classList.remove("pulse"), 520);
+        say('The value lands in a <b>register</b> — the small, very fast storage inside the processor — where the <b>ALU</b> can now use it in a calculation or comparison.', "data");
+      } else {
+        tokData.classList.remove("show");
+        c.val = STORE_VALUE;
+        drawCells();
+        $("cell" + target).classList.add("wrote");
+        say('Memory location <code>' + target + '</code> now holds <code>' + STORE_VALUE + '</code>. The old contents are gone — storing overwrites.', "data");
+      }
+
+    } else if(stage === 5){
+      const summary = mode === "fetch"
+        ? 'Done. The <b style="color:var(--addr)">address bus</b> carried <b>where</b> (<code>' + target + '</code>) and the <b style="color:var(--data)">data bus</b> carried <b>what</b> (<code>' + c.val + '</code>). ' +
+          'Now switch to <b>Store</b> and watch which bus changes direction.'
+        : 'Done. The <b style="color:var(--addr)">address bus</b> carried <b>where</b> (<code>' + target + '</code>) and the <b style="color:var(--data)">data bus</b> carried <b>what</b> (<code>' + STORE_VALUE + '</code>) — ' +
+          'but this time the data bus ran <em>processor → memory</em>. The address bus did not change: it never does.';
+      say(summary, "");
+    }
+
+    drawSteps();
+    drawPicker();
+    syncButtons();
+    postHeight();
+  }
+
+  function syncButtons(){
+    $("step").disabled = playing || stage >= 5;
+    $("play").disabled = playing || stage >= 5;
+    $("step").textContent = stage >= 5 ? "Finished" : (stage === 0 ? "Step ▶" : "Next step ▶");
+  }
+
+  function play(){
+    if(playing || stage >= 5) return;
+    playing = true;
+    syncButtons();
+    drawPicker();
+    const tick = () => {
+      advance();
+      if(stage < 5){ timer = setTimeout(tick, 1700); }
+      else { playing = false; syncButtons(); drawPicker(); }
+    };
+    tick();
+  }
+
+  function reset(){
+    if(timer){ clearTimeout(timer); timer = null; }
+    playing = false;
+    stage = 0;
+    mem = START.map(c => Object.assign({}, c));
+    clearHighlights();
+    tokAddr.classList.remove("show"); tokData.classList.remove("show");
+    tokAddr.style.left = "0"; tokData.style.left = "0";
+    $("r1v").textContent = "—"; $("r2v").textContent = "—";
+    $("r1").classList.remove("full"); $("r2").classList.remove("full");
+    drawCells();
+    drawSteps();
+    drawPicker();
+    syncButtons();
+    const c = cellOf(target);
+    say(mode === "fetch"
+      ? 'The processor needs the value held at address <code>' + target + '</code>. Press <b>Step</b> to send the request, or <b>Play all</b> to watch the whole journey.'
+      : 'The processor has calculated <code>' + STORE_VALUE + '</code> and needs to store it at address <code>' + target + '</code>, which currently holds <code>' + c.val + '</code>. Press <b>Step</b> to begin.', "idle");
+  }
+
+  /* ---------- setup ---------- */
+  [["fetch","Fetch from memory"],["store","Store into memory"]].forEach(([k, label]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = label;
+    b.dataset.k = k;
+    b.addEventListener("click", () => {
+      mode = k;
+      [...$("probs").children].forEach(x => x.classList.toggle("on", x.dataset.k === mode));
+      reset();
+    });
+    if(k === mode) b.className = "on";
+    $("probs").appendChild(b);
+  });
+
+  $("step").addEventListener("click", advance);
+  $("play").addEventListener("click", play);
+  $("reset").addEventListener("click", reset);
+
+  /* Auto-size the parent iframe. Declared before reset(), which calls
+     postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  reset();
+})();
+</script>
+</body>
+</html>

@@ -83,10 +83,16 @@
           <div class="callout-icon">💡</div>
           <div>Fans of WWII history: this is the Enigma machine problem. The Germans encrypted their radio messages precisely because they <em>knew</em> the enemy could intercept them — interception without the key is useless. Same idea, now protecting your group chat.</div>
         </div>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎞️</span>
-          <em>Placeholder — animation</em>
-          Suggestion: an interception animation — a readable message leaves a sender, gets scrambled into ciphertext, an eavesdropper in the middle grabs a copy and sees only gibberish, while the receiver unscrambles it back to plain text. A toggle for "without encryption" showing the eavesdropper reading everything would land the point.
+        <div class="interactive-block">
+          <div class="ib-label">Animation</div>
+          <p class="ib-title">Encryption &amp; Interception</p>
+          <div class="ib-body">
+            <p class="ib-intro">Send a message past someone who is listening in. Type your own message, pick a key, and step through the journey — then switch to <strong>Without encryption</strong> and send the very same message again. The eavesdropper captures it both times; only one of those captures is worth anything to them.</p>
+            <iframe src="../resources/cs/visualisers/encryption-interception.html"
+                    title="Encryption and interception — send a message past an eavesdropper with and without encryption"
+                    loading="lazy"
+                    style="height:900px"></iframe>
+          </div>
         </div>
       </article>
 
