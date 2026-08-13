@@ -107,22 +107,28 @@ END REPEAT</pre>
 
       <article>
         <h2 id="counter">Using the Loop Variable</h2>
-        <p>The loop variable isn't just for show — it counts up by 1 on every pass, and your code can <em>use</em> it. <code>range(5)</code> gives the values 0, 1, 2, 3, 4 (starting from zero — everything in computing counts from zero!). You can also give range a start and end: <code>range(1, 11)</code> counts 1 to 10.</p>
+        <p>The loop variable isn't just for show — it counts up by 1 on every pass, and your code can <em>use</em> it. <code>range(5)</code> gives the values 0, 1, 2, 3, 4 (starting from zero — everything in computing counts from zero!).</p>
         <div class="example-block">
           <div class="example-label">Example — a times table in four lines</div>
           <div class="code-block">
             <div class="code-label">Python</div>
             <pre># Print the 7 times table
-for counter in range(1, 11):
+for counter in range(10):
     answer = counter * 7
     print(str(counter) + " x 7 = " + str(answer))</pre>
           </div>
-          <p>On the first pass <code>counter</code> is 1, so it prints "1 x 7 = 7". On the second pass it's 2 — "2 x 7 = 14" — and so on up to 10. One calculation, written once, run ten times with a different value each time. <em>That's</em> the power of the loop variable.</p>
+          <p>On the first pass <code>counter</code> is 0, so it prints "0 x 7 = 0" — yes, the table really does start at zero! On the second pass it's 1 — "1 x 7 = 7" — and so on up to 9. One calculation, written once, run ten times with a different value each time. <em>That's</em> the power of the loop variable.</p>
         </div>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎞️</span>
-          <em>Placeholder — animation</em>
-          Suggestion: a loop stepper — the times table code on the left, and on the right the loop variable visibly ticking up each pass with the corresponding output line appearing. A "step" button lets pupils advance one pass at a time.
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Loop Stepper</p>
+          <div class="ib-body">
+            <p class="ib-intro">The times table program above, one pass at a time. Press <strong>Step</strong> and watch the loop variable tick up, the calculation reuse its new value, and the matching output line appear — then see exactly why the loop stops after pass 10.</p>
+            <iframe src="../resources/sdd/visualisers/loop-stepper.html"
+                    title="Loop stepper — step through the times table loop one pass at a time"
+                    loading="lazy"
+                    style="height:620px"></iframe>
+          </div>
         </div>
       </article>
 
@@ -186,7 +192,7 @@ while 100 &gt; 5:
         <table>
           <thead><tr><th>Notation</th><th>Where the loop hides</th><th>Fixed looks like</th><th>Conditional looks like</th></tr></thead>
           <tbody>
-            <tr><td><strong>Structure diagram</strong></td><td>The rounded loop symbol</td><td>"Loop 20 times"</td><td>"Repeat until no more passengers"</td></tr>
+            <tr><td><strong>Structure diagram</strong></td><td>The rounded loop symbol</td><td>"Loop 20 times" or "Repeat for each child"</td><td>"Repeat until no more passengers"</td></tr>
             <tr><td><strong>Flowchart</strong></td><td>A decision whose arrow points back up</td><td>"Served 20 groups?"</td><td>"Any more customers?"</td></tr>
             <tr><td><strong>Pseudocode</strong></td><td>A loop line with indented steps below it</td><td>"Loop 20 times … End loop"</td><td>"While … End while"</td></tr>
           </tbody>

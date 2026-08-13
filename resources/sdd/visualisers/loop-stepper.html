@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop Stepper — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:940px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:820px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 12px}
+  .chip{font-family:var(--mono);font-size:12px;padding:7px 11px;border:1px solid var(--line);background:#fff;display:flex;gap:7px;align-items:center}
+  .chip .k{color:var(--ink-soft);letter-spacing:.06em}
+  .chip b{color:var(--ink)}
+  .chip.good{border-color:var(--active);background:var(--active-bg)}
+  .chip.good .k{color:var(--active)}
+  .chip.good b{color:var(--active-strong)}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 18px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+  }
+  button.ctrl:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button.ctrl.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C}
+  button.ctrl.primary:hover:not(:disabled){filter:brightness(1.06);background:var(--match-accent)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button.ctrl:focus-visible{outline:3px solid var(--match-bg);outline-offset:1px}
+
+  .layout{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch}
+  .panel{border:1px solid var(--line);background:var(--panel)}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- code panel ---- */
+  .codepanel{flex:1 1 330px;display:flex;flex-direction:column}
+  .codebody{padding:14px;flex:1}
+  .cl{
+    display:block;font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--ink);
+    padding:9px 11px;border:1px solid transparent;border-left:3px solid var(--line);margin-bottom:6px;
+    white-space:pre;overflow-x:auto;transition:background .2s,border-color .2s;
+  }
+  .cl.now{background:var(--match-bg);border-color:var(--match-accent);border-left-color:var(--match-accent)}
+  .rangenote{font-size:12.5px;color:var(--ink-soft);margin:10px 2px 0;line-height:1.6}
+  .rangenote b{color:var(--match)}
+
+  /* ---- right column ---- */
+  .rightcol{flex:1 1 330px;display:flex;flex-direction:column;gap:14px}
+  .vars{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:18px 14px 14px}
+  .varwrap{text-align:center}
+  .varname{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--active-strong);margin-bottom:5px}
+  .varbox{
+    width:110px;height:60px;border:2.5px solid var(--active-strong);background:#fff;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .varbox .v{
+    font-family:var(--mono);font-size:17px;font-weight:700;color:var(--active-strong);
+    background:var(--active-bg);border:2px solid var(--active);padding:3px 11px;
+  }
+  .varbox.counterbox .v{background:var(--match-bg);border-color:var(--match-accent);color:var(--match)}
+  .varbox .v.empty{background:none;border:none;color:var(--line);font-size:24px}
+  .varbox .v.drop{animation:drop .45s cubic-bezier(.3,.7,.4,1.15)}
+  @keyframes drop{from{transform:translateY(-85px)}to{transform:translateY(0)}}
+  .vartype{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+
+  .console{flex:1;display:flex;flex-direction:column}
+  .consbody{
+    background:#0d1f17;flex:1;min-height:170px;max-height:300px;overflow-y:auto;padding:12px 14px;
+    font-family:var(--mono);font-size:13px;line-height:1.85;
+  }
+  .consbody .ghost{color:rgba(255,255,255,.35);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .consbody .ln{display:block;color:#7CE3AC;font-weight:700}
+  .consbody .ln.new{animation:appear .4s}
+  @keyframes appear{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:14px;font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate.out{border-left-color:var(--out);background:var(--out-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Loops</p>
+    <h1>Loop Stepper</h1>
+    <p class="sub">The times table program, one pass at a time. Press <b>Step</b> and watch the loop variable tick up, the calculation reuse it, and a new output line appear — the same three lines of code doing ten passes of work.</p>
+  </header>
+
+  <div class="controls">
+    <div class="chip good"><span class="k">pass</span><b id="c-pass">— of 10</b></div>
+    <div class="btnrow">
+      <button class="ctrl primary" id="step" type="button">Step ▶</button>
+      <button class="ctrl" id="restart" type="button">Restart ↺</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <section class="panel codepanel">
+      <div class="panelbar"><span>THE CODE — THREE LINES, TEN PASSES</span></div>
+      <div class="codebody">
+        <span class="cl" id="l0">for counter in range(10):</span>
+        <span class="cl" id="l1">    answer = counter * 7</span>
+        <span class="cl" id="l2">    print(str(counter) + " x 7 = " + str(answer))</span>
+        <p class="rangenote"><b>range(10)</b> gives counter the values <b>0</b> up to <b>9</b> — it starts from zero, and stops <em>before</em> 10.</p>
+      </div>
+    </section>
+
+    <div class="rightcol">
+      <section class="panel">
+        <div class="panelbar"><span>MEMORY — THE VARIABLES</span></div>
+        <div class="vars">
+          <div class="varwrap">
+            <div class="varname">counter</div>
+            <div class="varbox counterbox" id="box-counter"><span class="v empty">?</span></div>
+            <div class="vartype">the loop variable</div>
+          </div>
+          <div class="varwrap">
+            <div class="varname">answer</div>
+            <div class="varbox" id="box-answer"><span class="v empty">?</span></div>
+            <div class="vartype">counter × 7</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel console">
+        <div class="panelbar"><span>OUTPUT — ONE LINE PER PASS</span></div>
+        <div class="consbody" id="cons"><span class="ghost">nothing printed yet</span></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="narrate idle" id="narrate">Before the loop starts, <code>counter</code> doesn't exist yet. Press <b>Step ▶</b> to run the first pass.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const LAST = 10;
+  const $ = id => document.getElementById(id);
+  const lines = [$("l0"), $("l1"), $("l2")];
+  const cons = $("cons"), narrate = $("narrate");
+  const stepBtn = $("step"), restartBtn = $("restart");
+  let pass = 0, busy = false;
+
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  function highlight(i){
+    lines.forEach((l, j) => l.classList.toggle("now", j === i));
+  }
+
+  function setVar(box, val){
+    const b = $(box);
+    b.innerHTML = "";
+    const v = document.createElement("span");
+    v.className = "v drop";
+    v.textContent = val;
+    b.appendChild(v);
+  }
+
+  function step(){
+    if(busy || pass >= LAST) return;
+    busy = true;
+    stepBtn.disabled = true;
+    pass++;
+    $("c-pass").textContent = pass + " of 10";
+    const n = pass - 1, ans = n * 7;
+
+    // line 1: the loop variable ticks up
+    highlight(0);
+    setVar("box-counter", n);
+    say("Pass <b>" + pass + "</b>: the loop line runs and <code>counter</code> " +
+        (n === 0 ? "gets its first value, <b>0</b> — loops count from zero!" : "ticks up to <b>" + n + "</b> — the old " + (n - 1) + " is overwritten."), "");
+
+    // line 2: the calculation uses it
+    setTimeout(() => {
+      highlight(1);
+      setVar("box-answer", ans);
+      say("The calculation <em>uses</em> the loop variable: <code>answer = " + n + " * 7</code> → <b>" + ans + "</b>. Same line of code, different value every pass.", "");
+    }, 700);
+
+    // line 3: the output appears
+    setTimeout(() => {
+      highlight(2);
+      const ghost = cons.querySelector(".ghost");
+      if(ghost) ghost.remove();
+      const ln = document.createElement("span");
+      ln.className = "ln new";
+      ln.textContent = n + " x 7 = " + ans;
+      cons.appendChild(ln);
+      cons.scrollTop = cons.scrollHeight;
+
+      if(pass >= LAST){
+        say("<b>Pass 10 was the last one.</b> Back at the loop line, the next value would be 10 — but <code>range(10)</code> stops <em>before</em> 10, so the loop ends with counter on 9. Ten lines of output from three lines of code — that's the loop variable earning its keep.", "match");
+        stepBtn.textContent = "Loop finished";
+        highlight(-1);
+      } else {
+        say("Line printed: <b>" + n + " x 7 = " + ans + "</b>. Back up to the loop line for the next pass.", "out");
+        stepBtn.disabled = false;
+      }
+      busy = false;
+      postHeight();
+    }, 1400);
+  }
+
+  function restart(){
+    pass = 0; busy = false;
+    $("c-pass").textContent = "— of 10";
+    $("box-counter").innerHTML = '<span class="v empty">?</span>';
+    $("box-answer").innerHTML = '<span class="v empty">?</span>';
+    cons.innerHTML = '<span class="ghost">nothing printed yet</span>';
+    highlight(-1);
+    stepBtn.disabled = false;
+    stepBtn.textContent = "Step ▶";
+    say("Before the loop starts, <code>counter</code> doesn't exist yet. Press <b>Step ▶</b> to run the first pass.", "idle");
+    postHeight();
+  }
+
+  stepBtn.addEventListener("click", step);
+  restartBtn.addEventListener("click", restart);
+
+  /* Auto-size the parent iframe. Declared before the first postHeight()
+     call — embedded, a later declaration would throw. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+  postHeight();
+})();
+</script>
+</body>
+</html>

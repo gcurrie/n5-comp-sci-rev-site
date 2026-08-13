@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Software Design &amp; Development</div>
     <h1>Standard Algorithms</h1>
-    <p>The three ready-made recipes every N5 candidate must know: input validation, running total, and traversing a 1-D array.</p>
+    <p>The three ready-made recipes every N5 candidate must know: input validation, traversing a 1-D array, and the running total.</p>
   </div>
 </section>
 <main class="page-content">
@@ -48,8 +48,9 @@
         <ul>
           <li><a href="#intro">Introduction</a></li>
           <li><a href="#input-validation">Input Validation</a></li>
-          <li><a href="#running-total">Running Total</a></li>
           <li><a href="#traversing">Traversing a 1-D Array</a></li>
+          <li><a href="#running-total">Running Total</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -63,8 +64,8 @@
         <h3>Key Terms</h3>
         <div class="key-terms">
           <div class="key-term"><div class="term">Input validation</div><div class="def">Checking input is acceptable, and asking again (and again…) until it is.</div></div>
-          <div class="key-term"><div class="term">Running total</div><div class="def">Adding up a list of values one at a time inside a loop, keeping a cumulative total.</div></div>
           <div class="key-term"><div class="term">Traversing a 1-D array</div><div class="def">Using a loop to visit every element of an array, from first to last.</div></div>
+          <div class="key-term"><div class="term">Running total</div><div class="def">Adding up a list of values one at a time inside a loop, keeping a cumulative total.</div></div>
         </div>
 
         <div class="callout callout-info">
@@ -75,7 +76,7 @@
 
       <article>
         <h2 id="input-validation">Standard Algorithm 1 — Input Validation</h2>
-        <p>Users make mistakes. Ask for an age and someone will type -7, or 300. <strong>Input validation</strong> checks that input is acceptable — and if it isn't, shows an error and asks again, repeating until the input passes. Note what it's checking: that the data is the right <em>sort</em> (in range, long enough), not that it's actually <em>true</em>. If you claim to be 21, the program takes your word for it.</p>
+        <p>Users make mistakes. Ask for an age and someone will type -7, or 300. <strong>Input validation</strong> checks that input is acceptable — and if it isn't, shows an error and asks again, repeating until the input passes. Note what it's checking: that the data is the right <em>sort</em> (in range, long enough, one of the allowed choices), not that it's actually <em>true</em>. If you claim to be 21, the program takes your word for it.</p>
         <p>The recipe uses a <strong>conditional loop</strong> — because we can't know how many attempts the user will need:</p>
         <ol>
           <li>Ask for the input</li>
@@ -84,8 +85,9 @@
           <li>&nbsp;&nbsp;&nbsp;&nbsp;Ask for the input again</li>
           <li>End loop — the program only gets here with valid input</li>
         </ol>
+        <p>There are <strong>three kinds of check</strong> you need to know — a <strong>range check</strong>, a <strong>length check</strong> and a <strong>restricted choice</strong>. It's the same recipe every time; only the condition changes:</p>
         <div class="code-block">
-          <div class="code-label">Python — validating an age (range check)</div>
+          <div class="code-label">Python — 1. Range check: validating an age</div>
           <pre>age = int(input("Enter your age: "))
 while age &lt; 11 or age &gt; 18:
     print("Error - age must be between 11 and 18")
@@ -93,13 +95,22 @@ while age &lt; 11 or age &gt; 18:
 print("Your age is acceptable")</pre>
         </div>
         <div class="code-block">
-          <div class="code-label">Python — validating a password length</div>
+          <div class="code-label">Python — 2. Length check: validating a password</div>
           <pre>password = input("Please enter a new password: ")
-while len(password) &lt; 7:
-    print("Your password must be at least 7 characters long")
+while len(password) &lt; 8:
+    print("Your password must be at least 8 characters long")
     password = input("Please re-enter your new password: ")
 print("Your password is long enough")</pre>
         </div>
+        <div class="code-block">
+          <div class="code-label">Python — 3. Restricted choice: only certain answers allowed</div>
+          <pre>answer = input("Play again? (yes/no): ")
+while answer != "yes" and answer != "no":
+    print("Error - please answer yes or no")
+    answer = input("Play again? (yes/no): ")
+print("Thank you")</pre>
+        </div>
+        <p>Look at the three conditions: a range check tests the <em>value</em>, a length check tests the <em>number of characters</em> (there's <code>len()</code> from <a href="pre-defined-functions.html">pre-defined functions</a> earning its keep), and a restricted choice tests the input against a <em>list of allowed answers</em>. Everything else — error message, ask again — is identical.</p>
         <p>Two details that catch people out:</p>
         <ul>
           <li><strong>The input line appears twice</strong> — once before the loop (the program needs a first value to test) and once inside it (or the loop could never end). This is one repeat that's allowed!</li>
@@ -129,64 +140,98 @@ UNTIL number &gt;= 10 AND number &lt;= 20</pre>
           <div class="callout-icon">💡</div>
           <div>Input validation is what makes a program <strong>robust</strong> — it stops exceptional data from crashing it. That link comes up in evaluation questions constantly: see the <a href="evaluation.html">Evaluation</a> page.</div>
         </div>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — interactive trainer</em>
-          Suggestion: a validation tester — pupils type values at a live validation loop (age 11–18) and watch which ones bounce off and which get through, with the condition highlighting true/false on each attempt. A boundary-highlighter like the Higher site's would also work here.
+        <p>Now try it on two real past paper questions. One important thing before you start: when a question says <strong>"using a design technique of your choice"</strong>, you're writing a <em>design</em>, not code — so plain wording is fine. "While the price is not between 50000 and 600000" or "add the name to the array" earn the marks without any formal syntax. Jot down your own design before opening each walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2022 Q9 b) i) — Property Price Validation (4 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q1.png" alt="Past paper question: the user can search for properties priced from £50,000 to £600,000. Using a design technique of your choice, design an efficient solution to check that the price entered is valid. 4 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> "Check the input is valid" is the signal for input validation, and this one is a <strong>range check</strong>. Four marks means the marker wants the four ingredients of the recipe:</p>
+          <ul>
+            <li>a <strong>conditional loop</strong></li>
+            <li>the <strong>correct condition</strong> — looping <em>while</em> the price is bad: below 50000 <strong>OR</strong> above 600000</li>
+            <li>the <strong>input asked again inside the loop</strong></li>
+            <li>an <strong>error message</strong></li>
+          </ul>
+          <p>Watch the traps: the condition joins its two halves with <strong>OR</strong> for a while loop (a price can't be both too low <em>and</em> too high), and the input line must appear <em>inside</em> the loop or the program can never escape. And because this is a design, the marking instructions accept plain wording for the boundaries — no need to fuss over &pound; signs or commas in 600,000.</p>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q1_ans.png" alt="Marking instructions: one mark for each design of input validation showing a conditional loop, correct loop condition for valid data, input of price inside loop, and error message. If there is no loop, one mark may be awarded for input and one for an error message inside an if statement with correct conditions. Example conditions shown for while, price below 50000 or above 600000, and until, price at least 50000 and at most 600000. As this is design, accept between 50000 and 600000." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">
+            1&nbsp;&nbsp;Get price from user<br/>
+            2&nbsp;&nbsp;While price &lt; 50000 OR price &gt; 600000<br/>
+            2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Display "Error - price must be between 50000 and 600000"<br/>
+            2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get price from user<br/>
+            3&nbsp;&nbsp;End while
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2019 Q16 c) — Washing Machine (3 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q4.png" alt="Past paper question: when the wash is finished, the water will drain out. A sensor continuously detects the amount of water in the machine during the draining process. When there is no more water in the machine the door will automatically open. Using a design technique of your choice, design a solution to this problem. 3 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> This is the validation loop's shape with a twist — <strong>no keyboard</strong>. A <em>sensor</em> drives the condition instead of a user, but the pattern is identical: keep looping while the condition holds, escape when it doesn't, then act.</p>
+          <ul>
+            <li>a <strong>loop with a condition</strong> — while the sensor detects water</li>
+            <li>the <strong>sensor</strong> doing the detecting inside the loop</li>
+            <li><strong>open the door</strong> after the loop — only reachable when the water is gone</li>
+          </ul>
+          <p>Watch the trap: the marking instructions explicitly refuse <strong>human input</strong> of the water level. Writing "ask the user for the water level" turns an automatic sensor system into a questionnaire — no marks. And this is where design wording really pays: <strong>"while sensor detects water"</strong> is a perfectly acceptable condition. You're describing the logic, not writing Python.</p>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q4_ans.png" alt="Marking instructions: one mark each for a loop with condition, sensor detects water level, and open door when no more water. Do not allow human input of water level. 3 marks." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">
+            1&nbsp;&nbsp;While sensor detects water in the machine<br/>
+            1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue draining the water<br/>
+            2&nbsp;&nbsp;End while<br/>
+            3&nbsp;&nbsp;Open the door
+          </p>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Validation Tester</p>
+          <div class="ib-body">
+            <p class="ib-intro">Three live validation loops — one per kind of check. Type real values at each and watch bad input bounce off the condition (red, error, asked again) while good input escapes the loop. Try the boundary values on purpose: 10, 11, 18 and 19 are where the marks live.</p>
+            <iframe src="../resources/sdd/visualisers/validation-tester.html"
+                    title="Validation tester — type values at a live validation loop"
+                    loading="lazy"
+                    style="height:660px"></iframe>
+          </div>
         </div>
       </article>
 
       <article>
-        <h2 id="running-total">Standard Algorithm 2 — Running Total</h2>
-        <p>How do you add up ten numbers when you can only handle one at a time? The same way a shop till does: keep a <strong>running total</strong>. Start the total at 0, and add each value on as it arrives. The recipe:</p>
-        <ol>
-          <li>Set the total to 0 (initialise — this step is <em>not optional</em>)</li>
-          <li>Start a loop</li>
-          <li>&nbsp;&nbsp;&nbsp;&nbsp;Get the next value (from the user, or from an array)</li>
-          <li>&nbsp;&nbsp;&nbsp;&nbsp;Add it to the total</li>
-          <li>End loop, then use the total</li>
-        </ol>
-        <p>The txt says it works two ways, so here's both — <strong>without</strong> an array (values typed in, used once, forgotten) and <strong>with</strong> an array (values already stored, added up by index):</p>
-        <div class="code-block">
-          <div class="code-label">Python — running total from user input (no array)</div>
-          <pre># Add up 5 prices typed in by the user
-total = 0
-for counter in range(5):
-    price = int(input("Please enter a price: "))
-    total = total + price
-print("The total price is £" + str(total))</pre>
-        </div>
-        <div class="code-block">
-          <div class="code-label">Python — running total from an array</div>
-          <pre># Add up prices already stored in an array
-prices = [5, 25, 32, 10, 3]
-total = 0
-for counter in range(len(prices)):
-    total = total + prices[counter]
-print("The total price is £" + str(total))</pre>
-        </div>
-        <p>The key line is the same in both: <code>total = total + …</code> — "the new total is the old total plus this value". And in reference language:</p>
-        <div class="code-block">
-          <div class="code-label">SQA Reference Language — running total</div>
-          <pre>SET total TO 0
-FOR counter FROM 0 TO 4 DO
-    SET total TO total + prices(counter)
-END FOR
-SEND "The total is " &amp; total TO DISPLAY</pre>
-        </div>
-        <div class="callout callout-warning">
-          <div class="callout-icon">⚠️</div>
-          <div>Forget <code>total = 0</code> at the start and the algorithm falls apart — you'd be adding to whatever happened to be in the variable. Initialise first, always.</div>
-        </div>
-        <div class="callout callout-tip">
-          <div class="callout-icon">💡</div>
-          <div>Calculating an <strong>average</strong>? Total inside the loop, divide <strong>once after the loop ends</strong>. Dividing on every pass gives the right answer eventually but does pointless work — an <a href="evaluation.html">efficiency</a> question waiting to happen. And it has appeared with a conditional loop too: a 2019 exam question kept accepting numbers <em>until the total reached 100</em>.</div>
-        </div>
-      </article>
+        <h2 id="traversing">Standard Algorithm 2 — Traversing a 1-D Array</h2>
 
-      <article>
-        <h2 id="traversing">Standard Algorithm 3 — Traversing a 1-D Array</h2>
-        <p>On the <a href="data-types-structures.html">arrays page</a>, you accessed elements one at a time: <code>scores[0]</code>, <code>scores[4]</code>. Useful — but the real power of an array is processing <em>every</em> element, and for that you <strong>traverse</strong> it: use a loop, with the <strong>loop variable as the index</strong>.</p>
+        <h3>First, a 30-second array recap</h3>
+        <p>An <strong>array</strong> stores several values of the same type under <strong>one name</strong>, with each position numbered by an <strong>index</strong> — and indexes start at <strong>0</strong>, not 1:</p>
+
+        <svg viewBox="0 0 620 120" role="img" aria-label="An array called scores holding five integers, 15, 20, 19, 18 and 17, with indexes 0 to 4" style="max-width:620px;width:100%;height:auto;display:block;margin:1rem auto;">
+          <style>
+            .sa-cell { fill:#fff; stroke:#00442A; stroke-width:2; }
+            .sa-val { font:700 16px 'JetBrains Mono',monospace; fill:#0d1f17; text-anchor:middle; }
+            .sa-idx { font:600 12px 'Public Sans',sans-serif; fill:#92750A; text-anchor:middle; }
+            .sa-name { font:700 14px 'JetBrains Mono',monospace; fill:#00442A; }
+          </style>
+          <text class="sa-name" x="20" y="30">scores</text>
+          <rect class="sa-cell" x="90"  y="40" width="90" height="44"/>
+          <rect class="sa-cell" x="180" y="40" width="90" height="44"/>
+          <rect class="sa-cell" x="270" y="40" width="90" height="44"/>
+          <rect class="sa-cell" x="360" y="40" width="90" height="44"/>
+          <rect class="sa-cell" x="450" y="40" width="90" height="44"/>
+          <text class="sa-val" x="135" y="68">15</text>
+          <text class="sa-val" x="225" y="68">20</text>
+          <text class="sa-val" x="315" y="68">19</text>
+          <text class="sa-val" x="405" y="68">18</text>
+          <text class="sa-val" x="495" y="68">17</text>
+          <text class="sa-idx" x="135" y="102">index 0</text>
+          <text class="sa-idx" x="225" y="102">index 1</text>
+          <text class="sa-idx" x="315" y="102">index 2</text>
+          <text class="sa-idx" x="405" y="102">index 3</text>
+          <text class="sa-idx" x="495" y="102">index 4</text>
+        </svg>
+
+        <p>One position at a time, an array works just like a variable with an index attached: <code>scores[0]</code> is 15, <code>scores[4]</code> is 17. If any of that feels rusty, take five minutes back at the <a href="data-types-structures.html">arrays page</a> (and its visualiser) before carrying on.</p>
+
+        <h3>Visiting every element</h3>
+        <p>Accessing elements one at a time is useful — but the real power of an array is processing <em>every</em> element, and for that you <strong>traverse</strong> it: use a loop, with the <strong>loop variable as the index</strong>.</p>
         <ol>
           <li>Start a fixed loop that runs once per element</li>
           <li>&nbsp;&nbsp;&nbsp;&nbsp;Use the element at position [counter]</li>
@@ -195,13 +240,13 @@ SEND "The total is " &amp; total TO DISPLAY</pre>
         <div class="code-block">
           <div class="code-label">Python — traversing an array</div>
           <pre># An array of seven names
-names = ["Dopey", "Grumpy", "Doc", "Bashful", "Sneezy", "Sleepy", "Happy"]
+names = ["Archie", "Erika", "Riley", "Matthew", "Lucienne", "Harveer", "Christian"]
 
 # Elements are numbered 0 to 6 - visit and print each one
 for counter in range(7):
     print(names[counter])</pre>
         </div>
-        <p>On the first pass <code>counter</code> is 0, so it prints <code>names[0]</code> (Dopey). Next pass, <code>names[1]</code> (Grumpy). The loop variable sweeps through every index in turn — that's the whole trick. Rather than hard-coding the 7, you can let Python count the array for you with <code>range(len(names))</code> — then the loop still works if the array grows.</p>
+        <p>On the first pass <code>counter</code> is 0, so it prints <code>names[0]</code> (Archie). Next pass, <code>names[1]</code> (Erika). The loop variable sweeps through every index in turn — that's the whole trick. Rather than hard-coding the 7, you can let Python count the array for you with <code>range(len(names))</code> — then the loop still works if the array grows.</p>
         <div class="code-block">
           <div class="code-label">Python — filling an array, then traversing it</div>
           <pre>names = []
@@ -220,11 +265,324 @@ for counter in range(len(names)):
     SEND names(counter) TO DISPLAY
 END FOR</pre>
         </div>
-        <p>Traversal also combines beautifully with the running total — look back at the "running total from an array" example above and you'll see it's <em>both</em> standard algorithms in one: a traversal that adds instead of prints. Exam questions mix the algorithms together like this all the time.</p>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎞️</span>
-          <em>Placeholder — animation</em>
-          Suggestion: a traversal stepper — the names array drawn as boxes, with a highlight hopping from index 0 to 6 as the loop variable ticks up, and each element appearing in an output panel. A toggle to "running total mode" (numbers instead of names, with the total accumulating) would cover two algorithms in one visualiser.
+        <p>This traversal just <em>prints</em> each element — but you can do anything to them as the loop sweeps past. Do some <em>adding</em> along the way and you've built the next standard algorithm.</p>
+
+        <p>Here's a past paper question about exactly this — write your own answer before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2017 Q16 a) — Louise's Survey (3 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q5.png" alt="Past paper question: Louise is conducting a survey to find out how many hours per week her classmates spend playing computer games. She will survey 100 pupils. The program assigns 100 names to a 1-D array, shown as 101 lines of code: DECLARE name AS ARRAY OF STRING, then RECEIVE name index 0 FROM KEYBOARD, RECEIVE name index 1 FROM KEYBOARD, and so on up to RECEIVE name index 99 FROM KEYBOARD. Part a: Louise realises that writing the code to read the data into the array like this is time consuming and not good practice. Write, using pseudocode or a programming language of your choice, the code to show how the data can be entered into the 1-D array using repetition. 3 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> One hundred nearly-identical RECEIVE lines — the Bart Simpson problem from the <a href="loops.html">loops page</a>, applied to an array. The only thing changing from line to line is the <strong>index</strong>: 0, 1, 2 … 99. Anything that counts up by one each time is a job for the <strong>loop variable</strong> — so we traverse the array, filling as we go:</p>
+          <ul>
+            <li>a <strong>fixed loop</strong> — 100 pupils, known in advance</li>
+            <li><strong>user input</strong> inside the loop</li>
+            <li>the input stored in the <strong>array</strong>, with the loop variable as the index</li>
+          </ul>
+          <p>Watch the trap: the indexes run <strong>0 to 99</strong>, not 1 to 100 — the hundredth pupil lives at <code>name[99]</code>. And note the question allows pseudocode: "add each name to the array" wording earns the array mark in a design, though since code is invited, showing the index is the safest bet.</p>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q5_ans.png" alt="Marking instructions: one mark for a fixed loop, one mark for user input, one mark for using an array. 3 marks." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">
+            1&nbsp;&nbsp;Loop 100 times<br/>
+            1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receive name[index] from keyboard<br/>
+            2&nbsp;&nbsp;End loop
+          </p>
+          <p style="color:#6A1B9A;">or in Python:</p>
+          <p style="color:#6A1B9A;">
+            name = []<br/>
+            for counter in range(100):<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;name.append(input("Enter name: "))
+          </p>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Traversal Stepper</p>
+          <div class="ib-body">
+            <p class="ib-intro">The names array as boxes, with the highlight hopping from index 0 to 6 as the loop variable ticks up and each element lands in the output. Then flip to <strong>running total mode</strong> — the same sweep with one line changed, covering two standard algorithms in one loop.</p>
+            <iframe src="../resources/sdd/visualisers/traversal-stepper.html"
+                    title="Traversal stepper — watch the loop variable sweep the array"
+                    loading="lazy"
+                    style="height:700px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="running-total">Standard Algorithm 3 — Running Total</h2>
+        <p>How do you add up ten numbers when you can only handle one at a time? The same way a shop till does: keep a <strong>running total</strong>. Start the total at 0, and add each value on as it arrives. The recipe:</p>
+        <ol>
+          <li>Set the total to 0 (initialise — this step is <em>not optional</em>)</li>
+          <li>Start a loop</li>
+          <li>&nbsp;&nbsp;&nbsp;&nbsp;Get the next value (from the user, or from an array)</li>
+          <li>&nbsp;&nbsp;&nbsp;&nbsp;Add it to the total</li>
+          <li>End loop, then use the total</li>
+        </ol>
+        <p>It works two ways — <strong>without</strong> an array (values typed in, used once, forgotten) and <strong>with</strong> an array (values already stored, added up by index):</p>
+        <div class="code-block">
+          <div class="code-label">Python — running total from user input (no array)</div>
+          <pre># Add up 5 prices typed in by the user
+total = 0
+for counter in range(5):
+    price = int(input("Please enter a price: "))
+    total = total + price
+print("The total price is £" + str(total))</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">Python — running total from an array</div>
+          <pre># Add up prices already stored in an array
+prices = [5, 25, 32, 10, 3]
+total = 0
+for counter in range(len(prices)):
+    total = total + prices[counter]
+print("The total price is £" + str(total))</pre>
+        </div>
+        <p>Look closely at the array version: it's the <strong>traversal from above with one line changed</strong> — a traversal that adds instead of prints. That's <em>both</em> standard algorithms in one, and exam questions mix them together like this all the time. The key line is the same in both versions: <code>total = total + …</code> — "the new total is the old total plus this value". And in reference language:</p>
+        <div class="code-block">
+          <div class="code-label">SQA Reference Language — running total</div>
+          <pre>SET total TO 0
+FOR counter FROM 0 TO 4 DO
+    SET total TO total + prices(counter)
+END FOR
+SEND "The total is " &amp; total TO DISPLAY</pre>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>Forget <code>total = 0</code> at the start and the algorithm falls apart — you'd be adding to whatever happened to be in the variable. Initialise first, always.</div>
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Calculating an <strong>average</strong>? Total inside the loop, divide <strong>once after the loop ends</strong>. Dividing on every pass gives the right answer eventually but does pointless work — an <a href="evaluation.html">efficiency</a> question waiting to happen. And it has appeared with a conditional loop too: a 2019 exam question kept accepting numbers <em>until the total reached 100</em>.</div>
+        </div>
+        <p>Now two past paper questions — and notice both of them mix the running total with the other algorithms on this page. Try each before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2022 Q10 c) — Sam's Five Jobs (4 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q2.png" alt="Past paper question: Sam completes five jobs in July and earns £562.77, £675.44, £287.91, £245.22 and £899.66. The code shown declares total and job1 initially 0.0, then receives job1 to job5 from the keyboard on five separate lines, sets total to job1 plus job2 plus job3 plus job4 plus job5, and displays Total Monthly Earnings with the total. When evaluating this code, it is found to be inefficient. Using a programming language of your choice, re-write Lines 7 to 12 of the code using more efficient constructs. The values for the five jobs should remain stored for use after Line 12. 4 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Five separate input lines and one long addition — the giveaway of a program crying out for a loop. But read the last sentence carefully: <em>"the values for the five jobs should remain stored"</em>. That single sentence forces an <strong>array</strong>. Five separate variables could be replaced by one reused variable if we only wanted the total — but then the individual values would be lost. Keeping all five means <code>job[0]</code> to <code>job[4]</code>.</p>
+          <ul>
+            <li>a <strong>loop</strong> that runs 5 times</li>
+            <li><strong>input of each job inside the loop</strong>, stored in the array</li>
+            <li>a <strong>running total inside the loop</strong> — replacing the long addition on line 12</li>
+            <li><strong>correct use of the array</strong>, with the loop variable as the index</li>
+          </ul>
+          <p>Look at what this answer actually is: <strong>filling an array</strong> (Louise's survey) and a <strong>running total</strong> happening in the same loop. Exam questions stack the standard algorithms like this constantly.</p>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q2_ans.png" alt="Marking instructions: one mark each for loop 5 times, input of job assigned within loop, running total within loop, and correct use of array. Number of loop iterations declared may vary according to language, for example 0 to 5, 1 to 5, 0 to 4, 1 to 6. To avoid double penalising, along with bullet point two, award mark for correct use of an array once in the answer. 4 marks." class="zoomable" />
+          <p>The question says "a programming language of your choice", so here it is in Python:</p>
+          <p style="color:#6A1B9A;">
+            job = [0.0] * 5<br/>
+            total = 0<br/>
+            for counter in range(5):<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;job[counter] = float(input("Enter job earnings: "))<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;total = total + job[counter]
+          </p>
+          <p>Notice <strong>job[counter]</strong> — using the loop variable as the index is what earns the "correct use of array" mark. Write <code>job</code> without the index and the marker can't see an array being used at all.</p>
+          <p>A design-style answer is also acceptable:</p>
+          <p style="color:#6A1B9A;">
+            1&nbsp;&nbsp;Loop 5 times<br/>
+            1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receive job[index] from keyboard<br/>
+            1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set total to total + job[index]<br/>
+            2&nbsp;&nbsp;End loop
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">2023 Q10 b) — Average Data Usage (4 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q3-1.png" alt="Past paper question: a communications company uses a program to calculate a customer's average data usage over a 12-month period. A table shows example monthly data usage in gigabytes: February 50, March 41, April 30.8, May 35.7, June 32.7, July 23, August 19." class="zoomable" />
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q3-2.png" alt="Past paper question continued: the design shows an algorithm with three steps — store each month's data usage, calculate the average monthly data usage, display the average monthly data usage. The data structure month is used to store the data usage. The variable aveData is used to store a customer's average monthly data usage. Using a design technique of your choice, refine step 2. 4 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> "Refine step 2" means breaking "calculate the average" into its real steps. An average is a <strong>running total divided by the count</strong> — and here the twist is that the data is <em>already stored</em> in the <code>month</code> array by step 1. So this is a <strong>traversal</strong> feeding a running total:</p>
+          <ul>
+            <li>a <strong>loop that runs 12 times</strong> — one pass per month</li>
+            <li>a <strong>running total updated inside the loop</strong></li>
+            <li>using the <strong>stored array values</strong> — <code>month[index]</code>, not new input</li>
+            <li>the <strong>average calculated after the loop</strong>: total &divide; 12, stored in <code>aveData</code></li>
+          </ul>
+          <p>Watch the traps: no RECEIVE lines — step 1 already stored the data, so asking the user again throws away the "stored array values" mark. And divide <strong>once, after the loop ends</strong> — by the same number as the loop runs. (Recognise <code>aveData</code>? It's the very value that gets rounded to 23.3 in part c) of this question, on the <a href="pre-defined-functions.html">Pre-Defined Functions</a> page.)</p>
+          <img src="../resources/sdd/worked_examples/n5_stnd_algo_q3-2_ans.png" alt="Marking instructions: one mark for each of the following designed — loop 12 times, updating running total within loop, using stored array values, calculate average total divided by 12. Example answer: 2.1 loop 12 times, 2.2 set total to total plus month index, 2.3 end loop, 2.4 set aveData to total divided by 12. Award mark if average divides by the same number of loop iterations. 4 marks." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">
+            2.1&nbsp;&nbsp;Loop 12 times<br/>
+            2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set total to total + month[index]<br/>
+            2.3&nbsp;&nbsp;End loop<br/>
+            2.4&nbsp;&nbsp;Set aveData to total / 12
+          </p>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">The Shop Till</p>
+          <div class="ib-body">
+            <p class="ib-intro">The prices array feeding a till, one value at a time, with the key line shown substituting real numbers each pass (total = 30 + 32 → 62). Then switch to <strong>"Forgot to initialise"</strong> — the till still holds £70 from the last customer, and the final bill shows exactly why <code>total = 0</code> is not optional.</p>
+            <iframe src="../resources/sdd/visualisers/running-total-till.html"
+                    title="Shop till — running total animation with a forgot-to-initialise mode"
+                    loading="lazy"
+                    style="height:640px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>These don't copy the worked examples — each one makes you <em>apply</em> the recipe in a new shape. Remember: "a design technique of your choice" means plain wording is fine. Write your answer down before opening the marking instructions.</p>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Name That Algorithm (2 marks)</div>
+          <p>(a) State the standard algorithm used in the design below.</p>
+          <div class="code-block">
+            <div class="code-label">Pseudocode</div>
+            <pre>1. Set raised to 0
+2. Loop for each runner
+2.1     Get donation from runner
+2.2     Add donation onto raised
+3. End loop
+4. Display raised</pre>
+          </div>
+          <p>(b) State the standard algorithm used in the design below.</p>
+
+          <svg viewBox="0 0 580 360" role="img"
+               aria-label="A flowchart. An arrow leads into an input step, get PIN, then down to a decision diamond asking is PIN valid. The No branch leads right to a process box, display error message, which loops back up to get PIN. The Yes branch leads down to a box reading continue to account."
+               style="max-width:580px;width:100%;height:auto;display:block;margin:1rem auto;">
+            <style>
+              .sa2-io { fill:#fff; stroke:#00442A; stroke-width:2; }
+              .sa2-proc { fill:#fff; stroke:#00442A; stroke-width:2; }
+              .sa2-dec { fill:#FEF3C7; stroke:#C9A227; stroke-width:2; }
+              .sa2-txt { font:600 13px 'Public Sans',sans-serif; fill:#1A1A1A; text-anchor:middle; }
+              .sa2-lbl { font:700 12px 'Public Sans',sans-serif; text-anchor:middle; }
+              .sa2-ln { fill:none; stroke:#4A5568; stroke-width:1.8; }
+            </style>
+            <defs>
+              <marker id="sa2arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+              </marker>
+            </defs>
+            <path class="sa2-ln" d="M230,8 V40" marker-end="url(#sa2arr)"/>
+            <polygon class="sa2-io" points="150,46 330,46 310,92 130,92"/>
+            <text class="sa2-txt" x="230" y="74">Get PIN</text>
+            <path class="sa2-ln" d="M230,92 V128" marker-end="url(#sa2arr)"/>
+            <polygon class="sa2-dec" points="230,134 350,190 230,246 110,190"/>
+            <text class="sa2-txt" x="230" y="195">Is PIN valid?</text>
+            <path class="sa2-ln" d="M350,190 H384" marker-end="url(#sa2arr)"/>
+            <text class="sa2-lbl" x="366" y="180" fill="#B91C1C">No</text>
+            <rect class="sa2-proc" x="390" y="167" width="160" height="46"/>
+            <text class="sa2-txt" x="470" y="195">Display error message</text>
+            <path class="sa2-ln" d="M470,167 V69 H336" marker-end="url(#sa2arr)"/>
+            <path class="sa2-ln" d="M230,246 V286" marker-end="url(#sa2arr)"/>
+            <text class="sa2-lbl" x="252" y="270" fill="#1B6B45">Yes</text>
+            <rect class="sa2-proc" x="140" y="292" width="180" height="46"/>
+            <text class="sa2-txt" x="230" y="320">Continue to account</text>
+          </svg>
+
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">(a) <strong>Running total</strong> (1 mark) — a total set to 0, then added to inside a loop. The fingerprint is line 2.2: raised appears on both sides of the addition.</p>
+              <p style="color:#6A1B9A;">(b) <strong>Input validation</strong> (1 mark) — the No branch shows an error message and loops back to ask for the input again, repeating until the PIN passes.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Museum Tickets (4 marks)</div>
+          <p>A museum's ticket kiosk asks visitors to type their ticket type, which must be either "adult" or "child".</p>
+          <p>Using a design technique of your choice, design an efficient solution to check that the ticket type entered is valid.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark for each of the following designed:</p>
+              <ul style="color:#6A1B9A;">
+                <li>a conditional loop</li>
+                <li>correct loop condition (while ticketType is not "adult" AND not "child")</li>
+                <li>input of the ticket type inside the loop</li>
+                <li>an error message</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer:</p>
+              <p style="color:#6A1B9A;">
+                1&nbsp;&nbsp;Get ticketType from user<br/>
+                2&nbsp;&nbsp;While ticketType &ne; "adult" AND ticketType &ne; "child"<br/>
+                2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Display "Error - please enter adult or child"<br/>
+                2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get ticketType from user<br/>
+                3&nbsp;&nbsp;End while
+              </p>
+              <p style="color:#6A1B9A;">This is a design, so plain wording like "while the answer is not adult or child" is acceptable. Note the join is <strong>AND</strong>, not OR — the input is only bad when it fails <em>both</em> comparisons. A range check loops on OR; a restricted choice loops on AND. Writing OR here would loop forever, whatever the user types.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Smart Kettle (3 marks)</div>
+          <p>A smart kettle heats water. A sensor continuously detects the temperature of the water while it heats. When the water reaches 100&deg;C, the kettle automatically switches off.</p>
+          <p>Using a design technique of your choice, design a solution to this problem.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark for each of the following:</p>
+              <ul style="color:#6A1B9A;">
+                <li>a loop with a condition</li>
+                <li>the sensor detecting the temperature</li>
+                <li>switching off when the water reaches 100&deg;C</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer:</p>
+              <p style="color:#6A1B9A;">
+                1&nbsp;&nbsp;While sensor detects temperature below 100<br/>
+                1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue heating the water<br/>
+                2&nbsp;&nbsp;End while<br/>
+                3&nbsp;&nbsp;Switch off the kettle
+              </p>
+              <p style="color:#6A1B9A;">Do not allow human input of the temperature — the sensor drives the condition. Notice the loop runs while the water is <em>below</em> the target, the opposite direction from the washing machine draining while water <em>remains</em>. Read the story, then write the condition to match it.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Weather Station (3 marks)</div>
+          <p>A weather station stores 24 hourly temperature readings in the array <code>temps</code>.</p>
+          <p>Using a design technique of your choice, design a solution to display every reading in the array alongside its hour number.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark for each of the following:</p>
+              <ul style="color:#6A1B9A;">
+                <li>a fixed loop that runs 24 times</li>
+                <li>use of the array with the loop variable as the index</li>
+                <li>the display inside the loop (accept the loop variable as the hour number)</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer:</p>
+              <p style="color:#6A1B9A;">
+                1&nbsp;&nbsp;Loop 24 times<br/>
+                1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Display index and temps[index]<br/>
+                2&nbsp;&nbsp;End loop
+              </p>
+              <p style="color:#6A1B9A;">No total is needed — this is a traversal on its own. The readings already exist, so there is no input either: the loop simply visits index 0 to 23 and displays as it goes.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Lap Times (4 marks)</div>
+          <p>A swimming coach wants a program that stores the lap times of the 8 swimmers in a race in an array, then displays the average lap time.</p>
+          <p>Using a design technique of your choice, design a solution to this problem.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark for each of the following designed:</p>
+              <ul style="color:#6A1B9A;">
+                <li>a loop that runs 8 times</li>
+                <li>input of each lap time into the array within the loop</li>
+                <li>a running total within the loop</li>
+                <li>the average calculated after the loop (total &divide; 8) and displayed</li>
+              </ul>
+              <p style="color:#6A1B9A;">Sample answer:</p>
+              <p style="color:#6A1B9A;">
+                1&nbsp;&nbsp;Set total to 0<br/>
+                2&nbsp;&nbsp;Loop 8 times<br/>
+                2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receive time[index] from keyboard<br/>
+                2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set total to total + time[index]<br/>
+                3&nbsp;&nbsp;End loop<br/>
+                4&nbsp;&nbsp;Set average to total / 8<br/>
+                5&nbsp;&nbsp;Display average
+              </p>
+              <p style="color:#6A1B9A;">Unlike the data usage question, nothing is stored yet — so the input goes into the array <em>inside</em> the loop. This one design uses all three standard algorithms' ingredients: filling an array, a running total, and dividing once after the loop.</p>
+            </div>
+          </details>
         </div>
       </article>
 

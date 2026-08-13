@@ -264,6 +264,23 @@
             3.3&nbsp;&nbsp;END IF
           </p>
         </div>
+
+        <p>And here's the boundary itself being examined directly — the number lines above are exactly what this question is testing.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2018 Q4 — Security Light (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_if_q2.png" alt="Past paper question: the program below is used to switch a security light on or off depending on a reading taken from a light sensor. Line 1 DECLARE storedLight INITIALLY 765.2. Line 2 RECEIVE reading FROM light sensor. Line 3 IF reading is less than storedLight THEN. Line 4 switch on light. Line 5 ELSE. Line 6 switch off light. Line 7 END IF. Part a: state the smallest light sensor value that would result in the security light being off. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> The question asks about the light being <strong>off</strong>, so we work backwards from the branch that switches it off. That's the <code>ELSE</code> on line 5 — and an ELSE only runs when the condition is <strong>false</strong>.</p>
+          <ul>
+            <li>The condition is <code>reading &lt; storedLight</code>, which is <code>reading &lt; 765.2</code>.</li>
+            <li>It is false when the reading is <strong>not</strong> less than 765.2 — in other words, 765.2 or above.</li>
+            <li>The <em>smallest</em> value in that set is <strong>765.2</strong> itself.</li>
+          </ul>
+          <p>Watch the trap: it's tempting to answer 765.3, on the instinct that the value must be "bigger". But <code>&lt;</code> <em>excludes</em> the boundary — so 765.2 is not less than 765.2, the condition is false, and the boundary value belongs to the ELSE. Look back at the <code>days &lt; 14</code> number line above: the hollow circle at the boundary is this exact idea.</p>
+          <img src="../resources/sdd/worked_examples/n5_if_q2_ans.png" alt="Marking instructions: 765.2. 1 mark." class="zoomable" />
+          <p>The answer is:</p>
+          <p style="color:#6A1B9A;"><strong>765.2</strong></p>
+        </div>
       </article>
 
       <article>
@@ -292,6 +309,60 @@ else:
         <div class="callout callout-warning">
           <div class="callout-icon">⚠️</div>
           <div><code>==</code> asks a question ("are these equal?"); a single <code>=</code> gives an order ("store this!"). Mixing them up inside an if is a classic <a href="testing.html">syntax error</a>.</div>
+        </div>
+
+        <p>Reading an IF … ELSE carefully is worth marks in itself. This past paper question asks three different things about one short piece of code — try each part before opening it.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2018 Q14 — Delivery Cost (3 marks)</div>
+          <div class="q-intro">
+            <p>An online shop works out the delivery cost of an order. Platinum cardholders, and anyone spending &pound;50 or more, get cheaper delivery:</p>
+            <img src="../resources/sdd/worked_examples/n5_logic_op_q2.png" alt="Past paper question: the program code below calculates the delivery cost of orders. Line 13 IF orderTotal is less than 50.00 AND NOT open bracket cardType equals Platinum close bracket THEN. Line 14 SET deliveryCost TO 5.00. Line 15 ELSE. Line 16 SET delivery TO 1.50. Line 17 END IF. Line 18 SEND deliveryCost TO DISPLAY. Part a: explain why the program may not display the expected output at line 18, 1 mark. Part b: identify one logical operator in the above code, 1 mark. Part c: state the delivery cost for the following order — card type Gold, order total 43.00, 1 mark." class="zoomable" />
+          </div>
+          <div class="q-parts-heading">Question parts — try each one before opening it</div>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">a</span><span class="qp-title">Explain why the program may not display the expected output at line 18.</span><span class="qp-marks">1 mark</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> When a question says the output may be wrong, compare the variable names <em>character by character</em>. Line 18 displays <code>deliveryCost</code>. Line 14 sets <code>deliveryCost</code> — that matches. But line 16 sets <code>delivery</code>.</p>
+              <p><code>delivery</code> and <code>deliveryCost</code> are two <strong>completely different variables</strong>, as far as the computer is concerned. So when the ELSE branch runs, the 1.50 goes into a variable nobody ever displays, and <code>deliveryCost</code> is left holding whatever it had before.</p>
+              <p>Notice the program doesn't crash — it runs happily and quietly displays the wrong number. That's the definition of a <a href="testing.html">logic error</a>, and it's why testing exists.</p>
+              <p>So the answer is:</p>
+              <p style="color:#6A1B9A;">Line 16 stores the value in a variable called <strong>delivery</strong>, but line 18 displays <strong>deliveryCost</strong> — a different variable. When the ELSE branch runs, deliveryCost is never given the 1.50.</p>
+            </div>
+          </details>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">b</span><span class="qp-title">Identify one logical operator in the above code.</span><span class="qp-marks">1 mark</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> Only three logical operators exist at National 5 — AND, OR and NOT. Scan line 13 and two of them are sitting there: <code>AND</code> joins the two halves of the condition, and <code>NOT</code> flips the bracket. Either one earns the mark.</p>
+              <p>Watch the trap: <code>&lt;</code> and <code>=</code> are <strong>comparison</strong> operators, not logical ones. Comparison operators build a condition; logical operators join conditions together.</p>
+              <p>So the answer is:</p>
+              <p style="color:#6A1B9A;"><strong>AND</strong> (or NOT)</p>
+            </div>
+          </details>
+
+          <details class="q-part">
+            <summary><span class="qp-letter">c</span><span class="qp-title">State the delivery cost for an order — card type Gold, order total £43.00.</span><span class="qp-marks">1 mark</span><span class="qp-chevron" aria-hidden="true"></span></summary>
+            <div class="qp-body">
+              <p><strong>How to tackle it:</strong> Substitute the values into line 13 and evaluate it one piece at a time, exactly as the Condition Evaluator further down this page does:</p>
+              <ul>
+                <li><code>orderTotal &lt; 50.00</code> → 43.00 &lt; 50.00 → <strong>true</strong></li>
+                <li><code>cardType = "Platinum"</code> → "Gold" = "Platinum" → <strong>false</strong></li>
+                <li><code>NOT(false)</code> → <strong>true</strong> — NOT flips it</li>
+                <li><code>true AND true</code> → the whole condition is <strong>true</strong></li>
+              </ul>
+              <p>The condition is true, so the THEN branch on line 14 runs and the delivery cost is set to 5.00.</p>
+              <p>Here's the neat part: this order takes the <em>THEN</em> branch, which uses the correctly spelled <code>deliveryCost</code>. So despite the bug you found in part a), this particular order displays the right answer. The fault only shows itself for orders that reach the ELSE — a Platinum cardholder, or anyone spending £50 or more.</p>
+              <p>So the answer is:</p>
+              <p style="color:#6A1B9A;"><strong>&pound;5.00</strong></p>
+            </div>
+          </details>
+
+          <p>Here are the marking instructions for all three parts — check your answers:</p>
+          <img src="../resources/sdd/worked_examples/n5_logic_op_q2-1_ans.png" alt="Marking instructions part a: the variable used on line 16 is delivery which is different than the variable being set on line 14 and 18 which is deliveryCost." class="zoomable" />
+          <img src="../resources/sdd/worked_examples/n5_logic_op_q2-2_ans.png" alt="Marking instructions part b: NOT or AND." class="zoomable" />
+          <img src="../resources/sdd/worked_examples/n5_logic_op_q2-3_ans.png" alt="Marking instructions part c: 5." class="zoomable" />
         </div>
       </article>
 
@@ -752,6 +823,62 @@ Line 15  END IF</pre>
                 END IF
               </p>
               <p style="color:#6A1B9A;">Every vehicle is either 2 metres or under, or over 2 metres — there is no third possibility, so the second condition is simply the opposite of the first. As originally written, every vehicle is tested twice.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 6 — Gym Discount (3 marks)</div>
+          <p>The program code below calculates the discount given to a gym member.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 8   IF visits &gt; 10 AND NOT(memberType = "Gold") THEN
+Line 9       SET discount TO 2.00
+Line 10  ELSE
+Line 11      SET saving TO 0.50
+Line 12  END IF
+Line 13  SEND discount TO DISPLAY</pre>
+          </div>
+          <p>(a) Explain why the program may not display the expected output at line 13.<br/>
+             (b) Identify <strong>one</strong> logical operator in the above code.<br/>
+             (c) State the discount for the following member.</p>
+          <table style="max-width:22rem;">
+            <tbody>
+              <tr><td style="width:9rem;">Member Type:</td><td>Silver</td></tr>
+              <tr><td>Visits:</td><td>14</td></tr>
+            </tbody>
+          </table>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">(a) Line 11 stores the value in a variable called <strong>saving</strong>, but line 13 displays <strong>discount</strong> — a different variable. When the ELSE branch runs, discount never receives the 0.50 (1 mark).</p>
+              <p style="color:#6A1B9A;">(b) <strong>AND</strong> or <strong>NOT</strong> (1 mark). Do not accept &gt; or = — those are comparison operators.</p>
+              <p style="color:#6A1B9A;">(c) <strong>&pound;2.00</strong> (1 mark). Working: 14 &gt; 10 is true; "Silver" = "Gold" is false, so NOT(false) is true; true AND true is true — the THEN branch runs.</p>
+              <p style="color:#6A1B9A;">Notice this member takes the THEN branch, which uses the correctly spelled variable — so the bug from part (a) doesn't affect this answer. It only shows itself for Gold members, or anyone with 10 visits or fewer.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 7 — Thermostat (1 mark)</div>
+          <p>The program below switches a heating system on or off depending on a reading taken from a temperature sensor.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 1  DECLARE targetTemp INITIALLY 18.5
+Line 2  RECEIVE roomTemp FROM &lt;temperature sensor&gt;
+Line 3  IF roomTemp &gt; targetTemp THEN
+Line 4      &lt;switch heating off&gt;
+Line 5  ELSE
+Line 6      &lt;switch heating on&gt;
+Line 7  END IF</pre>
+          </div>
+          <p>State the <strong>largest</strong> temperature reading that would result in the heating being switched <strong>on</strong>.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>18.5</strong> (1 mark)</p>
+              <p style="color:#6A1B9A;">The heating is switched on by the ELSE, which runs when the condition is false. <code>roomTemp &gt; 18.5</code> is false whenever the reading is 18.5 <em>or below</em>, so the largest such reading is 18.5 itself.</p>
+              <p style="color:#6A1B9A;">Do not accept 18.4. Because <code>&gt;</code> excludes the boundary, 18.5 is not greater than 18.5 — the boundary value belongs to the ELSE branch.</p>
             </div>
           </details>
         </div>

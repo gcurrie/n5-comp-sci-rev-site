@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Till — Running Total — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:880px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:780px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 12px}
+  .grp{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+  .modes{display:flex;border:1px solid var(--line)}
+  .modes button{font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 14px;color:var(--ink)}
+  .modes button:last-child{border-right:0}
+  .modes button.on{background:var(--active-strong);color:#fff}
+  .modes button.on.bad{background:var(--warn)}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 18px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  button.ctrl:hover:not(:disabled){filter:brightness(1.06)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button:focus-visible{outline:3px solid var(--match-bg);outline-offset:1px}
+
+  .panel{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- stage: array over till ---- */
+  .stage{padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .arrname{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--active-strong);align-self:flex-start;margin:0 0 8px}
+  .cells{display:flex;gap:0}
+  .slot{text-align:center}
+  .cell{
+    min-width:clamp(56px,10vw,96px);height:56px;border:2.5px solid var(--active-strong);margin-left:-2.5px;
+    background:#fff;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:15px;font-weight:700;color:var(--active-strong);
+    transition:background .3s,border-color .3s,color .3s,opacity .3s;
+  }
+  .slot:first-child .cell{margin-left:0}
+  .cell.now{background:var(--match-bg);border-color:var(--match-accent);color:var(--match)}
+  .cell.done{opacity:.45}
+  .idx{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--match);margin-top:6px}
+
+  .droplane{height:56px;position:relative;width:100%;display:flex;justify-content:center;align-items:flex-start}
+  .droptoken{
+    font-family:var(--mono);font-size:16px;font-weight:700;color:#002D1C;background:var(--match-accent);
+    border:2px solid var(--match);padding:5px 12px;opacity:0;
+  }
+  .droptoken.go{animation:dropin .55s cubic-bezier(.5,.05,.8,.5) forwards}
+  @keyframes dropin{from{opacity:1;transform:translateY(-6px)}85%{opacity:1}to{opacity:0;transform:translateY(52px)}}
+
+  .till{width:min(360px,90vw);border:3px solid var(--ink);background:#0d1f17}
+  .tillbar{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--match-accent);background:var(--bar);padding:7px 10px;display:flex;justify-content:space-between}
+  .tillbar .warned{color:#F3A0A0}
+  .tilldisplay{padding:16px 14px;text-align:center}
+  .tilldisplay .amount{font-family:var(--mono);font-size:38px;font-weight:700;color:#7CE3AC;transition:color .3s}
+  .tilldisplay .amount.bad{color:#F3A0A0}
+  .keyline{
+    font-family:var(--mono);font-size:14px;font-weight:700;color:var(--out);
+    background:var(--out-bg);border-left:3px solid var(--out);padding:10px 14px;margin-top:14px;
+    min-height:2.6em;display:flex;align-items:center;overflow-x:auto;white-space:nowrap;max-width:100%;
+  }
+  .keyline.idle{color:var(--ink-soft);background:var(--bg);border-left-color:var(--line);font-weight:400;font-size:13px}
+  .keyline.init{color:var(--active-strong);background:var(--active-bg);border-left-color:var(--active)}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:2px;font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Standard Algorithms</p>
+    <h1>The Shop Till</h1>
+    <p class="sub">A running total, exactly as a till does it: each price is added on as it arrives. Run it properly first — then run it again having <b>forgotten to initialise</b>, and see what the customer thinks of that.</p>
+  </header>
+
+  <div class="controls">
+    <div class="grp">
+      <span class="lbl">Mode</span>
+      <div class="modes" id="modes" role="group" aria-label="Choose a mode"></div>
+    </div>
+    <button class="ctrl" id="run" type="button">Run ▶</button>
+  </div>
+
+  <section class="panel">
+    <div class="panelbar"><span>THE PRICES ARRAY → THE TILL</span></div>
+    <div class="stage">
+      <p class="arrname">prices = [5, 25, 32, 10, 3]</p>
+      <div class="cells" id="cells"></div>
+      <div class="droplane"><span class="droptoken" id="droptoken"></span></div>
+      <div class="till">
+        <div class="tillbar"><span>TILL TOTAL</span><span id="tillnote"></span></div>
+        <div class="tilldisplay"><span class="amount" id="amount">—</span></div>
+      </div>
+      <div class="keyline idle" id="keyline">the key line will appear here with real numbers in it</div>
+    </div>
+  </section>
+
+  <div class="narrate idle" id="narrate">Pick a mode and press <b>Run ▶</b>.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const PRICES = [5, 25, 32, 10, 3];
+  const LEFTOVER = 70;
+
+  const MODES = [
+    { name:"Set total to 0 first", bad:false },
+    { name:"Forgot to initialise", bad:true }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const narrate = $("narrate"), runBtn = $("run");
+  let mode = 0, playing = false;
+  let modeBtns = [], cellEls = [];
+
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  modeBtns = MODES.map((m, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = m.name;
+    b.addEventListener("click", () => { if(playing) return; mode = i; deal(); });
+    $("modes").appendChild(b);
+    return b;
+  });
+
+  function setAmount(v, bad){
+    $("amount").textContent = (v === "—" ? v : "£" + v);
+    $("amount").classList.toggle("bad", !!bad);
+  }
+
+  function deal(){
+    const m = MODES[mode];
+    playing = false;
+    modeBtns.forEach((b, i) => {
+      b.classList.toggle("on", i === mode);
+      b.classList.toggle("bad", i === mode && MODES[i].bad);
+    });
+    $("cells").innerHTML = "";
+    cellEls = PRICES.map((v, i) => {
+      const slot = document.createElement("div");
+      slot.className = "slot";
+      slot.innerHTML = '<div class="cell">' + v + '</div><div class="idx">[' + i + ']</div>';
+      $("cells").appendChild(slot);
+      return slot.querySelector(".cell");
+    });
+    if(m.bad){
+      setAmount(LEFTOVER, true);
+      $("tillnote").innerHTML = '<span class="warned">LEFT OVER FROM THE LAST CUSTOMER</span>';
+      say("The till was never cleared — it still shows <b>&pound;" + LEFTOVER + "</b> from the previous customer. Run it and watch what happens.", "warn");
+    } else {
+      setAmount("—");
+      $("tillnote").textContent = "";
+      say("Ready. The first thing a running total does is <code>Set total TO 0</code> — watch for it. Press <b>Run ▶</b>.", "idle");
+    }
+    $("keyline").className = "keyline idle";
+    $("keyline").textContent = "the key line will appear here with real numbers in it";
+    runBtn.disabled = false;
+    runBtn.textContent = "Run ▶";
+    postHeight();
+  }
+
+  function play(){
+    if(playing) return;
+    deal();
+    playing = true;
+    runBtn.disabled = true;
+    modeBtns.forEach(b => b.disabled = true);
+
+    const m = MODES[mode];
+    let total = m.bad ? LEFTOVER : 0;
+    let t = 300;
+
+    if(!m.bad){
+      setTimeout(() => {
+        setAmount(0);
+        $("keyline").className = "keyline init";
+        $("keyline").textContent = "SET total TO 0";
+        say("<b>Initialise.</b> The till is cleared before this customer's shopping starts. This step is not optional.", "");
+      }, t);
+      t += 1100;
+    } else {
+      setTimeout(() => {
+        $("keyline").className = "keyline init";
+        $("keyline").textContent = "(no SET total TO 0 — straight into the loop)";
+        say("<b>No initialise step.</b> The loop starts adding onto whatever the till already holds…", "warn");
+      }, t);
+      t += 1100;
+    }
+
+    PRICES.forEach((v, i) => {
+      setTimeout(() => {
+        cellEls.forEach((c, j) => {
+          c.classList.toggle("now", j === i);
+          if(j < i) c.classList.add("done");
+        });
+        const tok = $("droptoken");
+        tok.textContent = v;
+        tok.classList.remove("go");
+        void tok.offsetWidth;
+        tok.classList.add("go");
+      }, t);
+      t += 600;
+
+      setTimeout(() => {
+        const old = total;
+        total = total + v;
+        setAmount(total, m.bad);
+        $("keyline").className = "keyline";
+        $("keyline").textContent = "total = " + old + " + " + v + "  →  " + total;
+        say("Pass " + (i + 1) + ": <code>prices[" + i + "]</code> is <b>" + v + "</b>, so <code>total = " + old + " + " + v + "</code> → <b>" + total + "</b>.", "out");
+      }, t);
+      t += 800;
+    });
+
+    setTimeout(() => {
+      cellEls.forEach(c => { c.classList.remove("now"); c.classList.add("done"); });
+      if(m.bad){
+        say("<b>The till says &pound;" + total + " — but the shopping only cost &pound;75.</b> This customer just paid &pound;" + LEFTOVER +
+            " of someone else's bill, because the loop added onto a total that was never cleared. One missing line — <code>SET total TO 0</code> — and every answer after it is wrong.", "warn");
+      } else {
+        say("<b>&pound;" + total + " — correct.</b> Initialise to 0, add each value inside the loop, use the total at the end. Now try <b>Forgot to initialise</b> and see why that first step earns its place in the recipe.", "match");
+      }
+      playing = false;
+      runBtn.disabled = false;
+      runBtn.textContent = "Replay ↺";
+      modeBtns.forEach(b => b.disabled = false);
+      postHeight();
+    }, t + 200);
+  }
+
+  runBtn.addEventListener("click", play);
+
+  /* Auto-size the parent iframe. Declared before deal(), which calls
+     postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  deal();
+})();
+</script>
+</body>
+</html>

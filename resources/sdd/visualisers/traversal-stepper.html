@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traversal Stepper — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:940px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:820px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 12px}
+  .grp{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+  .modes{display:flex;border:1px solid var(--line)}
+  .modes button{font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 14px;color:var(--ink)}
+  .modes button:last-child{border-right:0}
+  .modes button.on{background:var(--active-strong);color:#fff}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 18px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+  }
+  button.ctrl:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button.ctrl.primary{background:var(--match-accent);border-color:var(--match-accent);color:#002D1C}
+  button.ctrl.primary:hover:not(:disabled){filter:brightness(1.06);background:var(--match-accent)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button:focus-visible{outline:3px solid var(--match-bg);outline-offset:1px}
+
+  .panel{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- the array ---- */
+  .arrbody{padding:20px 14px 14px}
+  .arrname{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--active-strong);margin:0 0 10px}
+  .cells{display:flex;justify-content:center;gap:0;flex-wrap:nowrap;overflow-x:auto}
+  .slot{text-align:center}
+  .cell{
+    min-width:clamp(64px,11vw,110px);height:62px;border:2.5px solid var(--active-strong);margin-left:-2.5px;
+    background:#fff;display:flex;align-items:center;justify-content:center;padding:0 6px;
+    font-family:var(--mono);font-size:clamp(12px,2vw,14.5px);font-weight:700;color:var(--active-strong);
+    transition:background .3s,border-color .3s,color .3s;
+  }
+  .slot:first-child .cell{margin-left:0}
+  .cell.now{background:var(--match-bg);border-color:var(--match-accent);color:var(--match);position:relative;z-index:1}
+  .cell.done{background:var(--active-bg)}
+  .idx{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--match);margin-top:7px}
+  .idx.now{font-weight:700;text-decoration:underline}
+
+  /* ---- code + state + output ---- */
+  .layout{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch}
+  .leftcol{flex:1 1 320px;display:flex;flex-direction:column}
+  .codebody{padding:14px;flex:1}
+  .cl{
+    display:block;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);
+    padding:8px 11px;border:1px solid transparent;border-left:3px solid var(--line);margin-bottom:6px;
+    white-space:pre;overflow-x:auto;transition:background .2s,border-color .2s;
+  }
+  .cl.now{background:var(--match-bg);border-color:var(--match-accent);border-left-color:var(--match-accent)}
+  .keyline{
+    font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--out);
+    background:var(--out-bg);border-left:3px solid var(--out);padding:10px 12px;margin:8px 2px 2px;
+    display:none;overflow-x:auto;white-space:nowrap;
+  }
+  .keyline.show{display:block}
+
+  .rightcol{flex:1 1 300px;display:flex;flex-direction:column;gap:14px}
+  .vars{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:16px 14px}
+  .varwrap{text-align:center}
+  .varname{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--active-strong);margin-bottom:5px}
+  .varbox{
+    width:104px;height:56px;border:2.5px solid var(--active-strong);background:#fff;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .varbox .v{
+    font-family:var(--mono);font-size:16px;font-weight:700;color:var(--active-strong);
+    background:var(--active-bg);border:2px solid var(--active);padding:3px 10px;
+  }
+  .varbox.counterbox .v{background:var(--match-bg);border-color:var(--match-accent);color:var(--match)}
+  .varbox .v.empty{background:none;border:none;color:var(--line);font-size:22px}
+  .varbox .v.drop{animation:drop .4s cubic-bezier(.3,.7,.4,1.15)}
+  @keyframes drop{from{transform:translateY(-70px)}to{transform:translateY(0)}}
+  .vartype{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+
+  .console{flex:1;display:flex;flex-direction:column}
+  .consbody{background:#0d1f17;flex:1;min-height:120px;max-height:240px;overflow-y:auto;padding:12px 14px;font-family:var(--mono);font-size:12.5px;line-height:1.85}
+  .consbody .ghost{color:rgba(255,255,255,.35);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .consbody .ln{display:block;color:#7CE3AC;font-weight:700}
+  .consbody .ln.new{animation:appear .35s}
+  @keyframes appear{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:14px;font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate.out{border-left-color:var(--out);background:var(--out-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Standard Algorithms</p>
+    <h1>Traversal Stepper</h1>
+    <p class="sub">Watch the loop variable sweep through the array, index by index. Then flip to <b>running total mode</b> — the same loop with one line changed, and suddenly it's two standard algorithms at once.</p>
+  </header>
+
+  <div class="controls">
+    <div class="grp">
+      <span class="lbl">Mode</span>
+      <div class="modes" id="modes" role="group" aria-label="Choose a mode"></div>
+    </div>
+    <div class="btnrow">
+      <button class="ctrl primary" id="step" type="button">Step ▶</button>
+      <button class="ctrl" id="restart" type="button">Restart ↺</button>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panelbar"><span>MEMORY — THE ARRAY</span></div>
+    <div class="arrbody">
+      <p class="arrname" id="arrname"></p>
+      <div class="cells" id="cells"></div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <section class="panel leftcol">
+      <div class="panelbar"><span>THE CODE</span></div>
+      <div class="codebody" id="code"></div>
+    </section>
+
+    <div class="rightcol">
+      <section class="panel">
+        <div class="panelbar"><span>MEMORY — THE VARIABLES</span></div>
+        <div class="vars" id="vars"></div>
+      </section>
+      <section class="panel console">
+        <div class="panelbar"><span id="outlabel">OUTPUT</span></div>
+        <div class="consbody" id="cons"><span class="ghost">nothing yet</span></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="narrate idle" id="narrate">Press <b>Step ▶</b> to run the first pass.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const MODES = [
+    {
+      name:"Display names", arrname:"names — an array of 7 strings", outlabel:"OUTPUT — ONE NAME PER PASS",
+      arr:["Archie","Erika","Riley","Matthew","Lucienne","Harveer","Christian"],
+      total:false,
+      code:[
+        'for counter in range(7):',
+        '    print(names[counter])'
+      ]
+    },
+    {
+      name:"Running total", arrname:"prices — an array of 5 integers", outlabel:"THE TOTAL BUILDING UP",
+      arr:[5, 25, 32, 10, 3],
+      total:true,
+      code:[
+        'total = 0',
+        'for counter in range(5):',
+        '    total = total + prices[counter]'
+      ]
+    }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const narrate = $("narrate"), stepBtn = $("step");
+  let mode = 0, pass = 0, total = 0, busy = false;
+  let modeBtns = [], cellEls = [], idxEls = [], codeEls = [];
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  modeBtns = MODES.map((m, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = m.name;
+    b.addEventListener("click", () => { if(busy) return; mode = i; deal(); });
+    $("modes").appendChild(b);
+    return b;
+  });
+
+  function setVar(id, val){
+    const box = $(id);
+    box.innerHTML = "";
+    const v = document.createElement("span");
+    v.className = "v drop";
+    v.textContent = val;
+    box.appendChild(v);
+  }
+
+  function log(text){
+    const ghost = $("cons").querySelector(".ghost");
+    if(ghost) ghost.remove();
+    const ln = document.createElement("span");
+    ln.className = "ln new";
+    ln.textContent = text;
+    $("cons").appendChild(ln);
+    $("cons").scrollTop = $("cons").scrollHeight;
+    postHeight();
+  }
+
+  function highlightCode(i){
+    codeEls.forEach((el, j) => el.classList.toggle("now", j === i));
+  }
+
+  function step(){
+    const m = MODES[mode];
+    if(busy || pass >= m.arr.length) return;
+    busy = true;
+    stepBtn.disabled = true;
+    pass++;
+    const i = pass - 1, val = m.arr[i];
+
+    // beat 1: loop line — counter ticks, highlight hops
+    highlightCode(m.total ? 1 : 0);
+    setVar("box-counter", i);
+    cellEls.forEach((c, j) => {
+      c.classList.toggle("now", j === i);
+      if(j < i){ c.classList.add("done"); }
+    });
+    idxEls.forEach((c, j) => c.classList.toggle("now", j === i));
+    say("Pass " + pass + ": <code>counter</code> is <b>" + i + "</b>, so this pass works on <code>" +
+        (m.total ? "prices" : "names") + "[" + i + "]</code> — the highlighted box.", "");
+
+    // beat 2: the body line uses the element
+    setTimeout(() => {
+      highlightCode(m.total ? 2 : 1);
+      if(m.total){
+        const old = total;
+        total = total + val;
+        $("keyline").textContent = "total = " + old + " + " + val + "  →  " + total;
+        $("keyline").classList.add("show");
+        setVar("box-total", total);
+        log("total is now " + total);
+        say("The key line with real numbers in it: <code>total = " + old + " + " + val + "</code> → <b>" + total + "</b>. The old total plus this element.", "out");
+      } else {
+        log(val);
+        say("<code>names[" + i + "]</code> is <b>" + esc(val) + "</b> — printed, and on to the next index.", "out");
+      }
+
+      if(pass >= m.arr.length){
+        setTimeout(() => {
+          cellEls[i].classList.remove("now");
+          cellEls[i].classList.add("done");
+          idxEls[i].classList.remove("now");
+          highlightCode(-1);
+          if(m.total){
+            say("<b>Every element visited, total = " + total + ".</b> Compare the two modes: same sweep through the array, one line changed — a traversal that <em>adds</em> instead of <em>prints</em>. That's both standard algorithms in one loop.", "match");
+          } else {
+            say("<b>Every element visited</b> — index 0 to " + i + ", nothing skipped, nothing repeated. That's a traversal. Now flip to <b>Running total</b> mode and watch the same sweep do arithmetic.", "match");
+          }
+          stepBtn.textContent = "Loop finished";
+          busy = false;
+          postHeight();
+        }, 900);
+      } else {
+        busy = false;
+        stepBtn.disabled = false;
+      }
+      postHeight();
+    }, 800);
+  }
+
+  function deal(){
+    const m = MODES[mode];
+    pass = 0; total = 0; busy = false;
+    modeBtns.forEach((b, i) => b.classList.toggle("on", i === mode));
+    $("arrname").textContent = m.arrname;
+    $("outlabel").textContent = m.outlabel;
+
+    $("cells").innerHTML = "";
+    cellEls = []; idxEls = [];
+    m.arr.forEach((v, i) => {
+      const slot = document.createElement("div");
+      slot.className = "slot";
+      slot.innerHTML = '<div class="cell">' + esc(v) + '</div><div class="idx">[' + i + ']</div>';
+      $("cells").appendChild(slot);
+      cellEls.push(slot.querySelector(".cell"));
+      idxEls.push(slot.querySelector(".idx"));
+    });
+
+    $("code").innerHTML = "";
+    codeEls = m.code.map(src => {
+      const el = document.createElement("span");
+      el.className = "cl";
+      el.textContent = src;
+      $("code").appendChild(el);
+      return el;
+    });
+    const key = document.createElement("div");
+    key.className = "keyline";
+    key.id = "keyline";
+    $("code").appendChild(key);
+
+    $("vars").innerHTML =
+      '<div class="varwrap"><div class="varname">counter</div><div class="varbox counterbox" id="box-counter"><span class="v empty">?</span></div><div class="vartype">the index</div></div>' +
+      (m.total ? '<div class="varwrap"><div class="varname">total</div><div class="varbox" id="box-total"><span class="v">0</span></div><div class="vartype">running total</div></div>' : '');
+
+    $("cons").innerHTML = '<span class="ghost">nothing yet</span>';
+    stepBtn.disabled = false;
+    stepBtn.textContent = "Step ▶";
+    say(m.total
+      ? "Same loop shape as display mode — but watch line 3, and watch <code>total</code>. Press <b>Step ▶</b>."
+      : "Press <b>Step ▶</b> and watch the highlight hop from index 0 upwards.", "idle");
+    postHeight();
+  }
+
+  stepBtn.addEventListener("click", step);
+  $("restart").addEventListener("click", deal);
+
+  /* Auto-size the parent iframe. Declared before deal(), which calls
+     postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  deal();
+})();
+</script>
+</body>
+</html>

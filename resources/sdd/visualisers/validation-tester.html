@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validation Tester — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:920px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:800px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 12px}
+  .probs{display:flex;border:1px solid var(--line);flex-wrap:wrap}
+  .probs button{font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 14px;color:var(--ink)}
+  .probs button:last-child{border-right:0}
+  .probs button.on{background:var(--active-strong);color:#fff}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+  }
+  button.ctrl:hover:not(:disabled){border-color:var(--active);background:var(--active-bg)}
+  button.ctrl:disabled{opacity:.4;cursor:not-allowed}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+
+  .layout{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch}
+  .panel{border:1px solid var(--line);background:var(--panel)}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  /* ---- code + input ---- */
+  .leftcol{flex:1 1 340px;display:flex;flex-direction:column;gap:14px}
+  .codebody{padding:14px;font-family:var(--mono);font-size:12.5px;line-height:1.9}
+  .codebody .cl{display:block;white-space:pre;overflow-x:auto;color:var(--ink);padding:1px 6px}
+  .codebody .cl.cond{background:var(--match-bg);border-left:3px solid var(--match-accent);font-weight:700}
+
+  .askrow{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+  .prompt{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--active-strong)}
+  .entry{display:flex;gap:8px;flex-wrap:wrap}
+  .entry input{
+    font-family:var(--mono);font-size:15px;font-weight:700;color:var(--active-strong);
+    flex:1;min-width:120px;padding:9px 11px;border:1px solid var(--line);background:#fff;
+  }
+  .entry input:disabled{background:var(--bg);color:var(--ink-soft)}
+  .entry input:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px;border-color:var(--active)}
+  button.try{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 18px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  button.try:hover:not(:disabled){filter:brightness(1.06)}
+  button.try:disabled{opacity:.4;cursor:not-allowed}
+
+  /* ---- condition lane ---- */
+  .rightcol{flex:1 1 340px;display:flex;flex-direction:column;gap:14px}
+  .lane{padding:16px;display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-height:74px}
+  .lane .ghost{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .tok{font-family:var(--mono);font-weight:700;font-size:13.5px}
+  .tok.op{color:var(--out);background:var(--out-bg);padding:5px 9px}
+  .tok.cmp{background:#fff;border:2px solid var(--line);padding:7px 10px;color:var(--ink)}
+  .tok.cmp .tag{font-size:9px;letter-spacing:.12em;margin-left:7px;padding:2px 5px;vertical-align:2px}
+  .tok.cmp.t{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+  .tok.cmp.t .tag{background:var(--warn);color:#fff}
+  .tok.cmp.f{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+  .tok.cmp.f .tag{background:var(--active);color:#fff}
+  .verdict{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;padding:8px 13px;display:none}
+  .verdict.bounce{display:block;background:var(--warn);color:#fff}
+  .verdict.pass{display:block;background:var(--active);color:#fff}
+
+  /* ---- attempt log ---- */
+  .consbody{background:#0d1f17;min-height:120px;max-height:240px;overflow-y:auto;padding:12px 14px;font-family:var(--mono);font-size:12.5px;line-height:1.9}
+  .consbody .ghost{color:rgba(255,255,255,.35);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .consbody .ln{display:block;color:#F3A0A0;overflow-wrap:anywhere}
+  .consbody .ln.ok{color:#7CE3AC;font-weight:700}
+
+  /* ---- narration ---- */
+  .narrate{margin-top:14px;font-size:14px;min-height:2.6em;border:1px solid var(--line);border-left:3px solid var(--active);padding:11px 15px;background:var(--active-bg)}
+  .narrate.idle{border-left-color:var(--line);background:var(--bg);color:var(--ink-soft)}
+  .narrate.warn{border-left-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+  .narrate.match{border-left-color:var(--match-accent);background:var(--match-bg)}
+  .narrate b{font-weight:700}
+  .narrate code{font-family:var(--mono);font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Standard Algorithms</p>
+    <h1>Validation Tester</h1>
+    <p class="sub">A live validation loop. Type a value and press <b>Try it</b> — bad input bounces off the condition and gets asked again; good input escapes the loop. <b style="color:var(--warn)">Red means the condition is TRUE</b> (bad input, loop again); <b style="color:var(--active)">green means FALSE</b> (input accepted).</p>
+  </header>
+
+  <div class="controls">
+    <div class="probs" id="probs" role="group" aria-label="Choose a check"></div>
+    <button class="ctrl" id="reset" type="button">Reset loop ↺</button>
+  </div>
+
+  <div class="layout">
+    <div class="leftcol">
+      <section class="panel">
+        <div class="panelbar"><span>THE LOOP BEING TESTED</span></div>
+        <div class="codebody" id="code"></div>
+      </section>
+      <section class="panel">
+        <div class="panelbar"><span>YOUR INPUT</span></div>
+        <div class="askrow">
+          <div class="prompt" id="prompt"></div>
+          <div class="entry">
+            <input id="field" type="text" autocomplete="off" aria-label="Value to test">
+            <button class="try" id="try" type="button">Try it ▶</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="rightcol">
+      <section class="panel">
+        <div class="panelbar"><span>THE CONDITION — THIS ATTEMPT</span></div>
+        <div class="lane" id="lane"><span class="ghost">no attempt yet</span></div>
+      </section>
+      <section class="panel">
+        <div class="panelbar"><span>ATTEMPT LOG</span></div>
+        <div class="consbody" id="cons"><span class="ghost">no attempts yet</span></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="narrate idle" id="narrate">Pick a check, type a value and press <b>Try it ▶</b>. Boundary values — just inside and just outside — are the interesting ones.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const TABS = [
+    {
+      name:"1 · Range", prompt:"Enter your age:",
+      code:[
+        {t:'age = int(input("Enter your age: "))'},
+        {t:'while age < 11 or age > 18:', cond:true},
+        {t:'    print("Error - age must be between 11 and 18")'},
+        {t:'    age = int(input("Enter your age: "))'}
+      ],
+      run(raw){
+        if(!/^-?\d+$/.test(raw)) return {invalid:'<b>That would crash before the check!</b> <code>int()</code> can only convert whole numbers — try something like 15.'};
+        const v = parseInt(raw, 10);
+        const a = v < 11, b = v > 18;
+        return {
+          bad: a || b, echo:"age = " + v,
+          toks:[ {txt: v + " < 11", val:a}, {op:"or"}, {txt: v + " > 18", val:b} ],
+          note: (v === 10 || v === 19) ? "That's a <b>boundary value</b> — just one outside the range. This is exactly where validation mistakes hide."
+              : (v === 11 || v === 18) ? "That's a <b>boundary value</b> — right on the edge, and it gets in. Testing 10, 11, 18 and 19 proves the condition exactly."
+              : null,
+          err:"Error - age must be between 11 and 18"
+        };
+      }
+    },
+    {
+      name:"2 · Length", prompt:"Enter a new password:",
+      code:[
+        {t:'password = input("Please enter a new password: ")'},
+        {t:'while len(password) < 8:', cond:true},
+        {t:'    print("Must be at least 8 characters long")'},
+        {t:'    password = input("Please re-enter: ")'}
+      ],
+      run(raw){
+        const l = raw.length;
+        return {
+          bad: l < 8, echo:'password = "' + raw + '"',
+          toks:[ {txt:'len("' + raw + '") = ' + l, neutral:true}, {txt: l + " < 8", val: l < 8} ],
+          note: (l === 7) ? "Seven characters — <b>one short</b>. Boundary values like 7 and 8 are where a wrongly written condition (&le; instead of &lt;) would show itself."
+              : (l === 8) ? "Exactly eight — the shortest password that passes. A <b>boundary value</b> worth testing on purpose."
+              : (raw.indexOf(" ") !== -1 ? "Notice <b>spaces count as characters</b> — len() counts every keypress." : null),
+          err:"Must be at least 8 characters long"
+        };
+      }
+    },
+    {
+      name:"3 · Choice", prompt:"Play again? (yes/no):",
+      code:[
+        {t:'answer = input("Play again? (yes/no): ")'},
+        {t:'while answer != "yes" and answer != "no":', cond:true},
+        {t:'    print("Error - please answer yes or no")'},
+        {t:'    answer = input("Play again? (yes/no): ")'}
+      ],
+      run(raw){
+        const a = raw !== "yes", b = raw !== "no";
+        return {
+          bad: a && b, echo:'answer = "' + raw + '"',
+          toks:[ {txt:'"' + raw + '" != "yes"', val:a}, {op:"and"}, {txt:'"' + raw + '" != "no"', val:b} ],
+          note: (raw.toLowerCase() === "yes" && raw !== "yes") || (raw.toLowerCase() === "no" && raw !== "no")
+                  ? '<b>Case matters!</b> "' + raw + '" is not the same string as "' + raw.toLowerCase() + '" — the computer compares character by character.'
+              : (!(a && b)) ? "Notice only <b>one</b> side went green — and that's enough, because the join here is <b>and</b>: the input is only bad when it fails <em>both</em> comparisons."
+              : "Both comparisons are TRUE — the input matches neither allowed answer, so the <b>and</b> makes the whole condition TRUE and the loop runs.",
+          err:"Error - please answer yes or no"
+        };
+      }
+    }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const lane = $("lane"), cons = $("cons"), narrate = $("narrate");
+  const field = $("field"), tryBtn = $("try");
+  let tab = 0, escaped = false;
+  let tabBtns = [];
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function say(html, cls){
+    narrate.className = "narrate" + (cls ? " " + cls : "");
+    narrate.innerHTML = html;
+  }
+
+  tabBtns = TABS.map((t, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t.name;
+    b.addEventListener("click", () => { tab = i; deal(); });
+    $("probs").appendChild(b);
+    return b;
+  });
+
+  function log(text, ok){
+    const ghost = cons.querySelector(".ghost");
+    if(ghost) ghost.remove();
+    const ln = document.createElement("span");
+    ln.className = "ln" + (ok ? " ok" : "");
+    ln.textContent = text;
+    cons.appendChild(ln);
+    cons.scrollTop = cons.scrollHeight;
+    postHeight();
+  }
+
+  function attempt(){
+    if(escaped) return;
+    const t = TABS[tab];
+    const raw = tab === 0 ? field.value.trim() : field.value;
+    if(raw === ""){ say("Type something first.", "warn"); field.focus(); return; }
+    const r = t.run(raw);
+    if(r.invalid){ say(r.invalid, "warn"); field.select(); return; }
+
+    // draw the condition lane
+    lane.innerHTML = "";
+    r.toks.forEach(tok => {
+      const el = document.createElement("span");
+      if(tok.op){ el.className = "tok op"; el.textContent = tok.op; }
+      else if(tok.neutral){ el.className = "tok cmp"; el.textContent = tok.txt; }
+      else {
+        el.className = "tok cmp " + (tok.val ? "t" : "f");
+        el.innerHTML = esc(tok.txt) + '<span class="tag">' + (tok.val ? "TRUE" : "FALSE") + '</span>';
+      }
+      lane.appendChild(el);
+    });
+    const v = document.createElement("span");
+    v.className = "verdict " + (r.bad ? "bounce" : "pass");
+    v.textContent = r.bad ? "TRUE — LOOP AGAIN" : "FALSE — ACCEPTED";
+    lane.appendChild(v);
+
+    if(r.bad){
+      log(r.echo + "  →  " + r.err);
+      say("<b>Bounced.</b> The condition is TRUE, so the input is bad — the loop shows the error and asks again." + (r.note ? " " + r.note : ""), "warn");
+      field.select();
+    } else {
+      log(r.echo + "  →  accepted, the loop ends", true);
+      escaped = true;
+      field.disabled = true;
+      tryBtn.disabled = true;
+      say("<b>Accepted!</b> The condition is FALSE, so the loop is over — the program carries on past it. That's the whole algorithm: it only lets go when the input is good." +
+          (r.note ? " " + r.note : "") + " Press <b>Reset loop</b> to test more values.", "match");
+    }
+    postHeight();
+  }
+
+  function deal(){
+    const t = TABS[tab];
+    tabBtns.forEach((b, i) => b.classList.toggle("on", i === tab));
+    $("code").innerHTML = "";
+    t.code.forEach(l => {
+      const el = document.createElement("span");
+      el.className = "cl" + (l.cond ? " cond" : "");
+      el.textContent = l.t;
+      $("code").appendChild(el);
+    });
+    $("prompt").textContent = t.prompt;
+    lane.innerHTML = '<span class="ghost">no attempt yet</span>';
+    cons.innerHTML = '<span class="ghost">no attempts yet</span>';
+    field.value = "";
+    field.disabled = false;
+    tryBtn.disabled = false;
+    escaped = false;
+    say("Type a value and press <b>Try it ▶</b>. Boundary values — just inside and just outside — are the interesting ones.", "idle");
+    postHeight();
+  }
+
+  tryBtn.addEventListener("click", attempt);
+  field.addEventListener("keydown", e => { if(e.key === "Enter") attempt(); });
+  $("reset").addEventListener("click", deal);
+
+  /* Auto-size the parent iframe. Declared before deal(), which calls
+     postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  deal();
+})();
+</script>
+</body>
+</html>

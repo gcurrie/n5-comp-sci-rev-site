@@ -296,6 +296,22 @@ SEND ages(3) TO DISPLAY  &lt;# displays 14 #&gt;</pre>
           <p>An example would be:</p>
           <p style="color:#6A1B9A;"><strong>Data structure</strong> — array<br/><strong>Data type</strong> — string</p>
         </div>
+
+        <p>That question asked you to <em>state</em> the structure and type. This next one asks you to <strong>explain why</strong> they're the right choices — which is worth twice the marks, and needs twice the answer.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2018 Q17 a) (i) — Scott's Online Quiz (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_array_q2.png" alt="Past paper question: Scott is developing an online quiz with ten true or false questions. At the end of the quiz, the user's final score will be calculated. Part a shows the user interface on a tablet — a screen headed Question 3 with a running figure image, the words True or False, the statement Usain Bolt is the first man to run 100 metres in less than 10 seconds, and two buttons labelled TRUE and FALSE. Part a i: explain why a 1-D array of Boolean values is a suitable data structure to store the user's responses. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Two marks for one sentence of explanation is a clue: the question is really asking <em>two</em> things at once, because the phrase "a 1-D array of Boolean values" contains two separate decisions. Justify each one against the problem:</p>
+          <ul>
+            <li><strong>Why Boolean?</strong> Every answer the user gives is either TRUE or FALSE — look at the two buttons on the screen. A Boolean stores exactly that and nothing else.</li>
+            <li><strong>Why an array?</strong> There are <strong>ten</strong> questions, so ten responses to keep. A variable holds one value; an array holds many under a single name.</li>
+          </ul>
+          <p>Watch the trap: a general definition earns only half the marks. "An array stores lots of values" is true of every array ever written — the marker needs to see it tied to <em>this</em> problem: ten questions, so ten stored answers. Same for the type: mention the TRUE/FALSE buttons, not just "Booleans are true or false".</p>
+          <img src="../resources/sdd/worked_examples/n5_array_q2_ans.png" alt="Marking instructions: each question is a True or False question so the Boolean data type is required, 1 mark. As there will be 10 questions an array will be needed in order to store the multiple answers, 1 mark." class="zoomable" />
+          <p>An example would be:</p>
+          <p style="color:#6A1B9A;">Each question is answered TRUE or FALSE, so the Boolean data type is required. As there are 10 questions, an array is needed to store the multiple answers under one name.</p>
+        </div>
       </article>
 
       <article>
@@ -422,6 +438,23 @@ scores[6] = scores[2] + 1  # element 2, plus one</pre>
                 <li><strong>Data type</strong> — real</li>
               </ul>
               <p style="color:#6A1B9A;">Thirty similar items under one name means an array — but the times are measured values like 14.62 seconds, so each element is a real, not an integer or a string.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Step Counter (2 marks)</div>
+          <p>A fitness app records the number of steps a user takes on each of the 7 days of a week, then displays their weekly total.</p>
+          <p>Explain why a 1-D array of integer values is a suitable data structure to store the daily step counts.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <ul style="color:#6A1B9A;">
+                <li>steps are counted in whole numbers, so the <strong>integer</strong> data type is required</li>
+                <li>there are <strong>7</strong> daily totals, so an <strong>array</strong> is needed to store the multiple values under one name</li>
+              </ul>
+              <p style="color:#6A1B9A;">Both halves must be tied to this problem. "An array stores lots of values" or "an integer is a whole number" are general definitions and earn nothing on their own — say <em>why</em> they suit the step counts.</p>
             </div>
           </details>
         </div>
