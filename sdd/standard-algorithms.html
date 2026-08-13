@@ -206,9 +206,9 @@ UNTIL number &gt;= 10 AND number &lt;= 20</pre>
         <svg viewBox="0 0 620 120" role="img" aria-label="An array called scores holding five integers, 15, 20, 19, 18 and 17, with indexes 0 to 4" style="max-width:620px;width:100%;height:auto;display:block;margin:1rem auto;">
           <style>
             .sa-cell { fill:#fff; stroke:#00442A; stroke-width:2; }
-            .sa-val { font:700 16px 'JetBrains Mono',monospace; fill:#0d1f17; text-anchor:middle; }
+            .sa-val { font:700 16px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#0d1f17; text-anchor:middle; }
             .sa-idx { font:600 12px 'Public Sans',sans-serif; fill:#92750A; text-anchor:middle; }
-            .sa-name { font:700 14px 'JetBrains Mono',monospace; fill:#00442A; }
+            .sa-name { font:700 14px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#00442A; }
           </style>
           <text class="sa-name" x="20" y="30">scores</text>
           <rect class="sa-cell" x="90"  y="40" width="90" height="44"/>
@@ -497,7 +497,7 @@ SEND "The total is " &amp; total TO DISPLAY</pre>
               <p style="color:#6A1B9A;">Sample answer:</p>
               <p style="color:#6A1B9A;">
                 1&nbsp;&nbsp;Get ticketType from user<br/>
-                2&nbsp;&nbsp;While ticketType &ne; "adult" AND ticketType &ne; "child"<br/>
+                2&nbsp;&nbsp;While ticketType != "adult" AND ticketType != "child"<br/>
                 2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Display "Error - please enter adult or child"<br/>
                 2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get ticketType from user<br/>
                 3&nbsp;&nbsp;End while

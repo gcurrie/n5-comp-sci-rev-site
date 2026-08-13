@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Data Number Line — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  /* JetBrains Mono fuses >= <= != into single glyphs. Exam notation is two
+     characters, so ligatures stay off. Inherited, so it reaches SVG text too;
+     form controls are listed because the font shorthand resets them. */
+  body,input,button,select,textarea{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:960px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:820px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 12px}
+  .probs{display:flex;border:1px solid var(--line);flex-wrap:wrap}
+  .probs button{font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 14px;color:var(--ink)}
+  .probs button:last-child{border-right:0}
+  .probs button.on{background:var(--active-strong);color:#fff}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+  }
+  button.ctrl:hover{border-color:var(--active);background:var(--active-bg)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+
+  .panel{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  .panelbar{background:var(--bar);padding:10px 16px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+  .panelbar em{font-style:normal;font-family:var(--mono);font-size:10.5px;color:rgba(255,255,255,.6);letter-spacing:.05em}
+
+  .rule{padding:6px 10px 2px}
+  .rule svg{display:block;width:100%;height:auto}
+  .nl-band{font-family:var(--mono);font-size:10px;letter-spacing:.14em;font-weight:700}
+  .nl-tick{font-family:var(--mono);font-size:11px;fill:var(--ink-soft)}
+  .nl-tick.edge{fill:var(--match);font-weight:700}
+  .nl-pin{opacity:0}
+  .nl-pin.drop{animation:pindrop .5s cubic-bezier(.3,1.4,.5,1) forwards}
+  @keyframes pindrop{ from{opacity:0;transform:translateY(-46px)} to{opacity:1;transform:translateY(0)} }
+  .nl-pinlabel{font-family:var(--mono);font-size:12.5px;font-weight:700}
+
+  .askrow{padding:14px 16px;display:flex;flex-direction:column;gap:11px}
+  .prompt{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--active-strong)}
+  .entry{display:flex;gap:8px;flex-wrap:wrap}
+  .entry input{
+    font-family:var(--mono);font-size:15px;font-weight:700;color:var(--active-strong);
+    flex:1;min-width:130px;padding:9px 11px;border:1px solid var(--line);background:#fff;
+  }
+  .entry input:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px;border-color:var(--active)}
+  button.try{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 18px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  button.try:hover{filter:brightness(1.06)}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .chips b{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+  .chips button{
+    font-family:var(--mono);font-size:12.5px;font-weight:700;cursor:pointer;
+    padding:6px 11px;border:1px dashed var(--line);background:var(--bg);color:var(--active-strong);
+  }
+  .chips button:hover{border-style:solid;border-color:var(--active);background:var(--active-bg)}
+
+  /* ---- verdict ---- */
+  .verdict{padding:14px 16px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  .badge{
+    font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    padding:9px 14px;white-space:nowrap;flex:0 0 auto;
+  }
+  .badge.normal{background:var(--active);color:#fff}
+  .badge.extreme{background:var(--match-accent);color:#002D1C}
+  .badge.exceptional{background:var(--warn);color:#fff}
+  .badge.idle{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line)}
+  .why{flex:1 1 260px;font-size:14px;min-height:2.4em}
+  .why b{font-weight:700}
+  .why code{font-family:var(--mono);font-weight:700}
+
+  /* ---- test table ---- */
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  thead th{
+    background:var(--active-strong);color:#fff;text-align:left;padding:9px 14px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+  }
+  tbody td{padding:9px 14px;border-bottom:1px solid var(--line)}
+  tbody tr:last-child td{border-bottom:0}
+  tbody td.v{font-family:var(--mono);font-weight:700;color:var(--active-strong);overflow-wrap:anywhere}
+  tbody td.t{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+  tbody td.t.normal{color:var(--active)} tbody td.t.extreme{color:var(--match)} tbody td.t.exceptional{color:var(--warn)}
+  tbody tr.fresh{animation:rowin .35s ease-out}
+  @keyframes rowin{ from{background:var(--match-bg)} to{background:transparent} }
+  .empty{padding:14px 16px;color:var(--ink-soft);font-size:13.5px}
+  .tallies{display:flex;gap:14px;flex-wrap:wrap;padding:11px 16px;border-top:1px solid var(--line);background:var(--bg);font-family:var(--mono);font-size:11px;letter-spacing:.08em;font-weight:700}
+  .tallies span.done{color:var(--active)}
+  .tallies span.todo{color:var(--ink-soft)}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.nl-pin{opacity:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Testing</p>
+    <h1>Test Data Number Line</h1>
+    <p class="sub">Drop a value onto the line and see which zone it lands in. <b style="color:var(--active)">Green</b> is the accepted range, <b style="color:var(--match)">gold</b> marks the two edges of it, and everything outside is refused. Each value you try is added to a test table underneath.</p>
+  </header>
+
+  <div class="controls">
+    <div class="probs" id="probs" role="group" aria-label="Choose a problem"></div>
+    <button class="ctrl" id="reset" type="button">Clear table ↺</button>
+  </div>
+
+  <section class="panel">
+    <div class="panelbar"><span>THE ACCEPTED RANGE</span><em id="ranged"></em></div>
+    <div class="rule" id="rule"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>TRY A VALUE</span></div>
+    <div class="askrow">
+      <div class="prompt" id="prompt"></div>
+      <div class="entry">
+        <input id="field" type="text" autocomplete="off" aria-label="Value to test">
+        <button class="try" id="try" type="button">Drop it ▼</button>
+      </div>
+      <div class="chips" id="chips"><b>Or try</b></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>VERDICT</span></div>
+    <div class="verdict">
+      <span class="badge idle" id="badge">no value yet</span>
+      <div class="why" id="why">Type a value above, or click one of the suggestions.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelbar"><span>YOUR TEST TABLE</span></div>
+    <div id="tablewrap"><p class="empty">Nothing tested yet. A good test table needs at least one value of each type.</p></div>
+    <div class="tallies" id="tallies"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const TABS = [
+    {
+      name:"1 · Guessing game", prompt:"Guess a number between 0 and 10:",
+      min:0, max:10, lo:-4, hi:14, unit:"", noun:"guess", whole:true,
+      desc:"whole numbers from 0 to 10 inclusive",
+      chips:["5","0","10","-4","26","ten"]
+    },
+    {
+      name:"2 · Club age", prompt:"Enter your age:",
+      min:11, max:18, lo:8, hi:21, unit:"", noun:"age", whole:true,
+      desc:"whole numbers from 11 to 18 inclusive",
+      chips:["15","11","18","10","19","fifteen"]
+    },
+    {
+      name:"3 · Two dice", prompt:"Enter the total of your two dice:",
+      min:2, max:12, lo:-1, hi:15, unit:"", noun:"total", whole:true,
+      desc:"the total of two six-sided dice",
+      chips:["7","2","12","1","6","13"],
+      note:"Careful — the edges here have to be <b>worked out</b>: 1+1 and 6+6, not the 1 and 6 printed on a dice."
+    },
+    {
+      name:"4 · Password length", prompt:"Enter a new password:",
+      min:8, max:12, lo:3, hi:17, unit:" characters", noun:"password", whole:true, measure:true,
+      desc:"passwords of 8 to 12 characters",
+      chips:["chocolate","computer","chocolatecak","cat","supercalifragilistic"],
+      note:"This time the value on the line is the <b>length</b> of what you typed — the input itself is still a password."
+    }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const field = $("field"), badge = $("badge"), why = $("why");
+  let tab = 0, rows = [], tabBtns = [];
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  /* ---------- the number line ---------- */
+  function drawLine(mark){
+    const t = TABS[tab];
+    const W = 960, H = 150, PADX = 34, Y = 92;
+    const span = t.hi - t.lo;
+    const x = v => PADX + (v - t.lo) / span * (W - 2 * PADX);
+    const step = span <= 20 ? 1 : Math.ceil(span / 18);
+    const half = (x(1) - x(0)) / 2;
+
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Number line showing the accepted range from ' + t.min + ' to ' + t.max + '">';
+
+    /* zones */
+    s += '<rect x="' + PADX + '" y="70" width="' + (x(t.min) - half - PADX) + '" height="44" fill="#FDECEA"/>';
+    s += '<rect x="' + (x(t.max) + half) + '" y="70" width="' + (W - PADX - x(t.max) - half) + '" height="44" fill="#FDECEA"/>';
+    s += '<rect x="' + (x(t.min) - half) + '" y="70" width="' + (x(t.max) - x(t.min) + half * 2) + '" height="44" fill="#E8F5EE" stroke="#1B6B45" stroke-width="1.5"/>';
+    /* the two edges */
+    s += '<rect x="' + (x(t.min) - half) + '" y="70" width="' + (half * 2) + '" height="44" fill="#FEF3C7" stroke="#C9A227" stroke-width="1.5"/>';
+    s += '<rect x="' + (x(t.max) - half) + '" y="70" width="' + (half * 2) + '" height="44" fill="#FEF3C7" stroke="#C9A227" stroke-width="1.5"/>';
+
+    /* zone captions */
+    s += '<text class="nl-band" x="' + ((PADX + x(t.min) - half) / 2) + '" y="62" fill="#B91C1C" text-anchor="middle">EXCEPTIONAL</text>';
+    s += '<text class="nl-band" x="' + ((x(t.max) + half + W - PADX) / 2) + '" y="62" fill="#B91C1C" text-anchor="middle">EXCEPTIONAL</text>';
+    s += '<text class="nl-band" x="' + ((x(t.min) + x(t.max)) / 2) + '" y="62" fill="#1B6B45" text-anchor="middle">NORMAL</text>';
+    s += '<text class="nl-band" x="' + x(t.min) + '" y="132" fill="#92750A" text-anchor="middle">EXTREME</text>';
+    s += '<text class="nl-band" x="' + x(t.max) + '" y="132" fill="#92750A" text-anchor="middle">EXTREME</text>';
+
+    /* baseline + ticks */
+    s += '<line x1="' + PADX + '" y1="' + Y + '" x2="' + (W - PADX) + '" y2="' + Y + '" stroke="#4A5568" stroke-width="1.5"/>';
+    const first = Math.ceil(t.lo / step) * step;
+    for(let v = first; v <= t.hi; v += step){
+      const edge = (v === t.min || v === t.max);
+      s += '<line x1="' + x(v) + '" y1="' + (Y - 5) + '" x2="' + x(v) + '" y2="' + (Y + 5) + '" stroke="' + (edge ? "#92750A" : "#4A5568") + '" stroke-width="' + (edge ? 2.5 : 1.2) + '"/>';
+      s += '<text class="nl-tick' + (edge ? " edge" : "") + '" x="' + x(v) + '" y="' + (Y + 20) + '" text-anchor="middle">' + v + '</text>';
+    }
+
+    /* the dropped pin */
+    if(mark){
+      const col = mark.kind === "normal" ? "#1B6B45" : mark.kind === "extreme" ? "#92750A" : "#B91C1C";
+      const off = mark.pos === null;
+      const px = off ? W / 2 : Math.max(PADX, Math.min(W - PADX, x(mark.pos)));
+      const clamped = !off && (mark.pos < t.lo || mark.pos > t.hi);
+      s += '<g class="nl-pin drop">';
+      if(off){
+        s += '<rect x="' + (px - 96) + '" y="14" width="192" height="30" fill="#B91C1C"/>';
+        s += '<text class="nl-pinlabel" x="' + px + '" y="34" fill="#fff" text-anchor="middle">NOT ON THIS LINE</text>';
+      } else {
+        /* the label box is kept fully inside the viewBox even when the pin
+           itself is pushed right up against an edge */
+        const w = Math.max(46, String(mark.label).length * 9 + 20);
+        const lx = Math.max(w / 2 + 4, Math.min(W - w / 2 - 4, px));
+        s += '<rect x="' + (lx - w / 2) + '" y="16" width="' + w + '" height="28" fill="' + col + '"/>';
+        s += '<text class="nl-pinlabel" x="' + lx + '" y="35" fill="#fff" text-anchor="middle">' + esc(mark.label) + '</text>';
+        s += '<path d="M' + px + ' ' + (Y - 2) + ' L' + (px - 7) + ' ' + (Y - 16) + ' L' + (px + 7) + ' ' + (Y - 16) + ' Z" fill="' + col + '"/>';
+        s += '<line x1="' + lx + '" y1="44" x2="' + px + '" y2="' + (Y - 14) + '" stroke="' + col + '" stroke-width="2.5"/>';
+        if(clamped){
+          const left = mark.pos < t.lo;
+          s += '<text class="nl-tick" x="' + (left ? PADX : W - PADX) + '" y="' + (Y + 36) + '" fill="#B91C1C" ' +
+               'text-anchor="' + (left ? "start" : "end") + '" font-weight="700">' +
+               (left ? "◀ way off the line" : "way off the line ▶") + '</text>';
+        }
+      }
+      s += '</g>';
+    }
+    s += '</svg>';
+    $("rule").innerHTML = s;
+  }
+
+  /* ---------- classify ---------- */
+  function classify(raw){
+    const t = TABS[tab];
+
+    if(t.measure){
+      const n = raw.length;
+      const base = {pos:n, label:n + " chars"};
+      if(n < t.min || n > t.max){
+        return Object.assign(base, {kind:"exceptional", expected:"Error message shown, asked again",
+          why:'<code>"' + esc(raw) + '"</code> is <b>' + n + ' characters</b> — outside the ' + t.min + '–' + t.max + ' range, so the program must reject it. That makes it <b>exceptional</b> data.'});
+      }
+      if(n === t.min || n === t.max){
+        return Object.assign(base, {kind:"extreme", expected:"Password accepted",
+          why:'<code>"' + esc(raw) + '"</code> is exactly <b>' + n + ' characters</b> — the ' + (n === t.min ? "shortest" : "longest") + ' password allowed. It sits right on the boundary but is still <b>valid</b>, so it is <b>extreme</b> data and the program should accept it.'});
+      }
+      return Object.assign(base, {kind:"normal", expected:"Password accepted",
+        why:'<code>"' + esc(raw) + '"</code> is <b>' + n + ' characters</b> — comfortably inside ' + t.min + '–' + t.max + '. Nothing interesting happens, which is exactly what <b>normal</b> data is for.'});
+    }
+
+    if(!/^-?\d+(\.\d+)?$/.test(raw)){
+      return {kind:"exceptional", pos:null, label:raw, expected:"Error message shown, asked again",
+        why:'<code>' + esc(raw) + '</code> isn\'t a number at all, so it can\'t even be placed on the line. Wrong-type data counts as <b>exceptional</b> — and it is the classic cause of an <b>execution error</b> if the program has no validation.'};
+    }
+    const v = parseFloat(raw);
+    if(t.whole && !Number.isInteger(v)){
+      return {kind:"exceptional", pos:v, label:raw, expected:"Error message shown, asked again",
+        why:'<code>' + esc(raw) + '</code> lands between two whole numbers. The ' + t.noun + ' has to be a whole number, so this is <b>exceptional</b> data even though it is inside the range.'};
+    }
+    if(v < t.min || v > t.max){
+      return {kind:"exceptional", pos:v, label:raw, expected:"Error message shown, asked again",
+        why:'<code>' + esc(raw) + '</code> is ' + (v < t.min ? "below the minimum of <b>" + t.min + "</b>" : "above the maximum of <b>" + t.max + "</b>") +
+            ', so the program must refuse it. That is <b>exceptional</b> data.' +
+            (v === t.min - 1 || v === t.max + 1 ? ' It is also the <b>nastiest</b> exceptional value to try — one step outside the range is where a <code>&lt;</code> written instead of <code>&lt;=</code> gets caught.' : '')};
+    }
+    if(v === t.min || v === t.max){
+      return {kind:"extreme", pos:v, label:raw, expected:"Value accepted, program continues",
+        why:'<code>' + esc(raw) + '</code> is the ' + (v === t.min ? "smallest" : "largest") + ' value allowed — right on the edge, but <b>still valid</b>. That makes it <b>extreme</b> data, and the program should accept it without complaint.' +
+            (t.note ? " " + t.note : "")};
+    }
+    return {kind:"normal", pos:v, label:raw, expected:"Value accepted, program continues",
+      why:'<code>' + esc(raw) + '</code> sits comfortably inside ' + t.min + '–' + t.max + ', nowhere near an edge. That is <b>normal</b> data — it proves the program works, but it will never expose a boundary mistake.'};
+  }
+
+  /* ---------- the growing test table ---------- */
+  function renderTable(){
+    if(!rows.length){
+      $("tablewrap").innerHTML = '<p class="empty">Nothing tested yet. A good test table needs at least one value of each type.</p>';
+    } else {
+      let h = '<table><thead><tr><th>Test data</th><th>Type</th><th>Expected result</th></tr></thead><tbody>';
+      rows.forEach((r, i) => {
+        h += '<tr' + (i === rows.length - 1 ? ' class="fresh"' : '') + '><td class="v">' + esc(r.value) +
+             '</td><td class="t ' + r.kind + '">' + r.kind + '</td><td>' + r.expected + '</td></tr>';
+      });
+      $("tablewrap").innerHTML = h + '</tbody></table>';
+    }
+    const have = k => rows.some(r => r.kind === k);
+    const done = ["normal","extreme","exceptional"].filter(have).length;
+    $("tallies").innerHTML =
+      ["normal","extreme","exceptional"].map(k =>
+        '<span class="' + (have(k) ? "done" : "todo") + '">' + (have(k) ? "✓" : "○") + " " + k.toUpperCase() + '</span>'
+      ).join("") +
+      (done === 3 ? '<span class="done">— TABLE COVERS ALL THREE TYPES</span>' : '<span class="todo">— ' + (3 - done) + ' still to cover</span>');
+    postHeight();
+  }
+
+  /* ---------- drop a value ---------- */
+  function drop(raw){
+    const t = TABS[tab];
+    const v = t.measure ? raw : raw.trim();
+    if(v === ""){ why.innerHTML = "Type something first — a test table row needs a real value."; field.focus(); return; }
+    const r = classify(v);
+    drawLine(r);
+    badge.className = "badge " + r.kind;
+    badge.textContent = r.kind;
+    why.innerHTML = r.why;
+    rows.push({value: t.measure ? '"' + v + '"' : v, kind:r.kind, expected:r.expected});
+    renderTable();
+    field.select();
+  }
+
+  /* ---------- setup ---------- */
+  tabBtns = TABS.map((t, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t.name;
+    b.addEventListener("click", () => { tab = i; rows = []; deal(); });
+    $("probs").appendChild(b);
+    return b;
+  });
+
+  function deal(){
+    const t = TABS[tab];
+    tabBtns.forEach((b, i) => b.classList.toggle("on", i === tab));
+    $("ranged").textContent = t.desc;
+    $("prompt").textContent = t.prompt;
+    field.value = "";
+    badge.className = "badge idle";
+    badge.textContent = "no value yet";
+    why.innerHTML = "Type a value above, or click one of the suggestions." + (t.note ? " " + t.note : "");
+    $("chips").innerHTML = "<b>Or try</b>";
+    t.chips.forEach(c => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = c;
+      b.addEventListener("click", () => { field.value = c; drop(c); });
+      $("chips").appendChild(b);
+    });
+    drawLine(null);
+    renderTable();
+  }
+
+  $("try").addEventListener("click", () => drop(field.value));
+  field.addEventListener("keydown", e => { if(e.key === "Enter") drop(field.value); });
+  $("reset").addEventListener("click", () => { rows = []; deal(); });
+
+  /* Auto-size the parent iframe. Declared before deal(), which calls
+     postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  deal();
+})();
+</script>
+</body>
+</html>

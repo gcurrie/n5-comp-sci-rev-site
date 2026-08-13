@@ -17,6 +17,10 @@
     --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
     --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   }
+  /* JetBrains Mono fuses >= <= != into single glyphs. Exam notation is two
+     characters, so ligatures stay off. Inherited, so it reaches SVG text too;
+     form controls are listed because the font shorthand resets them. */
+  body,input,button,select,textarea{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
   *{box-sizing:border-box}
   html{scrollbar-gutter:stable}
   body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
@@ -176,9 +180,9 @@
   const TABS = [
     {
       name:"1 · Cinema", bar:"EXAMPLE 1 — CINEMA TICKET CHECK",
-      outer:'age ≥ 15', inner:'hasID = "yes"',
+      outer:'age >= 15', inner:'hasID = "yes"',
       code:[
-        'IF age ≥ 15 THEN',
+        'IF age >= 15 THEN',
         '   IF hasID = "yes" THEN',
         '      SEND "Enjoy the film" TO DISPLAY',
         '   ELSE',
@@ -190,17 +194,17 @@
       ],
       presets:[
         { label:'age 17, ID yes', token:'age 17\nID yes',
-          outerSub:'17 ≥ 15', outerVal:true,
+          outerSub:'17 >= 15', outerVal:true,
           innerSub:'"yes" = "yes"', innerVal:true,
           out:'Enjoy the film', lines:[0,1,2,5,8],
           note:'<b>Both gates opened.</b> The outer IF let us in, and only then was the ID question even asked. This is the only path that reaches line 3.' },
         { label:'age 17, ID no', token:'age 17\nID no',
-          outerSub:'17 ≥ 15', outerVal:true,
+          outerSub:'17 >= 15', outerVal:true,
           innerSub:'"no" = "yes"', innerVal:false,
           out:'Sorry, no ID, no entry', lines:[0,1,3,4,5,8],
           note:'<b>Gate 1 opened, gate 2 shut.</b> The inner ELSE runs — and notice this failure gets its <em>own</em> message. A single complex condition could only have said "no entry".' },
         { label:'age 12', token:'age 12',
-          outerSub:'12 ≥ 15', outerVal:false,
+          outerSub:'12 >= 15', outerVal:false,
           innerSub:null, innerVal:null,
           out:'This film is rated 15', lines:[0,6,7,8],
           note:'<b>Gate 1 shut, so gate 2 was never reached.</b> The program never even asks for ID — that whole inner block is skipped. This is the heart of nesting: the inner condition only exists inside the outer one.' }
@@ -208,10 +212,10 @@
     },
     {
       name:"2 · Score trace", bar:"EXAMPLE 2 — PAST PAPER SCORE TRACE",
-      outer:'score = 5 OR score = 10 OR score = 15', inner:'NOT(score ≥ 3 AND score ≤ 12)',
+      outer:'score = 5 OR score = 10 OR score = 15', inner:'NOT(score >= 3 AND score <= 12)',
       code:[
         'IF score = 5 OR score = 10 OR score = 15 THEN',
-        '   IF NOT(score ≥ 3 AND score ≤ 12) THEN',
+        '   IF NOT(score >= 3 AND score <= 12) THEN',
         '      SEND "Success" TO DISPLAY',
         '   END IF',
         'END IF'
@@ -219,17 +223,17 @@
       presets:[
         { label:'score 15', token:'score\n15',
           outerSub:'15 = 5 OR 15 = 10 OR 15 = 15', outerVal:true,
-          innerSub:'NOT(15 ≥ 3 AND 15 ≤ 12) → NOT(FALSE)', innerVal:true,
+          innerSub:'NOT(15 >= 3 AND 15 <= 12) → NOT(FALSE)', innerVal:true,
           out:'Success', lines:[0,1,2,3,4],
           note:'<b>Both gates opened — the answer to the exam question.</b> 15 is in the outer list, and it sits <em>outside</em> 3–12, so the bracket is false and NOT flips it to true.' },
         { label:'score 5', token:'score\n5',
           outerSub:'5 = 5 OR 5 = 10 OR 5 = 15', outerVal:true,
-          innerSub:'NOT(5 ≥ 3 AND 5 ≤ 12) → NOT(TRUE)', innerVal:false,
+          innerSub:'NOT(5 >= 3 AND 5 <= 12) → NOT(TRUE)', innerVal:false,
           out:null, lines:[0,1,3,4],
           note:'<b>Gate 1 opened, gate 2 shut.</b> 5 <em>is</em> inside 3–12, so the bracket is true and NOT makes it false. There is no ELSE here, so <b>nothing at all is displayed</b>.' },
         { label:'score 10', token:'score\n10',
           outerSub:'10 = 5 OR 10 = 10 OR 10 = 15', outerVal:true,
-          innerSub:'NOT(10 ≥ 3 AND 10 ≤ 12) → NOT(TRUE)', innerVal:false,
+          innerSub:'NOT(10 >= 3 AND 10 <= 12) → NOT(TRUE)', innerVal:false,
           out:null, lines:[0,1,3,4],
           note:'Same again — 10 gets past the outer list but is inside 3–12, so the inner condition is false and nothing is displayed. That leaves 15 as the only value that works.' },
         { label:'score 7', token:'score\n7',

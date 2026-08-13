@@ -154,7 +154,7 @@ print("Got it! The number was " + str(secret))</pre>
         <p>The loop might run once, ten times, or not at all (a lucky first guess means the condition starts false and the loop is skipped entirely). The program only escapes when the condition <code>guess != secret</code> becomes false.</p>
         <div class="code-block">
           <div class="code-label">SQA Reference Language — conditional loop</div>
-          <pre>WHILE guess ≠ secret DO
+          <pre>WHILE guess != secret DO
     SEND "Nope, try again!" TO DISPLAY
     RECEIVE guess FROM (INTEGER) KEYBOARD
 END WHILE</pre>

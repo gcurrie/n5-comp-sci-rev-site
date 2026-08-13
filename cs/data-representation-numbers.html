@@ -80,13 +80,128 @@
           <tbody><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td></tr></tbody>
         </table>
         <p>Every binary number is just a row of 1s and 0s sitting under those columns. A 1 means "this column is switched on"; a 0 means it isn't. That one idea powers both conversions below.</p>
+        <h3>You never have to remember the columns</h3>
+        <p>You don't need to memorise 128, 64, 32, 16, 8, 4, 2, 1. Write a <strong>1</strong> at the right-hand end and <strong>double</strong> your way left — the whole row rebuilds itself in about five seconds. Do this on your paper before you start any conversion question:</p>
+
+        <svg viewBox="0 0 780 210" role="img"
+             aria-label="A diagram showing how to rebuild the eight binary place-value columns. Start with 1 at the right-hand end, then a times-two arrow hops leftward to each next column in turn, giving 2, then 4, 8, 16, 32, 64 and finally 128 at the left-hand end."
+             style="max-width:780px;width:100%;height:auto;display:block;margin:1.25rem auto;">
+          <style>
+            .dl-box   { fill:#fff; stroke:#00442A; stroke-width:2; }
+            .dl-box.s { fill:#FEF3C7; stroke:#C9A227; }
+            .dl-val   { font:700 22px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#0d1f17; text-anchor:middle; }
+            .dl-arc   { fill:none; stroke:#C9A227; stroke-width:2.5; }
+            .dl-x2    { font:700 12px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#92750A; text-anchor:middle; }
+            .dl-cap   { font:600 12.5px 'Public Sans',sans-serif; fill:#4A5568; text-anchor:middle; }
+            .dl-start { font:700 11px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#92750A; text-anchor:middle; letter-spacing:.1em; }
+          </style>
+          <defs>
+            <marker id="dl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#C9A227" />
+            </marker>
+          </defs>
+
+          <!-- doubling arcs, drawn right to left so each hops onto the next column -->
+          <path class="dl-arc" d="M 698 86 Q 654 34 610 86" marker-end="url(#dl-arrow)" />
+          <path class="dl-arc" d="M 610 86 Q 566 34 522 86" marker-end="url(#dl-arrow)" />
+          <path class="dl-arc" d="M 522 86 Q 478 34 434 86" marker-end="url(#dl-arrow)" />
+          <path class="dl-arc" d="M 434 86 Q 390 34 346 86" marker-end="url(#dl-arrow)" />
+          <path class="dl-arc" d="M 346 86 Q 302 34 258 86" marker-end="url(#dl-arrow)" />
+          <path class="dl-arc" d="M 258 86 Q 214 34 170 86" marker-end="url(#dl-arrow)" />
+          <path class="dl-arc" d="M 170 86 Q 126 34 82 86" marker-end="url(#dl-arrow)" />
+          <text class="dl-x2" x="654" y="50">×2</text>
+          <text class="dl-x2" x="566" y="50">×2</text>
+          <text class="dl-x2" x="478" y="50">×2</text>
+          <text class="dl-x2" x="390" y="50">×2</text>
+          <text class="dl-x2" x="302" y="50">×2</text>
+          <text class="dl-x2" x="214" y="50">×2</text>
+          <text class="dl-x2" x="126" y="50">×2</text>
+
+          <!-- the eight columns -->
+          <rect class="dl-box" x="47"  y="90" width="70" height="52" />
+          <rect class="dl-box" x="135" y="90" width="70" height="52" />
+          <rect class="dl-box" x="223" y="90" width="70" height="52" />
+          <rect class="dl-box" x="311" y="90" width="70" height="52" />
+          <rect class="dl-box" x="399" y="90" width="70" height="52" />
+          <rect class="dl-box" x="487" y="90" width="70" height="52" />
+          <rect class="dl-box" x="575" y="90" width="70" height="52" />
+          <rect class="dl-box s" x="663" y="90" width="70" height="52" />
+          <text class="dl-val" x="82"  y="124">128</text>
+          <text class="dl-val" x="170" y="124">64</text>
+          <text class="dl-val" x="258" y="124">32</text>
+          <text class="dl-val" x="346" y="124">16</text>
+          <text class="dl-val" x="434" y="124">8</text>
+          <text class="dl-val" x="522" y="124">4</text>
+          <text class="dl-val" x="610" y="124">2</text>
+          <text class="dl-val" x="698" y="124">1</text>
+
+          <text class="dl-start" x="698" y="162">START HERE</text>
+          <text class="dl-cap" x="390" y="192">Write 1 at the right, then double each time you move one column left.</text>
+        </svg>
+
+        <h3>How far eight bits can go</h3>
+        <p>Eight bits can be arranged in <strong>256</strong> different patterns. That does <em>not</em> mean the largest number is 256 — because the counting starts at <strong>0</strong>, not 1:</p>
+
+        <svg viewBox="0 0 800 246" role="img"
+             aria-label="A diagram showing the range of an 8-bit number. Five patterns are shown: 0000 0000 equals 0, 0000 0001 equals 1, 0000 0010 equals 2, then an ellipsis, then 1111 1110 equals 254 and 1111 1111 equals 255. A bracket underneath spans all of them labelled 256 different patterns in total, with a note that because counting starts at zero the largest value is 255."
+             style="max-width:800px;width:100%;height:auto;display:block;margin:1.25rem auto;">
+          <style>
+            .rb-chip  { fill:#fff; stroke:#D1D5DB; stroke-width:1.5; }
+            .rb-chip.a{ fill:#E8F5EE; stroke:#1B6B45; stroke-width:2; }
+            .rb-chip.z{ fill:#FEF3C7; stroke:#C9A227; stroke-width:2; }
+            .rb-bin   { font:700 13px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#4A5568; text-anchor:middle; }
+            .rb-val   { font:700 22px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#0d1f17; text-anchor:middle; }
+            .rb-val.a { fill:#00442A; }
+            .rb-val.z { fill:#92750A; }
+            .rb-rule  { stroke:#D1D5DB; stroke-width:1; }
+            .rb-dots  { font:700 24px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#9AA3AE; text-anchor:middle; }
+            .rb-brace { fill:none; stroke:#00442A; stroke-width:2; }
+            .rb-lab   { font:700 14px 'Public Sans',sans-serif; fill:#00442A; text-anchor:middle; }
+            .rb-note  { font:600 13px 'Public Sans',sans-serif; fill:#92750A; text-anchor:middle; }
+          </style>
+
+          <!-- 0 -->
+          <rect class="rb-chip a" x="30"  y="26" width="110" height="76" />
+          <text class="rb-bin" x="85"  y="50">0000 0000</text>
+          <line class="rb-rule" x1="42"  y1="60" x2="128" y2="60" />
+          <text class="rb-val a" x="85"  y="88">0</text>
+          <!-- 1 -->
+          <rect class="rb-chip" x="156" y="26" width="110" height="76" />
+          <text class="rb-bin" x="211" y="50">0000 0001</text>
+          <line class="rb-rule" x1="168" y1="60" x2="254" y2="60" />
+          <text class="rb-val" x="211" y="88">1</text>
+          <!-- 2 -->
+          <rect class="rb-chip" x="282" y="26" width="110" height="76" />
+          <text class="rb-bin" x="337" y="50">0000 0010</text>
+          <line class="rb-rule" x1="294" y1="60" x2="380" y2="60" />
+          <text class="rb-val" x="337" y="88">2</text>
+          <!-- gap -->
+          <text class="rb-dots" x="463" y="72">· · ·</text>
+          <!-- 254 -->
+          <rect class="rb-chip" x="534" y="26" width="110" height="76" />
+          <text class="rb-bin" x="589" y="50">1111 1110</text>
+          <line class="rb-rule" x1="546" y1="60" x2="632" y2="60" />
+          <text class="rb-val" x="589" y="88">254</text>
+          <!-- 255 -->
+          <rect class="rb-chip z" x="660" y="26" width="110" height="76" />
+          <text class="rb-bin" x="715" y="50">1111 1111</text>
+          <line class="rb-rule" x1="672" y1="60" x2="758" y2="60" />
+          <text class="rb-val z" x="715" y="88">255</text>
+
+          <!-- brace across everything -->
+          <path class="rb-brace" d="M 30 120 v 10 h 740 v -10" />
+          <path class="rb-brace" d="M 400 130 v 12" />
+          <text class="rb-lab" x="400" y="164">256 different patterns in total</text>
+          <text class="rb-note" x="400" y="196">…but the first one is 0, so the largest value is <tspan font-weight="700">255</tspan></text>
+          <text class="rb-note" x="400" y="222" fill="#4A5568">Patterns counted: 0 to 255. Number of patterns: 256. Not the same number.</text>
+        </svg>
       </article>
 
       <article>
         <h2 id="bin-to-den">Converting Binary → Denary</h2>
         <p>To turn a binary number into an ordinary (denary) number: write it under the place-value columns, then <strong>add up every column with a 1 in it</strong>. Done.</p>
         <div class="example-block">
-          <div class="example-label">Example — 01011100 to denary</div>
+          <div class="example-label">Example — 0101 1100 to denary</div>
           <table style="text-align:center;">
             <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
             <tbody><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr></tbody>
@@ -110,7 +225,7 @@
             <thead><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
             <tbody><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr></tbody>
           </table>
-          <p>So 87 is <code>01010111</code>. <strong>Always check your working</strong> by adding the 1-columns back up: 64 + 16 + 4 + 2 + 1 = 87 ✓</p>
+          <p>So 87 is <code>0101 0111</code>. <strong>Always check your working</strong> by adding the 1-columns back up: 64 + 16 + 4 + 2 + 1 = 87 ✓</p>
         </div>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
@@ -127,7 +242,7 @@
           <div class="ib-label">Visualiser</div>
           <p class="ib-title">8-bit Binary Converter</p>
           <div class="ib-body">
-            <p class="ib-intro">Click any bit to flip it, or type a decimal number and convert. Stick to <strong>standard 8-bit (unsigned)</strong> mode — that's the National 5 requirement. (Two's complement mode is a sneak peek at Higher!)</p>
+            <p class="ib-intro">Click any bit to flip it, or type a denary number and convert. The place values stay on show and the working is written out beside them, so you can check your own answer column by column. Try <strong>255</strong> to see every column switched on, and <strong>128</strong> to see the opposite — one bit doing all the work.</p>
             <iframe src="../resources/cs/visualisers/binary-converter-8bit.html"
                     title="8-bit Binary Number Converter — interactive visualiser"
                     loading="lazy"
@@ -156,11 +271,67 @@ exponent = 4         (the power — remove the ×10)</pre>
           <div class="callout-icon">💡</div>
           <div><strong>Exam gold:</strong> "identify the mantissa and exponent" has appeared in the same form in <em>every</em> N5 exam. Two easy marks — see the worked example below for exactly how it looks.</div>
         </div>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎞️</span>
-          <em>Placeholder — animation</em>
-          Suggestion: a "floating decimal point" animation — a number like 581.25 with the point visibly sliding left to 0.58125 while a ×10 counter ticks up to 10³, then the mantissa and exponent are highlighted and pulled out into labelled boxes.
-        </div>
+        <h3>Anatomy of a floating-point number</h3>
+        <p>Here is exactly how the question appears on the paper. Two parts of what's printed are <strong>not</strong> part of either answer — cross them out and what's left is the two marks:</p>
+
+        <svg viewBox="0 0 760 268" role="img"
+             aria-label="A labelled diagram of the floating-point number 0.127 times 10 to the power 2. The zero-point and the times-ten are greyed out and struck through because they are not part of either answer. The digits 127 are highlighted and labelled mantissa, the digits with the decimal point removed, which governs precision. The power 2 is highlighted and labelled exponent, the power with the times ten removed, which governs range."
+             style="max-width:760px;width:100%;height:auto;display:block;margin:1.25rem auto;">
+          <style>
+            .fa-eyebrow { font:700 11px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#9AA3AE; text-anchor:middle; letter-spacing:.18em; }
+            .fa-num   { font:700 54px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#0d1f17; }
+            .fa-num.g { fill:#9AA3AE; }
+            .fa-sup   { font:700 34px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#0d1f17; }
+            .fa-strike{ stroke:#B91C1C; stroke-width:2.5; }
+            .fa-mbox  { fill:#FEF3C7; stroke:#C9A227; stroke-width:2; }
+            .fa-ebox  { fill:#F3E8F9; stroke:#6A1B9A; stroke-width:2; }
+            .fa-lead  { fill:none; stroke-width:2; }
+            .fa-lead.m{ stroke:#C9A227; }
+            .fa-lead.e{ stroke:#6A1B9A; }
+            .fa-name  { font:700 15px 'JetBrains Mono',monospace; font-variant-ligatures:none; text-anchor:middle; letter-spacing:.14em; }
+            .fa-name.m{ fill:#92750A; }
+            .fa-name.e{ fill:#6A1B9A; }
+            .fa-desc  { font:600 12.5px 'Public Sans',sans-serif; fill:#4A5568; text-anchor:middle; }
+            .fa-job   { font:700 12.5px 'Public Sans',sans-serif; text-anchor:middle; }
+            .fa-job.m { fill:#92750A; }
+            .fa-job.e { fill:#6A1B9A; }
+            .fa-cross { font:700 11px 'Public Sans',sans-serif; fill:#B91C1C; text-anchor:middle; letter-spacing:.06em; }
+          </style>
+
+          <text class="fa-eyebrow" x="380" y="26">AS PRINTED IN THE EXAM</text>
+
+          <!-- highlight boxes sit behind the glyphs -->
+          <rect class="fa-mbox" x="260" y="58" width="104" height="60" />
+          <rect class="fa-ebox" x="524" y="46" width="30" height="42" />
+
+          <!-- 0.127 × 10² laid out on a monospace grid: 32.4px per character -->
+          <text class="fa-num g" x="200" y="106">0.</text>
+          <text class="fa-num"   x="264.8" y="106">127</text>
+          <text class="fa-num g" x="362" y="106"> × 10</text>
+          <text class="fa-sup"   x="528" y="80">2</text>
+
+          <!-- strike the parts that are not part of either answer -->
+          <line class="fa-strike" x1="196" y1="88" x2="266" y2="88" />
+          <line class="fa-strike" x1="392" y1="88" x2="518" y2="88" />
+          <text class="fa-cross" x="205" y="156">not an answer</text>
+          <text class="fa-cross" x="452" y="156">not an answer</text>
+
+          <!-- mantissa leader + label -->
+          <path class="fa-lead m" d="M 260 126 v 10 h 104 v -10" />
+          <path class="fa-lead m" d="M 312 136 v 26" />
+          <text class="fa-name m" x="312" y="186">MANTISSA</text>
+          <text class="fa-desc"   x="312" y="210">the digits — remove the decimal point</text>
+          <text class="fa-job m"  x="312" y="232">governs PRECISION</text>
+
+          <!-- exponent leader + label -->
+          <path class="fa-lead e" d="M 539 92 v 62 h 71" />
+          <path class="fa-lead e" d="M 610 154 v 8" />
+          <text class="fa-name e" x="610" y="186">EXPONENT</text>
+          <text class="fa-desc"   x="610" y="210">the power — remove the × 10</text>
+          <text class="fa-job e"  x="610" y="232">governs RANGE</text>
+
+          <text class="fa-desc" x="380" y="260" fill="#9AA3AE">Answer: mantissa 127, exponent 2 — never the other way round.</text>
+        </svg>
       </article>
 
       <article>
@@ -207,7 +378,7 @@ exponent = 4         (the power — remove the ×10)</pre>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;"><code>01101010</code></p>
+              <p style="color:#6A1B9A;"><code>0110 1010</code></p>
               <p>Working: 106 = 64 + 32 + 8 + 2. One mark for the correct 8-bit answer — remember the leading zero.</p>
             </div>
           </details>
@@ -215,7 +386,7 @@ exponent = 4         (the power — remove the ×10)</pre>
 
         <div class="practice-question">
           <div class="q-label">Practice Question 2 — Binary to Denary (1 mark)</div>
-          <p>Convert the binary number <code>10110010</code> to denary.</p>
+          <p>Convert the binary number <code>1011 0010</code> to denary.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">

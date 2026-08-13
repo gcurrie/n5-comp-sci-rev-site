@@ -74,7 +74,7 @@
 
       <article>
         <h2 id="ascii">Text — Extended ASCII</h2>
-        <p>Text is stored by giving every character its own <strong>number</strong>, which is then stored in binary. Capital A is <strong>65</strong> (binary <code>01000001</code>), the Space key is <strong>32</strong>, and so on. <strong>Extended ASCII</strong> uses <strong>8 bits per character</strong>, giving 2⁸ = <strong>256 possible characters</strong>.</p>
+        <p>Text is stored by giving every character its own <strong>number</strong>, which is then stored in binary. Capital A is <strong>65</strong> (binary <code>0100 0001</code>), the Space key is <strong>32</strong>, and so on. <strong>Extended ASCII</strong> uses <strong>8 bits per character</strong>, giving 2⁸ = <strong>256 possible characters</strong>.</p>
         <p>Those 256 characters come in two types:</p>
         <ul>
           <li><strong>Printable characters</strong> — everything you can see on screen: letters (capital and lowercase are <em>different</em> characters!), digits and symbols like &amp; and %.</li>
@@ -115,11 +115,15 @@
       <article>
         <h2 id="bitmap">Bitmap Graphics</h2>
         <p>A <strong>bitmap</strong> stores an image as a <strong>grid of pixels</strong>, and <strong>each pixel has a colour stored as a binary value</strong>. That sentence is the whole topic — and worth two marks, so learn it word for word.</p>
+
+        <img src="../resources/cs/images/bitmap.png" alt="A photograph of a dog sitting in a living room. A section of the dog's eye is magnified to show that the smooth-looking photo is really a grid of individual coloured squares, each one a single pixel holding one colour." class="zoomable" style="border:1px solid var(--border);margin:1.25rem auto;" />
+        <p style="text-align:center;font-size:.9rem;color:var(--text-muted);margin-top:-.5rem;">Zoom far enough into any photograph and the grid appears. Each square is <strong>one pixel</strong>, and each one stores <strong>one colour as a binary value</strong> — that's a bitmap.</p>
+
         <p>In a black and white bitmap, one bit per pixel does the job: black is 1, white is 0. For colour, each pixel needs more bits — up to <strong>24-bit True Colour</strong>, where every pixel can be one of <strong>16,777,216 colours</strong>.</p>
         <svg viewBox="0 0 420 160" role="img" aria-label="A black and white bitmap stored as 1s and 0s" style="max-width:420px;width:100%;height:auto;display:block;margin:1rem auto;">
           <style>
             .bm-cell { stroke:#8aa295; stroke-width:1; }
-            .bm-code { font:600 13px 'JetBrains Mono',monospace; fill:#0d1f17; }
+            .bm-code { font:600 13px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#0d1f17; }
           </style>
           <g>
             <rect class="bm-cell" x="20" y="20" width="30" height="30" fill="#fff"/><rect class="bm-cell" x="50" y="20" width="30" height="30" fill="#0d1f17"/><rect class="bm-cell" x="80" y="20" width="30" height="30" fill="#0d1f17"/><rect class="bm-cell" x="110" y="20" width="30" height="30" fill="#fff"/>

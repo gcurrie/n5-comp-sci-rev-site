@@ -51,6 +51,7 @@
           <li><a href="#test-tables">Test Tables</a></li>
           <li><a href="#error-types">The Three Error Types</a></li>
           <li><a href="#identifying">Identifying Errors from a Scenario</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
@@ -95,10 +96,38 @@
         </div>
         <p>The one people mix up is <strong>extreme</strong>. Extreme data is <em>not</em> bad data — it's the edge of what's <em>allowed</em>. Take a standard 6-sided dice: 1 and 6 are extreme values, and the program should absolutely accept them — it's perfectly valid for a dice to roll a 6. But 180? A dice can't roll 180. That's exceptional.</p>
         <p>Why do the boundaries get their own category? Because that's where programs break. A condition written as <code>guess &gt; 0</code> instead of <code>guess &gt;= 0</code> works perfectly for normal data and only fails when someone enters exactly 0 — which is precisely why we always test the edges.</p>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — visualiser</em>
-          Suggestion: a number-line boundary highlighter — the accepted range (0–10) drawn as a green band on a number line, with pupils dropping values onto it and the visualiser classifying each as normal (deep in the green), extreme (on the very edge) or exceptional (outside), with the reasoning shown.
+
+        <p>Here's a past paper question that looks easy and catches people out constantly. Write your two values down before opening it.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Rolling Two Dice (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_test_data_q2.png" alt="Past paper question: part of a program requires a user to input the total score achieved when they roll a pair of six-sided dice. For example, if the user rolled a 4 and a 1 they would input 5. Part a: state the extreme values required to test this part of the program. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Extreme data sits on the <em>edges of what is allowed</em>, so our job is to find the smallest and largest values the program should accept. Before we can do that we have to be clear about one thing: <strong>what is the user actually typing in?</strong></p>
+          <p>Read the question again. The user isn't entering one dice roll — they're entering the <strong>total</strong> of two. So we work the edges out from there:</p>
+          <ul>
+            <li>Lowest possible total: 1 + 1 = <strong>2</strong></li>
+            <li>Highest possible total: 6 + 6 = <strong>12</strong></li>
+          </ul>
+          <p>Watch the trap: the tempting answers are <strong>1 and 6</strong>, because those are the numbers printed on a dice. But a total of 1 is impossible with two dice — so 1 isn't extreme data at all, it's <em>exceptional</em>. Whenever a question describes an input that is added up, doubled or counted, calculate the boundary rather than lifting a number straight out of the text.</p>
+          <p>And remember both of these values are <strong>valid</strong>. The program should accept 2 and 12 without complaint — we test them because that's exactly where an <code>&lt;</code> that should have been a <code>&lt;=</code> gives itself away.</p>
+          <img src="../resources/sdd/worked_examples/n5_test_data_q2_ans.png" alt="Marking instructions: 2 and 12, two marks." class="zoomable" />
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;">
+            Extreme 1 — <strong>2</strong><br/>
+            Extreme 2 — <strong>12</strong>
+          </p>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Test Data Number Line</p>
+          <div class="ib-body">
+            <p class="ib-intro">Drop values onto the accepted range and watch them classify themselves. Try the boundary on purpose — the value on the edge and the value one step outside look almost identical and land in completely different zones. Every value you test is added to a <strong>test table</strong> underneath, and the tally tells you when you've covered all three types. Tab 3 is the two-dice question above; tab 4 swaps to measuring a <em>length</em> instead of a value.</p>
+            <iframe src="../resources/sdd/visualisers/test-data-number-line.html"
+                    title="Test data number line — drop values onto the accepted range and classify them"
+                    loading="lazy"
+                    style="height:900px"></iframe>
+          </div>
         </div>
       </article>
 
@@ -122,6 +151,30 @@
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
           <div>In the <strong>coursework assignment</strong> you're usually <em>given</em> specific test data to use. Use exactly the values you're given, and record the results — don't invent your own.</div>
+        </div>
+
+        <p>In the exam you're often handed a half-finished test table and asked to fill the gaps. This one follows on from the property search app whose <a href="standard-algorithms.html">input validation</a> you may already have designed — the price entered must be between &pound;50,000 and &pound;600,000.</p>
+
+        <div class="worked-example">
+          <div class="q-label">2022 Q9 b) (ii) — Property Price Test Data (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_test_data_q1.png" alt="Past paper question: test data is used to ensure the validation of the price entered works correctly. Complete the test table below with one appropriate numerical value for each input. 2 marks. The table has columns Type of test, Input and Expected result. Row one: Extreme, blank input, program continues. Row two: Exceptional, blank input, program displays an error message." class="zoomable" />
+          <p><strong>How to tackle it:</strong> The gaps are all in the <em>Input</em> column, and the two columns either side of them have already been filled in for us. Read those first — they tell us exactly which side of the boundary each answer has to land on.</p>
+          <ul>
+            <li><strong>Extreme</strong>, expected result "program continues" — so the value must be <em>accepted</em>. Accepted <em>and</em> on the edge means one of the two boundary values themselves: <strong>50000</strong> or <strong>600000</strong>.</li>
+            <li><strong>Exceptional</strong>, expected result "program displays an error message" — so the value must be <em>rejected</em>. That means anything outside the range: below 50000 or above 600000. <strong>49999</strong> does the job nicely.</li>
+          </ul>
+          <p>Watch the trap: <strong>one actual value per box</strong>. "Between 50000 and 600000", "too low" or "any big number" all score zero — the marker needs a number they could type in. And the question says "one appropriate <em>numerical</em> value", so an answer like "cheap" or a word wouldn't be accepted here even though wrong-type data is normally fine as exceptional data.</p>
+          <p>The other classic slip is putting 50000 in the exceptional row. 50000 is <em>inside</em> the accepted range — the validation lets it straight through, so the expected result wouldn't match.</p>
+          <img src="../resources/sdd/worked_examples/n5_test_data_q1_ans.png" alt="Marking instructions: one mark for one extreme value from 50000 or 600000. One mark for one numerical exceptional value, less than 50000 or more than 600000. Marking should focus on the numerical values and may ignore spaces or commas that candidates may add." class="zoomable" />
+          <p>A completed table would be:</p>
+          <table style="max-width:34rem;">
+            <thead><tr><th>Type of test</th><th>Input</th><th>Expected result</th></tr></thead>
+            <tbody>
+              <tr><td>Extreme</td><td style="color:#6A1B9A;"><strong>600000</strong></td><td>Program continues</td></tr>
+              <tr><td>Exceptional</td><td style="color:#6A1B9A;"><strong>49999</strong></td><td>Program displays an error message</td></tr>
+            </tbody>
+          </table>
+          <p style="color:#6A1B9A;">50000 would earn the extreme mark equally well, and any value above 600000 would earn the exceptional mark. The marking instructions add a small mercy: they ignore spaces and commas, so 600,000 is fine.</p>
         </div>
       </article>
 
@@ -163,6 +216,90 @@ print("Hello", age, ". You are", name, "years old.")
           <li>A file the program needs is missing or renamed</li>
         </ul>
         <p>Notice the timing: the code itself can be perfectly legal — the crash depends on what happens at run time. The same program might run fine a hundred times, then crash the moment someone types "five" instead of 5. Programs that defend themselves against this (mainly with <a href="standard-algorithms.html">input validation</a>) are called <strong>robust</strong> — see <a href="evaluation.html">Evaluation</a>.</p>
+
+        <h3>When each error shows itself</h3>
+        <p>The three types aren't really three <em>kinds</em> of mistake — they're three <strong>moments</strong> at which a mistake gets found. Follow each lane across the life of a program:</p>
+
+        <svg viewBox="0 0 860 348" role="img"
+             aria-label="A timeline showing the life of a program in four stages: Write, Translate, Run and Finish. Three lanes below show how far a program gets with each type of error. The syntax error lane stops at the end of the Translate stage, halted by the translator, and never reaches Run. The execution error lane passes translation and stops part-way through the Run stage where it crashes. The logic error lane runs the whole way to Finish without stopping, and the mistake is only found afterwards by comparing the output with the expected result."
+             style="max-width:860px;width:100%;height:auto;display:block;margin:1.25rem auto;">
+          <style>
+            .et-stage { fill:#00442A; }
+            .et-stagetxt { font:700 13px 'Public Sans',sans-serif; fill:#fff; text-anchor:middle; }
+            .et-div { stroke:#F8F7F2; stroke-width:2; }
+            .et-guide { stroke:#D1D5DB; stroke-width:1.5; stroke-dasharray:4 4; }
+            .et-track { fill:#EDEDE7; }
+            .et-name { font:700 13px 'Public Sans',sans-serif; }
+            .et-cap { font:600 12px 'Public Sans',sans-serif; }
+            .et-mark { font:700 15px 'Public Sans',sans-serif; }
+            .et-bartxt { font:700 11px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#fff; letter-spacing:.08em; }
+          </style>
+
+          <!-- stage band -->
+          <rect class="et-stage" x="30" y="34" width="800" height="36" />
+          <line class="et-div" x1="210" y1="34" x2="210" y2="70" />
+          <line class="et-div" x1="390" y1="34" x2="390" y2="70" />
+          <line class="et-div" x1="690" y1="34" x2="690" y2="70" />
+          <text class="et-stagetxt" x="120" y="57">1 · Write it</text>
+          <text class="et-stagetxt" x="300" y="57">2 · Translate it</text>
+          <text class="et-stagetxt" x="540" y="57">3 · Run it</text>
+          <text class="et-stagetxt" x="760" y="57">4 · Finish</text>
+
+          <!-- stage guides down the page -->
+          <line class="et-guide" x1="210" y1="76" x2="210" y2="330" />
+          <line class="et-guide" x1="390" y1="76" x2="390" y2="330" />
+          <line class="et-guide" x1="690" y1="76" x2="690" y2="330" />
+
+          <!-- lane 1: syntax -->
+          <text class="et-name" x="30" y="103" fill="#B91C1C">SYNTAX ERROR</text>
+          <rect class="et-track" x="30" y="112" width="800" height="24" />
+          <rect x="30" y="112" width="360" height="24" fill="#B91C1C" />
+          <text class="et-bartxt" x="42" y="128">GETS THIS FAR</text>
+          <line x1="390" y1="106" x2="390" y2="142" stroke="#B91C1C" stroke-width="3.5" />
+          <text class="et-mark" x="402" y="130" fill="#B91C1C">✕</text>
+          <text class="et-cap" x="422" y="129" fill="#B91C1C">The translator refuses it — the program never starts</text>
+
+          <!-- lane 2: execution -->
+          <text class="et-name" x="30" y="181" fill="#92750A">EXECUTION ERROR</text>
+          <rect class="et-track" x="30" y="190" width="800" height="24" />
+          <rect x="30" y="190" width="530" height="24" fill="#C9A227" />
+          <text class="et-bartxt" x="42" y="206" fill="#002D1C">TRANSLATES FINE, STARTS RUNNING</text>
+          <line x1="560" y1="184" x2="560" y2="220" stroke="#92750A" stroke-width="3.5" />
+          <text class="et-mark" x="572" y="208" fill="#92750A">✕</text>
+          <text class="et-cap" x="592" y="207" fill="#92750A">Crashes part-way — stops dead</text>
+
+          <!-- lane 3: logic -->
+          <text class="et-name" x="30" y="259" fill="#6A1B9A">LOGIC ERROR</text>
+          <rect class="et-track" x="30" y="268" width="800" height="24" />
+          <rect x="30" y="268" width="800" height="24" fill="#6A1B9A" />
+          <text class="et-bartxt" x="42" y="284">RUNS ALL THE WAY THROUGH — NOTHING IS EVER REPORTED</text>
+          <text class="et-cap" x="30" y="316" fill="#6A1B9A">↳ found only afterwards, when you compare the actual output with the expected output — which is exactly what test data is for</text>
+        </svg>
+
+        <p>That's the whole distinction. A syntax error never gets to run; an execution error runs and then stops; a logic error runs to the end and lies to you. Notice which lane is the longest — the error that causes the least fuss is the hardest one to find.</p>
+
+        <p>Exam questions often hand you a short piece of code containing more than one fault and ask you to name both. Read the code below and write down your two answers before opening the walkthrough.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Displaying a Name (2 marks)</div>
+          <img src="../resources/sdd/worked_examples/n5_err_types_q1.png" alt="Past paper question: the code below should receive input and display a user's name. Line 3 DECLARE name INITIALLY empty string. Line 4 SEND Please type in your name TO DISPLAY. Line 5 SD Your name is and name TO DISPLAY. Line 6 RECEIVE name FROM KEYBOARD. Identify the syntax error and logic error in the program code above. 2 marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Two marks, and the question names the two error types for us — one syntax, one logic. That's a useful hint in itself: we're looking for one thing that <em>breaks the rules of the language</em>, and one thing that is perfectly legal but <em>does the wrong thing</em>. They will not be the same line.</p>
+          <p><strong>The syntax error — check the keywords.</strong> Line 3's <code>DECLARE … INITIALLY</code> is fine. Line 4's <code>SEND … TO DISPLAY</code> is fine. Line 6's <code>RECEIVE … FROM KEYBOARD</code> is fine. Line 5 begins <code>SD</code> — and there is no such keyword. It should be <code>SEND</code>. The translator would stop right there and refuse to run the program.</p>
+          <p><strong>The logic error — check the order.</strong> Now read the lines as a sequence, as if we were the computer:</p>
+          <ul>
+            <li>Line 4 asks the user to type their name</li>
+            <li>Line 5 displays "Your name is" joined to <code>name</code></li>
+            <li>Line 6 <em>then</em> reads what the user typed</li>
+          </ul>
+          <p>Line 5 displays the name <em>before</em> line 6 puts anything into it — so the program shows "Your name is" followed by the empty string from line 3. Nothing is misspelled and nothing crashes. It runs, and it's wrong: a textbook logic error.</p>
+          <p>Watch the trap: quoting a line number is not an answer. "Line 5" on its own earns nothing — say <em>what</em> is wrong with it. For the logic error, either describing the fault ("the name is displayed before it is entered") or the fix ("line 6 should come before line 5") is accepted.</p>
+          <img src="../resources/sdd/worked_examples/n5_err_types_q1_ans.png" alt="Marking instructions: syntax error, SD should be SEND. Logic error, the name is displayed before the user enters it. Two marks. For the logic error accept, line 6 should come after line 4." class="zoomable" />
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;">
+            <strong>Syntax error</strong> — line 5 uses <strong>SD</strong>, which should be <strong>SEND</strong>.<br/>
+            <strong>Logic error</strong> — the name is displayed (line 5) before the user has entered it (line 6); line 6 should come immediately after line 4.
+          </p>
+        </div>
       </article>
 
       <article>
@@ -177,10 +314,209 @@ print("Hello", age, ". You are", name, "years old.")
           </tbody>
         </table>
         <p>Ask yourself two questions, in order: <em>Did it run?</em> If no — syntax. <em>Did it crash?</em> If yes — execution. If it ran to the end and was simply wrong — logic.</p>
-        <div class="img-placeholder">
-          <span class="ph-icon">🎛️</span>
-          <em>Placeholder — interactive trainer</em>
-          Suggestion: an error-spotter quiz — pupils are shown short scenarios ("the program crashes when Priya presses Enter without typing anything") and sort them into syntax / logic / execution, with the two-question flowchart above revealed as a hint.
+
+        <p>Here are those two questions drawn out properly — and since it's a flowchart, it doubles as a reminder of the notation from the <a href="design.html">Design</a> page:</p>
+
+        <svg viewBox="0 0 700 452" role="img"
+             aria-label="A flowchart for identifying an error type. It starts with a terminator reading, a program is not behaving. An arrow leads to a decision diamond asking, did the program run at all? The No branch leads right to syntax error. The Yes branch leads down to a second decision diamond asking, did it stop part-way through? The Yes branch leads right to execution error. The No branch leads down to logic error."
+             style="max-width:700px;width:100%;height:auto;display:block;margin:1.25rem auto;">
+          <style>
+            .ef-term { fill:#E8F5EE; stroke:#00442A; stroke-width:2; }
+            .ef-dec { fill:#fff; stroke:#00442A; stroke-width:2; }
+            .ef-txt { font:600 14px 'Public Sans',sans-serif; fill:#1A1A1A; text-anchor:middle; }
+            .ef-out { font:700 14px 'Public Sans',sans-serif; fill:#fff; text-anchor:middle; letter-spacing:.02em; }
+            .ef-br { font:700 12px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#00442A; }
+            .ef-note { font:600 11.5px 'Public Sans',sans-serif; text-anchor:middle; }
+            .ef-line { stroke:#00442A; stroke-width:2; fill:none; }
+          </style>
+          <defs>
+            <marker id="ef-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#00442A" />
+            </marker>
+          </defs>
+
+          <!-- start -->
+          <rect class="ef-term" x="215" y="14" width="270" height="42" rx="21" />
+          <text class="ef-txt" x="350" y="41">Something is wrong with a program</text>
+          <line class="ef-line" x1="350" y1="56" x2="350" y2="82" marker-end="url(#ef-arrow)" />
+
+          <!-- decision 1 -->
+          <polygon class="ef-dec" points="350,86 480,142 350,198 220,142" />
+          <text class="ef-txt" x="350" y="147">Did it run at all?</text>
+
+          <!-- no -> syntax -->
+          <line class="ef-line" x1="480" y1="142" x2="536" y2="142" marker-end="url(#ef-arrow)" />
+          <text class="ef-br" x="492" y="133">No</text>
+          <rect x="540" y="120" width="150" height="44" rx="22" fill="#B91C1C" />
+          <text class="ef-out" x="615" y="147">SYNTAX ERROR</text>
+          <text class="ef-note" x="615" y="182" fill="#B91C1C">caught by the translator</text>
+
+          <!-- yes down -->
+          <line class="ef-line" x1="350" y1="198" x2="350" y2="226" marker-end="url(#ef-arrow)" />
+          <text class="ef-br" x="360" y="217">Yes</text>
+
+          <!-- decision 2 -->
+          <polygon class="ef-dec" points="350,230 480,286 350,342 220,286" />
+          <text class="ef-txt" x="350" y="282">Did it stop</text>
+          <text class="ef-txt" x="350" y="300">part-way through?</text>
+
+          <!-- yes -> execution -->
+          <line class="ef-line" x1="480" y1="286" x2="536" y2="286" marker-end="url(#ef-arrow)" />
+          <text class="ef-br" x="490" y="277">Yes</text>
+          <rect x="540" y="264" width="150" height="44" rx="22" fill="#C9A227" />
+          <text class="ef-out" x="615" y="291" fill="#002D1C">EXECUTION ERROR</text>
+          <text class="ef-note" x="615" y="326" fill="#92750A">it crashed while running</text>
+
+          <!-- no -> logic -->
+          <line class="ef-line" x1="350" y1="342" x2="350" y2="374" marker-end="url(#ef-arrow)" />
+          <text class="ef-br" x="360" y="363">No</text>
+          <rect x="250" y="378" width="200" height="44" rx="22" fill="#6A1B9A" />
+          <text class="ef-out" x="350" y="405">LOGIC ERROR</text>
+          <text class="ef-note" x="350" y="440" fill="#6A1B9A">it finished, and the answer was wrong</text>
+        </svg>
+
+        <p>These questions are usually worth a single mark and take about ten seconds — <em>if</em> you keep the two questions in your head. Here's one where the wording is deliberately slippery.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — AND Instead of OR (1 mark)</div>
+          <img src="../resources/sdd/worked_examples/n5_err_types_q2.png" alt="Past paper question, part four: line 11 should have used AND instead of OR. State the type of error that using OR would cause when the program is executed. 1 mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> Run the two questions in order.</p>
+          <p><em>Did it run?</em> Yes. <code>OR</code> is a real logical operator, correctly spelled and in a sensible place — the translator has nothing to complain about. So it isn't a syntax error.</p>
+          <p><em>Did it crash?</em> No. Whether the condition uses AND or OR, it still evaluates to true or false and the program carries on to the next line. So it isn't an execution error.</p>
+          <p>That leaves the last case: the program runs from start to finish, says nothing, and produces the wrong result. Swapping AND for OR makes the condition true far more often than it should be, so the wrong branch runs. That is a <strong>logic error</strong>.</p>
+          <p>Watch the trap: the question ends "…when the program is <strong>executed</strong>", and it is very tempting to answer "execution error" because the word is sitting right there. It isn't a hint — it's just telling us the program <em>does</em> run, which is what rules syntax out. Never let a word in the question choose your answer for you.</p>
+          <p>One more thing worth noticing: a wrong logical operator is one of the most common causes of logic errors at National 5, precisely because the code looks completely healthy. Only <a href="#test-data">test data</a> will expose it.</p>
+          <img src="../resources/sdd/worked_examples/n5_err_types_q2_ans.png" alt="Marking instructions: logic. One mark." class="zoomable" />
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;"><strong>Logic error</strong></p>
+        </div>
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Error Spotter</p>
+          <div class="ib-body">
+            <p class="ib-intro">Ten scenarios in a random order — syntax, logic or execution? Every answer comes with the reasoning, and the hint panel puts the two questions from the flowchart above in front of you if you need them. Watch for the ones written to be misleading: the wording is deliberately unhelpful, and only what actually <em>happened</em> to the program decides the answer.</p>
+            <iframe src="../resources/sdd/visualisers/error-spotter.html"
+                    title="Error spotter — sort scenarios into syntax, logic and execution errors"
+                    loading="lazy"
+                    style="height:700px"></iframe>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>Each of these tests the same skill as one of the worked examples above — but none of them has the same answer. Write your answer down before opening the marking instructions.</p>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Heart Rate Monitor (4 marks)</div>
+          <p>A fitness app asks the user to enter their resting heart rate. The app accepts whole numbers from <strong>40 to 200</strong> beats per minute inclusive.</p>
+          <p>State the type of test data — <strong>normal</strong>, <strong>extreme</strong> or <strong>exceptional</strong> — for each of the values below.</p>
+          <table style="max-width:26rem;">
+            <thead><tr><th>Value entered</th><th>Type of test data</th></tr></thead>
+            <tbody>
+              <tr><td>(a) 39</td><td>&nbsp;</td></tr>
+              <tr><td>(b) 72</td><td>&nbsp;</td></tr>
+              <tr><td>(c) 200</td><td>&nbsp;</td></tr>
+              <tr><td>(d) sixty</td><td>&nbsp;</td></tr>
+            </tbody>
+          </table>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each:</p>
+              <ul style="color:#6A1B9A;">
+                <li>(a) 39 — <strong>exceptional</strong> (one below the minimum, so it must be rejected)</li>
+                <li>(b) 72 — <strong>normal</strong> (comfortably inside the range)</li>
+                <li>(c) 200 — <strong>extreme</strong> (the maximum itself — still valid, still accepted)</li>
+                <li>(d) sixty — <strong>exceptional</strong> (the wrong data type entirely)</li>
+              </ul>
+              <p style="color:#6A1B9A;">Parts (a) and (d) are both exceptional for different reasons — exceptional covers <em>anything</em> the program should refuse, whether it's out of range or the wrong type. Part (c) is the one that costs marks: 200 is the edge of what's allowed, not something invalid, so it is extreme rather than exceptional.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — Three Darts (2 marks)</div>
+          <p>Part of a program requires a player to input the <strong>total score</strong> from three darts. Each dart scores from 0 to 20.</p>
+          <p>State the extreme values required to test this part of the program.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for <strong>0</strong> and <strong>60</strong>.</p>
+              <p style="color:#6A1B9A;">The input is the total of three darts, so the boundaries have to be calculated: 0 + 0 + 0 = 0 and 20 + 20 + 20 = 60. Do not accept 0 and 20 — that's the range of a single dart, not of the value being entered. Note also that the minimum here is 0, not 1: a dart that misses the board scores nothing.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — New Password (2 marks)</div>
+          <p>A program checks that a new password is <strong>at least 8 and at most 12 characters</strong> long.</p>
+          <p>Complete the test table below with one appropriate value for each input.</p>
+          <table style="max-width:34rem;">
+            <thead><tr><th>Type of test</th><th>Input</th><th>Expected result</th></tr></thead>
+            <tbody>
+              <tr><td>Extreme</td><td>&nbsp;</td><td>Password accepted</td></tr>
+              <tr><td>Exceptional</td><td>&nbsp;</td><td>Program displays an error message</td></tr>
+            </tbody>
+          </table>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each:</p>
+              <ul style="color:#6A1B9A;">
+                <li><strong>Extreme</strong> — any password of exactly 8 or exactly 12 characters, e.g. <code>computer</code> (8) or <code>chocolatecak</code> (12)</li>
+                <li><strong>Exceptional</strong> — any password of 7 or fewer, or 13 or more, characters, e.g. <code>cat</code> or <code>supercalifragilistic</code></li>
+              </ul>
+              <p style="color:#6A1B9A;">The catch is what's being measured. Here the boundary is a <em>length</em>, but the input is still a <strong>password</strong> — so write an actual password, not the number 8. Answers of "8", "13" or "a short password" earn nothing, because they aren't things the user could type into the box.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Ferry Booking System (3 marks)</div>
+          <p>A team is testing a ferry booking program. State the type of error in each of the following cases.</p>
+          <ol style="font-family:inherit;">
+            <li>The program will not run at all. The translator reports a problem at line 12, where <code>prnit</code> has been typed instead of <code>print</code>.</li>
+            <li>The program runs to the end and displays a total fare of &pound;0.00 for every booking. No error message appears.</li>
+            <li>The program stops part-way through and displays "ZeroDivisionError" when a booking is made for 0 passengers.</li>
+          </ol>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each:</p>
+              <ul style="color:#6A1B9A;">
+                <li>(a) <strong>Syntax error</strong> — a misspelled keyword, caught by the translator before the program runs</li>
+                <li>(b) <strong>Logic error</strong> — it runs perfectly happily and gives the wrong answer, with no error message</li>
+                <li>(c) <strong>Execution error</strong> (accept run-time error) — it crashes <em>while</em> running because of what happened at run time</li>
+              </ul>
+              <p style="color:#6A1B9A;">Every one of these is decided by the two questions: did it run, and did it crash? Part (b) gives itself away with "no error message appears" — that phrase almost always means logic.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Adding to a Basket (2 marks)</div>
+          <p>The code below should add the price of an item to a running total and display the new total.</p>
+          <div class="code-block">
+            <div class="code-label">SQA Reference Language</div>
+            <pre>Line 4  DECLARE total INITIALLY 0
+Line 5  DECLARE price INITIALLY 0
+Line 6  RECIEVE price FROM KEYBOARD
+Line 7  SET total TO total - price
+Line 8  SEND total TO DISPLAY</pre>
+          </div>
+          <p>Identify the <strong>syntax error</strong> and the <strong>logic error</strong> in the program code above.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each:</p>
+              <ul style="color:#6A1B9A;">
+                <li><strong>Syntax error</strong> — line 6 is spelled <code>RECIEVE</code>; it should be <code>RECEIVE</code></li>
+                <li><strong>Logic error</strong> — line 7 subtracts the price from the total instead of adding it; it should be <code>SET total TO total + price</code></li>
+              </ul>
+              <p style="color:#6A1B9A;">Line 7 is legal code — the language is perfectly happy to subtract — so nothing is reported and nothing crashes. It simply produces a total that goes down every time you add an item. Do not award marks for a line number alone; the fault has to be described.</p>
+            </div>
+          </details>
         </div>
       </article>
 

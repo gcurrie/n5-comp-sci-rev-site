@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Error Spotter — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --out:#6A1B9A; --out-bg:#F3E8F9;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  /* JetBrains Mono fuses >= <= != into single glyphs. Exam notation is two
+     characters, so ligatures stay off. Inherited, so it reaches SVG text too;
+     form controls are listed because the font shorthand resets them. */
+  body,input,button,select,textarea{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
+  .wrap{max-width:880px;margin:0 auto}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:800px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0 12px}
+  .meta{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--ink-soft)}
+  .meta b{color:var(--active-strong)}
+  button.ctrl{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--active-strong);
+  }
+  button.ctrl:hover{border-color:var(--active);background:var(--active-bg)}
+  button:focus-visible{outline:3px solid var(--active-bg);outline-offset:1px}
+
+  .bar{height:6px;background:var(--line);margin:0 0 14px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--active);width:0;transition:width .3s ease}
+
+  .panel{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  .panelbar{background:var(--bar);padding:10px 16px}
+  .panelbar span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--match-accent)}
+
+  .scene{padding:18px 18px 16px;font-size:16.5px;line-height:1.55;min-height:5.4em}
+  .scene code{font-family:var(--mono);font-size:15px;font-weight:700;background:var(--bg);padding:1px 5px;border:1px solid var(--line)}
+  .scene .who{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;display:block;margin-bottom:8px}
+
+  .picks{display:flex;gap:0;flex-wrap:wrap;border-top:1px solid var(--line)}
+  .picks button{
+    flex:1 1 33%;min-width:150px;cursor:pointer;border:0;border-right:1px solid var(--line);
+    background:#fff;padding:15px 12px;font-family:var(--sans);font-size:15px;font-weight:700;color:var(--active-strong);
+  }
+  .picks button:last-child{border-right:0}
+  .picks button:hover:not(:disabled){background:var(--active-bg)}
+  .picks button:disabled{cursor:not-allowed;opacity:.55}
+  .picks button.right{background:var(--active);color:#fff;opacity:1}
+  .picks button.wrong{background:var(--warn);color:#fff;opacity:1}
+
+  .feedback{padding:0;font-size:14.5px}
+  .feedback.show{padding:14px 18px;border-top:1px solid var(--line)}
+  .feedback .head{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:7px}
+  .feedback.ok .head{color:var(--active)}
+  .feedback.no .head{color:var(--warn)}
+  .feedback p{margin:0 0 8px}
+  .feedback p:last-child{margin:0}
+  .feedback b{font-weight:700}
+  .feedback code{font-family:var(--mono);font-weight:700}
+  .feedback.ok{background:var(--active-bg)}
+  .feedback.no{background:var(--warn-bg)}
+
+  .next{display:flex;justify-content:flex-end;padding:0 18px 16px}
+  .next button{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    padding:11px 20px;border:1px solid var(--match-accent);background:var(--match-accent);color:#002D1C;
+  }
+  .next button:hover{filter:brightness(1.06)}
+
+  /* ---- hint ---- */
+  details.hint{border:1px solid var(--line);background:var(--panel);margin-bottom:14px}
+  details.hint summary{
+    cursor:pointer;padding:11px 16px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;font-weight:700;color:var(--active-strong);list-style:none;
+  }
+  details.hint summary::-webkit-details-marker{display:none}
+  details.hint summary::before{content:"▸ ";color:var(--match-accent)}
+  details.hint[open] summary::before{content:"▾ "}
+  details.hint .hbody{padding:0 16px 15px;font-size:14px}
+  .steps{display:flex;flex-direction:column;gap:8px;margin:10px 0 0}
+  .step{display:flex;gap:11px;align-items:flex-start;border-left:3px solid var(--line);padding:7px 0 7px 12px}
+  .step.syn{border-left-color:var(--warn)} .step.exe{border-left-color:var(--match-accent)} .step.log{border-left-color:var(--out)}
+  .step .q{font-family:var(--mono);font-size:12.5px;font-weight:700;flex:1 1 200px}
+  .step .a{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+  .step.syn .a{color:var(--warn)} .step.exe .a{color:var(--match)} .step.log .a{color:var(--out)}
+
+  /* ---- final score ---- */
+  .final{padding:20px 18px;text-align:center;display:none}
+  .final.show{display:block}
+  .final .big{font-family:var(--mono);font-size:clamp(30px,6vw,46px);font-weight:700;color:var(--active-strong);line-height:1.1}
+  .final .msg{margin:10px auto 0;max-width:480px;font-size:14.5px;color:var(--ink-soft)}
+  .final .missed{margin:16px auto 0;max-width:560px;text-align:left;font-size:13.5px;border:1px solid var(--line);background:var(--warn-bg);padding:12px 15px}
+  .final .missed b{font-weight:700;color:var(--warn)}
+  .final .missed li{margin-bottom:5px}
+  .final button{margin-top:18px}
+  .quiz.done{display:none}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · SDD · Testing</p>
+    <h1>Error Spotter</h1>
+    <p class="sub">Ten scenarios, one question each: <b>syntax</b>, <b>logic</b> or <b>execution</b>? Read what actually happened to the program, not what the words sound like. Open the hint if you get stuck — the two questions solve every one of these.</p>
+  </header>
+
+  <div class="controls">
+    <div class="meta">
+      <span>Scenario <b id="pos">1</b> of <b id="tot">10</b></span>
+      <span>Score <b id="score">0</b></span>
+      <span>Streak <b id="streak">0</b></span>
+    </div>
+    <button class="ctrl" id="restart" type="button">Start again ↺</button>
+  </div>
+
+  <div class="bar"><i id="prog"></i></div>
+
+  <details class="hint">
+    <summary>Show the two questions</summary>
+    <div class="hbody">
+      <p style="margin:0">Ask them <b>in this order</b> and stop at the first one that answers itself:</p>
+      <div class="steps">
+        <div class="step syn"><span class="q">1 · Did the program run at all?</span><span class="a">No → syntax</span></div>
+        <div class="step exe"><span class="q">2 · Did it stop part-way through?</span><span class="a">Yes → execution</span></div>
+        <div class="step log"><span class="q">3 · It ran to the end but was wrong</span><span class="a">→ logic</span></div>
+      </div>
+    </div>
+  </details>
+
+  <section class="panel quiz" id="quiz">
+    <div class="panelbar"><span>WHAT HAPPENED</span></div>
+    <div class="scene" id="scene"></div>
+    <div class="picks" id="picks">
+      <button type="button" data-k="syntax">Syntax error</button>
+      <button type="button" data-k="logic">Logic error</button>
+      <button type="button" data-k="execution">Execution error</button>
+    </div>
+    <div class="feedback" id="fb"></div>
+    <div class="next" id="nextwrap" style="display:none"><button id="next" type="button">Next scenario ▶</button></div>
+  </section>
+
+  <section class="panel final" id="final">
+    <div class="panelbar"><span>HOW YOU DID</span></div>
+    <div style="padding:22px 18px">
+      <div class="big" id="fscore"></div>
+      <p class="msg" id="fmsg"></p>
+      <div class="missed" id="fmissed" style="display:none"></div>
+      <button class="ctrl" id="again" type="button">Go again ↺</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const Q = [
+    {
+      s:'The program will not start at all. The editor highlights line 7, where <code>pirnt("Total")</code> has been typed.',
+      a:"syntax",
+      why:'<b>print</b> is misspelled, so the translator cannot understand the line and refuses to run the program. Anything caught <em>before</em> the program starts is a syntax error — and you get a line number for free.'
+    },
+    {
+      s:'The program runs from start to finish and displays a grade of "Fail" for every pupil — even the one who scored 90%. No error message appears anywhere.',
+      a:"logic",
+      why:'It ran, it did not crash, and it was wrong. "No error message appears" is almost always the giveaway for a <b>logic error</b> — the language rules were obeyed, the thinking was not.'
+    },
+    {
+      s:'Priya presses Enter without typing anything at the "How old are you?" prompt. The program stops immediately and displays <code>ValueError</code>.',
+      a:"execution",
+      why:'The code is perfectly legal — it only falls over because of what the <em>user</em> did at run time. Crashing part-way through is an <b>execution error</b> (also called a run-time error). Input validation is what prevents it.'
+    },
+    {
+      s:'A pupil forgets the closing bracket on line 12. When they press Run, an error message appears straight away and nothing happens.',
+      a:"syntax",
+      why:'A missing bracket breaks the rules of the language, so the translator stops before a single line is executed. <b>Syntax error</b>.'
+    },
+    {
+      s:'The average mark is worked out by dividing the total by 4, but there are 5 marks in the array. The program runs perfectly and displays an average that is too high.',
+      a:"logic",
+      why:'Dividing by 4 is legal arithmetic — nothing to report and nothing to crash. The program simply does the wrong sum, which is a <b>logic error</b>. Only comparing the output with what you expected would catch this.'
+    },
+    {
+      s:'A quiz program divides the total score by the number of players. When a game is started with 0 players, the program stops part-way through and reports a division error.',
+      a:"execution",
+      why:'Dividing by zero is impossible, but the code only discovers that <em>while running</em>, and only for that one input. The program halts, so it is an <b>execution error</b>.'
+    },
+    {
+      s:'The programmer wrote <code>IF score &gt; 50 THEN</code> but meant <code>&gt;=</code>. Pupils who score exactly 50 are told they have failed. Everything else works.',
+      a:"logic",
+      why:'A classic boundary mistake. <code>&gt;</code> is a perfectly valid operator, so nothing is reported and nothing crashes — the program is just wrong for one particular value. That is a <b>logic error</b>, and it is precisely why we test with <b>extreme</b> data.'
+    },
+    {
+      s:'The program opens a file called <code>scores.txt</code> to read the high scores. Someone renamed the file yesterday. The program starts, prints the welcome message, then stops with an error.',
+      a:"execution",
+      why:'It got as far as the welcome message, so it clearly ran. It then hit something it could not cope with — a missing file — and stopped. <b>Execution error</b>.'
+    },
+    {
+      s:'Line 11 uses <code>OR</code> where <code>AND</code> was intended. The program runs to the end every time, but lets people into the competition who should have been refused.',
+      a:"logic",
+      why:'<code>OR</code> is a real operator, correctly spelled and in the right place, so the translator is happy and the program never crashes. The wrong branch simply runs. <b>Logic error</b> — and do not be tempted by the word "executed" if a question uses it.'
+    },
+    {
+      s:'The output line reads <code>print("Hello", age, ". You are", name, "years old.")</code>. Bob, aged 15, is greeted with "Hello 15. You are Bob years old."',
+      a:"logic",
+      why:'The two variables are the wrong way round. Both exist, both hold sensible values, and Python is happy to print either — so it runs, and the result is nonsense. <b>Logic error</b>.'
+    }
+  ];
+
+  const NAMES = {syntax:"Syntax error", logic:"Logic error", execution:"Execution error"};
+
+  const $ = id => document.getElementById(id);
+  const picks = [...$("picks").querySelectorAll("button")];
+  let order = [], i = 0, score = 0, streak = 0, best = 0, missed = [], answered = false;
+
+  function shuffle(a){
+    const b = a.slice();
+    for(let j = b.length - 1; j > 0; j--){
+      const k = Math.floor(Math.random() * (j + 1));
+      [b[j], b[k]] = [b[k], b[j]];
+    }
+    return b;
+  }
+
+  function show(){
+    const q = Q[order[i]];
+    answered = false;
+    $("scene").innerHTML = '<span class="who">Scenario ' + (i + 1) + '</span>' + q.s;
+    picks.forEach(b => { b.disabled = false; b.className = ""; });
+    $("fb").className = "feedback";
+    $("fb").innerHTML = "";
+    $("nextwrap").style.display = "none";
+    $("pos").textContent = i + 1;
+    $("prog").style.width = (i / Q.length * 100) + "%";
+    postHeight();
+  }
+
+  function answer(k){
+    if(answered) return;
+    answered = true;
+    const q = Q[order[i]];
+    const right = k === q.a;
+    picks.forEach(b => {
+      b.disabled = true;
+      if(b.dataset.k === q.a) b.className = "right";
+      else if(b.dataset.k === k) b.className = "wrong";
+    });
+    if(right){
+      score++; streak++; best = Math.max(best, streak);
+      $("fb").className = "feedback show ok";
+      $("fb").innerHTML = '<div class="head">✓ Correct — ' + NAMES[q.a] + '</div><p>' + q.why + '</p>';
+    } else {
+      streak = 0;
+      missed.push(q);
+      $("fb").className = "feedback show no";
+      $("fb").innerHTML = '<div class="head">✗ Not quite — it is a ' + NAMES[q.a] + '</div><p>' + q.why + '</p>';
+    }
+    $("score").textContent = score;
+    $("streak").textContent = streak;
+    $("prog").style.width = ((i + 1) / Q.length * 100) + "%";
+    $("nextwrap").style.display = "flex";
+    $("next").textContent = (i === Q.length - 1) ? "See your score ▶" : "Next scenario ▶";
+    postHeight();
+  }
+
+  function finish(){
+    $("quiz").classList.add("done");
+    $("final").classList.add("show");
+    $("fscore").textContent = score + " / " + Q.length;
+    const msg = score === Q.length ? "Every one. You are reading what the program <em>did</em>, not what the words sound like — that is the whole skill."
+      : score >= 8 ? "Strong. Run the two questions in order on the ones you missed and this becomes a free mark every time."
+      : score >= 5 ? "Halfway there. The pattern to drill: did it run? did it crash? If it ran to the end and was simply wrong, it is logic."
+      : "Worth another go. Open <b>Show the two questions</b> and answer them out loud before you pick — almost every scenario falls out of question 1 or 2.";
+    $("fmsg").innerHTML = msg + " Longest streak: <b>" + best + "</b>.";
+    if(missed.length){
+      $("fmissed").style.display = "block";
+      $("fmissed").innerHTML = '<b>Worth re-reading:</b><ul style="margin:8px 0 0;padding-left:20px">' +
+        missed.map(q => '<li>' + q.s.replace(/<code>/g, "<code style=\"font-family:var(--mono);font-weight:700\">") +
+                        ' &rarr; <b>' + NAMES[q.a] + '</b></li>').join("") + '</ul>';
+    } else {
+      $("fmissed").style.display = "none";
+    }
+    postHeight();
+  }
+
+  function start(){
+    order = shuffle(Q.map((q, n) => n));
+    i = 0; score = 0; streak = 0; best = 0; missed = []; answered = false;
+    $("score").textContent = "0";
+    $("streak").textContent = "0";
+    $("tot").textContent = Q.length;
+    $("quiz").classList.remove("done");
+    $("final").classList.remove("show");
+    show();
+  }
+
+  picks.forEach(b => b.addEventListener("click", () => answer(b.dataset.k)));
+  $("next").addEventListener("click", () => {
+    if(i === Q.length - 1){ finish(); return; }
+    i++; show();
+  });
+  $("restart").addEventListener("click", start);
+  $("again").addEventListener("click", start);
+
+  /* Auto-size the parent iframe. Declared before start(), which calls
+     postHeight() on the first render. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  start();
+})();
+</script>
+</body>
+</html>

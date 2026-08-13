@@ -66,7 +66,7 @@
         <div class="key-terms">
           <div class="key-term"><div class="term">Selection</div><div class="def">A construct that lets the program follow different paths depending on a condition.</div></div>
           <div class="key-term"><div class="term">Condition</div><div class="def">A statement that is either true or false, e.g. <code>age &gt;= 17</code>.</div></div>
-          <div class="key-term"><div class="term">Comparison operators</div><div class="def">The symbols used in conditions: <code>=</code>, <code>≠</code>, <code>&lt;</code>, <code>&gt;</code>, <code>≤</code>, <code>≥</code>.</div></div>
+          <div class="key-term"><div class="term">Comparison operators</div><div class="def">The symbols used in conditions: <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>.</div></div>
           <div class="key-term"><div class="term">Complex condition</div><div class="def">Two or more conditions joined with the logical operators AND, OR or NOT.</div></div>
           <div class="key-term"><div class="term">elif</div><div class="def">Short for "else if" — checks another condition, but only if the ones above it were false.</div></div>
           <div class="key-term"><div class="term">Nested if</div><div class="def">An if statement placed inside another if statement.</div></div>
@@ -74,7 +74,7 @@
 
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
-          <div><strong>What the exam expects:</strong> you should be able to <strong>describe, exemplify and implement</strong> selection with simple and complex conditions using the operators <code>&lt; &gt; ≤ ≥ = ≠</code> and the logical operators AND, OR and NOT — and <strong>read and explain</strong> code that uses them.</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe, exemplify and implement</strong> selection with simple and complex conditions using the operators <code>&lt; &gt; &lt;= &gt;= = !=</code> and the logical operators AND, OR and NOT — and <strong>read and explain</strong> code that uses them.</div>
         </div>
       </article>
 
@@ -101,7 +101,7 @@
              style="max-width:660px;width:100%;height:auto;display:block;margin:1.25rem auto;">
           <style>
             .sc-dia   { fill:#FEF3C7; stroke:#C9A227; stroke-width:2.5; }
-            .sc-cond  { font:700 15px 'JetBrains Mono',monospace; fill:#1A1A1A; text-anchor:middle; }
+            .sc-cond  { font:700 15px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#1A1A1A; text-anchor:middle; }
             .sc-box-t { fill:#E8F5EE; stroke:#1B6B45; stroke-width:2.5; }
             .sc-box-f { fill:#FDECEA; stroke:#B91C1C; stroke-width:2.5; }
             .sc-box-n { fill:#FFFFFF; stroke:#D1D5DB; stroke-width:2; }
@@ -160,14 +160,15 @@
         <table>
           <thead><tr><th>Meaning</th><th>Exam papers</th><th>Python</th></tr></thead>
           <tbody>
-            <tr><td>Equal to</td><td>=</td><td><code>==</code></td></tr>
-            <tr><td>Not equal to</td><td>≠</td><td><code>!=</code></td></tr>
-            <tr><td>Less than</td><td>&lt;</td><td><code>&lt;</code></td></tr>
-            <tr><td>Greater than</td><td>&gt;</td><td><code>&gt;</code></td></tr>
-            <tr><td>Less than or equal to</td><td>≤</td><td><code>&lt;=</code></td></tr>
-            <tr><td>Greater than or equal to</td><td>≥</td><td><code>&gt;=</code></td></tr>
+            <tr><td>Equal to</td><td><code>=</code></td><td><code>==</code></td></tr>
+            <tr><td>Not equal to</td><td><code>!=</code></td><td><code>!=</code></td></tr>
+            <tr><td>Less than</td><td><code>&lt;</code></td><td><code>&lt;</code></td></tr>
+            <tr><td>Greater than</td><td><code>&gt;</code></td><td><code>&gt;</code></td></tr>
+            <tr><td>Less than or equal to</td><td><code>&lt;=</code></td><td><code>&lt;=</code></td></tr>
+            <tr><td>Greater than or equal to</td><td><code>&gt;=</code></td><td><code>&gt;=</code></td></tr>
           </tbody>
         </table>
+        <p>Only one row differs, and it's the one that catches people out: an exam paper writes <strong>equals</strong> as a single <code>=</code>, but Python needs a double <code>==</code> to <em>ask</em> a question. A single <code>=</code> in Python gives an order — "store this" — which is why it belongs on the left of an assignment and never inside an IF.</p>
 
         <h3>The boundary is where marks are won and lost</h3>
         <p>The four "less than / greater than" operators come in pairs, and the <em>only</em> difference within each pair is what happens at the boundary value itself. Using the parking fine from the question below — where the fine is halved if it's paid within 14 days — here's exactly where 14 falls:</p>
@@ -176,14 +177,14 @@
              aria-label="Four number lines comparing the comparison operators at the boundary value 14. days less than 14 is true to the left of 14 but false at 14 itself, shown with a hollow circle. days less than or equal to 14 is true to the left and true at 14, shown with a filled circle. days greater than 14 is true to the right but false at 14. days greater than or equal to 14 is true to the right and true at 14."
              style="max-width:660px;width:100%;height:auto;display:block;margin:1.25rem auto;">
           <style>
-            .bl-lbl   { font:700 13px 'JetBrains Mono',monospace; fill:#00442A; }
+            .bl-lbl   { font:700 13px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#00442A; }
             .bl-axis  { stroke:#D1D5DB; stroke-width:2; }
             .bl-tick  { stroke:#D1D5DB; stroke-width:2; }
             .bl-true  { stroke:#1B6B45; stroke-width:6; stroke-linecap:butt; }
             .bl-false { stroke:#B91C1C; stroke-width:6; stroke-linecap:butt; opacity:.3; }
-            .bl-b     { font:700 12px 'JetBrains Mono',monospace; fill:#1A1A1A; text-anchor:middle; }
-            .bl-n     { font:400 11px 'JetBrains Mono',monospace; fill:#9AA3AE; text-anchor:middle; }
-            .bl-note  { font:700 11.5px 'JetBrains Mono',monospace; }
+            .bl-b     { font:700 12px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#1A1A1A; text-anchor:middle; }
+            .bl-n     { font:400 11px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#9AA3AE; text-anchor:middle; }
+            .bl-note  { font:700 11.5px 'JetBrains Mono',monospace; font-variant-ligatures:none; }
             .bl-y     { fill:#1B6B45; }
             .bl-n2    { fill:#B91C1C; }
           </style>
@@ -201,8 +202,8 @@
           <text class="bl-n" x="289" y="86">13</text><text class="bl-b" x="335" y="86">14</text><text class="bl-n" x="381" y="86">15</text>
           <text class="bl-note bl-n2" x="548" y="64">at 14 &rarr; FALSE</text>
 
-          <!-- row 2: days ≤ 14 -->
-          <text class="bl-lbl" x="12" y="150">days &le; 14</text>
+          <!-- row 2: days <= 14 -->
+          <text class="bl-lbl" x="12" y="150">days &lt;= 14</text>
           <line class="bl-axis" x1="140" y1="145" x2="530" y2="145"/>
           <line class="bl-tick" x1="150" y1="140" x2="150" y2="150"/><line class="bl-tick" x1="196" y1="140" x2="196" y2="150"/>
           <line class="bl-tick" x1="243" y1="140" x2="243" y2="150"/><line class="bl-tick" x1="289" y1="140" x2="289" y2="150"/>
@@ -227,8 +228,8 @@
           <text class="bl-n" x="289" y="256">13</text><text class="bl-b" x="335" y="256">14</text><text class="bl-n" x="381" y="256">15</text>
           <text class="bl-note bl-n2" x="548" y="234">at 14 &rarr; FALSE</text>
 
-          <!-- row 4: days ≥ 14 -->
-          <text class="bl-lbl" x="12" y="320">days &ge; 14</text>
+          <!-- row 4: days >= 14 -->
+          <text class="bl-lbl" x="12" y="320">days &gt;= 14</text>
           <line class="bl-axis" x1="140" y1="315" x2="530" y2="315"/>
           <line class="bl-tick" x1="150" y1="310" x2="150" y2="320"/><line class="bl-tick" x1="196" y1="310" x2="196" y2="320"/>
           <line class="bl-tick" x1="243" y1="310" x2="243" y2="320"/><line class="bl-tick" x1="289" y1="310" x2="289" y2="320"/>
@@ -250,7 +251,7 @@
           <img src="../resources/sdd/worked_examples/n5_if_q1.png" alt="Past paper question: a parking fine is £130. If this fine is paid within 14 days the fine is halved. A design for a program to calculate the fine depending on when it is paid is shown below. Step 1, set fine to 130. Step 2, get number of days since fine was issued. Step 3, calculate and store fine. Using a design technique of your choice, refine step 3 of the design. 3 marks." class="zoomable" />
           <p><strong>How to tackle it:</strong> "Refine step 3" means breaking that one step down into the smaller steps that actually carry it out — the <a href="design.html">stepwise refinement</a> we met on the Design page. Three marks means the marker is looking for three ingredients, so we work out what each one is:</p>
           <ul>
-            <li><strong>The condition</strong> — was it paid within 14 days? That's <code>days ≤ 14</code>.</li>
+            <li><strong>The condition</strong> — was it paid within 14 days? That's <code>days &lt;= 14</code>.</li>
             <li><strong>The calculation</strong> — "halved" means <code>fine / 2</code>.</li>
             <li><strong>The assignment</strong> — the answer has to be stored back in <code>fine</code>, or it's lost.</li>
           </ul>
@@ -259,7 +260,7 @@
           <img src="../resources/sdd/worked_examples/n5_if_q1_ans.png" alt="Marking instructions: one mark each for an if with the condition days is less than or equal to 14, the calculation fine divided by 2, and assigning the calculated value to a variable. Also accept less than 14. The calculation may be done other ways but must always use fine." class="zoomable" />
           <p>An example would be:</p>
           <p style="color:#6A1B9A;">
-            3.1&nbsp;&nbsp;IF days &le; 14 THEN<br/>
+            3.1&nbsp;&nbsp;IF days &lt;= 14 THEN<br/>
             3.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET fine TO fine / 2<br/>
             3.3&nbsp;&nbsp;END IF
           </p>
@@ -384,13 +385,13 @@ else:
              aria-label="Truth tables for AND, OR and NOT. For AND, the result is true only when both A and B are true; all other combinations are false. For OR, the result is true when A is true, when B is true, or when both are true; it is false only when both are false. For NOT, true becomes false and false becomes true."
              style="max-width:660px;width:100%;height:auto;display:block;margin:1.25rem auto;">
           <style>
-            .tt-title { font:700 13px 'JetBrains Mono',monospace; fill:#6A1B9A; text-anchor:middle; }
+            .tt-title { font:700 13px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#6A1B9A; text-anchor:middle; }
             .tt-h     { fill:#001810; stroke:#001810; stroke-width:1; }
-            .tt-ht    { font:700 10px 'JetBrains Mono',monospace; fill:#C9A227; text-anchor:middle; letter-spacing:.08em; }
+            .tt-ht    { font:700 10px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#C9A227; text-anchor:middle; letter-spacing:.08em; }
             .tt-t     { fill:#E8F5EE; stroke:#D1D5DB; stroke-width:1; }
             .tt-f     { fill:#FDECEA; stroke:#D1D5DB; stroke-width:1; }
-            .tt-tt    { font:700 10.5px 'JetBrains Mono',monospace; fill:#00442A; text-anchor:middle; }
-            .tt-ft    { font:700 10.5px 'JetBrains Mono',monospace; fill:#B91C1C; text-anchor:middle; }
+            .tt-tt    { font:700 10.5px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#00442A; text-anchor:middle; }
+            .tt-ft    { font:700 10.5px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#B91C1C; text-anchor:middle; }
             .tt-cap   { font:italic 11px 'Public Sans',sans-serif; fill:#4A5568; text-anchor:middle; }
           </style>
 
@@ -455,8 +456,8 @@ IF NOT (num1 = 5) THEN</pre>
           <div class="example-label">Example — evaluating a complex condition step by step</div>
           <p>Is <code>height &gt;= 120 AND height &lt;= 200</code> true when <code>height</code> is <strong>150</strong>?</p>
           <ul>
-            <li>First condition: 150 ≥ 120 → <strong>true</strong></li>
-            <li>Second condition: 150 ≤ 200 → <strong>true</strong></li>
+            <li>First condition: 150 &gt;= 120 → <strong>true</strong></li>
+            <li>Second condition: 150 &lt;= 200 → <strong>true</strong></li>
             <li><code>true AND true</code> → the whole condition is <strong>true</strong> — on you get!</li>
           </ul>
           <p>Now try <code>height</code> = <strong>110</strong>: the first condition is false, and false AND anything is false. No ride today.</p>
@@ -485,7 +486,7 @@ IF NOT (num1 = 5) THEN</pre>
             <li>Line 5 uses <strong>NOT</strong> and <strong>AND</strong>.</li>
           </ul>
           <p>This code happens to contain all three, so any one of them earns the mark. Write one — the question says "state <em>one</em>", so there's nothing to gain from listing all three.</p>
-          <p>Watch the trap: <code>=</code>, <code>&ge;</code> and <code>&le;</code> are <strong>comparison</strong> operators, not logical ones. That's the easy mark thrown away here. The difference is worth remembering: comparison operators <em>build</em> a condition, logical operators <em>join</em> conditions together.</p>
+          <p>Watch the trap: <code>=</code>, <code>&gt;=</code> and <code>&lt;=</code> are <strong>comparison</strong> operators, not logical ones. That's the easy mark thrown away here. The difference is worth remembering: comparison operators <em>build</em> a condition, logical operators <em>join</em> conditions together.</p>
           <img src="../resources/sdd/worked_examples/n5_logic_op_q1-2_ans.png" alt="Marking instructions: one mark for any one from AND, OR, NOT." class="zoomable" />
           <p>The answer is:</p>
           <p style="color:#6A1B9A;"><strong>OR</strong> (or AND, or NOT — any one of the three)</p>
@@ -512,7 +513,7 @@ else:
 
 print(grade)</pre>
         </div>
-        <p>Follow a mark of 65 through: is it ≥ 70? No. Is it ≥ 60? Yes — grade is B, and the program <strong>skips the rest of the chain entirely</strong>. That's what makes elif smart: if the student got an A, the program never wastes time checking for a B or C. The <code>else</code> at the end catches everything that fell through.</p>
+        <p>Follow a mark of 65 through: is it &gt;= 70? No. Is it &gt;= 60? Yes — grade is B, and the program <strong>skips the rest of the chain entirely</strong>. That's what makes elif smart: if the student got an A, the program never wastes time checking for a B or C. The <code>else</code> at the end catches everything that fell through.</p>
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
           <div>Notice <code>elif mark &gt;= 60:</code> doesn't need to say "and less than 70" — anything 70 or above was already caught by the first branch. The chain does the "less than" for free. This also makes elif chains more <strong>efficient</strong> than separate ifs — see <a href="evaluation.html">Evaluation</a> for why that earns marks.</div>
@@ -543,14 +544,14 @@ print(grade)</pre>
             <li><strong>Tax rate assigned</strong> — each branch has to <em>store</em> the rate in a variable, not just mention it.</li>
             <li><strong>Efficient solution</strong> — a whole mark for the word "efficient" in the question.</li>
           </ul>
-          <p>That last mark is the one to think about. Three <em>separate</em> IF statements would test all three conditions for every single person, and each condition would need two comparisons joined with AND (<code>salary &ge; 12001 AND salary &le; 40000</code>). An else-if chain does neither: a band is only checked when the ones above it have already failed, so <code>salary &le; 40000</code> is enough on its own — anything 12000 or under was caught by the first branch.</p>
-          <p>Watch the trap: get the boundaries right. The bands are 0&ndash;12000 and 12001&ndash;40000, so the first test is <code>&le; 12000</code>, not <code>&lt; 12000</code> — otherwise someone earning exactly £12,000 gets taxed at 20%.</p>
+          <p>That last mark is the one to think about. Three <em>separate</em> IF statements would test all three conditions for every single person, and each condition would need two comparisons joined with AND (<code>salary &gt;= 12001 AND salary &lt;= 40000</code>). An else-if chain does neither: a band is only checked when the ones above it have already failed, so <code>salary &lt;= 40000</code> is enough on its own — anything 12000 or under was caught by the first branch.</p>
+          <p>Watch the trap: get the boundaries right. The bands are 0&ndash;12000 and 12001&ndash;40000, so the first test is <code>&lt;= 12000</code>, not <code>&lt; 12000</code> — otherwise someone earning exactly £12,000 gets taxed at 20%.</p>
           <img src="../resources/sdd/worked_examples/n5_elseif_q1-2_ans.png" alt="Marking instructions: one mark each for selection constructs, conditions correct, tax rate assigned, and an efficient solution. 4 marks." class="zoomable" />
           <p>An example would be:</p>
           <p style="color:#6A1B9A;">
-            1&nbsp;&nbsp;IF salary &le; 12000 THEN<br/>
+            1&nbsp;&nbsp;IF salary &lt;= 12000 THEN<br/>
             2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET taxRate TO 0<br/>
-            3&nbsp;&nbsp;ELSE IF salary &le; 40000 THEN<br/>
+            3&nbsp;&nbsp;ELSE IF salary &lt;= 40000 THEN<br/>
             4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET taxRate TO 20<br/>
             5&nbsp;&nbsp;ELSE<br/>
             6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET taxRate TO 40<br/>
@@ -585,13 +586,13 @@ else:
           <style>
             .nc-panel { fill:#FFFFFF; stroke:#D1D5DB; stroke-width:1.5; }
             .nc-bar   { fill:#001810; }
-            .nc-bt    { font:700 10px 'JetBrains Mono',monospace; fill:#C9A227; letter-spacing:.16em; }
-            .nc-bn    { font:700 10px 'JetBrains Mono',monospace; fill:#FFFFFF; letter-spacing:.16em; text-anchor:end; }
-            .nc-code  { font:700 12.5px 'JetBrains Mono',monospace; fill:#1A1A1A; }
+            .nc-bt    { font:700 10px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#C9A227; letter-spacing:.16em; }
+            .nc-bn    { font:700 10px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#FFFFFF; letter-spacing:.16em; text-anchor:end; }
+            .nc-code  { font:700 12.5px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#1A1A1A; }
             .nc-chip-y{ fill:#E8F5EE; stroke:#1B6B45; stroke-width:2; }
             .nc-chip-n{ fill:#FDECEA; stroke:#B91C1C; stroke-width:2; }
-            .nc-ty    { font:700 11px 'JetBrains Mono',monospace; fill:#00442A; text-anchor:middle; }
-            .nc-tn    { font:700 11px 'JetBrains Mono',monospace; fill:#B91C1C; text-anchor:middle; }
+            .nc-ty    { font:700 11px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#00442A; text-anchor:middle; }
+            .nc-tn    { font:700 11px 'JetBrains Mono',monospace; font-variant-ligatures:none; fill:#B91C1C; text-anchor:middle; }
           </style>
 
           <!-- ===== one complex condition ===== -->
@@ -599,7 +600,7 @@ else:
           <rect class="nc-bar" x="8" y="10" width="644" height="28"/>
           <text class="nc-bt" x="20" y="29">ONE COMPLEX CONDITION</text>
           <text class="nc-bn" x="640" y="29">2 OUTCOMES</text>
-          <text class="nc-code" x="24" y="68">IF age &ge; 15 AND hasID = "yes" THEN</text>
+          <text class="nc-code" x="24" y="68">IF age &gt;= 15 AND hasID = "yes" THEN</text>
           <rect class="nc-chip-y" x="24" y="88" width="181" height="34"/>
           <text class="nc-ty" x="115" y="110">&#10003; Enjoy the film</text>
           <rect class="nc-chip-n" x="217" y="88" width="181" height="34"/>
@@ -610,7 +611,7 @@ else:
           <rect class="nc-bar" x="8" y="155" width="644" height="28"/>
           <text class="nc-bt" x="20" y="174">A NESTED IF</text>
           <text class="nc-bn" x="640" y="174">3 OUTCOMES</text>
-          <text class="nc-code" x="24" y="208">IF age &ge; 15 THEN</text>
+          <text class="nc-code" x="24" y="208">IF age &gt;= 15 THEN</text>
           <text class="nc-code" x="24" y="228">&#160;&#160;&#160;&#160;IF hasID = "yes" THEN</text>
           <rect class="nc-chip-y" x="24" y="248" width="176" height="34"/>
           <text class="nc-ty" x="112" y="270">&#10003; Enjoy the film</text>
@@ -647,7 +648,7 @@ else:
           <p><strong>How to tackle it:</strong> "Success" is buried two levels deep, so it only appears when <strong>both</strong> conditions are true — the inner IF is never even reached unless the outer one passes. The trick is that the outer condition does us a favour: it narrows the whole of maths down to three candidates.</p>
           <ul>
             <li><strong>Line 4</strong> — the score must be 5, 10 or 15. Nothing else gets past this line, so we only need to test those three.</li>
-            <li><strong>Line 5</strong> — <code>NOT(score &ge; 3 AND score &le; 12)</code>. The bracket is true for anything from 3 to 12, and NOT flips it. So this line is true only when the score is <em>outside</em> 3&ndash;12.</li>
+            <li><strong>Line 5</strong> — <code>NOT(score &gt;= 3 AND score &lt;= 12)</code>. The bracket is true for anything from 3 to 12, and NOT flips it. So this line is true only when the score is <em>outside</em> 3&ndash;12.</li>
           </ul>
           <p>Now we test each candidate against that second condition: <strong>5</strong> is inside 3&ndash;12, so the bracket is true and NOT makes it false. <strong>10</strong> is inside too — same result. <strong>15</strong> is outside 3&ndash;12, so the bracket is false and NOT flips it to true. Both conditions pass, and "Success" is displayed.</p>
           <p>Watch the trap: it's tempting to read line 4 and answer "5, 10 or 15". The nested IF is there precisely to narrow it to one. If you found the NOT hard to read, the Condition Evaluator further up this page steps through this exact shape of condition.</p>
@@ -668,7 +669,7 @@ else:
           <img src="../resources/sdd/worked_examples/n5_nested_if_q2-2_ans.png" alt="Marking instructions: one mark each for a suitable condition for one ticket, use of else for the other type of ticket, and calculating the running total. 3 marks. Example answer: IF ticketNumber is less than or equal to open bracket lower + 49 close bracket THEN, SET totalValue TO totalValue + 5, ELSE, SET totalValue TO totalValue + 10, END IF." class="zoomable" />
           <p>An example would be:</p>
           <p style="color:#6A1B9A;">
-            IF ticketNumber &le; (lower + 49) THEN<br/>
+            IF ticketNumber &lt;= (lower + 49) THEN<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET totalValue TO totalValue + 5<br/>
             ELSE<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET totalValue TO totalValue + 10<br/>
@@ -757,9 +758,9 @@ Line 10  END IF</pre>
               </ul>
               <p style="color:#6A1B9A;">Sample answer:</p>
               <p style="color:#6A1B9A;">
-                1&nbsp;&nbsp;IF weight &le; 2 THEN<br/>
+                1&nbsp;&nbsp;IF weight &lt;= 2 THEN<br/>
                 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET charge TO 3.50<br/>
-                3&nbsp;&nbsp;ELSE IF weight &le; 10 THEN<br/>
+                3&nbsp;&nbsp;ELSE IF weight &lt;= 10 THEN<br/>
                 4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET charge TO 6.00<br/>
                 5&nbsp;&nbsp;ELSE<br/>
                 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET charge TO 11.00<br/>
@@ -816,7 +817,7 @@ Line 15  END IF</pre>
               </ul>
               <p style="color:#6A1B9A;">Sample answer:</p>
               <p style="color:#6A1B9A;">
-                IF vehicleHeight &le; 2 THEN<br/>
+                IF vehicleHeight &lt;= 2 THEN<br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET totalTakings TO totalTakings + 4<br/>
                 ELSE<br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET totalTakings TO totalTakings + 7<br/>

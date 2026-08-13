@@ -31,6 +31,12 @@
 /* ── Reset ────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* JetBrains Mono ships programming ligatures that fuse >= into ≥, <= into ≤
+   and != into ≠. Exam papers and our materials write these as two characters,
+   so ligatures are switched off wherever --font-mono is applied. Every rule
+   that sets font-family: var(--font-mono) also carries font-variant-ligatures:
+   none — keep the pair together when adding new monospace rules. */
+
 html { scroll-behavior: smooth; }
 
 body {
@@ -53,6 +59,7 @@ a:hover { color: var(--green-medium); text-decoration: underline; }
   color: #FFFFFF;
   text-align: center;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .74rem;
   font-weight: 500;
   letter-spacing: .08em;
@@ -98,6 +105,7 @@ a:hover { color: var(--green-medium); text-decoration: underline; }
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   flex-shrink: 0;
 }
 
@@ -111,6 +119,7 @@ a:hover { color: var(--green-medium); text-decoration: underline; }
 
 .site-logo .logo-title {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .9rem;
   font-weight: 700;
   color: var(--white);
@@ -121,6 +130,7 @@ a:hover { color: var(--green-medium); text-decoration: underline; }
 
 .site-logo .logo-sub {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   color: rgba(255,255,255,.5);
   text-transform: uppercase;
@@ -139,6 +149,7 @@ a:hover { color: var(--green-medium); text-decoration: underline; }
   padding: .5rem .8rem;
   border-radius: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   font-weight: 500;
   letter-spacing: .1em;
@@ -184,6 +195,7 @@ a:hover { color: var(--green-medium); text-decoration: underline; }
   align-items: center;
   gap: .5rem;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -270,6 +282,7 @@ a:hover { color: var(--green-medium); text-decoration: underline; }
   padding: .35rem .85rem;
   border-radius: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .7rem;
   font-weight: 500;
   letter-spacing: .18em;
@@ -410,6 +423,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
 
 .card-unit .card-header .unit-icon {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: .1em;
@@ -435,6 +449,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   padding: .2rem .5rem;
   border-radius: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .64rem;
   font-weight: 500;
   letter-spacing: .12em;
@@ -464,6 +479,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   align-items: center;
   gap: .5rem;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .78rem;
   color: var(--green-medium);
 }
@@ -485,6 +501,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   align-items: center;
   justify-content: space-between;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -546,6 +563,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   margin-top: .75rem;
   color: var(--green-medium);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   font-weight: 700;
   letter-spacing: .1em;
@@ -575,6 +593,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
 
 .stat-box .stat-value {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: 2rem;
   font-weight: 700;
   color: var(--green-primary);
@@ -584,6 +603,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
 
 .stat-box .stat-label {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   color: var(--text-muted);
   font-weight: 500;
@@ -614,6 +634,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
 .callout .callout-label,
 .callout strong:first-child {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
 }
 
 /* ── Progress / split bar ─────────────────────────────────── */
@@ -650,6 +671,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   text-align: center;
   padding: .55rem .9rem;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .74rem;
   font-weight: 700;
   letter-spacing: .06em;
@@ -720,6 +742,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   width: 45px;
   text-align: right;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-weight: 700;
   color: var(--green-primary);
 }
@@ -755,6 +778,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   color: var(--white);
   padding: .85rem 1.1rem;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -821,6 +845,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
 .content-article .article-meta,
 .content-area article .article-meta {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .7rem;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -880,6 +905,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   padding: .15em .45em;
   border-radius: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .87em;
 }
 
@@ -891,6 +917,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   overflow-x: auto;
   margin: 1rem 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .87rem;
   line-height: 1.6;
 }
@@ -934,6 +961,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   border: 1px solid rgba(201, 162, 39, .55);
   color: var(--gold);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   font-weight: 700;
   letter-spacing: .12em;
@@ -974,6 +1002,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   background: var(--green-primary);
   color: var(--white);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .66rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1025,6 +1054,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
 
 .key-term .term {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-weight: 700;
   color: var(--green-dark);
   font-size: .82rem;
@@ -1047,6 +1077,7 @@ body:has(.content-layout, .content-with-sidebar) { --content-max: 1400px; }
   padding: .65rem .9rem;
   text-align: left;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-weight: 500;
   font-size: .74rem;
   letter-spacing: .08em;
@@ -1115,6 +1146,7 @@ details.worked-example .pq-text {
 
 details.worked-example .pq-kicker {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1185,6 +1217,7 @@ details.worked-example .pq-body > *:first-child { margin-top: 0; }
   color: var(--white);
   border-radius: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-weight: 700;
   font-size: .82rem;
 }
@@ -1201,6 +1234,7 @@ details.worked-example .pq-body > *:first-child { margin-top: 0; }
 .q-part .qp-marks {
   flex-shrink: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .66rem;
   font-weight: 700;
   letter-spacing: .08em;
@@ -1237,6 +1271,7 @@ details.worked-example .pq-body > *:first-child { margin-top: 0; }
 
 .q-parts-heading {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1273,6 +1308,7 @@ details.worked-example .pq-body > *:first-child { margin-top: 0; }
 
 .worked-example .q-label {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1304,6 +1340,7 @@ details.worked-example .pq-body > *:first-child { margin-top: 0; }
 .worked-example .q-answer > summary {
   cursor: pointer;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1379,6 +1416,7 @@ details.practice-question .pq-text {
 
 details.practice-question .pq-kicker {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1413,6 +1451,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
 
 .practice-question .q-label {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1443,6 +1482,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
 .practice-question .marking-instructions > summary {
   cursor: pointer;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1505,6 +1545,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
   border-radius: 0;
   color: var(--white);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .76rem;
   letter-spacing: .04em;
   padding: .5rem 1rem .5rem 2.2rem;
@@ -1564,6 +1605,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
 .sd-badge {
   flex-shrink: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .64rem;
   font-weight: 700;
   letter-spacing: .08em;
@@ -1644,6 +1686,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
 .footer-brand .brand-name {
   color: var(--white);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .9rem;
   font-weight: 700;
   letter-spacing: .04em;
@@ -1662,6 +1705,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
 .footer-links a {
   color: rgba(255,255,255,.65);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .72rem;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -1712,6 +1756,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
   color: var(--white);
   padding: .8rem 1.1rem;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1809,6 +1854,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
   padding: .15em .45em;
   border-radius: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .87em;
 }
 
@@ -1826,6 +1872,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
   background: rgba(255,255,255,.06);
   color: var(--gold);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1854,6 +1901,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
   overflow-x: auto;
   margin: 0;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .87rem;
   line-height: 1.7;
 }
@@ -1908,6 +1956,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
 
 .example-label {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1952,6 +2001,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
   padding: .7rem 1rem;
   text-align: left;
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-weight: 500;
   font-size: .72rem;
   white-space: nowrap;
@@ -2024,6 +2074,7 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
   background: var(--green-primary);
   color: var(--white);
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
   font-size: .66rem;
   font-weight: 700;
   text-transform: uppercase;

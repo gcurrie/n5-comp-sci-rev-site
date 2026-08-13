@@ -17,6 +17,10 @@
     --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
     --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   }
+  /* JetBrains Mono fuses >= <= != into single glyphs. Exam notation is two
+     characters, so ligatures stay off. Inherited, so it reaches SVG text too;
+     form controls are listed because the font shorthand resets them. */
+  body,input,button,select,textarea{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
   *{box-sizing:border-box}
   html{scrollbar-gutter:stable}
   body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;padding:clamp(10px,1.5vw,18px)}
