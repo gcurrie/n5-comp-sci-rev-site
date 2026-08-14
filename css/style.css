@@ -49,7 +49,10 @@ body {
 }
 
 img { max-width: 100%; height: auto; display: block; }
-iframe { max-width: 100%; }
+/* Embeds fill their container. Without an explicit width an iframe falls back
+   to the HTML default of 300px, which is easy to miss when the surrounding
+   panel happens to supply one. */
+iframe { display: block; width: 100%; max-width: 100%; }
 a { color: var(--green-primary); text-decoration: none; }
 a:hover { color: var(--green-medium); text-decoration: underline; }
 
@@ -2110,6 +2113,14 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
   background: var(--white);
 }
 
+/* A visualiser dropped straight into the flow of a worked example, rather than
+   into an .interactive-block panel of its own. */
+.figure-embed {
+  border: 1px solid var(--border);
+  background: var(--white);
+  margin: 1rem 0;
+}
+
 .content-area > .callout:first-child {
   margin-top: 0;
 }
@@ -2279,3 +2290,61 @@ details.practice-question .pq-body > *:first-child { margin-top: 0; }
 }
 .img-placeholder .ph-icon { font-size: 1.6rem; display: block; margin-bottom: .4rem; }
 .img-placeholder em { display: block; font-style: normal; font-weight: 600; margin-bottom: .25rem; }
+
+/* ── N5 addition: query design table (Fields / Tables / Search criteria /
+      Sort order) — shown before the SQL on the SQL pages ────────────────── */
+.query-design {
+  width: 100%;
+  border-collapse: collapse;
+  margin: .75rem 0 1rem;
+  font-size: .88rem;
+  border: 1px solid var(--green-tint);
+  background: var(--white);
+}
+
+.query-design th[scope="row"] {
+  background: var(--green-light);
+  color: var(--green-dark);
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-align: left;
+  vertical-align: top;
+  padding: .55rem .8rem;
+  width: 11rem;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--green-tint);
+}
+
+.query-design td {
+  padding: .55rem .8rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-size: .82rem;
+}
+
+.query-design tr:last-child th[scope="row"],
+.query-design tr:last-child td { border-bottom: none; }
+
+.query-design td.none { color: var(--text-muted); font-style: italic; font-family: var(--font-body); }
+
+@media (max-width: 560px) {
+  .query-design th[scope="row"] { width: auto; }
+}
+
+/* Numbered stage headings used to separate design → SQL → output */
+.stage-step {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--green-medium);
+  margin: 1rem 0 .1rem;
+}
+.stage-step:first-child { margin-top: 0; }

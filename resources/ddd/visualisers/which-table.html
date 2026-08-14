@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Table Is It In? — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --purp:#6A1B9A; --purp-bg:#F4E8FA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;
+       padding:clamp(10px,1.5vw,18px);font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  input,button,select{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:900px}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 0}
+  .tab{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.06em;padding:9px 13px;
+       border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;
+       transition:background .15s,border-color .15s,color .15s}
+  .tab:hover{border-color:var(--active);color:var(--active-strong)}
+  .tab.on{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+  .tab.done::after{content:" ✓";color:var(--active)}
+
+  .panel{background:var(--panel);border:1px solid var(--line);margin-top:14px}
+  .panel .cap{background:var(--active-strong);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;
+              letter-spacing:.14em;text-transform:uppercase;padding:8px 12px}
+  .pad{padding:14px}
+
+  .ask{font-size:15.5px;font-weight:600;color:var(--active-strong);margin:0 0 4px}
+  .askhint{font-size:13px;color:var(--ink-soft);margin:0}
+
+  .steplab{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+           color:var(--active);margin:16px 0 7px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px;min-height:40px}
+  .chip{font-family:var(--mono);font-size:12.5px;font-weight:700;padding:8px 12px;border:1px solid var(--line);
+        background:#fff;color:var(--ink);cursor:pointer;transition:all .13s}
+  .chip:hover{border-color:var(--active);color:var(--active-strong)}
+  .chip.sel{background:var(--match-bg);border-color:var(--match-accent);color:var(--match);
+            box-shadow:0 0 0 3px rgba(201,162,39,.22)}
+  .chip:focus-visible{outline:3px solid var(--match-accent);outline-offset:2px}
+  .chip.placed{cursor:default;opacity:.45;text-decoration:line-through}
+  .chips .none{font-family:var(--sans);font-size:13px;color:var(--ink-soft);font-style:italic;padding:8px 0}
+
+  .bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  @media (max-width:700px){ .bins{grid-template-columns:minmax(0,1fr)} }
+  .bin{border:2px dashed var(--line);background:#fff;padding:10px;min-height:104px;cursor:pointer;
+       transition:border-color .15s,background .15s}
+  .bin:hover{border-color:var(--active);background:var(--active-bg)}
+  .bin.armed{border-color:var(--match-accent);background:#FFFDF3}
+  .bin:focus-visible{outline:3px solid var(--match-accent);outline-offset:2px}
+  .bin h4{margin:0 0 3px;font-size:13.5px;color:var(--active-strong)}
+  .bin .binsub{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+               color:var(--ink-soft);margin-bottom:8px}
+  .drop{display:flex;flex-wrap:wrap;gap:6px}
+  .dchip{font-family:var(--mono);font-size:11.5px;font-weight:700;padding:5px 9px;border:1px solid var(--active);
+         background:var(--active-bg);color:var(--active-strong)}
+  .dchip.bad{border-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+
+  .fb{margin-top:12px;padding:11px 13px;font-size:13.5px;border-left:4px solid var(--purp);
+      background:var(--purp-bg);min-height:4.6em}
+  .fb b{color:var(--purp)}
+  .fb.ok{border-left-color:var(--active);background:var(--active-bg)}
+  .fb.ok b{color:var(--active-strong)}
+  .fb.no{border-left-color:var(--warn);background:var(--warn-bg)}
+  .fb.no b{color:var(--warn)}
+  .fb code{font-family:var(--mono);font-size:12.5px;background:#fff;border:1px solid var(--line);padding:1px 5px}
+
+  .verdict{margin-top:14px;border:1px solid var(--line);background:var(--bg);padding:13px 14px;display:none}
+  .verdict.show{display:block}
+  .verdict .vhead{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;
+                  text-transform:uppercase;color:var(--active);margin-bottom:7px}
+  .verdict .vbig{font-size:15.5px;font-weight:700;color:var(--active-strong);margin-bottom:8px}
+  .verdict .vbig.nojoin{color:var(--match)}
+  pre.sql{margin:0;padding:13px 14px;background:#0D1117;color:#CDD9E5;font-family:var(--mono);
+          font-size:12.5px;line-height:1.75;overflow-x:auto;white-space:pre}
+  pre.sql .kw{color:#C9A227;font-weight:700}
+  pre.sql .hl{background:rgba(27,107,69,.35);outline:1px solid rgba(46,160,103,.75)}
+  .verdict p{font-size:13.5px;margin:10px 0 0}
+
+  .row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:14px}
+  .btn{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+       padding:9px 16px;border:1px solid var(--active-strong);background:#fff;color:var(--active-strong);cursor:pointer}
+  .btn:hover{background:var(--active-bg)}
+  .btn.solid{background:var(--active-strong);color:#fff}
+  .btn.solid:hover{background:var(--active)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+
+  .ref{margin-top:14px;font-size:12.5px;color:var(--ink-soft)}
+  .ref b{color:var(--active-strong)}
+  .ref code{font-family:var(--mono);font-size:11.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · Database Design &amp; Development</p>
+    <h1>Which Table Is It In?</h1>
+    <p class="sub">Before you can write a join you have to notice you need one. Work out where each field lives — the moment a query needs fields from two different tables, it needs a join. Click a field, then click the table you think it belongs to.</p>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="panel">
+    <div class="cap" id="cap">Query 1 of 5</div>
+    <div class="pad">
+      <p class="ask" id="ask"></p>
+      <p class="askhint">Place every field this query needs — the ones it displays <em>and</em> the ones it searches on.</p>
+
+      <p class="steplab">Fields to place</p>
+      <div class="chips" id="pool"></div>
+
+      <p class="steplab">Tables</p>
+      <div class="bins">
+        <div class="bin" id="binPupil" tabindex="0" role="button" aria-label="Place the selected field in the Pupil table">
+          <h4>Pupil</h4>
+          <div class="binsub">pupilID · pupilName · dateOfBirth · yearGroup · house · meritPoints · clubID</div>
+          <div class="drop" id="dropPupil"></div>
+        </div>
+        <div class="bin" id="binClub" tabindex="0" role="button" aria-label="Place the selected field in the Club table">
+          <h4>Club</h4>
+          <div class="binsub">clubID · clubName · meetingDay · meetingTime · staffLead · equipmentProvided</div>
+          <div class="drop" id="dropClub"></div>
+        </div>
+        <div class="bin" id="binBoth" tabindex="0" role="button" aria-label="Place the selected field in both tables">
+          <h4>Both tables</h4>
+          <div class="binsub">the field appears in Pupil and in Club</div>
+          <div class="drop" id="dropBoth"></div>
+        </div>
+      </div>
+
+      <div class="fb" id="fb"></div>
+
+      <div class="verdict" id="verdict">
+        <div class="vhead">Verdict</div>
+        <div class="vbig" id="vbig"></div>
+        <pre class="sql" id="vsql"></pre>
+        <p id="vnote"></p>
+      </div>
+
+      <div class="row">
+        <button class="btn solid" id="next" type="button" disabled>Next query →</button>
+        <button class="btn" id="reset" type="button">Start again</button>
+      </div>
+
+      <p class="ref">A field is in <b>Pupil</b> or <b>Club</b> — except <code>clubID</code>, which is in both: it is the primary key of Club and the foreign key in Pupil.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Auto-size the parent iframe. Declared before the first render(). */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  /* home: "P" Pupil only, "C" Club only, "B" both tables */
+  const WHERE = {
+    pupilID:"P", pupilName:"P", dateOfBirth:"P", yearGroup:"P", house:"P", meritPoints:"P",
+    clubName:"C", meetingDay:"C", meetingTime:"C", staffLead:"C", equipmentProvided:"C",
+    clubID:"B"
+  };
+  const WHY = {
+    pupilID:"the pupil's own identifier — Pupil's primary key.",
+    pupilName:"a fact about the pupil, so it is stored on the pupil's record.",
+    dateOfBirth:"a fact about the pupil.",
+    yearGroup:"a fact about the pupil.",
+    house:"a fact about the pupil — houses were deliberately left as a plain field in Pupil rather than split into a table of their own.",
+    meritPoints:"a fact about the pupil.",
+    clubName:"a fact about the club. Pupil only stores the code, never the name.",
+    meetingDay:"a fact about the club — it is the same for every pupil who attends, which is exactly why it lives in Club.",
+    meetingTime:"a fact about the club.",
+    staffLead:"a fact about the club — the member of staff who runs it.",
+    equipmentProvided:"a fact about the club.",
+    clubID:"in <b>both</b> tables. It is the primary key of Club and the foreign key in Pupil — that is what makes the link possible."
+  };
+
+  const QUERIES = [
+    {
+      ask:"List each pupil's name and the day their club meets.",
+      fields:["pupilName","meetingDay"],
+      join:true,
+      note:"<b>pupilName</b> is in Pupil and <b>meetingDay</b> is in Club, so the query has to reach into both — and the moment it does, it needs the join."
+    },
+    {
+      ask:"List the name and merit points of every pupil in Curie house.",
+      fields:["pupilName","meritPoints","house"],
+      join:false,
+      note:"All three fields are in Pupil, including <b>house</b> — the one being searched on. The Club table is printed in the exam paper beside this question, but it is not needed. Do not add a join you have no use for."
+    },
+    {
+      ask:"List the name of every pupil whose club is run by Mrs Kaur.",
+      fields:["pupilName","staffLead"],
+      join:true,
+      note:"This one is easy to misread. Only <b>pupilName</b> is displayed — but <b>staffLead</b> is in Club, and you still have to search on it. A field you search on counts just as much as a field you display."
+    },
+    {
+      ask:"List every club's name and the time it meets.",
+      fields:["clubName","meetingTime"],
+      join:false,
+      note:"Both fields are in Club. Nothing about a pupil is asked for, so Pupil is not involved and there is nothing to join."
+    },
+    {
+      ask:"List each pupil's name along with the clubID they belong to.",
+      fields:["pupilName","clubID"],
+      join:false,
+      note:"The trap. <b>clubID</b> is in both tables — but Pupil already holds it, so the whole query can be answered from Pupil alone. A field being in both tables does <em>not</em> mean you need both tables. Ask instead: is there any field here that Pupil cannot supply?"
+    }
+  ];
+
+  const tabsEl  = document.getElementById("tabs");
+  const capEl   = document.getElementById("cap");
+  const askEl   = document.getElementById("ask");
+  const poolEl  = document.getElementById("pool");
+  const fbEl    = document.getElementById("fb");
+  const nextBtn = document.getElementById("next");
+  const resetBtn= document.getElementById("reset");
+  const verdict = document.getElementById("verdict");
+  const vbig    = document.getElementById("vbig");
+  const vsql    = document.getElementById("vsql");
+  const vnote   = document.getElementById("vnote");
+  const BINS = {
+    P:{bin:document.getElementById("binPupil"), drop:document.getElementById("dropPupil")},
+    C:{bin:document.getElementById("binClub"),  drop:document.getElementById("dropClub")},
+    B:{bin:document.getElementById("binBoth"),  drop:document.getElementById("dropBoth")}
+  };
+
+  let qi = 0;
+  let selected = null;          /* field name currently picked up */
+  let placed = {};              /* field -> true once correctly placed */
+  const doneQs = [];
+
+  /* ---- tabs ---- */
+  QUERIES.forEach(function(q, i){
+    const b = document.createElement("button");
+    b.className = "tab";
+    b.type = "button";
+    /* Deliberately just a number — labelling the tabs with whether they need a
+       join would give the answer away before the pupil has placed anything. */
+    b.textContent = "Query " + (i + 1);
+    b.onclick = function(){ qi = i; loadQuery(); };
+    tabsEl.appendChild(b);
+  });
+  function paintTabs(){
+    Array.prototype.forEach.call(tabsEl.children, function(t, i){
+      t.classList.toggle("on", i === qi);
+      t.classList.toggle("done", doneQs.indexOf(i) !== -1);
+    });
+  }
+
+  function clearSelection(){
+    selected = null;
+    Array.prototype.forEach.call(poolEl.children, function(c){ c.classList.remove("sel"); });
+    Object.keys(BINS).forEach(function(k){ BINS[k].bin.classList.remove("armed"); });
+  }
+
+  function armBins(){
+    const armed = selected !== null;
+    Object.keys(BINS).forEach(function(k){ BINS[k].bin.classList.toggle("armed", armed); });
+  }
+
+  function loadQuery(){
+    const q = QUERIES[qi];
+    placed = {};
+    clearSelection();
+    capEl.textContent = "Query " + (qi + 1) + " of " + QUERIES.length;
+    askEl.textContent = q.ask;
+    verdict.classList.remove("show");
+    nextBtn.disabled = true;
+    nextBtn.textContent = (qi === QUERIES.length - 1) ? "Finish" : "Next query →";
+    fbEl.className = "fb";
+    fbEl.innerHTML = "<b>Pick a field</b>, then click the table it lives in. If you are not sure, ask yourself whether the fact belongs to one pupil or to one club.";
+
+    poolEl.innerHTML = "";
+    q.fields.forEach(function(f){
+      const c = document.createElement("button");
+      c.className = "chip";
+      c.type = "button";
+      c.textContent = f;
+      c.dataset.field = f;
+      c.onclick = function(){
+        if(c.classList.contains("placed")) return;
+        if(selected === f){ clearSelection(); return; }
+        clearSelection();
+        selected = f;
+        c.classList.add("sel");
+        armBins();
+      };
+      poolEl.appendChild(c);
+    });
+
+    Object.keys(BINS).forEach(function(k){ BINS[k].drop.innerHTML = ""; });
+    paintTabs();
+    postHeight();
+  }
+
+  function place(binKey){
+    if(selected === null){
+      fbEl.className = "fb";
+      fbEl.innerHTML = "<b>Pick a field first.</b> Click one of the field names above, then click a table.";
+      postHeight();
+      return;
+    }
+    const f = selected;
+    const correct = WHERE[f];
+    const chip = poolEl.querySelector('[data-field="' + f + '"]');
+
+    if(binKey === correct){
+      placed[f] = true;
+      chip.classList.add("placed");
+      chip.classList.remove("sel");
+      const d = document.createElement("span");
+      d.className = "dchip";
+      d.textContent = f;
+      BINS[correct].drop.appendChild(d);
+      fbEl.className = "fb ok";
+      fbEl.innerHTML = "<b>Yes — " + f + "</b> is " + WHY[f];
+      clearSelection();
+      checkDone();
+    } else {
+      const d = document.createElement("span");
+      d.className = "dchip bad";
+      d.textContent = f + " ✗";
+      BINS[binKey].drop.appendChild(d);
+      setTimeout(function(){ if(d.parentElement) d.parentElement.removeChild(d); postHeight(); }, 1300);
+      fbEl.className = "fb no";
+      fbEl.innerHTML = "<b>Not quite.</b> <code>" + f + "</code> is " + WHY[f];
+      clearSelection();
+    }
+    postHeight();
+  }
+
+  Object.keys(BINS).forEach(function(k){
+    BINS[k].bin.addEventListener("click", function(){ place(k); });
+    BINS[k].bin.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); place(k); }
+    });
+  });
+
+  function checkDone(){
+    const q = QUERIES[qi];
+    if(!q.fields.every(function(f){ return placed[f]; })) return;
+
+    /* Which tables did the query actually turn out to need? A field that lives
+       in both does not force a second table on its own. */
+    const homes = q.fields.map(function(f){ return WHERE[f]; });
+    const needsPupil = homes.indexOf("P") !== -1;
+    const needsClub  = homes.indexOf("C") !== -1;
+    const two = needsPupil && needsClub;
+
+    vbig.textContent = two
+      ? "Two tables — you need a join."
+      : "One table — no join needed.";
+    vbig.className = "vbig" + (two ? "" : " nojoin");
+
+    const fieldList = q.fields.join(", ");
+    if(two){
+      vsql.innerHTML =
+        '<span class="kw">SELECT</span> ' + fieldList + '\n' +
+        '<span class="kw">FROM</span>   Pupil, Club\n' +
+        '<span class="kw">WHERE</span>  <span class="hl">Pupil.clubID = Club.clubID</span>';
+    } else {
+      const only = needsClub ? "Club" : "Pupil";
+      vsql.innerHTML =
+        '<span class="kw">SELECT</span> ' + fieldList + '\n' +
+        '<span class="kw">FROM</span>   ' + only;
+    }
+    vnote.innerHTML = q.note;
+    verdict.classList.add("show");
+    fbEl.className = "fb ok";
+    fbEl.innerHTML = "<b>All placed.</b> Now look at where they landed — that is what decides whether this query needs a join.";
+
+    if(doneQs.indexOf(qi) === -1) doneQs.push(qi);
+    nextBtn.disabled = false;
+    paintTabs();
+    postHeight();
+  }
+
+  nextBtn.onclick = function(){
+    if(qi < QUERIES.length - 1){ qi++; loadQuery(); }
+    else {
+      fbEl.className = "fb ok";
+      fbEl.innerHTML = "<b>That is all five.</b> Three needed a join and two did not — and the only way to tell them apart was to work out where every field lived first.";
+      nextBtn.disabled = true;
+      postHeight();
+    }
+  };
+
+  resetBtn.onclick = function(){
+    doneQs.length = 0;
+    qi = 0;
+    loadQuery();
+  };
+
+  loadQuery();
+})();
+</script>
+</body>
+</html>

@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Database Design &amp; Development</div>
     <h1>Testing &amp; Evaluation</h1>
-    <p>Testing that SQL operations work correctly, and evaluating a database for fitness for purpose and accuracy of output.</p>
+    <p>Working out what a query <em>should</em> return, checking that it does, and judging whether it actually answers the question that was asked.</p>
   </div>
 </section>
 <main class="page-content">
@@ -41,72 +41,523 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#testing">Testing SQL Queries</a></li>
-          <li><a href="#fitness">Fitness for Purpose</a></li>
-          <li><a href="#accuracy">Accuracy of Output</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#database">The Database We Will Use</a></li>
+          <li><a href="#testing">Testing a Query</a></li>
+          <li><a href="#output">Writing the Expected Output</a></li>
+          <li><a href="#evaluation">Evaluation</a></li>
+          <li><a href="#eval-select">Evaluating a SELECT</a></li>
+          <li><a href="#eval-update">Evaluating an UPDATE</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="testing">Testing SQL Queries</h2>
-        <p>To test an SQL statement, <strong>run the query</strong> and compare the <strong>actual output</strong> on screen with the <strong>expected output</strong> — the results the query <em>should</em> produce. If they don't match, there is an error to correct.</p>
-        <div class="example-block">
-          <div class="example-label">Example — a query that fails its test</div>
-          <p>A query is supposed to find all the <strong>red</strong> cars, but it was written as:</p>
-          <div class="code-block code-sql">
-            <pre>SELECT Registration, Make, Model
-FROM Car
-WHERE Colour = "Green";</pre>
-          </div>
-          <p>The actual output (green cars) doesn't match the expected output (red cars) — the condition needs corrected to <code>Colour = "Red"</code>.</p>
+        <h2 id="intro">Introduction</h2>
+        <p>You can now write every kind of query the course asks for. This page is about the two questions that come after you have written one:</p>
+        <ul>
+          <li><strong>Testing</strong> — does the query do what <em>I</em> intended?</li>
+          <li><strong>Evaluation</strong> — does it do what the <em>user asked for</em>?</li>
+        </ul>
+        <p>Those sound like the same question and they are not, which is exactly why the course separates them. A query can pass its test perfectly and still be the wrong query. If someone asks for the highest scorers and you write a query that lists the lowest, it will return precisely the records you predicted — your test passes — and the answer is still useless to them.</p>
+        <p><strong>Testing is mechanical.</strong> Work out what the query should produce, run it, compare. If the two match, it passes.</p>
+        <p><strong>Evaluation is judgement.</strong> Go back to what was originally asked and decide whether this query serves it.</p>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Expected output</div><div class="def">What you work out the query <em>should</em> return, before running it, by reading the query against the data.</div></div>
+          <div class="key-term"><div class="term">Actual output</div><div class="def">What the query really returns when it is run.</div></div>
+          <div class="key-term"><div class="term">Testing</div><div class="def">Comparing expected output with actual output. If they match, the test passes.</div></div>
+          <div class="key-term"><div class="term">Fitness for purpose</div><div class="def">Whether the solution does the job the user actually asked for.</div></div>
+          <div class="key-term"><div class="term">Accuracy of output</div><div class="def">Whether the right records, the right fields and the right order come back.</div></div>
         </div>
+
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
-          <div>Unlike software development, you do <strong>not</strong> need to talk about normal, extreme or exceptional testing for databases — testing means checking that SQL operations work correctly.</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe how a query would be tested</strong>, <strong>write the expected output</strong> of a given SQL statement, and <strong>evaluate</strong> a query or statement against the requirement it was meant to meet.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="fitness">Fitness for Purpose</h2>
-        <p>A database (or query) is <strong>fit for purpose</strong> when it satisfies the <strong>functional requirements</strong> from the analysis stage — every required table exists and every required query works, verified through testing.</p>
+        <h2 id="database">The Database We Will Use</h2>
+        <p>The teaching examples use the school database from the <a href="sql-select.html">SELECT</a> and <a href="sql-joins.html">joins</a> pages. The past-paper questions bring their own.</p>
+
+        <div class="example-block">
+          <div class="example-label">Table — Pupil</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilID</th><th>pupilName</th><th>dateOfBirth</th><th>yearGroup</th><th>house</th><th>meritPoints</th><th>clubID</th></tr></thead>
+              <tbody>
+                <tr><td>P101</td><td>Archie</td><td>14/03/2010</td><td>4</td><td>Churchill</td><td>42</td><td>C01</td></tr>
+                <tr><td>P102</td><td>Noah</td><td>02/11/2009</td><td>5</td><td>Curie</td><td>18</td><td>C03</td></tr>
+                <tr><td>P103</td><td>Mason</td><td>27/06/2010</td><td>4</td><td>Montgomerie</td><td>55</td><td>C01</td></tr>
+                <tr><td>P104</td><td>Christian</td><td>09/01/2008</td><td>6</td><td>Nightingale</td><td>31</td><td>C02</td></tr>
+                <tr><td>P105</td><td>Leoni</td><td>18/09/2010</td><td>4</td><td>Curie</td><td>67</td><td>C04</td></tr>
+                <tr><td>P106</td><td>Lucienne</td><td>30/04/2009</td><td>5</td><td>Churchill</td><td>24</td><td>C03</td></tr>
+                <tr><td>P107</td><td>Erika</td><td>12/12/2011</td><td>3</td><td>Montgomerie</td><td>49</td><td>C04</td></tr>
+                <tr><td>P108</td><td>Louie</td><td>05/07/2009</td><td>5</td><td>Nightingale</td><td>12</td><td>C01</td></tr>
+                <tr><td>P109</td><td>Matthew</td><td>21/02/2011</td><td>3</td><td>Curie</td><td>38</td><td>C02</td></tr>
+                <tr><td>P110</td><td>Riley</td><td>08/05/2010</td><td>4</td><td>Churchill</td><td>71</td><td>C04</td></tr>
+                <tr><td>P111</td><td>Harveer</td><td>16/10/2008</td><td>6</td><td>Nightingale</td><td>26</td><td>C03</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Table — Club</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>clubID</th><th>clubName</th><th>meetingDay</th><th>meetingTime</th><th>staffLead</th><th>equipmentProvided</th></tr></thead>
+              <tbody>
+                <tr><td>C01</td><td>Chess Club</td><td>Monday</td><td>15:30</td><td>Mr Anderson</td><td>TRUE</td></tr>
+                <tr><td>C02</td><td>Debating</td><td>Tuesday</td><td>13:05</td><td>Ms Hendry</td><td>FALSE</td></tr>
+                <tr><td>C03</td><td>Film Making</td><td>Thursday</td><td>15:30</td><td>Mrs Kaur</td><td>TRUE</td></tr>
+                <tr><td>C04</td><td>Athletics</td><td>Wednesday</td><td>16:00</td><td>Miss Lawson</td><td>FALSE</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="testing">Testing a Query</h2>
+        <p>Testing a query is one of the most predictable questions in the whole course, because the answer is always the same two steps:</p>
+        <ol>
+          <li><strong>Work out the expected output</strong> — read the query against the data and write down the records it should return.</li>
+          <li><strong>Run the query and compare</strong> the actual output with that expected output. If they match, the query works. If they do not, there is a fault.</li>
+        </ol>
+        <p>That is it. There is no third step, and the marks are awarded for those two ideas however you phrase them.</p>
+
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div><strong>Answer format (usually 2 marks):</strong> "The database <strong>is</strong> fit for purpose because…" or "The database <strong>is not</strong> fit for purpose because…" — one mark for the judgement, one for the justification tied to the requirements.</div>
+          <div><strong>The expected output has to come first.</strong> If you run the query and then decide whether the results look about right, you are not testing — you are just believing whatever came back. The whole value of the method is that you commit to an answer <em>before</em> the computer gives you one.</div>
+        </div>
+
+        <h3>What a comparison looks like</h3>
+        <p>The head of Curie house wants her pupils listed with the highest merit points first. Working from the Pupil table, the expected output is Leoni on 67, Matthew on 38 and Noah on 18. The query is run, and this comes back:</p>
+
+        <div class="two-col-compare" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+          <div class="example-block">
+            <div class="example-label">Expected output</div>
+            <table>
+              <thead><tr><th>pupilName</th><th>meritPoints</th></tr></thead>
+              <tbody>
+                <tr><td>Leoni</td><td>67</td></tr>
+                <tr><td>Matthew</td><td>38</td></tr>
+                <tr><td>Noah</td><td>18</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="example-block">
+            <div class="example-label">Actual output</div>
+            <table>
+              <thead><tr><th>pupilName</th><th>meritPoints</th></tr></thead>
+              <tbody>
+                <tr><td>Noah</td><td>18</td></tr>
+                <tr><td>Matthew</td><td>38</td></tr>
+                <tr><td>Leoni</td><td>67</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p>The two do not match, so <strong>the test fails</strong> — and notice how easily this one could have been waved through. The right three pupils are there, with the right merit points. Only the <em>order</em> is wrong: the query must have been written <code>ORDER BY meritPoints ASC</code> instead of <code>DESC</code>.</p>
+        <p>This is why the comparison has to include the order, not just the contents. "The right records came back" is not the same as "the output is correct".</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Using Expected Output to Check a Statement (1 mark)</div>
+          <img src="../resources/ddd/worked-examples/n5_db_testing_q1.png" alt="Exam question part ii: Describe how this expected output could be used to check that the SQL statement works correctly. One mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the question hands you the expected output and asks what you would <em>do</em> with it. There is only one thing to do with an expected output — compare something to it.</p>
+          <p>So the answer is: <strong>run the SQL statement and compare the actual output against the expected output</strong>. If they are the same, the statement works correctly.</p>
+          <img src="../resources/ddd/worked-examples/n5_db_testing_q1_ans.png" alt="Marking instructions part ii: actual output would be compared to the predicted results. One mark." class="zoomable" />
+          <p>The marking instructions accept this in a single line — "actual output would be compared to the predicted results". Note the vocabulary is flexible: <em>predicted</em>, <em>expected</em> and <em>anticipated</em> all mean the same thing here, and so do <em>actual</em> and <em>real</em>.</p>
+          <p><strong>Watch the trap:</strong> for one mark, do not write a paragraph about opening the database and clicking Run. The mark is for the idea of <strong>comparing actual with expected</strong>, and everything else is padding that risks burying it.</p>
+          <p style="color:#6A1B9A;">1 mark: the <strong>actual output would be compared to the expected (predicted) output</strong>.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Describe How a Query Should Be Tested (2 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_db_testing_q2.png" alt="Exam question part ii: Describe how this SQL query should be tested. Two marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the same idea as the question above, but worth <strong>two</strong> marks — and that tells you something important. Two marks means two separate points, so an answer that only says "compare the outputs" is leaving a mark behind.</p>
+          <p>The two points are the two steps of the method:</p>
+          <ol>
+            <li><strong>Find the expected output</strong> — work out from the data what the query should return.</li>
+            <li><strong>Compare it to the actual output</strong> — run the query and check the results against that prediction.</li>
+          </ol>
+          <img src="../resources/ddd/worked-examples/n5_db_testing_q2_ans.png" alt="Marking instructions part ii: find expected output; compare to actual output. Two marks." class="zoomable" />
+          <p><strong>Watch the trap:</strong> the mark allocation is doing the work here. When this question appears for 1 mark, "compare actual with expected" is enough. When it appears for 2, you must say that you <strong>work out the expected output first</strong> and then compare. Same method, but you have to spell out both halves. Always let the number of marks tell you how many points to make.</p>
+          <p style="color:#6A1B9A;">1 mark: <strong>find the expected output</strong> · 1 mark: <strong>compare it to the actual output</strong>.</p>
         </div>
       </article>
 
       <article>
-        <h2 id="accuracy">Accuracy of Output</h2>
-        <p><strong>Accuracy of output</strong> is closely related to testing — it asks whether the queries produce the <strong>expected results</strong>. Your testing evidence (expected vs actual output comparisons) is exactly what supports a claim that the output is accurate.</p>
+        <h2 id="output">Writing the Expected Output</h2>
+        <p>Testing depends entirely on being able to produce that expected output, and the exam asks for it directly — sometimes for as many as 5 marks. It is worked out by running the query in your head, in the order the database would.</p>
+        <p>Take the clauses in this order, not the order they are written:</p>
+        <ol>
+          <li><strong><code>FROM</code></strong> — which table or tables. If there are two, apply the <strong>join</strong> to work out which records genuinely belong together.</li>
+          <li><strong><code>WHERE</code></strong> — cross out every record that fails the condition.</li>
+          <li><strong><code>SELECT</code></strong> — keep only the named fields, as your column headings, <strong>in the order they are named</strong>.</li>
+          <li><strong><code>ORDER BY</code></strong> — arrange the surviving rows.</li>
+        </ol>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Write the <strong>column headings</strong> on your answer. They are usually worth a mark of their own, they must be the field names from the SELECT line, and they must be in the same order as that line. It is the easiest mark on the question and the one most often skipped.</div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Write the Expected Output — Churchill's Clubs (5 marks)</div>
+          <p>Give the expected output of the following query, run against the Pupil and Club tables above.</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, clubName, meetingDay
+FROM Pupil, Club
+WHERE house = "Churchill"
+  AND Pupil.clubID = Club.clubID
+ORDER BY pupilName ASC;</pre>
+          </div>
+          <p><strong>How to tackle it:</strong> four steps, in the database's order.</p>
+          <p><strong>Step 1 — FROM and the join.</strong> Two tables, linked by <code>Pupil.clubID = Club.clubID</code>. So each pupil is paired with their own club and no other.</p>
+          <p><strong>Step 2 — WHERE.</strong> The condition is <code>house = "Churchill"</code>. Reading down the house column, three pupils qualify: <strong>Archie</strong> (C01), <strong>Lucienne</strong> (C03) and <strong>Riley</strong> (C04). Everyone else is crossed out.</p>
+          <p><strong>Step 3 — SELECT.</strong> Three fields, so three columns headed <code>pupilName</code>, <code>clubName</code>, <code>meetingDay</code>, in that order. Now follow each pupil's clubID across to the Club table:</p>
+          <ul>
+            <li>Archie → C01 → Chess Club, Monday</li>
+            <li>Lucienne → C03 → Film Making, Thursday</li>
+            <li>Riley → C04 → Athletics, Wednesday</li>
+          </ul>
+          <p><strong>Step 4 — ORDER BY.</strong> <code>pupilName ASC</code> means alphabetical: Archie, Lucienne, Riley. Which they already happen to be — but you must check rather than assume.</p>
+          <p>So the expected output is:</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>clubName</th><th>meetingDay</th></tr></thead>
+            <tbody>
+              <tr><td>Archie</td><td>Chess Club</td><td>Monday</td></tr>
+              <tr><td>Lucienne</td><td>Film Making</td><td>Thursday</td></tr>
+              <tr><td>Riley</td><td>Athletics</td><td>Wednesday</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Watch the trap:</strong> it is tempting to skip the join because the WHERE clause has a "real" condition in it too. Skip it and every Churchill pupil is paired with every club — 3 × 4 = <strong>twelve</strong> rows instead of three, nine of them invented. The join is doing as much work as the house condition.</p>
+          <p style="color:#6A1B9A;">1 mark for the <strong>three correct headings in the correct order</strong> · 1 mark for <strong>each correct row</strong> (3 marks) · 1 mark for the rows being in <strong>ascending order of pupilName</strong>.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Write the Expected Output, Company Database (5 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_db_output_q1_companyDB.png" alt="Exam question part d. The updated Vacancy table shows HR22 Clerk HR 04/06/2019; PD18 Manager Production 28/06/2019; AD36 Administrator Admin 30/06/2019; FN42 Finance Officer Finance 04/07/2019; PD20 Sales Manager Production 10/07/2019. The updated Employee table shows 325 HR22 C P Martin grade 2 licence yes; 326 PD18 G L Wood grade 1 licence yes; 327 HR22 H Patel grade 2 licence no; 328 HR22 B F Lee grade 3 licence yes; 329 AD36 M Aliyev grade 3 licence no; 330 PD18 L M Nowak grade 2 licence no; 331 HR22 S Patel grade 1 licence yes. The SQL statement SELECT jobTitle, appRef FROM Vacancy, Employee WHERE Vacancy.jobRef=Employee.jobRef AND drivingLicence=False ORDER BY jobTitle DESC is implemented. Part i: write the expected output from the SQL statement. Five marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> exactly the same four steps. The query looks intimidating because everything is on one line, so the first job is to break it into its clauses.</p>
+          <p><strong>Step 1 — FROM and the join.</strong> <code>FROM Vacancy, Employee</code> with <code>Vacancy.jobRef = Employee.jobRef</code>. Each employee is matched to the vacancy they applied for.</p>
+          <p><strong>Step 2 — WHERE.</strong> Besides the join, the condition is <code>drivingLicence = False</code> — the employees whose driving licence box is <strong>unticked</strong>. Reading down that column, three qualify: <strong>327</strong> H Patel, <strong>329</strong> M Aliyev and <strong>330</strong> L M Nowak. The other four are crossed out.</p>
+          <p><strong>Step 3 — SELECT.</strong> Two fields: <code>jobTitle</code> then <code>appRef</code>, in that order. Note that jobTitle is not in the Employee table at all — it comes across the join from Vacancy, which is why the join matters. Following each employee's jobRef:</p>
+          <ul>
+            <li>327 → HR22 → <strong>Clerk</strong></li>
+            <li>329 → AD36 → <strong>Administrator</strong></li>
+            <li>330 → PD18 → <strong>Manager</strong></li>
+          </ul>
+          <p><strong>Step 4 — ORDER BY.</strong> <code>jobTitle DESC</code> — reverse alphabetical. Manager, Clerk, Administrator.</p>
+          <p>So the expected output is:</p>
+          <table>
+            <thead><tr><th>jobTitle</th><th>appRef</th></tr></thead>
+            <tbody>
+              <tr><td>Manager</td><td>330</td></tr>
+              <tr><td>Clerk</td><td>327</td></tr>
+              <tr><td>Administrator</td><td>329</td></tr>
+            </tbody>
+          </table>
+          <img src="../resources/ddd/worked-examples/n5_db_output_q1_ans_companyDB.png" alt="Marking instructions part d i: one mark for two correct fields with correct headings in correct order; one mark for each row of search results — Manager 330, Clerk 327, Administrator 329; one mark for the above three rows in descending order of jobTitle. Five marks. If the search results are correct but also contain additional rows then award two marks out of the three available." class="zoomable" />
+          <p>The mark scheme is worth reading closely, because it shows where the five marks actually sit: <strong>one</strong> for the headings, <strong>three</strong> for the rows, and <strong>one</strong> for the sort order. The rows are the bulk of it, but the headings and the order are two easy marks that cost nothing but attention.</p>
+          <p><strong>Watch the trap:</strong> there is a specific penalty spelled out — "if the search results are correct but also contain additional rows then award 2 marks out of 3". That is the mark scheme's way of catching people who forget the join, or who forget <code>drivingLicence = False</code>, and hand in extra rows. <strong>Extra rows cost you marks even when every row you needed is present.</strong></p>
+          <p style="color:#6A1B9A;">1 mark: <strong>jobTitle and appRef as headings, in that order</strong> · 3 marks: one for each correct row (<strong>Manager 330</strong>, <strong>Clerk 327</strong>, <strong>Administrator 329</strong>) · 1 mark: the three rows in <strong>descending order of jobTitle</strong>.</p>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div>The Employee table in that question is the <strong>updated</strong> one — H Patel is on pay grade 2, because an earlier part of the same exam question was the <a href="sql-insert-update-delete.html#update-eval">UPDATE that fixed it</a>. It makes no difference to this answer, since payGrade is not selected, but it is a reminder that in a long question the data can change between parts. Always use the table printed with the part you are answering.</div>
+        </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="evaluation">Evaluation</h2>
+        <p>Evaluation asks a different question from testing. Not "did it do what I told it to?" but <strong>"does it do what was asked for?"</strong> — and you answer it by going back to the original request and checking the query against it, point by point.</p>
+        <p>Two criteria matter at National 5:</p>
+        <ul>
+          <li><strong>Fitness for purpose</strong> — does the solution meet the requirement it was written for? A query that runs perfectly but answers a different question is not fit for purpose.</li>
+          <li><strong>Accuracy of the output</strong> — are the <em>right records</em> returned, with the <em>right fields</em>, in the <em>right order</em>? All three count.</li>
+        </ul>
+        <p>In practice, evaluating a query means walking the request and the SQL side by side and asking four questions:</p>
+        <ol>
+          <li><strong>The fields</strong> — is everything that was asked for displayed, and nothing that was not?</li>
+          <li><strong>The tables</strong> — is the data being taken from the right place, and if two tables are involved, is the join there?</li>
+          <li><strong>The condition</strong> — does the <code>WHERE</code> match exactly the records wanted? Count how many it catches.</li>
+          <li><strong>The order</strong> — if a sort was asked for, is it on the right field and in the right direction?</li>
+        </ol>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>An evaluation question is not asking "is the SQL valid?"</strong> In almost every one of these questions the SQL runs without error — that is the point. The fault is always a mismatch between what the statement does and what somebody wanted it to do, and you can only find it by re-reading the request.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="eval-select">Evaluating a SELECT</h2>
+
+        <div class="worked-example">
+          <div class="q-label">Evaluate a SELECT — The Head of House's List (4 marks)</div>
+          <p>The head of <strong>Curie</strong> house asks for the following:</p>
+          <p><em>"Can I have a list of the names and merit points of everyone in my house, with the highest scorer at the top?"</em></p>
+          <p>A technician writes this query:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">The query under review</div>
+            <pre>SELECT pupilName, meritPoints, house
+FROM Pupil
+WHERE house = "Churchill"
+ORDER BY meritPoints ASC;</pre>
+          </div>
+          <p><strong>Evaluate this query in terms of fitness for purpose and the accuracy of its output, then rewrite it.</strong></p>
+          <p><strong>How to tackle it:</strong> we take the four checks in turn, comparing each line of SQL against the sentence the head of house actually said.</p>
+          <p><strong>The fields.</strong> She asked for "names and merit points" — two fields. The query displays three, adding <code>house</code>. Every row would show "Curie", telling her something she already knows. Not a disaster, but it is output she did not ask for.</p>
+          <p><strong>The table.</strong> Correct — <code>pupilName</code>, <code>meritPoints</code> and <code>house</code> are all in Pupil, and no second table is needed. No join required.</p>
+          <p><strong>The condition.</strong> This is the serious one. She is the head of <strong>Curie</strong>, and the query searches for <code>house = "Churchill"</code>. It returns <strong>the wrong pupils entirely</strong> — Archie, Lucienne and Riley instead of Leoni, Matthew and Noah. Not one record in the output belongs there. The query is not fit for purpose.</p>
+          <p><strong>The order.</strong> She asked for "the highest scorer at the top", which is <strong>descending</strong>. The query sorts <code>ASC</code>, so the lowest scorer comes first — the list is upside down.</p>
+          <p>Corrected:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>SELECT pupilName, meritPoints
+FROM Pupil
+WHERE house = "Curie"
+ORDER BY meritPoints DESC;</pre>
+          </div>
+          <p>Which produces what she actually wanted:</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>meritPoints</th></tr></thead>
+            <tbody>
+              <tr><td>Leoni</td><td>67</td></tr>
+              <tr><td>Matthew</td><td>38</td></tr>
+              <tr><td>Noah</td><td>18</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Watch the trap:</strong> this query would <em>pass a test</em>. Predict its output — Lucienne 24, Archie 42, Riley 71 — run it, and the actual output matches the prediction exactly. Testing confirms it does what it says; only evaluation catches that what it says is not what was wanted. That distinction is the whole reason both appear on the course.</p>
+          <p style="color:#6A1B9A;">1 mark: the <strong>wrong house</strong> is searched for — Churchill instead of Curie, so none of the correct pupils are returned · 1 mark: the <strong>sort is the wrong way round</strong> — ASC puts the lowest scorer first, when the highest was asked for · 1 mark: <strong>house is displayed</strong> although it was not requested · 1 mark: a corrected query with <strong>house = "Curie"</strong> and <strong>ORDER BY meritPoints DESC</strong>.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="eval-update">Evaluating an UPDATE</h2>
+        <p>The same four checks apply to a statement that changes data — but with far more at stake, because an <a href="sql-insert-update-delete.html">UPDATE or DELETE</a> cannot be undone. A SELECT that catches too many records shows you a list that is too long; an UPDATE that catches too many has already overwritten data you needed.</p>
+        <p>Both past papers below turn on the same check: <strong>count how many records the <code>WHERE</code> clause matches</strong>.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Two Faults in One UPDATE, Company Database (2 + 2 marks)</div>
+          <p>This question uses the company database. <code>appRef</code> is the primary key of Employee.</p>
+          <img src="../resources/ddd/worked-examples/n5_companyDB_structure.png" alt="Company database. Vacancy table with jobRef, jobTitle, department and startDate. Employee table with appRef, jobRef, initial, surname, payGrade, drivingLicence and cvAttached, containing 325 HR22 C P Martin grade 2; 326 PD18 G L Wood grade 1; 327 HR22 H Patel grade 3; 328 HR22 B F Lee grade 3; 329 AD36 M Aliyev grade 3; 330 PD18 L M Nowak grade 2; 331 HR22 S Patel grade 1." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_update_q1-1_companyDB.png" alt="Exam question part c: The pay grade for H Patel should be pay grade 2 and not pay grade 3. The SQL statement UPDATE Employee SET payGrade = 3 WHERE surname = Patel is written to make the change. Part i: Give two reasons why this SQL statement is not fit for purpose. Two marks." class="zoomable" />
+          <p><strong>How to tackle part (i):</strong> the phrase "not fit for purpose" is the exam telling you to compare the statement against the requirement. The requirement is in the first sentence: H Patel should be moved <strong>to</strong> pay grade 2.</p>
+          <p><strong>Fault 1 — the SET is wrong.</strong> The statement says <code>SET payGrade = 3</code>, but 3 is what H Patel already has; 2 is what was wanted. Either phrasing earns the mark: the grade should be set to <strong>2</strong>, or equivalently <strong>nothing would change</strong> because the value is already 3.</p>
+          <p><strong>Fault 2 — the WHERE catches too much.</strong> Count the matches for <code>surname = "Patel"</code>: appRef 327 is H Patel and appRef 331 is S Patel. <strong>Two records</strong>, when the requirement named one. S Patel's pay grade would be changed for no reason.</p>
+          <img src="../resources/ddd/worked-examples/n5_update_q1-1_ans-companyDB.png" alt="Marking instructions part c i: one mark each for payGrade should be set to 2, or there would be no update to payGrade as the value is already 3; and there is more than one Patel. Two marks." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_update_q1-2_companyDB.png" alt="Exam question part c ii: Re-write the SQL statement to make it fit for purpose. Two marks." class="zoomable" />
+          <p><strong>Part (ii)</strong> fixes one fault per line — set the grade to 2, and identify the one employee by the field that is unique by definition, the primary key:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>UPDATE Employee
+SET payGrade = 2
+WHERE appRef = 327;</pre>
+          </div>
+          <img src="../resources/ddd/worked-examples/n5_update_q1-2_ans_companyDB.png" alt="Marking instructions part c ii: one mark each for UPDATE Employee SET payGrade = 2, and WHERE appRef = 327. Two marks. Also accept WHERE surname equals Patel AND initial equals H." class="zoomable" />
+          <p>The marking instructions also accept <code>WHERE surname = "Patel" AND initial = "H"</code>. That works on this data, but only because no two people share an initial and a surname here. A primary key is unique by definition, which is why it is the safer answer.</p>
+          <p style="color:#6A1B9A;">Part (i) — 1 mark: <strong>payGrade should be set to 2</strong> (or: nothing would change, as it is already 3) · 1 mark: <strong>there is more than one Patel</strong>.<br />Part (ii) — 1 mark: <strong>UPDATE Employee SET payGrade = 2</strong> · 1 mark: <strong>WHERE appRef = 327</strong>.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — An UPDATE That Hits Too Much, Game Table (1 + 1 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_update_q2.png" alt="Exam question 15. The Game table stores gameID, gameName, programmer, rating, testerID and multiplatform, containing 378B World Away CodeQueen 12A; 311H Denta Deet AbdurPSK 15; 484D Cupland LindyLoo 12A; 257P Heat Wave EMC2 15; 183B Water Rage CodeQueen 15; 021B Bee-Hive AcroGymGal 12A; 782C Combat45 AbdurPSK 12A. The game Water Rage has been reclassified as an 18 rating and the statement UPDATE Game SET rating = 18 WHERE programmer = CodeQueen was implemented. Part b: explain why the SQL statement would give an unexpected result, one mark. Part c: rewrite the SQL statement to give the expected result, one mark." class="zoomable" />
+          <p><strong>How to tackle part (b):</strong> the requirement is a single game — Water Rage has been reclassified. So count what the <code>WHERE</code> clause matches.</p>
+          <p><code>WHERE programmer = "CodeQueen"</code> catches every game CodeQueen wrote, and reading down that column there are <strong>two</strong>: <em>Water Rage</em> (183B), which we wanted, and <em>World Away</em> (378B), which we did not. The statement <strong>reclassifies all of CodeQueen's games as 18</strong> — including a 12A family title.</p>
+          <img src="../resources/ddd/worked-examples/n5_update_q2-1_ans.png" alt="Marking instructions part b: changes all CodeQueen games to 18. One mark. Answers may refer to the World Away game also being updated to 18." class="zoomable" />
+          <p><strong>Part (c)</strong> replaces the condition with one that identifies Water Rage alone. <code>gameName</code> would work here, but the primary key is guaranteed unique:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>UPDATE Game
+SET rating = "18"
+WHERE gameID = "183B";</pre>
+          </div>
+          <img src="../resources/ddd/worked-examples/n5_update_q2-2_ans.png" alt="Marking instructions part c: WHERE gameID = 183B. One mark. Quotes not required." class="zoomable" />
+          <p>Only the <code>WHERE</code> line changes — the SET was right all along. Compare that with the Patel question, where the SET was <em>also</em> wrong. Evaluating properly means checking both halves every time, rather than stopping at the first fault you find.</p>
+          <p><strong>Watch the trap:</strong> both of these were solved by the same action — checking the <code>WHERE</code> condition against the actual rows and counting the matches. If the count is more than one and the requirement described a single record, you have found the fault. Make that count a reflex.</p>
+          <p style="color:#6A1B9A;">Part (b) — 1 mark: it <strong>changes all CodeQueen's games to 18</strong>, not just Water Rage.<br />Part (c) — 1 mark: <strong>WHERE gameID = "183B"</strong>. Quotes not required.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>These use a cinema database. <strong>Film</strong> holds the films, <strong>Screening</strong> holds each individual showing, and <code>filmID</code> is the primary key of Film and a foreign key in Screening.</p>
+
+        <div class="example-block">
+          <div class="example-label">Table — Film</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>filmID</th><th>title</th><th>certificate</th><th>runtimeMins</th><th>genre</th></tr></thead>
+              <tbody>
+                <tr><td>F01</td><td>Northern Lights</td><td>PG</td><td>104</td><td>Adventure</td></tr>
+                <tr><td>F02</td><td>The Quiet Hour</td><td>15</td><td>128</td><td>Drama</td></tr>
+                <tr><td>F03</td><td>Sky Runners</td><td>PG</td><td>96</td><td>Adventure</td></tr>
+                <tr><td>F04</td><td>Cold Harbour</td><td>15</td><td>141</td><td>Thriller</td></tr>
+                <tr><td>F05</td><td>Paper Boats</td><td>U</td><td>88</td><td>Family</td></tr>
+                <tr><td>F06</td><td>Last Signal</td><td>15</td><td>112</td><td>Thriller</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Table — Screening</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>screeningID</th><th>screenNo</th><th>showDate</th><th>showTime</th><th>filmID</th></tr></thead>
+              <tbody>
+                <tr><td>SC1</td><td>1</td><td>12/09/2026</td><td>14:00</td><td>F01</td></tr>
+                <tr><td>SC2</td><td>2</td><td>12/09/2026</td><td>17:30</td><td>F02</td></tr>
+                <tr><td>SC3</td><td>1</td><td>12/09/2026</td><td>19:45</td><td>F04</td></tr>
+                <tr><td>SC4</td><td>3</td><td>13/09/2026</td><td>11:15</td><td>F05</td></tr>
+                <tr><td>SC5</td><td>2</td><td>13/09/2026</td><td>15:00</td><td>F01</td></tr>
+                <tr><td>SC6</td><td>1</td><td>13/09/2026</td><td>20:00</td><td>F02</td></tr>
+                <tr><td>SC7</td><td>3</td><td>14/09/2026</td><td>13:30</td><td>F03</td></tr>
+                <tr><td>SC8</td><td>2</td><td>14/09/2026</td><td>18:15</td><td>F04</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — Evaluate the database (2 marks)</div>
-          <p>A café's functional requirements said the database needed a query showing all gluten-free items sorted by price. The finished query shows gluten-free items but unsorted. Evaluate the database's fitness for purpose.</p>
+          <div class="q-label">Practice Question 1 — Describe How a Query Would Be Tested (2 marks)</div>
+          <p>A query has been written to list every 15-certificate film. Describe how this query should be tested.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">The database is <strong>not fully fit for purpose</strong> (1 mark) because the query does not meet the functional requirement to sort the results by price — the ORDER BY is missing (1 mark).</p>
+              <p style="color:#6A1B9A;">1 mark: <strong>work out the expected output</strong> — read the query against the Film table and write down the records it should return (Cold Harbour, The Quiet Hour and Last Signal).</p>
+              <p style="color:#6A1B9A;">1 mark: <strong>run the query and compare the actual output with the expected output</strong>. If they match, the query works correctly.</p>
+              <p>Two marks means two points. An answer that only says "compare the outputs" has left the first mark behind — you must say that the expected output is worked out first.</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — Testing (2 marks)</div>
-          <p>Describe how you would test that a SELECT query works correctly.</p>
+          <div class="q-label">Practice Question 2 — Write the Expected Output (5 marks)</div>
+          <p>Write the expected output of the following query.</p>
+          <div class="code-block code-sql">
+            <pre>SELECT title, runtimeMins
+FROM Film
+WHERE certificate = "15"
+ORDER BY runtimeMins DESC;</pre>
+          </div>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">Run the query on the database (1 mark) and compare the actual output with the expected output worked out beforehand — if they match, the query works correctly (1 mark).</p>
+              <table>
+                <thead><tr><th>title</th><th>runtimeMins</th></tr></thead>
+                <tbody>
+                  <tr><td>Cold Harbour</td><td>141</td></tr>
+                  <tr><td>The Quiet Hour</td><td>128</td></tr>
+                  <tr><td>Last Signal</td><td>112</td></tr>
+                </tbody>
+              </table>
+              <p style="color:#6A1B9A;">1 mark: <strong>title and runtimeMins as headings, in that order</strong> · 3 marks: one for each correct row · 1 mark: rows in <strong>descending order of runtimeMins</strong>.</p>
+              <p>Three films carry a 15 certificate: F02, F04 and F06. Paper Boats (U) and both PG films are excluded.</p>
+              <p>Do not include <code>certificate</code> in the output. It is what the query searches on, not what it displays — and additional columns or rows cost marks.</p>
             </div>
           </details>
         </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Expected Output From a Join (5 marks)</div>
+          <p>Write the expected output of the following query.</p>
+          <div class="code-block code-sql">
+            <pre>SELECT title, showTime
+FROM Film, Screening
+WHERE screenNo = 1
+  AND Film.filmID = Screening.filmID
+ORDER BY showTime ASC;</pre>
+          </div>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <table>
+                <thead><tr><th>title</th><th>showTime</th></tr></thead>
+                <tbody>
+                  <tr><td>Northern Lights</td><td>14:00</td></tr>
+                  <tr><td>Cold Harbour</td><td>19:45</td></tr>
+                  <tr><td>The Quiet Hour</td><td>20:00</td></tr>
+                </tbody>
+              </table>
+              <p style="color:#6A1B9A;">1 mark: <strong>title and showTime as headings, in that order</strong> · 3 marks: one for each correct row · 1 mark: rows in <strong>ascending order of showTime</strong>.</p>
+              <p>Three screenings are in screen 1: SC1 (F01, 14:00), SC3 (F04, 19:45) and SC6 (F02, 20:00). Following each filmID across the join gives Northern Lights, Cold Harbour and The Quiet Hour.</p>
+              <p><code>title</code> is in Film while <code>screenNo</code> and <code>showTime</code> are in Screening, so the join is doing real work. Without it, all six films would be paired with all three screen-1 showings — 18 rows instead of 3.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Evaluate a SELECT (4 marks)</div>
+          <p>The manager asks: <em>"Can I have a list of the titles and running times of our thrillers, shortest first?"</em></p>
+          <p>A member of staff writes:</p>
+          <div class="code-block code-sql">
+            <pre>SELECT title, runtimeMins, genre, certificate
+FROM Film
+WHERE genre = "Drama"
+ORDER BY runtimeMins DESC;</pre>
+          </div>
+          <p>Evaluate this query in terms of fitness for purpose and accuracy of output, then rewrite it.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">1 mark: the <strong>wrong genre</strong> is searched for — <code>"Drama"</code> instead of <code>"Thriller"</code>, so it returns The Quiet Hour rather than Cold Harbour and Last Signal. None of the correct films appear, so it is not fit for purpose.</p>
+              <p style="color:#6A1B9A;">1 mark: the <strong>sort is the wrong way round</strong> — "shortest first" is <code>ASC</code>, but the query uses <code>DESC</code>.</p>
+              <p style="color:#6A1B9A;">1 mark: <strong>genre and certificate are displayed</strong> although only the title and running time were asked for.</p>
+              <p style="color:#6A1B9A;">1 mark: a corrected query:</p>
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>SELECT title, runtimeMins
+FROM Film
+WHERE genre = "Thriller"
+ORDER BY runtimeMins ASC;</pre>
+              </div>
+              <p>Which gives Last Signal (112) then Cold Harbour (141).</p>
+              <p>Note that the original query would <strong>pass a test</strong> — predict its output and the actual result matches exactly. Only evaluation catches that it answers the wrong question.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Evaluate an UPDATE (3 marks)</div>
+          <p><em>Cold Harbour</em> has been re-rated as an 18 certificate. A member of staff writes:</p>
+          <div class="code-block code-sql">
+            <pre>UPDATE Film
+SET certificate = "18"
+WHERE genre = "Thriller";</pre>
+          </div>
+          <p><strong>(a)</strong> Explain why this statement is not fit for purpose. <strong>(b)</strong> Rewrite it correctly.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 2 marks: the <code>WHERE</code> clause <strong>matches more than one record</strong> (1 mark) — there are two thrillers, so <strong>Last Signal would also be changed to an 18</strong> even though only Cold Harbour was re-rated (1 mark).</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 1 mark:</p>
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>UPDATE Film
+SET certificate = "18"
+WHERE filmID = "F04";</pre>
+              </div>
+              <p><code>WHERE title = "Cold Harbour"</code> is also acceptable here, but <code>filmID</code> is the primary key and so is guaranteed to identify one record.</p>
+              <p>This is the CodeQueen fault exactly: the <code>SET</code> line is correct and the whole problem is a <code>WHERE</code> clause that catches a record it should not. Counting the matches before running an UPDATE would have caught it.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="next">Next — Pulling It Together</h2>
+        <p>That completes the database topic: <a href="analysis.html">analysing</a> a problem, <a href="design.html">designing</a> the structure, writing <a href="sql-select.html">queries</a> and <a href="sql-insert-update-delete.html">changes</a>, and now testing and evaluating what you built.</p>
+        <p>The <a href="coursework-prep.html">coursework prep</a> page puts the whole sequence to work on the kind of task the assignment sets.</p>
       </article>
 
     </div>

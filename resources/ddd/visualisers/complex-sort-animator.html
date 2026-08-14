@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complex Sort Animator — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --purp:#6A1B9A; --purp-bg:#F4E8FA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;
+       padding:clamp(10px,1.5vw,16px);font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  button{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  .wrap{max-width:920px;margin:0 auto}
+
+  /* ---- phase strip ---- */
+  .phases{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+  .ph{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      padding:7px 11px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+      transition:background .3s,border-color .3s,color .3s}
+  .ph.on{background:var(--active-strong);border-color:var(--active-strong);color:#fff}
+  .ph.done{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+  .ph.on.trap{background:var(--warn);border-color:var(--warn);color:#fff}
+  .ph.done.trap{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+
+  /* ---- the output table ---- */
+  .tbox{background:var(--panel);border:1px solid var(--line);overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+  th{background:var(--active-bg);color:var(--active-strong);text-align:left;padding:8px 10px;
+     font-size:10.5px;letter-spacing:.06em;border-bottom:1px solid var(--line);white-space:nowrap;
+     transition:background .35s,color .35s,opacity .35s}
+  td{padding:7px 10px;border-bottom:1px solid #EDEFF1;white-space:nowrap;
+     transition:background .35s,color .35s,opacity .35s,box-shadow .25s}
+  tr:last-child td{border-bottom:none}
+
+  /* dimming everything that is not the current focus */
+  th.dim,td.dim{opacity:.2}
+
+  /* first sort — green */
+  th.g{background:var(--active-strong);color:#fff}
+  td.g{background:var(--active-bg);color:var(--active-strong);font-weight:700}
+
+  /* second sort — gold */
+  th.y{background:var(--match-accent);color:#2A2000}
+  td.y{background:var(--match-bg);color:var(--match);font-weight:700}
+  td.walk{box-shadow:inset 0 0 0 2px var(--match-accent);background:#FFF7DB}
+
+  /* the ruled-out distractor — red */
+  th.r{background:var(--warn);color:#fff}
+  th.r.struck{background:var(--warn-bg);color:var(--warn);text-decoration:line-through}
+  td.r{background:var(--warn-bg);color:var(--warn);font-weight:700}
+  td.maybe{background:var(--match-bg);color:var(--match);font-weight:700}
+
+  /* Alternating block shading, revealed in phase 1. Set on the ROW, not the cells:
+     cell backgrounds are transparent by default, so a highlighted cell paints over
+     the band without either rule having to out-specify the other. */
+  tr.shade.b1{background-color:#F2F8F5}
+
+  /* A firm rule closing each block off. Without it the only cue that the
+     second sort has restarted is the pause as the walk moves on, which is far
+     too easy to miss. On the gutter cell the border lands at the foot of the
+     rowspan, so the two halves of the rule line up. */
+  tr.blk-end.split td{border-bottom:3px solid var(--active)}
+  td.band.split{border-bottom:3px solid var(--active)}
+
+  /* ---- the block gutter ---- */
+  td.band{width:9.5rem;padding:8px 10px 8px 12px;vertical-align:top;white-space:normal;
+          border-bottom:1px solid #EDEFF1;background:#fff !important;
+          border-left:4px solid transparent;opacity:0;transition:opacity .45s,border-color .45s}
+  td.band.show{opacity:1;border-left-color:var(--active)}
+  .bh{display:block;font-family:var(--sans);font-weight:800;font-size:12.5px;color:var(--active-strong);letter-spacing:-.01em}
+  .bn{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+      color:var(--ink-soft);margin-top:2px}
+  .btag{display:inline-block;margin-top:7px;font-family:var(--mono);font-size:10px;font-weight:700;
+        letter-spacing:.05em;padding:3px 6px;background:var(--match-bg);color:var(--match);
+        border:1px solid var(--match-accent);opacity:0;transition:opacity .45s}
+  .btag.show{opacity:1}
+
+  /* On a narrow screen, tighten the table rather than let it scroll sideways —
+     the whole point is being able to compare columns without moving. */
+  @media (max-width:640px){
+    table{font-size:11.5px}
+    th{padding:7px 7px;font-size:9.5px}
+    td{padding:6px 7px}
+    td.band{width:6.75rem;padding:7px 7px 7px 9px}
+    .bh{font-size:11.5px}
+    .bn{font-size:9px}
+    .btag{font-size:9px;padding:2px 5px;margin-top:5px}
+  }
+
+  /* ---- narration ---- */
+  .cap{background:var(--purp-bg);border-left:4px solid var(--purp);padding:11px 14px;margin-top:12px;
+       font-size:13.5px;min-height:5.2em}
+  .cap b{color:var(--purp)}
+  .cap code{font-family:var(--mono);font-size:12.5px;background:#fff;border:1px solid var(--line);padding:1px 5px}
+  .cap .lead{display:block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;
+             text-transform:uppercase;color:var(--purp);margin-bottom:5px}
+
+  /* ---- footer / replay ---- */
+  .foot{display:flex;align-items:center;gap:10px;min-height:42px;margin-top:10px}
+  .btn{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+       padding:9px 16px;border:1px solid var(--active-strong);background:#fff;color:var(--active-strong);
+       cursor:pointer;opacity:0;pointer-events:none;transition:opacity .4s,background .15s}
+  .btn.show{opacity:1;pointer-events:auto}
+  .btn:hover{background:var(--active-bg)}
+  .foot .note{font-size:12.5px;color:var(--ink-soft);opacity:0;transition:opacity .4s}
+  .foot .note.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="phases" aria-hidden="true">
+    <div class="ph" id="ph1">1 · The repeating column</div>
+    <div class="ph" id="ph2">2 · Inside each block</div>
+    <div class="ph trap" id="ph3">3 · The near miss</div>
+  </div>
+
+  <div class="tbox">
+    <table id="tbl">
+      <caption class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">
+        Output of SELECT pupilName, yearGroup, house, meritPoints, clubID FROM Pupil ORDER BY house ASC, meritPoints DESC.
+        The house column runs Churchill, Curie, Montgomerie, Nightingale in alphabetical order, and within each house block
+        the meritPoints column falls: 71, 42, 24 for Churchill; 67, 38, 18 for Curie; 55, 49 for Montgomerie; 31, 26, 12 for
+        Nightingale. The yearGroup column climbs 4, 4, 5 in the Churchill block but reads 4, 3, 5 in the Curie block, so it is
+        not the second sort.
+      </caption>
+      <thead>
+        <tr>
+          <th style="background:#fff;border-bottom-color:var(--line)"></th>
+          <th class="h-name">pupilName</th>
+          <th class="h-yg">yearGroup</th>
+          <th class="h-house">house</th>
+          <th class="h-mp">meritPoints</th>
+          <th class="h-club">clubID</th>
+        </tr>
+      </thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+
+  <!-- Narration changes several times a second during the walk, so it is not a live
+       region — the full explanation is in the table's visually-hidden caption instead. -->
+  <div class="cap" id="cap"></div>
+
+  <div class="foot">
+    <button class="btn" id="replay" type="button">↻ Replay</button>
+    <span class="note" id="note">Runs once. Press replay to watch it again.</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Auto-size the parent iframe. Declared before anything renders. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  /* ---------------------------------------------------------------- data */
+  const ROWS = [
+    {name:"Riley",     yg:4, house:"Churchill",   mp:71, club:"C04"},
+    {name:"Archie",    yg:4, house:"Churchill",   mp:42, club:"C01"},
+    {name:"Lucienne",  yg:5, house:"Churchill",   mp:24, club:"C03"},
+    {name:"Leoni",     yg:4, house:"Curie",       mp:67, club:"C04"},
+    {name:"Matthew",   yg:3, house:"Curie",       mp:38, club:"C02"},
+    {name:"Noah",      yg:5, house:"Curie",       mp:18, club:"C03"},
+    {name:"Mason",     yg:4, house:"Montgomerie", mp:55, club:"C01"},
+    {name:"Erika",     yg:3, house:"Montgomerie", mp:49, club:"C04"},
+    {name:"Christian", yg:6, house:"Nightingale", mp:31, club:"C02"},
+    {name:"Harveer",   yg:6, house:"Nightingale", mp:26, club:"C03"},
+    {name:"Louie",     yg:5, house:"Nightingale", mp:12, club:"C01"}
+  ];
+  const BLOCKS = [
+    {house:"Churchill",   start:0, n:3, mp:"71, 42, 24", yg:"4, 4, 5"},
+    {house:"Curie",       start:3, n:3, mp:"67, 38, 18", yg:"4, 3, 5"},
+    {house:"Montgomerie", start:6, n:2, mp:"55, 49",     yg:"4, 3"},
+    {house:"Nightingale", start:8, n:3, mp:"31, 26, 12", yg:"6, 6, 5"}
+  ];
+
+  /* ---------------------------------------------------------------- build */
+  const tb = document.getElementById("tb");
+  const bandCells = [], tagEls = [];
+  const cell = {name:[], yg:[], house:[], mp:[], club:[]};
+
+  BLOCKS.forEach(function(b, bi){
+    for(let k = 0; k < b.n; k++){
+      const i  = b.start + k;
+      const r  = ROWS[i];
+      const tr = document.createElement("tr");
+      tr.className = "blk b" + (bi % 2);
+      /* The last block needs no closing rule — the table ends there. */
+      if(k === b.n - 1 && bi < BLOCKS.length - 1) tr.classList.add("blk-end");
+
+      if(k === 0){
+        const td = document.createElement("td");
+        td.className = "band";
+        td.rowSpan = b.n;
+        td.innerHTML = '<span class="bh"></span><span class="bn"></span><span class="btag">meritPoints ▼</span>';
+        td.querySelector(".bh").textContent = b.house;
+        td.querySelector(".bn").textContent = b.n + (b.n === 1 ? " record" : " records");
+        tr.appendChild(td);
+        bandCells.push(td);
+        tagEls.push(td.querySelector(".btag"));
+      }
+
+      [["name", r.name], ["yg", r.yg], ["house", r.house], ["mp", r.mp], ["club", r.club]].forEach(function(p){
+        const td = document.createElement("td");
+        td.className = "c-" + p[0];
+        td.textContent = p[1];
+        tr.appendChild(td);
+        cell[p[0]].push(td);
+      });
+
+      tb.appendChild(tr);
+    }
+  });
+
+  const head = {
+    name:  document.querySelector("th.h-name"),
+    yg:    document.querySelector("th.h-yg"),
+    house: document.querySelector("th.h-house"),
+    mp:    document.querySelector("th.h-mp"),
+    club:  document.querySelector("th.h-club")
+  };
+  const ALLCOLS = ["name","yg","house","mp","club"];
+  const rowsEl  = Array.prototype.slice.call(tb.querySelectorAll("tr"));
+  const cap     = document.getElementById("cap");
+  const phEl    = [document.getElementById("ph1"), document.getElementById("ph2"), document.getElementById("ph3")];
+  const replay  = document.getElementById("replay");
+  const note    = document.getElementById("note");
+
+  /* ------------------------------------------------------------- helpers */
+  function clearCol(k, cls){ head[k].classList.remove(cls); cell[k].forEach(function(t){ t.classList.remove(cls); }); }
+  function markCol(k, cls){ head[k].classList.add(cls); cell[k].forEach(function(t){ t.classList.add(cls); }); }
+  function dimAllBut(keep){
+    ALLCOLS.forEach(function(k){
+      const on = keep.indexOf(k) === -1;
+      head[k].classList.toggle("dim", on);
+      cell[k].forEach(function(t){ t.classList.toggle("dim", on); });
+    });
+  }
+  function undim(){
+    ALLCOLS.forEach(function(k){
+      head[k].classList.remove("dim");
+      cell[k].forEach(function(t){ t.classList.remove("dim"); });
+    });
+  }
+  function say(lead, html){ cap.innerHTML = '<span class="lead">' + lead + "</span>" + html; }
+  function phase(n){
+    phEl.forEach(function(p, i){
+      p.classList.toggle("on", i === n);
+      p.classList.toggle("done", i < n);
+    });
+  }
+
+  function reset(){
+    undim();
+    ALLCOLS.forEach(function(k){
+      ["g","y","r","struck","walk","maybe"].forEach(function(c){ clearCol(k, c); });
+    });
+    rowsEl.forEach(function(tr){ tr.classList.remove("shade", "split"); });
+    bandCells.forEach(function(td){ td.classList.remove("show", "split"); });
+    tagEls.forEach(function(el){ el.classList.remove("show"); });
+    phEl.forEach(function(p){ p.classList.remove("on", "done"); });
+    replay.classList.remove("show");
+    note.classList.remove("show");
+  }
+
+  /* Everything the animation ends on, applied in one go. */
+  function finalState(){
+    reset();
+    rowsEl.forEach(function(tr){ tr.classList.add("shade", "split"); });
+    bandCells.forEach(function(td, i){
+      td.classList.add("show");
+      if(i < BLOCKS.length - 1) td.classList.add("split");
+    });
+    tagEls.forEach(function(el){ el.classList.add("show"); });
+    markCol("house", "g");
+    markCol("mp", "y");
+    head.yg.classList.add("r", "struck");
+    phEl.forEach(function(p){ p.classList.add("done"); });
+    say("The finished reading",
+      "The <b>house</b> column repeats in runs, and the runs climb A–Z — that is the first sort. " +
+      "<b>meritPoints</b> falls inside <em>every</em> run and restarts at the top of the next one — that is the second sort. " +
+      "<b>yearGroup</b> only looked sorted in the first block, so it is out.<br>" +
+      "<code>ORDER BY house ASC, meritPoints DESC;</code>");
+    replay.classList.add("show");
+    note.classList.add("show");
+    postHeight();
+  }
+
+  /* ------------------------------------------------------------ timeline */
+  let timers = [];
+  function at(ms, fn){ timers.push(setTimeout(fn, ms)); }
+  function stop(){ timers.forEach(clearTimeout); timers = []; }
+
+  function play(){
+    stop();
+    reset();
+    let t = 0;
+    const step = function(ms, fn){ at(t, fn); t += ms; };
+
+    /* ---- opening: the raw output, nothing marked ---- */
+    step(900, function(){
+      say("The output",
+        "The query returned all 11 records with five fields. Nothing here tells you the sort yet — " +
+        "you have to read it out of the data.");
+    });
+
+    /* ---- phase 1: the repeating column ---- */
+    step(1300, function(){
+      phase(0);
+      dimAllBut(["house"]);
+      markCol("house", "g");
+      say("Step 1 · find the column that repeats in runs",
+        "Read straight down <b>house</b>. The same value appears several times in a row before it changes: " +
+        "Churchill, Churchill, Churchill, then Curie, Curie, Curie …");
+    });
+
+    BLOCKS.forEach(function(b, bi){
+      step(450, function(){
+        bandCells[bi].classList.add("show");
+        if(bi < BLOCKS.length - 1) bandCells[bi].classList.add("split");
+        for(let k = 0; k < b.n; k++){
+          rowsEl[b.start + k].classList.add("shade");
+          rowsEl[b.start + k].classList.add("split");
+        }
+        postHeight();
+      });
+    });
+
+    step(2100, function(){
+      say("Step 1 · the runs are the first sort",
+        "Those four runs are the <b>blocks</b>, ruled off so you can see exactly where each one ends. " +
+        "Now read the block names in order: Churchill, Curie, Montgomerie, Nightingale — alphabetical " +
+        "top to bottom. So the first sort is <code>house ASC</code>.");
+    });
+
+    /* ---- phase 2: inside each block ---- */
+    step(2200, function(){
+      phase(1);
+      undim();
+      dimAllBut(["house","mp"]);
+      markCol("mp", "y");
+      say("Step 2 · look inside a single block",
+        "Every row in a block has the <em>same</em> house, so house cannot decide their order. " +
+        "Something else is arranging them. Watch <b>meritPoints</b> block by block.");
+    });
+
+    BLOCKS.forEach(function(b, bi){
+      for(let k = 0; k < b.n; k++){
+        step(330, function(){
+          cell.mp.forEach(function(td){ td.classList.remove("walk"); });
+          cell.mp[b.start + k].classList.add("walk");
+          if(k === 0){
+            say("Step 2 · " + b.house,
+              "<b>" + b.house + "</b> — " + b.mp.split(",")[0].trim() + " …");
+          } else {
+            say("Step 2 · " + b.house,
+              "<b>" + b.house + "</b> — " + b.mp.split(",").slice(0, k + 1).join(",") +
+              (k === b.n - 1 ? " — falling all the way down ▼" : " …"));
+          }
+        });
+      }
+      step(450, function(){
+        tagEls[bi].classList.add("show");
+        postHeight();
+      });
+    });
+
+    step(2400, function(){
+      cell.mp.forEach(function(td){ td.classList.remove("walk"); });
+      say("Step 2 · the second sort",
+        "All four blocks count <b>downwards</b>, and the numbers <em>restart</em> every time you cross a " +
+        "line — 71 down to 24, then straight back up to 67. That restart is the giveaway that " +
+        "meritPoints is the <em>second</em> sort, not the first. So: <code>meritPoints DESC</code>.");
+    });
+
+    /* ---- phase 3: the near miss ---- */
+    step(1500, function(){
+      phase(2);
+      undim();
+      dimAllBut(["house","yg"]);
+      head.yg.classList.add("y");
+      say("Step 3 · why you must check a second block",
+        "meritPoints was not the only column that looked promising. Try <b>yearGroup</b> instead and see " +
+        "what happens.");
+    });
+
+    step(2300, function(){
+      for(let k = 0; k < 3; k++){ cell.yg[k].classList.add("maybe"); }
+      say("Step 3 · Churchill looks convincing",
+        "In the Churchill block yearGroup reads <b>4, 4, 5</b>. That climbs. On this block alone you " +
+        "would happily write <code>yearGroup ASC</code>.");
+    });
+
+    step(2500, function(){
+      for(let k = 3; k < 6; k++){ cell.yg[k].classList.add("r"); }
+      say("Step 3 · Curie breaks it",
+        "But the very next block reads <b>4, 3, 5</b>. That is not ascending, and it is not descending " +
+        "either — it is not in order at all. One block disagreeing is enough to rule the column out.");
+    });
+
+    step(2400, function(){
+      cell.yg.forEach(function(td){ td.classList.remove("maybe", "r"); });
+      head.yg.classList.remove("y");
+      head.yg.classList.add("r", "struck");
+      say("Step 3 · ruled out",
+        "A column can land in order inside one block purely by luck. The second sort has to hold for " +
+        "<b>every</b> block, in the <b>same</b> direction — which is why you always check a second one.");
+    });
+
+    /* ---- hold on the finished diagram ---- */
+    step(0, function(){ finalState(); });
+  }
+
+  /* Shared with the in-view trigger below: pressing replay counts as having
+     started, so a pending start-fallback cannot restart the run underneath it. */
+  let started = false;
+  function start(){ if(!started){ started = true; play(); } }
+
+  replay.addEventListener("click", function(){ started = true; play(); });
+
+  /* Play once, when it actually comes into view. */
+  const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduced){
+    finalState();
+  } else {
+    say("", "");
+
+    if(window.parent !== window){
+      /* Embedded: an observer in here would only see this frame's own viewport
+         and would fire the moment the frame loads, however far down the parent
+         page the reader actually is. The host page tells us instead.
+
+         We say hello; if the host answers we wait however long it takes for the
+         reader to scroll down. Only if it never answers — an older cached
+         nav.js, say — do we give up and play on a timer. */
+      let hostReady = false, tries = 0;
+      window.addEventListener("message", function(e){
+        if(!e.data) return;
+        if(e.data.type === "embed-host-ready") hostReady = true;
+        if(e.data.type === "embed-inview") start();
+      });
+      /* Keep saying hello until answered: this frame can finish loading before
+         the host page's own script has run, and a hello sent that early is
+         simply dropped. */
+      const hello = function(){
+        if(hostReady) return;
+        window.parent.postMessage({type:"embed-hello"}, "*");
+        if(++tries < 8) setTimeout(hello, 400);
+      };
+      hello();
+      setTimeout(function(){ if(!hostReady) start(); }, 4200);
+    } else if("IntersectionObserver" in window){
+      const io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ io.disconnect(); start(); } });
+      }, {threshold:0.25});
+      io.observe(document.querySelector(".tbox"));
+      setTimeout(start, 8000);
+    } else {
+      start();
+    }
+  }
+})();
+</script>
+</body>
+</html>

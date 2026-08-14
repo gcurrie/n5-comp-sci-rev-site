@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SELECT Query Stepper — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --purp:#6A1B9A; --purp-bg:#F4E8FA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;
+       padding:clamp(10px,1.5vw,18px);font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  input,button,select{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+  header h1{font-size:clamp(21px,3vw,30px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:880px}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0 0}
+  .tab{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.07em;padding:9px 14px;
+       border:1px solid var(--line);border-top-width:3px;background:#fff;color:var(--ink-soft);cursor:pointer;
+       transition:background .15s,border-color .15s,color .15s}
+  .tab:nth-child(1){border-top-color:var(--active)}
+  .tab:nth-child(2){border-top-color:var(--purp)}
+  .tab:hover{color:var(--active-strong);border-color:var(--active)}
+  .tab.on{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 0}
+  .chip{font-family:var(--mono);font-size:11.5px;font-weight:700;padding:8px 12px;border:1px solid var(--line);
+        background:#fff;color:var(--ink-soft);cursor:pointer;transition:all .13s}
+  .chip:hover{border-color:var(--active);color:var(--active-strong)}
+  .chip.on{background:var(--match-bg);border-color:var(--match-accent);color:var(--match)}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  @media (max-width:800px){ .two{grid-template-columns:1fr} }
+
+  .panel{background:var(--panel);border:1px solid var(--line)}
+  .panel .cap{background:var(--active-strong);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;
+              letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;display:flex;justify-content:space-between;gap:8px}
+  .panel .cap span.n{color:var(--tint);letter-spacing:.06em}
+  .panel .pad{padding:0}
+
+  table.qd{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+  table.qd th{background:var(--active-bg);color:var(--active-strong);text-align:left;padding:7px 10px;
+              font-size:10px;letter-spacing:.08em;width:8.5rem;white-space:nowrap;vertical-align:top;
+              border-bottom:1px solid #EDEFF1}
+  table.qd td{padding:7px 10px;border-bottom:1px solid #EDEFF1}
+  table.qd tr.hi th{background:var(--match-bg);color:var(--match)}
+  table.qd tr.hi td{background:#FFFDF3;font-weight:700}
+  table.qd tr:last-child th,table.qd tr:last-child td{border-bottom:none}
+  table.qd td.none{color:var(--ink-soft);font-family:var(--sans);font-style:italic}
+
+  pre.sql{margin:0;padding:13px 14px;background:#0D1117;color:#CDD9E5;font-family:var(--mono);
+          font-size:12.5px;line-height:1.75;overflow-x:auto}
+  pre.sql .kw{color:#C9A227;font-weight:700}
+  pre.sql .on{background:rgba(201,162,39,.22);outline:1px solid rgba(201,162,39,.5)}
+  pre.sql .dim{opacity:.35}
+
+  .steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .pill{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.09em;padding:7px 11px;
+        border:1px solid var(--line);background:#fff;color:var(--ink-soft)}
+  .pill.on{background:var(--active-strong);border-color:var(--active-strong);color:#fff}
+  .pill.done{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+
+  .narrate{background:var(--purp-bg);border-left:4px solid var(--purp);padding:11px 14px;margin-top:12px;font-size:13.5px}
+  .narrate b{color:var(--purp)}
+
+  .row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:12px}
+  .btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+       padding:10px 18px;border:1px solid var(--active-strong);background:var(--active-strong);color:#fff;cursor:pointer}
+  .btn:hover{background:var(--active)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn.ghost{background:#fff;color:var(--active-strong)}
+  .btn.ghost:hover{background:var(--active-bg)}
+
+  table.data{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+  table.data th{background:var(--active-bg);color:var(--active-strong);text-align:left;padding:7px 9px;
+                font-size:10.5px;letter-spacing:.05em;border-bottom:1px solid var(--line);white-space:nowrap}
+  table.data td{padding:6px 9px;border-bottom:1px solid #EDEFF1;white-space:nowrap}
+  table.data th.drop,table.data td.drop{opacity:.22}
+  table.data th.keep{background:var(--match-bg);color:var(--match)}
+  table.data tr.out td{background:var(--warn-bg);color:var(--warn);text-decoration:line-through;opacity:.65}
+  table.data tr.in td{background:var(--active-bg)}
+  table.data td.cond{font-weight:700}
+  .empty{padding:14px;font-size:13.5px;color:var(--warn);font-style:italic}
+
+  .build{background:var(--panel);border:1px solid var(--line);padding:14px 16px;margin-top:14px}
+  .build h3{margin:0 0 10px;font-size:14px;color:var(--active-strong)}
+  .bgrid{display:grid;grid-template-columns:7.5rem 1fr;gap:9px 12px;align-items:start}
+  @media (max-width:620px){ .bgrid{grid-template-columns:1fr} }
+  .blab{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--active);padding-top:8px}
+  .fieldset{display:flex;flex-wrap:wrap;gap:6px}
+  .fchip{font-family:var(--mono);font-size:11.5px;padding:6px 10px;border:1px solid var(--line);background:#fff;
+         color:var(--ink-soft);cursor:pointer;user-select:none}
+  .fchip.on{background:var(--active-bg);border-color:var(--active);color:var(--active-strong);font-weight:700}
+  .inline{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  select,input[type=text]{font-family:var(--mono);font-size:12px;padding:7px 8px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  select:focus,input:focus{outline:2px solid var(--active);outline-offset:1px}
+  .hintline{font-size:12.5px;color:var(--ink-soft);margin:6px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · Database Design &amp; Development</p>
+    <h1>SELECT Query Stepper</h1>
+    <p class="sub">One clause at a time against the Pupil table. <b>FROM</b> loads the records, <b>WHERE</b> throws some away, <b>ORDER BY</b> rearranges the survivors, and <b>SELECT</b> decides which columns you actually see.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab on" data-mode="step">Step through</button>
+    <button class="tab" data-mode="build">Build your own</button>
+  </div>
+
+  <!-- ── STEP MODE ─────────────────────────────────────────── -->
+  <div id="stepMode">
+    <div class="chips" id="presets"></div>
+
+    <div class="two">
+      <div class="panel">
+        <div class="cap"><span>Query design</span></div>
+        <div class="pad"><table class="qd" id="qdTable"></table></div>
+      </div>
+      <div class="panel">
+        <div class="cap"><span>SQL</span></div>
+        <div class="pad"><pre class="sql" id="sqlBox"></pre></div>
+      </div>
+    </div>
+
+    <div class="steps" id="pills"></div>
+    <div class="narrate" id="narr"></div>
+
+    <div class="row">
+      <button class="btn ghost" id="backBtn">&#8592; Back</button>
+      <button class="btn" id="nextBtn">Next &#8594;</button>
+      <button class="btn ghost" id="restartBtn">Restart</button>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <div class="cap"><span id="tblCap">The table</span><span class="n" id="tblCount"></span></div>
+      <div class="pad" style="overflow-x:auto"><table class="data" id="dataTable"></table></div>
+    </div>
+  </div>
+
+  <!-- ── BUILD MODE ────────────────────────────────────────── -->
+  <div id="buildMode" style="display:none">
+    <div class="build">
+      <h3>Build a query</h3>
+      <div class="bgrid">
+        <div class="blab">Select</div>
+        <div>
+          <div class="fieldset" id="bFields"></div>
+          <p class="hintline">Click the fields you want to display. They appear in the order you pick them.</p>
+        </div>
+
+        <div class="blab">Where</div>
+        <div>
+          <div class="inline">
+            <select id="bW1f"></select>
+            <select id="bW1o"></select>
+            <input type="text" id="bW1v" size="12" placeholder="value">
+          </div>
+          <div class="inline" style="margin-top:6px">
+            <select id="bJoin"><option value="">— no second condition —</option><option value="AND">AND</option><option value="OR">OR</option></select>
+            <select id="bW2f"></select>
+            <select id="bW2o"></select>
+            <input type="text" id="bW2v" size="12" placeholder="value">
+          </div>
+          <p class="hintline">Leave the first value empty for no WHERE at all. Text values do not need quotes here — they are added for you in the SQL.</p>
+        </div>
+
+        <div class="blab">Order by</div>
+        <div>
+          <div class="inline">
+            <select id="bO1f"></select>
+            <select id="bO1d"><option value="ASC">ASC</option><option value="DESC">DESC</option></select>
+          </div>
+          <div class="inline" style="margin-top:6px">
+            <select id="bO2f"></select>
+            <select id="bO2d"><option value="ASC">ASC</option><option value="DESC">DESC</option></select>
+          </div>
+          <p class="hintline">Add a second sort to make it a complex sort — it only decides the order inside groups tied on the first.</p>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn ghost" id="bReset">Reset</button>
+      </div>
+    </div>
+
+    <div class="two">
+      <div class="panel">
+        <div class="cap"><span>Query design</span></div>
+        <div class="pad"><table class="qd" id="bQd"></table></div>
+      </div>
+      <div class="panel">
+        <div class="cap"><span>Your SQL</span></div>
+        <div class="pad"><pre class="sql" id="bSql"></pre></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <div class="cap"><span>Result</span><span class="n" id="bCount"></span></div>
+      <div class="pad" style="overflow-x:auto"><table class="data" id="bTable"></table></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Auto-size the parent iframe. Declared before the first render(). */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  const FIELDS = ["pupilID","pupilName","dateOfBirth","yearGroup","house","meritPoints","clubID"];
+  const NUMERIC = {yearGroup:1, meritPoints:1};
+  const DATEF   = {dateOfBirth:1};
+  const OPS = ["=","!=",">","<",">=","<="];
+
+  const PUPILS = [
+    {pupilID:"P101",pupilName:"Archie",   dateOfBirth:"14/03/2010",yearGroup:4,house:"Churchill",  meritPoints:42,clubID:"C01"},
+    {pupilID:"P102",pupilName:"Noah",     dateOfBirth:"02/11/2009",yearGroup:5,house:"Curie",      meritPoints:18,clubID:"C03"},
+    {pupilID:"P103",pupilName:"Mason",    dateOfBirth:"27/06/2010",yearGroup:4,house:"Montgomerie",meritPoints:55,clubID:"C01"},
+    {pupilID:"P104",pupilName:"Christian",dateOfBirth:"09/01/2008",yearGroup:6,house:"Nightingale",meritPoints:31,clubID:"C02"},
+    {pupilID:"P105",pupilName:"Leoni",    dateOfBirth:"18/09/2010",yearGroup:4,house:"Curie",      meritPoints:67,clubID:"C04"},
+    {pupilID:"P106",pupilName:"Lucienne", dateOfBirth:"30/04/2009",yearGroup:5,house:"Churchill",  meritPoints:24,clubID:"C03"},
+    {pupilID:"P107",pupilName:"Erika",    dateOfBirth:"12/12/2011",yearGroup:3,house:"Montgomerie",meritPoints:49,clubID:"C04"},
+    {pupilID:"P108",pupilName:"Louie",    dateOfBirth:"05/07/2009",yearGroup:5,house:"Nightingale",meritPoints:12,clubID:"C01"},
+    {pupilID:"P109",pupilName:"Matthew",  dateOfBirth:"21/02/2011",yearGroup:3,house:"Curie",      meritPoints:38,clubID:"C02"},
+    {pupilID:"P110",pupilName:"Riley",    dateOfBirth:"08/05/2010",yearGroup:4,house:"Churchill",  meritPoints:71,clubID:"C04"},
+    {pupilID:"P111",pupilName:"Harveer",  dateOfBirth:"16/10/2008",yearGroup:6,house:"Nightingale",meritPoints:26,clubID:"C03"}
+  ];
+
+  /* Sort key: dates become yyyymmdd so they compare correctly. */
+  function key(row, f){
+    if(DATEF[f]){ const p = row[f].split("/"); return Number(p[2] + p[1] + p[0]); }
+    if(NUMERIC[f]) return row[f];
+    return String(row[f]).toLowerCase();
+  }
+  function cmpVal(a, b){ return a < b ? -1 : a > b ? 1 : 0; }
+
+  function testCond(row, c){
+    if(!c || !c.field || c.value === "") return true;
+    let a = row[c.field], b = c.value;
+    if(NUMERIC[c.field]){ a = Number(a); b = Number(b); if(isNaN(b)) return false; }
+    else if(DATEF[c.field]){ a = key(row, c.field); const p = String(b).split("/");
+                             b = p.length === 3 ? Number(p[2]+p[1]+p[0]) : NaN; if(isNaN(b)) return false; }
+    else { a = String(a).toLowerCase(); b = String(b).toLowerCase(); }
+    switch(c.op){
+      case "=":  return a === b;
+      case "!=": return a !== b;
+      case ">":  return a > b;
+      case "<":  return a < b;
+      case ">=": return a >= b;
+      case "<=": return a <= b;
+    }
+    return true;
+  }
+  function passes(row, w){
+    if(!w || !w.conds || !w.conds.length) return true;
+    const r = w.conds.map(c => testCond(row, c));
+    if(r.length === 1) return r[0];
+    return w.join === "OR" ? (r[0] || r[1]) : (r[0] && r[1]);
+  }
+  function sortRows(rows, order){
+    if(!order || !order.length) return rows.slice();
+    return rows.slice().sort(function(x, y){
+      for(let i = 0; i < order.length; i++){
+        const o = order[i];
+        let d = cmpVal(key(x, o.field), key(y, o.field));
+        if(o.dir === "DESC") d = -d;
+        if(d !== 0) return d;
+      }
+      return 0;
+    });
+  }
+  function quote(field, v){ return NUMERIC[field] ? v : '"' + v + '"'; }
+  function condText(c){ return c.field + " " + c.op + " " + quote(c.field, c.value); }
+  function whereText(w){
+    if(!w || !w.conds || !w.conds.length) return "";
+    return w.conds.map(condText).join(" " + (w.join || "AND") + " ");
+  }
+  function orderText(o){ return !o || !o.length ? "" : o.map(s => s.field + " " + s.dir).join(", "); }
+
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  /* ---- shared renderers ---- */
+  function renderDesign(el, q, hi){
+    const w = whereText(q.where), o = orderText(q.order);
+    function row(lab, val, k){
+      const on = hi === k ? " class='hi'" : "";
+      const none = val === "";
+      return "<tr" + on + "><th>" + lab + "</th>" +
+             (none ? "<td class='none'>none</td>" : "<td>" + esc(val) + "</td>") + "</tr>";
+    }
+    el.innerHTML = "<tbody>" +
+      row("Field(s)", q.fields.join(", "), "select") +
+      row("Table(s)", "Pupil", "from") +
+      row("Search criteria", w, "where") +
+      row("Sort order", o, "order") +
+      "</tbody>";
+  }
+
+  function renderSql(el, q, hi){
+    const w = whereText(q.where), o = orderText(q.order);
+    function line(kw, rest, k){
+      const cls = hi ? (hi === k ? " class='on'" : " class='dim'") : "";
+      return "<span" + cls + "><span class='kw'>" + kw + "</span> " + esc(rest) + "</span>";
+    }
+    let s = line("SELECT", q.fields.join(", "), "select") + "\n" +
+            line("FROM", "Pupil" + (w || o ? "" : ";"), "from");
+    if(w) s += "\n" + line("WHERE", w + (o ? "" : ";"), "where");
+    if(o) s += "\n" + line("ORDER BY", o + ";", "order");
+    el.innerHTML = s;
+  }
+
+  /* stage: 0 FROM, 1 WHERE, 2 ORDER BY, 3 SELECT */
+  function renderData(el, q, stage){
+    const w = q.where, o = q.order;
+    let rows, marks = null;
+    if(stage === 0){ rows = PUPILS.slice(); }
+    else if(stage === 1){ rows = PUPILS.slice(); marks = rows.map(r => passes(r, w)); }
+    else { rows = sortRows(PUPILS.filter(r => passes(r, w)), stage >= 2 ? o : null); }
+
+    const condFields = {};
+    if(w && w.conds) w.conds.forEach(c => { if(c.field) condFields[c.field] = 1; });
+    const sortFields = {};
+    if(o) o.forEach(s => sortFields[s.field] = 1);
+
+    let h = "<thead><tr>";
+    FIELDS.forEach(f => {
+      let cls = "";
+      if(stage === 3) cls = q.fields.indexOf(f) === -1 ? " class='drop'" : " class='keep'";
+      else if(stage === 1 && condFields[f]) cls = " class='keep'";
+      else if(stage === 2 && sortFields[f]) cls = " class='keep'";
+      h += "<th" + cls + ">" + f + "</th>";
+    });
+    h += "</tr></thead><tbody>";
+
+    rows.forEach((r, i) => {
+      let rcls = "";
+      if(stage === 1) rcls = marks[i] ? " class='in'" : " class='out'";
+      h += "<tr" + rcls + ">";
+      FIELDS.forEach(f => {
+        let cls = "";
+        if(stage === 3 && q.fields.indexOf(f) === -1) cls = " class='drop'";
+        else if(stage === 1 && condFields[f]) cls = " class='cond'";
+        h += "<td" + cls + ">" + esc(r[f]) + "</td>";
+      });
+      h += "</tr>";
+    });
+    el.innerHTML = h + "</tbody>";
+    return rows.length;
+  }
+
+  /* ---- presets ---- */
+  const PRESETS = [
+    {
+      name:"Simple search",
+      fields:["pupilID","pupilName"],
+      where:{join:"AND", conds:[{field:"house", op:"=", value:"Curie"}]},
+      order:[],
+      narr:["<b>FROM Pupil</b> — the query starts by loading every record in the table. All <b>11</b> pupils are in play.",
+            "<b>WHERE house = \"Curie\"</b> — each record is tested. Three pass and stay; the other eight are struck out. Nothing is deleted — they simply will not appear.",
+            "<b>No ORDER BY</b> — this query does not sort, so the three survivors keep the order they had in the table.",
+            "<b>SELECT pupilID, pupilName</b> — only the two listed columns are displayed. Notice <code>house</code> disappears even though we searched on it: you can filter on a field without showing it."]
+    },
+    {
+      name:"AND — two fields",
+      fields:["pupilName","yearGroup","house"],
+      where:{join:"AND", conds:[{field:"yearGroup", op:"=", value:"4"},{field:"house", op:"=", value:"Churchill"}]},
+      order:[],
+      narr:["<b>FROM Pupil</b> — all 11 records to begin with.",
+            "<b>WHERE yearGroup = 4 AND house = \"Churchill\"</b> — a record must pass <i>both</i> tests. Four pupils are S4 and three are in Churchill, but only <b>two</b> are both. Mason is S4 but Montgomerie; Lucienne is Churchill but S5.",
+            "<b>No ORDER BY</b> — the two survivors stay in table order.",
+            "<b>SELECT pupilName, yearGroup, house</b> — three columns displayed. Every extra AND makes the result <i>smaller</i>."]
+    },
+    {
+      name:"OR — same field",
+      fields:["pupilName","house"],
+      where:{join:"OR", conds:[{field:"house", op:"=", value:"Curie"},{field:"house", op:"=", value:"Nightingale"}]},
+      order:[],
+      narr:["<b>FROM Pupil</b> — all 11 records.",
+            "<b>WHERE house = \"Curie\" OR house = \"Nightingale\"</b> — a record only has to pass <i>one</i> test, so six pupils survive. Using AND here would return <b>nothing</b>, because no pupil is in two houses at once.",
+            "<b>No ORDER BY</b> — table order is kept.",
+            "<b>SELECT pupilName, house</b> — two columns. Every extra OR makes the result <i>bigger</i>."]
+    },
+    {
+      name:"Range + sort",
+      fields:["pupilName","meritPoints"],
+      where:{join:"AND", conds:[{field:"meritPoints", op:">=", value:"20"},{field:"meritPoints", op:"<=", value:"50"}]},
+      order:[{field:"meritPoints", dir:"DESC"}],
+      narr:["<b>FROM Pupil</b> — all 11 records.",
+            "<b>WHERE meritPoints &gt;= 20 AND meritPoints &lt;= 50</b> — a range needs two conditions on the same field, joined by AND. This is the one time AND on a single field is right, because one value can be both at least 20 and at most 50.",
+            "<b>ORDER BY meritPoints DESC</b> — the six survivors are rearranged, largest first. Sorting happens <i>after</i> the WHERE, so only records that already passed are sorted.",
+            "<b>SELECT pupilName, meritPoints</b> — two columns displayed."]
+    },
+    {
+      name:"Complex sort",
+      fields:["pupilName","yearGroup","house","meritPoints","clubID"],
+      where:{join:"AND", conds:[]},
+      order:[{field:"house", dir:"ASC"},{field:"meritPoints", dir:"DESC"}],
+      narr:["<b>FROM Pupil</b> — all 11 records.",
+            "<b>No WHERE</b> — this query has no search criteria, so every record continues to the next stage.",
+            "<b>ORDER BY house ASC, meritPoints DESC</b> — the <i>first</i> field does the main sort: houses go alphabetically. The <i>second</i> only breaks ties inside each house block, putting the highest merit points first. Watch the numbers restart at the top of each new house — that is the signature of a second sort.<br><br>Careful with <b>yearGroup</b>: in the Churchill block it reads 4, 4, 5, which looks like it could be the second sort. Check the Curie block — 4, 3, 5 — and it falls apart. A column has to be in order in <i>every</i> block to be the sort field.",
+            "<b>SELECT pupilName, yearGroup, house, meritPoints, clubID</b> — five columns displayed. Only two of them were sorted; the rest are along for the ride, exactly as they would be in an exam output."]
+    }
+  ];
+  const STAGES = ["1 · FROM","2 · WHERE","3 · ORDER BY","4 · SELECT"];
+  const HI = ["from","where","order","select"];
+
+  let pi = 0, stage = 0;
+
+  function renderStep(){
+    const q = PRESETS[pi];
+
+    let c = "";
+    PRESETS.forEach((p, i) => { c += "<button class='chip" + (i === pi ? " on" : "") + "' data-i='" + i + "'>" + p.name + "</button>"; });
+    document.getElementById("presets").innerHTML = c;
+    document.querySelectorAll("#presets .chip").forEach(b => {
+      b.onclick = function(){ pi = Number(b.dataset.i); stage = 0; renderStep(); };
+    });
+
+    renderDesign(document.getElementById("qdTable"), q, HI[stage]);
+    renderSql(document.getElementById("sqlBox"), q, HI[stage]);
+
+    let p = "";
+    STAGES.forEach((s, i) => {
+      p += "<span class='pill" + (i === stage ? " on" : (i < stage ? " done" : "")) + "'>" + s + "</span>";
+    });
+    document.getElementById("pills").innerHTML = p;
+    document.getElementById("narr").innerHTML = q.narr[stage];
+
+    const n = renderData(document.getElementById("dataTable"), q, stage);
+    const caps = ["Every record in the table","Testing each record","Survivors, now sorted","The finished result"];
+    document.getElementById("tblCap").textContent = caps[stage];
+    document.getElementById("tblCount").textContent =
+      stage === 1 ? PUPILS.filter(r => passes(r, q.where)).length + " of " + PUPILS.length + " pass"
+                  : n + (n === 1 ? " record" : " records");
+
+    document.getElementById("backBtn").disabled = stage === 0;
+    document.getElementById("nextBtn").disabled = stage === 3;
+    postHeight();
+  }
+
+  document.getElementById("backBtn").onclick = function(){ if(stage > 0){ stage--; renderStep(); } };
+  document.getElementById("nextBtn").onclick = function(){ if(stage < 3){ stage++; renderStep(); } };
+  document.getElementById("restartBtn").onclick = function(){ stage = 0; renderStep(); };
+
+  /* ---- build mode ---- */
+  let bFields = ["pupilName","house"];
+
+  function fillSelect(el, opts, blank){
+    let s = blank ? "<option value=''>" + blank + "</option>" : "";
+    opts.forEach(o => s += "<option value='" + o + "'>" + o + "</option>");
+    el.innerHTML = s;
+  }
+
+  function readBuild(){
+    const c1 = {field:document.getElementById("bW1f").value, op:document.getElementById("bW1o").value,
+                value:document.getElementById("bW1v").value.trim()};
+    const c2 = {field:document.getElementById("bW2f").value, op:document.getElementById("bW2o").value,
+                value:document.getElementById("bW2v").value.trim()};
+    const join = document.getElementById("bJoin").value;
+    const conds = [];
+    if(c1.field && c1.value !== "") conds.push(c1);
+    if(join && c2.field && c2.value !== "") conds.push(c2);
+
+    const order = [];
+    const o1 = document.getElementById("bO1f").value;
+    if(o1) order.push({field:o1, dir:document.getElementById("bO1d").value});
+    const o2 = document.getElementById("bO2f").value;
+    if(o1 && o2) order.push({field:o2, dir:document.getElementById("bO2d").value});
+
+    return {fields:bFields.slice(), where:{join:join || "AND", conds:conds}, order:order};
+  }
+
+  function renderBuild(){
+    let f = "";
+    FIELDS.forEach(x => {
+      f += "<span class='fchip" + (bFields.indexOf(x) > -1 ? " on" : "") + "' data-f='" + x + "'>" + x + "</span>";
+    });
+    document.getElementById("bFields").innerHTML = f;
+    document.querySelectorAll("#bFields .fchip").forEach(el => {
+      el.onclick = function(){
+        const x = el.dataset.f, i = bFields.indexOf(x);
+        if(i > -1){ if(bFields.length > 1) bFields.splice(i, 1); }
+        else bFields.push(x);
+        renderBuild();
+      };
+    });
+
+    const q = readBuild();
+    renderDesign(document.getElementById("bQd"), q, null);
+    renderSql(document.getElementById("bSql"), q, null);
+
+    const rows = sortRows(PUPILS.filter(r => passes(r, q.where)), q.order);
+    const t = document.getElementById("bTable");
+    if(rows.length === 0){
+      t.innerHTML = "<tbody><tr><td class='empty'>No records match — every pupil failed the WHERE condition. " +
+                    "If both conditions test the same field for different values, try OR instead of AND.</td></tr></tbody>";
+    } else {
+      let h = "<thead><tr>";
+      q.fields.forEach(x => h += "<th class='keep'>" + x + "</th>");
+      h += "</tr></thead><tbody>";
+      rows.forEach(r => {
+        h += "<tr>";
+        q.fields.forEach(x => h += "<td>" + esc(r[x]) + "</td>");
+        h += "</tr>";
+      });
+      t.innerHTML = h + "</tbody>";
+    }
+    document.getElementById("bCount").textContent = rows.length + (rows.length === 1 ? " record" : " records");
+    postHeight();
+  }
+
+  fillSelect(document.getElementById("bW1f"), FIELDS, "— field —");
+  fillSelect(document.getElementById("bW2f"), FIELDS, "— field —");
+  fillSelect(document.getElementById("bW1o"), OPS);
+  fillSelect(document.getElementById("bW2o"), OPS);
+  fillSelect(document.getElementById("bO1f"), FIELDS, "— no sort —");
+  fillSelect(document.getElementById("bO2f"), FIELDS, "— no second sort —");
+  document.getElementById("bW1f").value = "house";
+  document.getElementById("bW1v").value = "Curie";
+
+  ["bW1f","bW1o","bW1v","bJoin","bW2f","bW2o","bW2v","bO1f","bO1d","bO2f","bO2d"].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener("change", renderBuild);
+    el.addEventListener("input", renderBuild);
+  });
+  document.getElementById("bReset").onclick = function(){
+    bFields = ["pupilName","house"];
+    document.getElementById("bW1f").value = "house";
+    document.getElementById("bW1o").value = "=";
+    document.getElementById("bW1v").value = "Curie";
+    document.getElementById("bJoin").value = "";
+    document.getElementById("bW2f").value = "";
+    document.getElementById("bW2v").value = "";
+    document.getElementById("bO1f").value = "";
+    document.getElementById("bO2f").value = "";
+    renderBuild();
+  };
+
+  document.querySelectorAll(".tab").forEach(t => {
+    t.onclick = function(){
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
+      t.classList.add("on");
+      const build = t.dataset.mode === "build";
+      document.getElementById("stepMode").style.display = build ? "none" : "";
+      document.getElementById("buildMode").style.display = build ? "" : "none";
+      if(build) renderBuild(); else renderStep();
+    };
+  });
+
+  renderStep();
+  renderBuild();
+})();
+</script>
+</body>
+</html>

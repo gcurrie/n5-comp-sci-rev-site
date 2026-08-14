@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Database Design &amp; Development</div>
     <h1>SQL — SELECT</h1>
-    <p>Searching and sorting a database with SELECT … FROM … WHERE … ORDER BY.</p>
+    <p>Asking a database a question — designing the query first, then writing it as SELECT … FROM … WHERE … ORDER BY.</p>
   </div>
 </section>
 <main class="page-content">
@@ -41,167 +41,959 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#structure">The SELECT Query</a></li>
-          <li><a href="#sorting">Sorting with ORDER BY</a></li>
-          <li><a href="#conditions">AND &amp; OR Conditions</a></li>
-          <li><a href="#reading">Reading a Query's Output</a></li>
-          <li><a href="#visualiser">Try It — Query in Action</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#database">The Database We Will Use</a></li>
+          <li><a href="#anatomy">Anatomy of a Query</a></li>
+          <li><a href="#select-from">SELECT and FROM</a></li>
+          <li><a href="#where">WHERE — Search Criteria</a></li>
+          <li><a href="#complex">Complex Search Criteria</a></li>
+          <li><a href="#order">ORDER BY — Sort Order</a></li>
+          <li><a href="#complex-sorts">Complex Sorts</a></li>
+          <li><a href="#visualiser">Try It — Step a Query</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="structure">The SELECT Query</h2>
-        <p>At National 5 you must be able to <strong>read, understand, explain and write</strong> SQL SELECT queries. A SELECT query <strong>searches or sorts</strong> a database, and follows this structure:</p>
-        <div class="code-block code-sql">
-          <div class="code-label">SQL — the full structure</div>
-          <pre>SELECT Registration, Make, Model
-FROM Car
-WHERE Colour = "Blue"
-ORDER BY Mileage DESC;</pre>
-        </div>
+        <h2 id="intro">Introduction</h2>
+        <p>A database is only useful if you can get things <em>out</em> of it. On the <a href="database-introduction.html">introduction page</a> you saw that almost everything people do with an app comes down to searching, sorting and filtering. A <strong>query</strong> is how you ask for exactly that.</p>
+        <p>A query is a <strong>question you ask a database</strong>. You state which information you want and which conditions it has to meet, and the database hands back only the records that qualify. Every search box, every "sort by price", every "filter: in stock" is a query running behind the glass.</p>
+        <p>The language for writing queries is <strong>SQL</strong> — Structured Query Language — and the query that asks questions is the <strong>SELECT</strong> query. A SELECT query never changes the data. It only <strong>looks</strong>, and it lets you do three things at once:</p>
         <ul>
-          <li><code>SELECT</code> — the field(s) to display</li>
-          <li><code>FROM</code> — the table the data comes from</li>
-          <li><code>WHERE</code> — the search condition <em>(optional)</em></li>
-          <li><code>ORDER BY</code> — the sort order <em>(optional)</em></li>
+          <li><strong>Choose the fields</strong> you want to see, instead of the whole table.</li>
+          <li><strong>Choose the records</strong> you want, by setting a search condition.</li>
+          <li><strong>Choose the order</strong> they come back in.</li>
         </ul>
-        <p>Without the optional clauses, the query displays every record. To show <strong>all fields</strong>, use the asterisk wildcard:</p>
-        <div class="code-block code-sql">
-          <div class="code-label">SQL — all fields, all records</div>
-          <pre>SELECT *
-FROM Car;</pre>
+        <p>This page deals with <strong>single-table queries</strong> — everything comes from one table. Pulling data from two tables at once is a <a href="sql-joins.html">join</a>, and that has a page of its own.</p>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Query</div><div class="def">A question asked of a database, which returns the records matching what was asked for.</div></div>
+          <div class="key-term"><div class="term">SQL</div><div class="def">Structured Query Language — the language queries are written in.</div></div>
+          <div class="key-term"><div class="term">SELECT query</div><div class="def">A query that searches and sorts a database and displays the result. It does not change any stored data.</div></div>
+          <div class="key-term"><div class="term">Query design</div><div class="def">The plan for a query, written before the SQL: the fields, the tables, the search criteria and the sort order.</div></div>
+          <div class="key-term"><div class="term">Search criteria</div><div class="def">The condition a record must meet to be included — e.g. <code>house = "Curie"</code>.</div></div>
+          <div class="key-term"><div class="term">Sort order</div><div class="def">The field the results are ordered by, and whether that is ascending or descending.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe and implement</strong> a SELECT query — writing SQL from a description, <strong>designing</strong> a query before writing it, <strong>stating the output</strong> a given query would produce, and <strong>completing the sort order</strong> when you are shown a sorted output table.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="sorting">Sorting with ORDER BY</h2>
-        <p>Use <code>ASC</code> to sort A→Z / smallest→largest, or <code>DESC</code> for the reverse. At N5, you can sort on a <strong>maximum of two fields</strong>:</p>
-        <div class="code-block code-sql">
-          <div class="code-label">SQL — sorting</div>
-          <pre>SELECT Registration, Make, Model
-FROM Car
-WHERE Colour = "Blue"
-ORDER BY Registration ASC;
+        <h2 id="database">The Database We Will Use</h2>
+        <p>Every example on this page runs against the school database you built on the <a href="design.html">design page</a> — one club has many pupils, linked by <code>clubID</code>.</p>
 
--- Two-field sort: by make A-Z, then newest first within each make
-SELECT *
-FROM Car
-ORDER BY Make ASC, Year DESC;</pre>
-        </div>
-      </article>
-
-      <article>
-        <h2 id="conditions">Complex Conditions — AND &amp; OR</h2>
-        <p>The <code>WHERE</code> clause can combine conditions with <code>AND</code> and <code>OR</code>, and use the <code>&lt;</code>, <code>&gt;</code> and <code>=</code> operators:</p>
-        <div class="code-block code-sql">
-          <div class="code-label">SQL — multiple conditions</div>
-          <pre>-- Both conditions must be true
-SELECT Registration, Make, Model
-FROM Car
-WHERE Colour = "Red" AND Year = 2009;
-
--- Either condition can be true
-SELECT Registration, Make, Model
-FROM Car
-WHERE Colour = "Red" OR Colour = "Blue";
-
--- A range
-SELECT Registration, Make, Model
-FROM Car
-WHERE Year &gt;= 2009 AND Year &lt;= 2018;</pre>
-        </div>
-      </article>
-
-      <article>
-        <h2 id="reading">Reading a Query's Output</h2>
-        <p>The other common exam question gives you a query and asks you to <strong>state or describe its output</strong>. Use a three-step method:</p>
-        <div class="worked-example">
-          <div class="q-label">Worked Example — what does this query display?</div>
-          <div class="code-block code-sql">
-            <pre>SELECT Make, Model, Registration
-FROM Car
-WHERE Colour = "Black";</pre>
-          </div>
+        <div class="example-block">
+          <div class="example-label">Table — Pupil</div>
           <div style="overflow-x:auto;">
             <table>
-              <thead><tr><th>Registration</th><th>Make</th><th>Model</th><th>Colour</th><th>Year</th></tr></thead>
+              <thead><tr><th>pupilID</th><th>pupilName</th><th>dateOfBirth</th><th>yearGroup</th><th>house</th><th>meritPoints</th><th>clubID</th></tr></thead>
               <tbody>
-                <tr><td>SK19 TRE</td><td>Ford</td><td>Fiesta</td><td>Red</td><td>2019</td></tr>
-                <tr><td>ST99 FDT</td><td>Volkswagen</td><td>Golf</td><td>Black</td><td>2017</td></tr>
-                <tr><td>SG02 PLM</td><td>Vauxhall</td><td>Corsa</td><td>Blue</td><td>2015</td></tr>
-                <tr><td>SH88 NNG</td><td>Nissan</td><td>Qashqai</td><td>Black</td><td>2018</td></tr>
+                <tr><td>P101</td><td>Archie</td><td>14/03/2010</td><td>4</td><td>Churchill</td><td>42</td><td>C01</td></tr>
+                <tr><td>P102</td><td>Noah</td><td>02/11/2009</td><td>5</td><td>Curie</td><td>18</td><td>C03</td></tr>
+                <tr><td>P103</td><td>Mason</td><td>27/06/2010</td><td>4</td><td>Montgomerie</td><td>55</td><td>C01</td></tr>
+                <tr><td>P104</td><td>Christian</td><td>09/01/2008</td><td>6</td><td>Nightingale</td><td>31</td><td>C02</td></tr>
+                <tr><td>P105</td><td>Leoni</td><td>18/09/2010</td><td>4</td><td>Curie</td><td>67</td><td>C04</td></tr>
+                <tr><td>P106</td><td>Lucienne</td><td>30/04/2009</td><td>5</td><td>Churchill</td><td>24</td><td>C03</td></tr>
+                <tr><td>P107</td><td>Erika</td><td>12/12/2011</td><td>3</td><td>Montgomerie</td><td>49</td><td>C04</td></tr>
+                <tr><td>P108</td><td>Louie</td><td>05/07/2009</td><td>5</td><td>Nightingale</td><td>12</td><td>C01</td></tr>
+                <tr><td>P109</td><td>Matthew</td><td>21/02/2011</td><td>3</td><td>Curie</td><td>38</td><td>C02</td></tr>
+                <tr><td>P110</td><td>Riley</td><td>08/05/2010</td><td>4</td><td>Churchill</td><td>71</td><td>C04</td></tr>
+                <tr><td>P111</td><td>Harveer</td><td>16/10/2008</td><td>6</td><td>Nightingale</td><td>26</td><td>C03</td></tr>
               </tbody>
             </table>
           </div>
-          <ol>
-            <li><strong>Identify the fields to display</strong> — the SELECT clause gives the column headings: Make, Model, Registration.</li>
-            <li><strong>Check the WHERE condition</strong> — Colour = "Black". Two cars match: the Volkswagen and the Nissan.</li>
-            <li><strong>Extract the information</strong> for the matching records only.</li>
-          </ol>
-          <p><strong>Output:</strong></p>
-          <table>
-            <thead><tr><th>Make</th><th>Model</th><th>Registration</th></tr></thead>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Table — Club</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>clubID</th><th>clubName</th><th>meetingDay</th><th>meetingTime</th><th>staffLead</th><th>equipmentProvided</th></tr></thead>
+              <tbody>
+                <tr><td>C01</td><td>Chess Club</td><td>Monday</td><td>15:30</td><td>Mr Anderson</td><td>TRUE</td></tr>
+                <tr><td>C02</td><td>Debating</td><td>Tuesday</td><td>13:05</td><td>Ms Hendry</td><td>FALSE</td></tr>
+                <tr><td>C03</td><td>Film Making</td><td>Thursday</td><td>15:30</td><td>Mrs Kaur</td><td>TRUE</td></tr>
+                <tr><td>C04</td><td>Athletics</td><td>Wednesday</td><td>16:00</td><td>Miss Lawson</td><td>FALSE</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Exam questions nearly always <strong>show you both tables</strong>, even when the query only needs one. That is not a hint that you need a join — it is context. Read what is being asked for, work out which single table holds it, and ignore the other.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="anatomy">Anatomy of a Query</h2>
+        <p>A SELECT query is built from four clauses, always written in this order:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — the full structure</div>
+          <pre>SELECT  pupilName, house
+FROM    Pupil
+WHERE   house = "Curie"
+ORDER BY meritPoints DESC;</pre>
+        </div>
+        <table>
+          <thead><tr><th>Clause</th><th>What it does</th><th>Needed?</th></tr></thead>
+          <tbody>
+            <tr><td><code>SELECT</code></td><td>Lists the <strong>fields</strong> to display — these become the column headings of the result.</td><td><strong>Always</strong></td></tr>
+            <tr><td><code>FROM</code></td><td>Names the <strong>table</strong> the data comes from.</td><td><strong>Always</strong></td></tr>
+            <tr><td><code>WHERE</code></td><td>Sets the <strong>search criteria</strong> — the condition a record must meet to be included.</td><td>Optional</td></tr>
+            <tr><td><code>ORDER BY</code></td><td>Sets the <strong>sort order</strong> of the results.</td><td>Optional</td></tr>
+          </tbody>
+        </table>
+        <p>Leave out <code>WHERE</code> and you get every record. Leave out <code>ORDER BY</code> and the records come back in whatever order the table holds them.</p>
+
+        <h3>Design first, then write</h3>
+        <p>Before writing a single word of SQL, plan the query as a <strong>query design</strong> — four questions, in the same order as the four clauses. Answer those and the SQL almost writes itself, because each line of the design becomes one clause:</p>
+
+        <figure style="margin:1.25rem 0;">
+          <svg class="qd-svg" viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="qdTitle qdDesc" style="width:100%;height:auto;">
+            <title id="qdTitle">How a query design maps onto the four SQL clauses</title>
+            <desc id="qdDesc">A query design table on the left with four rows — Field(s) is pupilName and house, Table(s) is Pupil, Search criteria is house equals Curie, and Sort order is meritPoints descending. Four arrows point right to the matching SQL clauses: SELECT pupilName, house; FROM Pupil; WHERE house = "Curie"; ORDER BY meritPoints DESC.</desc>
+            <style>
+              .qd-svg .qd-box { fill:#FFFFFF; stroke:#00442A; stroke-width:2; }
+              .qd-svg .qd-hdr { fill:#00442A; }
+              .qd-svg .qd-hdr-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:11px; font-weight:700; letter-spacing:.14em; fill:#FFFFFF; }
+              .qd-svg .qd-lblcell { fill:#E8F5EE; }
+              .qd-svg .qd-lbl { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:11px; font-weight:700; letter-spacing:.06em; fill:#002D1C; }
+              .qd-svg .qd-val { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12px; fill:#1A1A1A; }
+              .qd-svg .qd-rl { stroke:#D1D5DB; stroke-width:1; }
+              .qd-svg .qd-arrow { stroke:#C9A227; stroke-width:2.5; fill:none; }
+              .qd-svg .qd-sqlbg { fill:#0D1117; }
+              .qd-svg .qd-kw { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12.5px; font-weight:700; fill:#C9A227; }
+              .qd-svg .qd-sql { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12.5px; fill:#CDD9E5; }
+            </style>
+            <defs>
+              <marker id="qdHead" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C9A227" />
+              </marker>
+            </defs>
+
+            <!-- design table -->
+            <rect class="qd-lblcell" x="31" y="93" width="158" height="166" />
+            <rect class="qd-box" x="30" y="60" width="400" height="200" />
+            <rect class="qd-hdr" x="31" y="61" width="398" height="32" />
+            <text class="qd-hdr-t" x="44" y="82">QUERY DESIGN</text>
+            <line class="qd-rl" x1="31" y1="135" x2="429" y2="135" />
+            <line class="qd-rl" x1="31" y1="177" x2="429" y2="177" />
+            <line class="qd-rl" x1="31" y1="219" x2="429" y2="219" />
+            <line class="qd-rl" x1="189" y1="93" x2="189" y2="259" />
+            <text class="qd-lbl" x="44" y="118">FIELD(S)</text>
+            <text class="qd-lbl" x="44" y="160">TABLE(S)</text>
+            <text class="qd-lbl" x="44" y="202">SEARCH</text>
+            <text class="qd-lbl" x="44" y="244">SORT ORDER</text>
+            <text class="qd-val" x="203" y="118">pupilName, house</text>
+            <text class="qd-val" x="203" y="160">Pupil</text>
+            <text class="qd-val" x="203" y="202">house = "Curie"</text>
+            <text class="qd-val" x="203" y="244">meritPoints, desc</text>
+
+            <!-- arrows -->
+            <g class="qd-arrow" marker-end="url(#qdHead)">
+              <line x1="438" y1="114" x2="502" y2="114" />
+              <line x1="438" y1="156" x2="502" y2="156" />
+              <line x1="438" y1="198" x2="502" y2="198" />
+              <line x1="438" y1="240" x2="502" y2="240" />
+            </g>
+
+            <!-- sql -->
+            <rect class="qd-sqlbg" x="512" y="60" width="358" height="200" />
+            <text class="qd-hdr-t" x="526" y="82">SQL</text>
+            <line class="qd-rl" x1="512" y1="93" x2="870" y2="93" opacity=".25" />
+            <text x="526" y="118"><tspan class="qd-kw">SELECT</tspan><tspan class="qd-sql" dx="8">pupilName, house</tspan></text>
+            <text x="526" y="160"><tspan class="qd-kw">FROM</tspan><tspan class="qd-sql" dx="8">Pupil</tspan></text>
+            <text x="526" y="202"><tspan class="qd-kw">WHERE</tspan><tspan class="qd-sql" dx="8">house = "Curie"</tspan></text>
+            <text x="526" y="244"><tspan class="qd-kw">ORDER BY</tspan><tspan class="qd-sql" dx="8">meritPoints DESC;</tspan></text>
+          </svg>
+        </figure>
+
+        <p>Every example below follows the same three stages: <strong>design it</strong>, <strong>write it</strong>, <strong>check the output</strong>. Get into that habit now and the exam questions that ask you to design a query become free marks.</p>
+      </article>
+
+      <article>
+        <h2 id="select-from">SELECT and FROM</h2>
+        <p><code>SELECT</code> lists the fields you want to see, separated by commas, and <code>FROM</code> names the table they live in. Between them they are the smallest query you can write — no conditions, no sorting, just "show me these columns from this table".</p>
+        <p>The fields appear in the output <strong>in the order you list them</strong>, not the order they sit in the table.</p>
+
+        <div class="example-block">
+          <div class="example-label">Example 1 — every pupil's name and house</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
             <tbody>
-              <tr><td>Volkswagen</td><td>Golf</td><td>ST99 FDT</td></tr>
-              <tr><td>Nissan</td><td>Qashqai</td><td>SH88 NNG</td></tr>
+              <tr><th scope="row">Field(s)</th><td>pupilName, house</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td class="none">none — every pupil is wanted</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
             </tbody>
           </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, house
+FROM Pupil;</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilName</th><th>house</th></tr></thead>
+              <tbody>
+                <tr><td>Archie</td><td>Churchill</td></tr>
+                <tr><td>Noah</td><td>Curie</td></tr>
+                <tr><td>Mason</td><td>Montgomerie</td></tr>
+                <tr><td>Christian</td><td>Nightingale</td></tr>
+                <tr><td>Leoni</td><td>Curie</td></tr>
+                <tr><td>Lucienne</td><td>Churchill</td></tr>
+                <tr><td>Erika</td><td>Montgomerie</td></tr>
+                <tr><td>Louie</td><td>Nightingale</td></tr>
+                <tr><td>Matthew</td><td>Curie</td></tr>
+                <tr><td>Riley</td><td>Churchill</td></tr>
+                <tr><td>Harveer</td><td>Nightingale</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>All <strong>11</strong> records come back, because there is no <code>WHERE</code> to cut any of them out — but only <strong>2</strong> of the 7 columns are shown, because only two were listed after <code>SELECT</code>.</p>
+        </div>
+
+        <h3>Showing every field with *</h3>
+        <p>To display <em>all</em> the fields, use the asterisk wildcard instead of listing them:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — all fields, all records</div>
+          <pre>SELECT *
+FROM Club;</pre>
+        </div>
+        <p>That returns the Club table exactly as it appears above — all six fields, all four records.</p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>Two marks are routinely lost here. <strong>Commas go between field names, not after the last one</strong> — <code>SELECT pupilName, house</code>, never <code>SELECT pupilName, house,</code>. And the <strong>table name is singular</strong>: our table is <code>Pupil</code>, not <code>Pupils</code>. Copy it exactly as the question prints it.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="where">WHERE — Search Criteria</h2>
+        <p><code>WHERE</code> is the filter. It sets the <strong>search criteria</strong>: a condition that each record is tested against. Records that pass are included; records that fail are dropped. Nothing is deleted — they simply do not appear in the result.</p>
+
+        <h3>The comparison operators</h3>
+        <p>A condition is built from a <strong>field</strong>, an <strong>operator</strong> and a <strong>value</strong>:</p>
+        <table>
+          <thead><tr><th>Operator</th><th>Means</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>=</code></td><td>equal to</td><td><code>house = "Curie"</code></td></tr>
+            <tr><td><code>!=</code></td><td>not equal to</td><td><code>house != "Curie"</code></td></tr>
+            <tr><td><code>&gt;</code></td><td>greater than</td><td><code>meritPoints &gt; 50</code></td></tr>
+            <tr><td><code>&lt;</code></td><td>less than</td><td><code>meritPoints &lt; 20</code></td></tr>
+            <tr><td><code>&gt;=</code></td><td>greater than or equal to</td><td><code>yearGroup &gt;= 5</code></td></tr>
+            <tr><td><code>&lt;=</code></td><td>less than or equal to</td><td><code>yearGroup &lt;= 4</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>Quote text, never quote numbers.</strong> <code>house = "Curie"</code> needs the double quotes because Curie is text. <code>meritPoints &gt; 50</code> must <em>not</em> have them, because 50 is a number. Watch out for fields that look numeric but are Text — <code>pupilID = "P101"</code> and <code>clubID = "C01"</code> both need quotes, because those are Text attributes.</div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example 2 — pupils in Curie house</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilID, pupilName</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>house = "Curie"</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilID, pupilName
+FROM Pupil
+WHERE house = "Curie";</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <table>
+            <thead><tr><th>pupilID</th><th>pupilName</th></tr></thead>
+            <tbody>
+              <tr><td>P102</td><td>Noah</td></tr>
+              <tr><td>P105</td><td>Leoni</td></tr>
+              <tr><td>P109</td><td>Matthew</td></tr>
+            </tbody>
+          </table>
+          <p>Three of the eleven records pass the test. Notice that <code>house</code> does not appear in the output — you can search on a field without displaying it.</p>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example 3 — a number comparison</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, meritPoints</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>meritPoints &gt; 50</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, meritPoints
+FROM Pupil
+WHERE meritPoints &gt; 50;</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>meritPoints</th></tr></thead>
+            <tbody>
+              <tr><td>Mason</td><td>55</td></tr>
+              <tr><td>Leoni</td><td>67</td></tr>
+              <tr><td>Riley</td><td>71</td></tr>
+            </tbody>
+          </table>
+          <p>Watch the boundary. <code>&gt; 50</code> means <em>more than</em> 50, so a pupil on exactly 50 would be left out. If the question says "50 or more", you need <code>&gt;= 50</code>.</p>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example 4 — "not equal to" with !=</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, house</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>house != "Churchill"</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, house
+FROM Pupil
+WHERE house != "Churchill";</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>house</th></tr></thead>
+            <tbody>
+              <tr><td>Noah</td><td>Curie</td></tr>
+              <tr><td>Mason</td><td>Montgomerie</td></tr>
+              <tr><td>Christian</td><td>Nightingale</td></tr>
+              <tr><td>Leoni</td><td>Curie</td></tr>
+              <tr><td>Erika</td><td>Montgomerie</td></tr>
+              <tr><td>Louie</td><td>Nightingale</td></tr>
+              <tr><td>Matthew</td><td>Curie</td></tr>
+              <tr><td>Harveer</td><td>Nightingale</td></tr>
+            </tbody>
+          </table>
+          <p>Eight records — everyone except the three Churchill pupils. <code>!=</code> is often the shortest way to write "everyone apart from…".</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="complex">Complex Search Criteria — AND and OR</h2>
+        <p>A <strong>simple</strong> condition tests one thing. A <strong>complex</strong> condition joins two or more together with <code>AND</code> or <code>OR</code>, and the difference between them decides how many records come back:</p>
+        <ul>
+          <li><code>AND</code> — a record must satisfy <strong>every</strong> condition. Each extra AND makes the result <strong>smaller</strong>.</li>
+          <li><code>OR</code> — a record only has to satisfy <strong>one</strong> condition. Each extra OR makes the result <strong>bigger</strong>.</li>
+        </ul>
+
+        <div class="example-block">
+          <div class="example-label">Example 5 — AND: S4 pupils who are in Churchill</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, yearGroup, house</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>yearGroup = 4 AND house = "Churchill"</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, yearGroup, house
+FROM Pupil
+WHERE yearGroup = 4 AND house = "Churchill";</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>yearGroup</th><th>house</th></tr></thead>
+            <tbody>
+              <tr><td>Archie</td><td>4</td><td>Churchill</td></tr>
+              <tr><td>Riley</td><td>4</td><td>Churchill</td></tr>
+            </tbody>
+          </table>
+          <p>Four pupils are in S4 and three are in Churchill, but only <strong>two</strong> are both. Mason is S4 but Montgomerie; Lucienne is Churchill but S5. Neither survives an AND.</p>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example 6 — OR: pupils in Curie or Nightingale</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, house</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>house = "Curie" OR house = "Nightingale"</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, house
+FROM Pupil
+WHERE house = "Curie" OR house = "Nightingale";</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>house</th></tr></thead>
+            <tbody>
+              <tr><td>Noah</td><td>Curie</td></tr>
+              <tr><td>Christian</td><td>Nightingale</td></tr>
+              <tr><td>Leoni</td><td>Curie</td></tr>
+              <tr><td>Louie</td><td>Nightingale</td></tr>
+              <tr><td>Matthew</td><td>Curie</td></tr>
+              <tr><td>Harveer</td><td>Nightingale</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>The trap that catches everyone.</strong> The question says "pupils in Curie <em>and</em> Nightingale", so you write <code>AND</code> — and get <strong>nothing back</strong>, because no pupil is in two houses at once. When two conditions test the <strong>same field</strong> for <strong>different values</strong>, the answer is almost always <code>OR</code>. Ask yourself whether one record could possibly satisfy both; if it cannot, AND is wrong.</div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example 7 — a range using AND</div>
+          <p>To find values <em>between</em> two limits, you need two conditions on the same field joined by AND — one for the lower limit and one for the upper.</p>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, meritPoints</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>meritPoints &gt;= 20 AND meritPoints &lt;= 50</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, meritPoints
+FROM Pupil
+WHERE meritPoints &gt;= 20 AND meritPoints &lt;= 50;</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>meritPoints</th></tr></thead>
+            <tbody>
+              <tr><td>Archie</td><td>42</td></tr>
+              <tr><td>Christian</td><td>31</td></tr>
+              <tr><td>Lucienne</td><td>24</td></tr>
+              <tr><td>Erika</td><td>49</td></tr>
+              <tr><td>Matthew</td><td>38</td></tr>
+              <tr><td>Harveer</td><td>26</td></tr>
+            </tbody>
+          </table>
+          <p>This is the one case where <code>AND</code> on the same field <em>is</em> right — because a single value can be both "at least 20" and "at most 50" at the same time. Note the field name has to be repeated: <code>meritPoints &gt;= 20 AND meritPoints &lt;= 50</code>, never <code>meritPoints &gt;= 20 AND &lt;= 50</code>.</p>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example 8 — two different fields with AND</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, meritPoints</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>house = "Curie" AND meritPoints &gt; 30</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, meritPoints
+FROM Pupil
+WHERE house = "Curie" AND meritPoints &gt; 30;</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>meritPoints</th></tr></thead>
+            <tbody>
+              <tr><td>Leoni</td><td>67</td></tr>
+              <tr><td>Matthew</td><td>38</td></tr>
+            </tbody>
+          </table>
+          <p>Three pupils are in Curie, but Noah's 18 merit points fail the second test, so only two records survive.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Design a Query — The Head of House's Request (4 marks)</div>
+          <p>The head of Curie house asks for a list she can pin on her wall:</p>
+          <p><em>"Can I get the name and merit points of everyone in my house who has more than 30 merit points, with the highest scorer at the top?"</em></p>
+          <p><strong>Complete a query design for this, then write the SQL.</strong></p>
+          <p><strong>How to tackle it:</strong> we do not start writing SQL. We take the sentence apart into the four design rows, in order, because each one becomes a clause.</p>
+          <p><strong>Field(s)</strong> — the words to look for are "get the … of". She asks for "the name and merit points", so that is <code>pupilName, meritPoints</code>. She does <em>not</em> ask for the house, even though the house is mentioned — it is a condition, not something to display.</p>
+          <p><strong>Table(s)</strong> — everything named lives in Pupil. The Club table is irrelevant here, however prominently it is printed in the question.</p>
+          <p><strong>Search criteria</strong> — there are two conditions hiding in that sentence. "in my house" gives <code>house = "Curie"</code>, and "more than 30 merit points" gives <code>meritPoints &gt; 30</code>. Both must be true of the same pupil, so they are joined with <strong>AND</strong>.</p>
+          <p><strong>Sort order</strong> — "highest scorer at the top" means merit points, largest first, which is <strong>descending</strong>.</p>
+          <p><strong>Watch the trap:</strong> "more than 30" is <code>&gt; 30</code>, not <code>&gt;= 30</code>. If a pupil sat on exactly 30 they would be excluded, and the marker will have chosen the data to catch that.</p>
+          <p>So the design is:</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, meritPoints</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>house = "Curie" AND meritPoints &gt; 30</td></tr>
+              <tr><th scope="row">Sort order</th><td>meritPoints, descending</td></tr>
+            </tbody>
+          </table>
+          <p>And it converts to SQL a line at a time:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>SELECT pupilName, meritPoints
+FROM Pupil
+WHERE house = "Curie" AND meritPoints &gt; 30
+ORDER BY meritPoints DESC;</pre>
+          </div>
+          <p>Which produces:</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>meritPoints</th></tr></thead>
+            <tbody>
+              <tr><td>Leoni</td><td>67</td></tr>
+              <tr><td>Matthew</td><td>38</td></tr>
+            </tbody>
+          </table>
+          <p style="color:#6A1B9A;">1 mark for the correct fields and table · 1 mark for <strong>house = "Curie"</strong> · 1 mark for <strong>meritPoints &gt; 30</strong> joined with AND · 1 mark for <strong>meritPoints descending</strong>.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="order">ORDER BY — Sort Order</h2>
+        <p><code>ORDER BY</code> decides the order the results are listed in. It names the field to sort on, followed by the direction:</p>
+        <ul>
+          <li><code>ASC</code> — <strong>ascending</strong>: A→Z for text, smallest→largest for numbers, oldest→newest for dates.</li>
+          <li><code>DESC</code> — <strong>descending</strong>: Z→A, largest→smallest, newest→oldest.</li>
+        </ul>
+        <p>Sorting happens <strong>last</strong>, after the WHERE has already thrown records away — so you are only ever sorting the records that survived.</p>
+
+        <div class="example-block">
+          <div class="example-label">Example 9 — a descending sort</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, meritPoints</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td class="none">none</td></tr>
+              <tr><th scope="row">Sort order</th><td>meritPoints, descending</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, meritPoints
+FROM Pupil
+ORDER BY meritPoints DESC;</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilName</th><th>meritPoints</th></tr></thead>
+              <tbody>
+                <tr><td>Riley</td><td>71</td></tr>
+                <tr><td>Leoni</td><td>67</td></tr>
+                <tr><td>Mason</td><td>55</td></tr>
+                <tr><td>Erika</td><td>49</td></tr>
+                <tr><td>Archie</td><td>42</td></tr>
+                <tr><td>Matthew</td><td>38</td></tr>
+                <tr><td>Christian</td><td>31</td></tr>
+                <tr><td>Harveer</td><td>26</td></tr>
+                <tr><td>Lucienne</td><td>24</td></tr>
+                <tr><td>Noah</td><td>18</td></tr>
+                <tr><td>Louie</td><td>12</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>All eleven records are still here — there is no WHERE. Only the <em>order</em> has changed.</p>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Example 10 — an ascending sort on text</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, yearGroup</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>yearGroup &lt;= 4</td></tr>
+              <tr><th scope="row">Sort order</th><td>pupilName, ascending</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, yearGroup
+FROM Pupil
+WHERE yearGroup &lt;= 4
+ORDER BY pupilName ASC;</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>yearGroup</th></tr></thead>
+            <tbody>
+              <tr><td>Archie</td><td>4</td></tr>
+              <tr><td>Erika</td><td>3</td></tr>
+              <tr><td>Leoni</td><td>4</td></tr>
+              <tr><td>Mason</td><td>4</td></tr>
+              <tr><td>Matthew</td><td>3</td></tr>
+              <tr><td>Riley</td><td>4</td></tr>
+            </tbody>
+          </table>
+          <p>Six pupils are in S3 or S4, and they come back in alphabetical order by name. Note that the year groups are <em>not</em> in order — the sort was on the name, not the year.</p>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>If you leave the direction off, most databases assume <code>ASC</code>. Write it anyway — an examiner cannot give you a mark for a direction you did not put on the page, and it costs three letters.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="complex-sorts">Complex Sorts</h2>
+        <p>A <strong>simple sort</strong> orders on one field. A <strong>complex sort</strong> orders on <strong>two</strong>, separated by a comma:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — the shape of a complex sort</div>
+          <pre>ORDER BY firstField ASC, secondField DESC;</pre>
+        </div>
+        <p>The <strong>first field is the main sort</strong>. The second only comes into play <em>within</em> a group where the first field is tied — it decides the order of the records that would otherwise be level. Each field gets its own direction, and they do not have to match.</p>
+
+        <div class="example-block">
+          <div class="example-label">Example 11 — by house A→Z, then by merit points highest first</div>
+          <p class="stage-step">1 · Design</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, yearGroup, house, meritPoints, clubID</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td class="none">none</td></tr>
+              <tr><th scope="row">Sort order</th><td>house ascending, then meritPoints descending</td></tr>
+            </tbody>
+          </table>
+          <p class="stage-step">2 · SQL</p>
+          <div class="code-block code-sql">
+            <pre>SELECT pupilName, yearGroup, house, meritPoints, clubID
+FROM Pupil
+ORDER BY house ASC, meritPoints DESC;</pre>
+          </div>
+          <p class="stage-step">3 · Output</p>
+          <p>Here is the output the query produces. Rather than print it flat, watch it take itself apart — the animation finds the repeating column first, then works inside the blocks, then rules out the column that only <em>looks</em> sorted.</p>
+          <iframe src="../resources/ddd/visualisers/complex-sort-animator.html"
+                  title="Animated reading of a complex sort: the house column repeats in blocks, meritPoints falls inside every block, and yearGroup is ruled out because it is only in order in the first block"
+                  class="figure-embed"
+                  loading="lazy"
+                  style="height:760px"></iframe>
+          <p>Read it in two passes. <strong>Down the house column</strong>: Churchill, Curie, Montgomerie, Nightingale — alphabetical from top to bottom, so that is the first sort, ascending. <strong>Within each house block</strong>: 71, 42, 24 … then 67, 38, 18 … — every block counts downwards, so the second sort is merit points descending. The numbers restart at the top of each new house, which is the giveaway that they are the <em>second</em> sort and not the first.</p>
+          <p>Three of the five columns are doing nothing at all, and that is deliberate — a real exam output gives you every field the query selected, not just the two that were sorted.</p>
+
+          <div class="callout callout-warning">
+            <div class="callout-icon">⚠️</div>
+            <div><strong>Check more than one block.</strong> Glance at <code>yearGroup</code> in the Churchill block — 4, 4, 5. That climbs, so it looks like the second sort might be <code>yearGroup ASC</code>. Now look at the very next block, Curie: 4, 3, 5. That is not in order at all, so yearGroup is ruled out. A column can fall into order inside one group purely by chance; it is only the second sort if it holds for <strong>every</strong> group.</div>
+          </div>
+        </div>
+
+        <h3>Working the sort out from an output table</h3>
+        <p>The commonest exam question here does not describe the sort at all — it shows you a sorted output and asks you to complete the <code>ORDER BY</code>. Four steps do it every time:</p>
+        <ol>
+          <li><strong>Find the column that is in order all the way down</strong> — that is the first sort field. Decide its direction from whether it climbs or falls.</li>
+          <li><strong>Find a block where that column repeats.</strong> The first sort cannot separate those rows, so something else must be ordering them.</li>
+          <li><strong>Look at the other columns inside that block only.</strong> Whichever one is in order there is your candidate for the second sort field — climbing means ASC, falling means DESC.</li>
+          <li><strong>Confirm it against a different block.</strong> This is the step people skip, and it is the one the distractor columns are there to punish. A column can easily land in order inside one group by luck; the second sort has to work in <em>every</em> group, in the <em>same</em> direction.</li>
+        </ol>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Completing a Sorted Output (2 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_order_q1.png" alt="Exam question: a sorted output from a Product table showing productCode, productName, manufacturer and description, with rows 366 Picture Frame Frame Design, 439 Crystal Vase Glass Gifts, 316 Glass Bowl Glass Gifts, 285 Scented Candle WaxWorks, 123 Candle Holder WaxWorks, 56 Tea Lights WaxWorks, 112 Place Mats Zingy Zebra. Complete the SQL statement used to produce this sorted output, with SELECT and FROM given and ORDER BY left blank." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the SELECT and FROM lines are already printed, so every mark is in the <code>ORDER BY</code>. We apply the three steps to the output table.</p>
+          <p><strong>Step 1 — which column is in order all the way down?</strong> It is not productCode: 366, 439, 316, 285, 123, 56, 112 jumps around. Look at manufacturer: Frame Design, Glass Gifts, Glass Gifts, WaxWorks, WaxWorks, WaxWorks, Zingy Zebra. That is alphabetical from top to bottom, so the <strong>first sort is manufacturer, ascending</strong>.</p>
+          <p><strong>Step 2 — find a repeating block.</strong> WaxWorks appears three times in a row. Those three rows are tied on the first sort, so something else is deciding their order.</p>
+          <p><strong>Step 3 — look inside that block.</strong> The WaxWorks product codes run 285, 123, 56 — falling. Check it against the Glass Gifts block too: 439, 316 — also falling. So the <strong>second sort is productCode, descending</strong>.</p>
+          <p><strong>Watch the trap:</strong> productCode is the eye-catching column because it is first and it is numbers, and it is tempting to lead with it. But it is only in order <em>inside</em> each manufacturer group, never across the whole table — that is exactly what makes it the second sort rather than the first.</p>
+          <img src="../resources/ddd/worked-examples/n5_order_q1_ans.png" alt="Marking instructions: one mark for first sort manufacturer ascending; if first sort present then one mark for second sort productCode DESC. Do not accept manufacturer DESC. Allow ascending and descending as not scaffolded. productCode DESC on its own scores 0 marks." class="zoomable" />
+          <p>Two details in the marking instructions are worth taking to heart. The second mark is only available <strong>if the first sort is present</strong> — writing "productCode DESC" on its own scores <strong>zero</strong>, even though it is half right. And "manufacturer DESC" is explicitly rejected, so the direction has to be correct, not just the field.</p>
+          <p>So the answer is:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>ORDER BY manufacturer ASC, productCode DESC;</pre>
+          </div>
+          <p style="color:#6A1B9A;">1 mark: first sort <strong>manufacturer (ASC)</strong>. 1 mark (only if the first sort is present): second sort <strong>productCode DESC</strong>.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Write the SQL — Working Backwards From an Output (3 marks)</div>
+          <p>The following output was produced by a query on the <strong>Pupil</strong> table. Write the SQL statement that produced it.</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>yearGroup</th><th>meritPoints</th></tr></thead>
+            <tbody>
+              <tr><td>Riley</td><td>4</td><td>71</td></tr>
+              <tr><td>Leoni</td><td>4</td><td>67</td></tr>
+              <tr><td>Mason</td><td>4</td><td>55</td></tr>
+              <tr><td>Archie</td><td>4</td><td>42</td></tr>
+            </tbody>
+          </table>
+          <p><strong>How to tackle it:</strong> an output table tells you all four parts of the query if you interrogate it in the right order. We rebuild the design from the evidence, then write the SQL from the design.</p>
+          <p><strong>The fields</strong> are the easiest — they are the column headings, read left to right: <code>pupilName, yearGroup, meritPoints</code>. Do not add any others, however useful they might seem.</p>
+          <p><strong>The table</strong> is given to us in the question: Pupil.</p>
+          <p><strong>The search criteria</strong> comes from asking <em>what do these rows share that the missing ones do not?</em> Every row shows yearGroup 4, and checking back against the full table, there are exactly four S4 pupils — Archie, Mason, Leoni and Riley — and all four are here. So the condition is <code>yearGroup = 4</code>. A column where every row holds the <strong>same</strong> value is nearly always the search criteria.</p>
+          <p><strong>The sort order</strong> comes from the column that is in order. It is not pupilName — Riley, Leoni, Mason, Archie is not alphabetical. It is meritPoints: 71, 67, 55, 42, falling, so <code>meritPoints DESC</code>.</p>
+          <p><strong>Watch the trap:</strong> do not be tempted to write <code>WHERE meritPoints &gt; 40</code> because the numbers happen to be over 40. Test it — Erika has 49 and is missing from the output, so that condition is wrong. Always check a candidate condition against a record that <em>should not</em> appear.</p>
+          <p>So the design is:</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, yearGroup, meritPoints</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil</td></tr>
+              <tr><th scope="row">Search criteria</th><td>yearGroup = 4</td></tr>
+              <tr><th scope="row">Sort order</th><td>meritPoints, descending</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>SELECT pupilName, yearGroup, meritPoints
+FROM Pupil
+WHERE yearGroup = 4
+ORDER BY meritPoints DESC;</pre>
+          </div>
+          <p style="color:#6A1B9A;">1 mark for <strong>SELECT</strong> with the three correct fields and <strong>FROM Pupil</strong> · 1 mark for <strong>WHERE yearGroup = 4</strong> · 1 mark for <strong>ORDER BY meritPoints DESC</strong>.</p>
         </div>
       </article>
 
       <article id="visualiser">
+        <h2>Try It — Step a Query</h2>
         <div class="interactive-block">
           <div class="ib-label">Visualiser</div>
-          <p class="ib-title">Query in Action</p>
+          <p class="ib-title">SELECT Query Stepper</p>
           <div class="ib-body">
-            <p class="ib-intro">Step through a SELECT query clause by clause and watch which rows survive the WHERE, how ORDER BY rearranges them, and which columns are displayed.</p>
-            <iframe src="../resources/ddd/visualisers/query-in-action.html"
-                    title="SQL query in action — interactive visualiser"
+            <p class="ib-intro">Watch a query happen one clause at a time against the Pupil table: <strong>FROM</strong> loads every record, <strong>WHERE</strong> strikes out the ones that fail, <strong>ORDER BY</strong> rearranges what is left, and <strong>SELECT</strong> keeps only the chosen columns. Step through the worked queries, or build your own and run it.</p>
+            <iframe src="../resources/ddd/visualisers/select-query-stepper.html"
+                    title="SELECT query stepper — watch FROM, WHERE, ORDER BY and SELECT run one clause at a time against the Pupil table"
                     loading="lazy"
-                    style="height:600px"></iframe>
+                    style="height:1250px"></iframe>
           </div>
         </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="practice">Practice Questions</h2>
+        <p>These use the vet's surgery database from the <a href="design.html#practice">design page</a>, expanded with more data. Both tables are shown — as they would be in an exam — but <strong>every question here needs only one of them</strong>.</p>
+
+        <div class="example-block">
+          <div class="example-label">Table — Owner</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>ownerID</th><th>ownerName</th><th>phone</th><th>town</th></tr></thead>
+              <tbody>
+                <tr><td>OW22</td><td>D Sutherland</td><td>07700 900412</td><td>Troon</td></tr>
+                <tr><td>OW23</td><td>P Ndiaye</td><td>07700 900873</td><td>Ayr</td></tr>
+                <tr><td>OW24</td><td>L Moreau</td><td>07700 900155</td><td>Troon</td></tr>
+                <tr><td>OW25</td><td>S Whyte</td><td>07700 900640</td><td>Prestwick</td></tr>
+                <tr><td>OW26</td><td>M Iqbal</td><td>07700 900297</td><td>Ayr</td></tr>
+                <tr><td>OW27</td><td>J Cameron</td><td>07700 900518</td><td>Troon</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Table — Pet</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>petID</th><th>petName</th><th>species</th><th>dateOfBirth</th><th>weightKg</th><th>vaccinated</th><th>ownerID</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>Bramble</td><td>Dog</td><td>02/05/2021</td><td>24.5</td><td>TRUE</td><td>OW22</td></tr>
+                <tr><td>102</td><td>Nutmeg</td><td>Cat</td><td>19/11/2019</td><td>4.2</td><td>TRUE</td><td>OW24</td></tr>
+                <tr><td>103</td><td>Pepper</td><td>Dog</td><td>07/03/2023</td><td>11.8</td><td>FALSE</td><td>OW22</td></tr>
+                <tr><td>104</td><td>Waffle</td><td>Rabbit</td><td>14/08/2022</td><td>2.1</td><td>TRUE</td><td>OW23</td></tr>
+                <tr><td>105</td><td>Sable</td><td>Cat</td><td>30/01/2020</td><td>5.6</td><td>FALSE</td><td>OW25</td></tr>
+                <tr><td>106</td><td>Rufus</td><td>Dog</td><td>22/06/2018</td><td>31.0</td><td>TRUE</td><td>OW26</td></tr>
+                <tr><td>107</td><td>Pickle</td><td>Rabbit</td><td>05/12/2023</td><td>1.7</td><td>FALSE</td><td>OW23</td></tr>
+                <tr><td>108</td><td>Juno</td><td>Dog</td><td>11/09/2021</td><td>18.3</td><td>TRUE</td><td>OW27</td></tr>
+                <tr><td>109</td><td>Mango</td><td>Bird</td><td>27/04/2022</td><td>0.4</td><td>FALSE</td><td>OW25</td></tr>
+                <tr><td>110</td><td>Willow</td><td>Cat</td><td>03/07/2019</td><td>3.9</td><td>TRUE</td><td>OW26</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — Write a query (3 marks)</div>
-          <p>Using the Car table above, write a query to display the registration and year of all cars newer than 2016, with the newest first.</p>
+          <div class="q-label">Practice Question 1 — A Simple Query (3 marks)</div>
+          <p>Write the SQL to display the name and species of every cat.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
               <div class="code-block code-sql">
-                <div class="code-label">Suggested answer</div>
-                <pre>SELECT Registration, Year
-FROM Car
-WHERE Year &gt; 2016
-ORDER BY Year DESC;</pre>
+                <div class="code-label">Model answer</div>
+                <pre>SELECT petName, species
+FROM Pet
+WHERE species = "Cat";</pre>
               </div>
-              <p>1 mark: SELECT/FROM with correct fields and table. 1 mark: correct WHERE. 1 mark: correct ORDER BY … DESC.</p>
+              <p style="color:#6A1B9A;">1 mark: SELECT with petName and species · 1 mark: FROM Pet · 1 mark: WHERE species = "Cat" with the quotes.</p>
+              <p>Output: Nutmeg, Sable and Willow. Note that the Owner table is not needed — nothing in the question mentions an owner.</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — State the output (2 marks)</div>
-          <p>Using the Car table above, state the output of:</p>
+          <div class="q-label">Practice Question 2 — A Complex Condition (3 marks)</div>
+          <p>The vet needs a list of large dogs for a diet clinic. Write the SQL to display the petID and name of every dog weighing more than 20 kg.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>SELECT petID, petName
+FROM Pet
+WHERE species = "Dog" AND weightKg &gt; 20;</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: correct fields and table · 1 mark: species = "Dog" · 1 mark: AND weightKg &gt; 20.</p>
+              <p>Output: 101 Bramble (24.5) and 106 Rufus (31.0). Juno at 18.3 and Pepper at 11.8 are both dogs but fail the weight test — AND needs both conditions true. Note <code>"Dog"</code> is quoted but <code>20</code> is not.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — OR, Not AND (3 marks)</div>
+          <p>Write the SQL to display the name and species of every pet that is a cat or a rabbit, in alphabetical order by name.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>SELECT petName, species
+FROM Pet
+WHERE species = "Cat" OR species = "Rabbit"
+ORDER BY petName ASC;</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: correct fields and table · 1 mark: the two conditions joined with <strong>OR</strong> · 1 mark: ORDER BY petName ASC.</p>
+              <p>Output in order: Nutmeg, Pickle, Sable, Waffle, Willow.</p>
+              <p><strong>AND scores nothing here.</strong> No pet is both a cat and a rabbit, so <code>species = "Cat" AND species = "Rabbit"</code> returns an empty table. Two conditions on the same field looking for different values always need OR. You must also repeat the field name — <code>species = "Cat" OR "Rabbit"</code> is not valid.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — A Range (3 marks)</div>
+          <p>Write the SQL to display the name and weight of every pet weighing at least 2 kg but no more than 12 kg, heaviest first.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>SELECT petName, weightKg
+FROM Pet
+WHERE weightKg &gt;= 2 AND weightKg &lt;= 12
+ORDER BY weightKg DESC;</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: correct fields and table · 1 mark: both limits, with the field name repeated and joined by AND · 1 mark: ORDER BY weightKg DESC.</p>
+              <p>Output: Pepper 11.8, Sable 5.6, Nutmeg 4.2, Willow 3.9, Waffle 2.1.</p>
+              <p>"At least" and "no more than" both <em>include</em> their limit, so this needs <code>&gt;=</code> and <code>&lt;=</code>. Using <code>&gt;</code> and <code>&lt;</code> would still give the same five pets here — but only by luck, and the marker is testing whether you knew the difference.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Design a Query (4 marks)</div>
+          <p>The practice manager says:</p>
+          <p><em>"I need to chase up vaccinations. Get me the name of every pet that hasn't been vaccinated along with its owner's ID, youngest pet first."</em></p>
+          <p>Complete a query design for this request, then write the SQL.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <table class="query-design">
+                <tbody>
+                  <tr><th scope="row">Field(s)</th><td>petName, ownerID</td></tr>
+                  <tr><th scope="row">Table(s)</th><td>Pet</td></tr>
+                  <tr><th scope="row">Search criteria</th><td>vaccinated = FALSE</td></tr>
+                  <tr><th scope="row">Sort order</th><td>dateOfBirth, descending</td></tr>
+                </tbody>
+              </table>
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>SELECT petName, ownerID
+FROM Pet
+WHERE vaccinated = FALSE
+ORDER BY dateOfBirth DESC;</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: fields petName and ownerID · 1 mark: FROM Pet · 1 mark: vaccinated = FALSE · 1 mark: dateOfBirth descending.</p>
+              <p>Output: Pickle OW23, Pepper OW22, Mango OW25, Sable OW25.</p>
+              <p>Two things to spot. <strong>ownerID is in the Pet table</strong> as a foreign key, so no join is needed — the manager asked for the owner's <em>ID</em>, not their name. And <strong>youngest first means the most recent date of birth first</strong>, which is <code>DESC</code> — the instinct to read "youngest" as "smallest" and write ASC is the trap here.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 6 — Complete the Sort (2 marks)</div>
+          <p>The sorted output below was produced by running a query on the Pet table.</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>petName</th><th>species</th><th>dateOfBirth</th><th>weightKg</th><th>ownerID</th></tr></thead>
+              <tbody>
+                <tr><td>Mango</td><td>Bird</td><td>27/04/2022</td><td>0.4</td><td>OW25</td></tr>
+                <tr><td>Sable</td><td>Cat</td><td>30/01/2020</td><td>5.6</td><td>OW25</td></tr>
+                <tr><td>Nutmeg</td><td>Cat</td><td>19/11/2019</td><td>4.2</td><td>OW24</td></tr>
+                <tr><td>Willow</td><td>Cat</td><td>03/07/2019</td><td>3.9</td><td>OW26</td></tr>
+                <tr><td>Rufus</td><td>Dog</td><td>22/06/2018</td><td>31.0</td><td>OW26</td></tr>
+                <tr><td>Bramble</td><td>Dog</td><td>02/05/2021</td><td>24.5</td><td>OW22</td></tr>
+                <tr><td>Juno</td><td>Dog</td><td>11/09/2021</td><td>18.3</td><td>OW27</td></tr>
+                <tr><td>Pepper</td><td>Dog</td><td>07/03/2023</td><td>11.8</td><td>OW22</td></tr>
+                <tr><td>Waffle</td><td>Rabbit</td><td>14/08/2022</td><td>2.1</td><td>OW23</td></tr>
+                <tr><td>Pickle</td><td>Rabbit</td><td>05/12/2023</td><td>1.7</td><td>OW23</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Complete the SQL statement used to produce this sorted output.</p>
           <div class="code-block code-sql">
-            <pre>SELECT Registration
-FROM Car
-WHERE Colour = "Red" OR Colour = "Blue";</pre>
+            <pre>SELECT petName, species, dateOfBirth, weightKg, ownerID
+FROM Pet
+ORDER BY ________________________</pre>
           </div>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">A single Registration column containing SK19 TRE (red Fiesta) and SG02 PLM (blue Corsa). (1 mark for correct records, 1 mark for showing only the Registration field)</p>
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>ORDER BY species ASC, weightKg DESC;</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: first sort <strong>species (ASC)</strong>. 1 mark, available only if the first sort is present: second sort <strong>weightKg DESC</strong>.</p>
+              <p>Species runs Bird, Cat, Cat, Cat, Dog, Dog, Dog, Dog, Rabbit, Rabbit — alphabetical all the way down, so that is the first sort. Inside the Cat block the weights fall (5.6, 4.2, 3.9) and inside the Dog block they fall too (31.0, 24.5, 18.3, 11.8), so the second sort is weight descending.</p>
+              <p><strong>The trap in this one is <code>dateOfBirth</code>.</strong> Look only at the Cat block and it runs 30/01/2020, 19/11/2019, 03/07/2019 — newest to oldest, a perfectly convincing <code>dateOfBirth DESC</code>. Now check the Dog block: 22/06/2018, 02/05/2021, 11/09/2021, 07/03/2023, which is oldest to newest. The same column cannot be descending in one group and ascending in the next, so it is not the sort field — it just happened to line up in the block you looked at first. <code>ownerID</code> is jumbled in both the Cat block (OW25, OW24, OW26) and the Dog block, so it is ruled out immediately.</p>
+              <p>As in the past-paper question above, <strong>weightKg DESC on its own scores zero</strong> — the second sort mark depends on the first sort being there.</p>
             </div>
           </details>
         </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 7 — Write the SQL From an Output (3 marks)</div>
+          <p>The output below was produced by a query on the Pet table. Write the SQL statement that produced it.</p>
+          <table>
+            <thead><tr><th>petName</th><th>dateOfBirth</th><th>ownerID</th></tr></thead>
+            <tbody>
+              <tr><td>Bramble</td><td>02/05/2021</td><td>OW22</td></tr>
+              <tr><td>Pepper</td><td>07/03/2023</td><td>OW22</td></tr>
+            </tbody>
+          </table>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>SELECT petName, dateOfBirth, ownerID
+FROM Pet
+WHERE ownerID = "OW22"
+ORDER BY dateOfBirth ASC;</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: the three fields from the column headings, and FROM Pet · 1 mark: WHERE ownerID = "OW22" · 1 mark: ORDER BY dateOfBirth ASC.</p>
+              <p>Both rows share OW22, and those are the only two pets belonging to that owner — a column holding the same value in every row is the search criteria. The dates run oldest to newest, so the sort is ascending.</p>
+              <p><code>"OW22"</code> must be <strong>quoted</strong>: ownerID is a Text attribute, even though it ends in digits.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="next">Next — Two Tables at Once</h2>
+        <p>Every query on this page has drawn from a single table. When the information you need is split across <em>both</em> tables — a pupil's name and the name of the club they attend — the query has to link them through the foreign key. That is a <strong>join</strong>, and it is covered on the <a href="sql-joins.html">SQL — Joins</a> page.</p>
       </article>
 
     </div>

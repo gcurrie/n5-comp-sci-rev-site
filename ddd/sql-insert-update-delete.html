@@ -12,14 +12,14 @@
   <div class="breadcrumb">
     <a href="../index.html">Home</a><span class="sep">›</span>
     <a href="index.html">Database Design &amp; Development</a><span class="sep">›</span>
-    <span class="current">SQL — Insert, Update &amp; Delete</span>
+    <span class="current">SQL — Insert/Update/Delete</span>
   </div>
 </div>
 <section class="page-hero hero-image hero-ddd">
   <div class="inner">
     <div class="hero-badge">Database Design &amp; Development</div>
     <h1>SQL — Insert, Update &amp; Delete</h1>
-    <p>Changing the data in a database: adding records with INSERT, editing them with UPDATE, and removing them with DELETE.</p>
+    <p>The three statements that change what a database stores — adding a record, altering one, and removing one — and how to judge whether they do the job properly.</p>
   </div>
 </section>
 <main class="page-content">
@@ -41,107 +41,540 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#insert">INSERT</a></li>
-          <li><a href="#update">UPDATE</a></li>
-          <li><a href="#delete">DELETE</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#database">The Database We Will Use</a></li>
+          <li><a href="#insert">INSERT — Adding a Record</a></li>
+          <li><a href="#insert-eval">Is the INSERT Fit for Purpose?</a></li>
+          <li><a href="#update">UPDATE — Changing a Record</a></li>
+          <li><a href="#update-eval">Is the UPDATE Fit for Purpose?</a></li>
+          <li><a href="#delete">DELETE — Removing a Record</a></li>
+          <li><a href="#delete-eval">Is the DELETE Fit for Purpose?</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="insert">INSERT INTO … VALUES …</h2>
-        <p>As well as searching and sorting, you may have to <strong>add</strong>, <strong>change</strong> or <strong>delete</strong> data. <code>INSERT INTO</code> adds a completely new record. Write the table name, then list each value <strong>in the order the fields come in the table</strong>:</p>
-        <div class="code-block code-sql">
-          <div class="code-label">SQL — INSERT INTO</div>
-          <pre>INSERT INTO Car
-VALUES ("Ford", "Focus", "Blue", 2020);
+        <h2 id="intro">Introduction</h2>
+        <p>Everything on the <a href="sql-select.html">SELECT</a> and <a href="sql-joins.html">joins</a> pages only ever <em>looked</em> at the database. However many times you run a SELECT query, the stored data comes out exactly as it went in.</p>
+        <p>The three statements on this page do the opposite. They <strong>manipulate</strong> the data — they change what the database actually holds:</p>
+        <ul>
+          <li><strong><code>INSERT</code></strong> adds a brand-new record to a table.</li>
+          <li><strong><code>UPDATE</code></strong> changes values inside records that are already there.</li>
+          <li><strong><code>DELETE</code></strong> removes whole records from a table.</li>
+        </ul>
+        <p>Between them they cover almost everything an app does when you are not just browsing. Signing up creates a record. Editing your profile updates it. Closing your account deletes it.</p>
+        <p>There is one enormous difference from a SELECT query, and it is worth stating plainly before anything else: <strong>these statements cannot be undone.</strong> A SELECT that goes wrong gives you a list you did not want, and you shrug and try again. An UPDATE that goes wrong has already overwritten the old values, and they are gone. This is why so many exam marks on this topic are not for writing the statement at all, but for <strong>spotting that somebody else's statement would do the wrong thing</strong>.</p>
 
-INSERT INTO Pupil
-VALUES ("Jasmine", "Smith", "S4", "123 Hamilton Street");</pre>
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">INSERT INTO</div><div class="def">Adds a new record. Names the table and the fields, then supplies the matching values.</div></div>
+          <div class="key-term"><div class="term">VALUES</div><div class="def">The list of data being inserted, in the same order as the field list above it.</div></div>
+          <div class="key-term"><div class="term">UPDATE</div><div class="def">Changes data in records that already exist. Never adds or removes records.</div></div>
+          <div class="key-term"><div class="term">SET</div><div class="def">States which field is being changed and what it is being changed to.</div></div>
+          <div class="key-term"><div class="term">DELETE FROM</div><div class="def">Removes entire records from a table. It cannot remove part of a record.</div></div>
+          <div class="key-term"><div class="term">WHERE</div><div class="def">Decides <em>which</em> records are affected. Leave it out of an UPDATE or DELETE and every record is.</div></div>
         </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>implement</strong> each of the three statements from a description, and <strong>evaluate</strong> one you are given — explaining why it would not produce the intended result, then rewriting it so it does. The evaluation questions come up at least as often as the writing ones.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="database">The Database We Will Use</h2>
+        <p>The examples on this page use the same school database as the <a href="sql-select.html">SELECT</a> and <a href="sql-joins.html">joins</a> pages. The past-paper questions each bring a database of their own, shown with the question.</p>
+
+        <div class="example-block">
+          <div class="example-label">Table — Pupil</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilID</th><th>pupilName</th><th>dateOfBirth</th><th>yearGroup</th><th>house</th><th>meritPoints</th><th>clubID</th></tr></thead>
+              <tbody>
+                <tr><td>P101</td><td>Archie</td><td>14/03/2010</td><td>4</td><td>Churchill</td><td>42</td><td>C01</td></tr>
+                <tr><td>P102</td><td>Noah</td><td>02/11/2009</td><td>5</td><td>Curie</td><td>18</td><td>C03</td></tr>
+                <tr><td>P103</td><td>Mason</td><td>27/06/2010</td><td>4</td><td>Montgomerie</td><td>55</td><td>C01</td></tr>
+                <tr><td>P104</td><td>Christian</td><td>09/01/2008</td><td>6</td><td>Nightingale</td><td>31</td><td>C02</td></tr>
+                <tr><td>P105</td><td>Leoni</td><td>18/09/2010</td><td>4</td><td>Curie</td><td>67</td><td>C04</td></tr>
+                <tr><td>P106</td><td>Lucienne</td><td>30/04/2009</td><td>5</td><td>Churchill</td><td>24</td><td>C03</td></tr>
+                <tr><td>P107</td><td>Erika</td><td>12/12/2011</td><td>3</td><td>Montgomerie</td><td>49</td><td>C04</td></tr>
+                <tr><td>P108</td><td>Louie</td><td>05/07/2009</td><td>5</td><td>Nightingale</td><td>12</td><td>C01</td></tr>
+                <tr><td>P109</td><td>Matthew</td><td>21/02/2011</td><td>3</td><td>Curie</td><td>38</td><td>C02</td></tr>
+                <tr><td>P110</td><td>Riley</td><td>08/05/2010</td><td>4</td><td>Churchill</td><td>71</td><td>C04</td></tr>
+                <tr><td>P111</td><td>Harveer</td><td>16/10/2008</td><td>6</td><td>Nightingale</td><td>26</td><td>C03</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Table — Club</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>clubID</th><th>clubName</th><th>meetingDay</th><th>meetingTime</th><th>staffLead</th><th>equipmentProvided</th></tr></thead>
+              <tbody>
+                <tr><td>C01</td><td>Chess Club</td><td>Monday</td><td>15:30</td><td>Mr Anderson</td><td>TRUE</td></tr>
+                <tr><td>C02</td><td>Debating</td><td>Tuesday</td><td>13:05</td><td>Ms Hendry</td><td>FALSE</td></tr>
+                <tr><td>C03</td><td>Film Making</td><td>Thursday</td><td>15:30</td><td>Mrs Kaur</td><td>TRUE</td></tr>
+                <tr><td>C04</td><td>Athletics</td><td>Wednesday</td><td>16:00</td><td>Miss Lawson</td><td>FALSE</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="insert">INSERT — Adding a Record</h2>
+        <p>An <strong>INSERT</strong> adds one complete new record to a table. It does not change anything that is already there, and it does not need a <code>WHERE</code> clause — there is nothing to search for, because the record does not exist yet.</p>
+
+        <div class="code-block code-sql">
+          <div class="code-label">The pattern</div>
+          <pre>INSERT INTO tableName (field1, field2, field3)
+VALUES ("text value", 42, "another text value");</pre>
+        </div>
+
+        <p>The statement is really <strong>two lists that have to line up</strong>. The field list says which columns you are filling; the <code>VALUES</code> list says what goes in them. The first value goes in the first field, the second in the second, and so on.</p>
+        <p>Three things must match between those lists:</p>
+        <ul>
+          <li><strong>The order</strong> — value 3 lands in field 3, whatever it happens to contain.</li>
+          <li><strong>The number</strong> — seven fields need seven values.</li>
+          <li><strong>The data type</strong> — a field holding a number should be given a number, not text.</li>
+        </ul>
+        <p>Quoting follows the same rule as a <code>WHERE</code> clause: <strong>text and dates go in quotes, numbers do not</strong>.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Write an INSERT — A New Pupil Joins (3 marks)</div>
+          <p>Sofia has just started at the school. Her details are: pupil ID <strong>P112</strong>, date of birth <strong>08/09/2011</strong>, year group <strong>3</strong>, <strong>Curie</strong> house, <strong>0</strong> merit points, and she has signed up for <strong>Film Making</strong>.</p>
+          <p><strong>Write the SQL to add her to the Pupil table.</strong></p>
+          <p><strong>How to tackle it:</strong> we work along the table's fields in order and pair each one with the value from the question. Doing it in the table's order — rather than the order the question happens to mention things — is what keeps the two lists lined up.</p>
+          <p><strong>The fields</strong> are every column in Pupil: <code>pupilID, pupilName, dateOfBirth, yearGroup, house, meritPoints, clubID</code>. A new record needs all of them.</p>
+          <p><strong>The values</strong>, in that same order: <code>"P112"</code>, <code>"Sofia"</code>, <code>"08/09/2011"</code>, <code>3</code>, <code>"Curie"</code>, <code>0</code>, <code>"C03"</code>.</p>
+          <p><strong>Two of those need thought.</strong> The question says "Film Making", but the Pupil table stores a <em>code</em>, not a name — so we look Film Making up in the Club table and write <code>"C03"</code>. And "0 merit points" is genuinely zero, not blank: she has a merit point total, and it is nought.</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>INSERT INTO Pupil (pupilID, pupilName, dateOfBirth, yearGroup, house, meritPoints, clubID)
+VALUES ("P112", "Sofia", "08/09/2011", 3, "Curie", 0, "C03");</pre>
+          </div>
+          <p><strong>Watch the trap:</strong> <code>yearGroup</code> and <code>meritPoints</code> are numbers, so <code>3</code> and <code>0</code> are written bare. Everything else is text — including <code>"P112"</code>, which looks like an ID but contains a letter, and <code>"08/09/2011"</code>, which is a date. Putting quotes round the numbers or leaving them off the text is the commonest way to lose the third mark.</p>
+          <p style="color:#6A1B9A;">1 mark for <strong>INSERT INTO Pupil</strong> with the field list · 1 mark for <strong>VALUES</strong> with all seven values in the matching order · 1 mark for correct quoting of text and dates, and none on the numbers.</p>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Some databases let you drop the field list and just write <code>INSERT INTO Pupil VALUES (…)</code>, relying on the table's own column order. Write the field list anyway. It makes the statement readable, it survives someone adding a column later, and in an exam it shows the marker you know which value belongs where.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="insert-eval">Is the INSERT Fit for Purpose?</h2>
+        <p>An INSERT can be perfectly valid SQL — no error, no warning — and still put the wrong data in the table. When you are asked to evaluate one, these are the faults worth checking for:</p>
+        <ul>
+          <li><strong>Values in the wrong order.</strong> The database does not know that an author is not a title. It fills the columns in the order given.</li>
+          <li><strong>The wrong number of values</strong> — six values for seven fields. This one usually <em>does</em> throw an error.</li>
+          <li><strong>The wrong data type</strong> — text pushed into a number field.</li>
+          <li><strong>A duplicate primary key.</strong> Adding a second <code>P101</code> is rejected, because a primary key must be unique.</li>
+          <li><strong>A foreign key that does not exist.</strong> This is <a href="design.html#integrity">referential integrity</a>, and it is covered below.</li>
+        </ul>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Why the INSERT Fails, Book Table (1 mark)</div>
+          <img src="../resources/ddd/worked-examples/n5_insert_q1-1.png" alt="Three records from a Book table: bookRef 0783567328120, title The Cat's Pyjamas, author R J Petersen, publisher Germiston; bookRef 0703487922417, title Grass Is Green, author V R Singh, publisher East Rand; bookRef 0724603125633, title Climb the Hill, author R McGrath, publisher Brown." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_insert_q1-2.png" alt="Exam question part b: Another book by V R Singh is to be added to the table. The SQL statement INSERT INTO Book (bookRef, title, author, publisher) VALUES (0745198374564, V R Singh, I'll Do It Yesterday, East Rand) is used to insert this record. Explain why the SQL statement will not produce the intended result. One mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the statement runs without complaint, so the fault is not a syntax error. We line the two lists up against each other and read them as pairs.</p>
+          <p>The field list is <code>bookRef, title, author, publisher</code>. The values are <code>"0745198374564"</code>, <code>"V R Singh"</code>, <code>"I'll Do It Yesterday"</code>, <code>"East Rand"</code>. Pairing them off:</p>
+          <table>
+            <thead><tr><th>Field</th><th>Value it would receive</th><th>Correct?</th></tr></thead>
+            <tbody>
+              <tr><td>bookRef</td><td>0745198374564</td><td>✅ yes</td></tr>
+              <tr><td>title</td><td>V R Singh</td><td>❌ that is the author</td></tr>
+              <tr><td>author</td><td>I'll Do It Yesterday</td><td>❌ that is the title</td></tr>
+              <tr><td>publisher</td><td>East Rand</td><td>✅ yes</td></tr>
+            </tbody>
+          </table>
+          <p>So the record would go in with a book called <em>V R Singh</em>, written by somebody called <em>I'll Do It Yesterday</em>. The <strong>title and author are the wrong way round</strong>.</p>
+          <img src="../resources/ddd/worked-examples/n5_insert_q1-2_ans.png" alt="Marking instructions: the data or values are input in the wrong order. One mark. V R Singh and I'll Do It Yesterday are the wrong way round." class="zoomable" />
+          <p>Corrected, the statement is:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Fixed</div>
+            <pre>INSERT INTO Book (bookRef, title, author, publisher)
+VALUES ("0745198374564", "I'll Do It Yesterday", "V R Singh", "East Rand");</pre>
+          </div>
+          <p><strong>Watch the trap:</strong> the number of values is right, the data types are right and every value is a real piece of information about the book. Nothing about the statement looks wrong until you match the lists item by item. That matching is the entire skill being tested.</p>
+          <p style="color:#6A1B9A;">1 mark: the <strong>values are in the wrong order</strong> — the title and the author have been swapped.</p>
+        </div>
+
+        <h3>Referential Integrity — a Recap</h3>
+        <p>The last fault on the list is the one with a name. <a href="design.html#integrity">Referential integrity</a> is the rule that <strong>a foreign key must point at a record that actually exists</strong>. The database enforces it, and it will refuse an INSERT that would break it.</p>
+        <p>Take the pupil we added above, but with one value changed:</p>
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — this INSERT will be rejected</div>
+          <pre>INSERT INTO Pupil (pupilID, pupilName, dateOfBirth, yearGroup, house, meritPoints, clubID)
+VALUES ("P112", "Sofia", "08/09/2011", 3, "Curie", 0, "C09");</pre>
+        </div>
+        <p>Everything about that statement is well formed. Seven fields, seven values, correct order, correct types, correct quoting, and <code>P112</code> is not already in use. It still fails — because <code>C09</code> is not a club. The Club table holds C01 to C04, and nothing else.</p>
+        <p>The database rejects the whole record rather than store a pupil who belongs to a club that does not exist. If it allowed it, Sofia would become an <strong>orphan record</strong>: a row with a foreign key pointing at nothing, and a query joining Pupil to Club would simply lose her.</p>
+
         <div class="callout callout-warning">
           <div class="callout-icon">⚠️</div>
-          <div>The values <strong>must match the field order</strong>. If the Pupil table's fields are forename, surname, yearGroup, address, then <code>VALUES ("Jasmine", "Smith", "123 Hamilton Street", "S4")</code> puts the address in the year group field!</div>
+          <div><strong>The order you insert things in matters.</strong> If a new pupil is joining a brand-new club, the <strong>club must be inserted first</strong>. Insert the pupil first and there is no club record for the foreign key to point at, so the pupil is rejected — even though both statements are individually correct.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="update">UPDATE … SET … WHERE …</h2>
-        <p><code>UPDATE</code> changes existing records. It always goes in this order: <code>UPDATE</code> the table, <code>SET</code> the new value, <code>WHERE</code> to choose which records change:</p>
+        <h2 id="update">UPDATE — Changing a Record</h2>
+        <p>An <strong>UPDATE</strong> changes values inside records that already exist. It never adds a record and never removes one — the same rows are there afterwards, with different data in them.</p>
+
         <div class="code-block code-sql">
-          <div class="code-label">SQL — UPDATE</div>
-          <pre>UPDATE Car
-SET Year = 2019
-WHERE Colour = "Red";
-
--- Move every S4 pupil up a year group
-UPDATE Pupil
-SET YearGroup = "S5"
-WHERE YearGroup = "S4";</pre>
+          <div class="code-label">The pattern</div>
+          <pre>UPDATE tableName
+SET field = newValue
+WHERE condition;</pre>
         </div>
-      </article>
 
-      <article>
-        <h2 id="delete">DELETE FROM … WHERE …</h2>
-        <p><code>DELETE FROM</code> removes <strong>whole records</strong> — you cannot delete just one field from a record:</p>
+        <p>The statement splits cleanly into two jobs, and it is worth naming them separately because exam faults nearly always live in one or the other:</p>
+        <ul>
+          <li><strong><code>SET</code> decides <em>what</em> changes</strong> — which field, and what it becomes.</li>
+          <li><strong><code>WHERE</code> decides <em>which records</em> change</strong> — exactly as it does in a SELECT query.</li>
+        </ul>
+        <p>Several fields can be changed at once by separating them with commas:</p>
         <div class="code-block code-sql">
-          <div class="code-label">SQL — DELETE FROM</div>
-          <pre>DELETE FROM Car
-WHERE Colour = "Red";
-
--- Compound condition
-DELETE FROM Car
-WHERE Year &gt;= 2009 AND Year &lt;= 2018;</pre>
+          <div class="code-label">Changing more than one field</div>
+          <pre>UPDATE Club
+SET meetingDay = "Friday", meetingTime = "15:45"
+WHERE clubID = "C02";</pre>
         </div>
+
         <div class="callout callout-warning">
           <div class="callout-icon">⚠️</div>
-          <div><strong>Always use a WHERE clause</strong> with UPDATE and DELETE — without one, the command changes or removes <em>every record in the table</em>.</div>
+          <div><strong>An UPDATE with no WHERE clause changes every record in the table.</strong> <code>UPDATE Pupil SET house = "Curie";</code> is valid SQL, runs without error, and puts all 11 pupils in Curie. The previous houses are gone. The <code>WHERE</code> clause is not an optional extra — it is the thing standing between you and the whole table.</div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Write an UPDATE — Awarding Merit Points (2 marks)</div>
+          <p>Riley has been awarded 5 more merit points for helping at parents' evening, taking her total from 71 to 76. <strong>Write the SQL to make this change.</strong></p>
+          <p><strong>How to tackle it:</strong> two decisions, in this order — what is changing, and who it is changing for.</p>
+          <p><strong>What changes:</strong> the <code>meritPoints</code> field becomes 76. Not "add 5" — we state the new value.</p>
+          <p><strong>Which record:</strong> Riley's, and only Riley's. The safe way to say that is her <strong>primary key</strong>, <code>pupilID = "P110"</code>.</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>UPDATE Pupil
+SET meritPoints = 76
+WHERE pupilID = "P110";</pre>
+          </div>
+          <p><strong>Watch the trap:</strong> <code>WHERE pupilName = "Riley"</code> would work on <em>this</em> data, because there happens to be only one Riley. But a second Riley enrolling next term would silently turn a correct statement into a wrong one. Name fields are not unique; primary keys are. Whenever you are changing one specific record, target its primary key.</p>
+          <p style="color:#6A1B9A;">1 mark for <strong>UPDATE Pupil SET meritPoints = 76</strong> · 1 mark for <strong>WHERE pupilID = "P110"</strong>.</p>
         </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="update-eval">Is the UPDATE Fit for Purpose?</h2>
+        <p>UPDATE is the statement the exam most often asks you to criticise, and the faults fall into the two halves of the statement:</p>
+        <ul>
+          <li><strong>The SET is wrong</strong> — the field is set to the wrong value, or to the value it already held, so nothing actually changes.</li>
+          <li><strong>The WHERE is too broad</strong> — it matches more records than intended, so records that should have been left alone are changed too.</li>
+          <li><strong>The WHERE is missing</strong> — every record in the table is changed.</li>
+        </ul>
+        <p>The two past papers below are one of each, and both are worth studying because the SQL looks entirely reasonable at a glance.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Two Faults in One UPDATE, Company Database (2 + 2 marks)</div>
+          <p>This question uses the company database. <code>appRef</code> is the primary key of Employee.</p>
+          <img src="../resources/ddd/worked-examples/n5_companyDB_structure.png" alt="Company database. Vacancy table with jobRef, jobTitle, department and startDate. Employee table with appRef, jobRef, initial, surname, payGrade, drivingLicence and cvAttached, containing 325 HR22 C P Martin grade 2; 326 PD18 G L Wood grade 1; 327 HR22 H Patel grade 3; 328 HR22 B F Lee grade 3; 329 AD36 M Aliyev grade 3; 330 PD18 L M Nowak grade 2; 331 HR22 S Patel grade 1." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_update_q1-1_companyDB.png" alt="Exam question part c: The pay grade for H Patel should be pay grade 2 and not pay grade 3. The SQL statement UPDATE Employee SET payGrade = 3 WHERE surname = Patel is written to make the change. Part i: Give two reasons why this SQL statement is not fit for purpose. Two marks." class="zoomable" />
+          <p><strong>How to tackle part (i):</strong> take the statement in two halves and test each against what the question actually asked for. It asked for H Patel to be moved <em>to</em> grade 2.</p>
+          <p><strong>Fault 1 — the SET is wrong.</strong> The statement says <code>SET payGrade = 3</code>. But 3 is the value H Patel already has; grade 2 is what was wanted. So either way of phrasing it earns the mark: the pay grade should be set to <strong>2</strong>, or equivalently <strong>nothing would change</strong>, because the field is already 3.</p>
+          <p><strong>Fault 2 — the WHERE is too broad.</strong> <code>WHERE surname = "Patel"</code> looks precise until you check the data. There are <strong>two Patels</strong> in the Employee table: appRef 327 is H Patel, and appRef 331 is S Patel. The statement would change both, and S Patel's pay grade has nothing to do with this request.</p>
+          <img src="../resources/ddd/worked-examples/n5_update_q1-1_ans-companyDB.png" alt="Marking instructions part c i: one mark each for payGrade should be set to 2, or there would be no update to payGrade as the value is already 3; and there is more than one Patel. Two marks." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_update_q1-2_companyDB.png" alt="Exam question part c ii: Re-write the SQL statement to make it fit for purpose. Two marks." class="zoomable" />
+          <p><strong>Part (ii)</strong> is then simply a matter of fixing each fault. Set the grade to 2, and identify the single employee by the field that is guaranteed unique — the primary key, <code>appRef = 327</code>:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>UPDATE Employee
+SET payGrade = 2
+WHERE appRef = 327;</pre>
+          </div>
+          <img src="../resources/ddd/worked-examples/n5_update_q1-2_ans_companyDB.png" alt="Marking instructions part c ii: one mark each for UPDATE Employee SET payGrade = 2, and WHERE appRef = 327. Two marks. Also accept WHERE surname equals Patel AND initial equals H." class="zoomable" />
+          <p>The marking instructions also accept <code>WHERE surname = "Patel" AND initial = "H"</code>. That does narrow it to one employee here — but it only works because no two people share both an initial and a surname in this data. The primary key is unique by definition, which is why it is the better answer.</p>
+          <p style="color:#6A1B9A;">Part (i) — 1 mark: <strong>payGrade should be set to 2</strong> (or: nothing would change, as it is already 3) · 1 mark: <strong>there is more than one Patel</strong>.<br />Part (ii) — 1 mark: <strong>UPDATE Employee SET payGrade = 2</strong> · 1 mark: <strong>WHERE appRef = 327</strong>.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — An UPDATE That Hits Too Much, Game Table (1 + 1 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_update_q2.png" alt="Exam question 15. The Game table stores gameID, gameName, programmer, rating, testerID and multiplatform, containing 378B World Away CodeQueen 12A; 311H Denta Deet AbdurPSK 15; 484D Cupland LindyLoo 12A; 257P Heat Wave EMC2 15; 183B Water Rage CodeQueen 15; 021B Bee-Hive AcroGymGal 12A; 782C Combat45 AbdurPSK 12A. The game Water Rage has been reclassified as an 18 rating and the statement UPDATE Game SET rating = 18 WHERE programmer = CodeQueen was implemented. Part b: explain why the SQL statement would give an unexpected result, one mark. Part c: rewrite the SQL statement to give the expected result, one mark." class="zoomable" />
+          <p><strong>How to tackle part (b):</strong> the intention is stated in one sentence — reclassify <strong>one game</strong>, Water Rage. So we ask how many records the <code>WHERE</code> clause actually catches.</p>
+          <p><code>WHERE programmer = "CodeQueen"</code> matches every game CodeQueen wrote. Reading down the programmer column, that is <strong>two</strong> games: <em>Water Rage</em> (183B), which we wanted, and <em>World Away</em> (378B), which we did not. So the statement <strong>changes all of CodeQueen's games to an 18 rating</strong> — and World Away, a 12A, is quietly reclassified as an adult game.</p>
+          <img src="../resources/ddd/worked-examples/n5_update_q2-1_ans.png" alt="Marking instructions part b: changes all CodeQueen games to 18. One mark. Answers may refer to the World Away game also being updated to 18." class="zoomable" />
+          <p><strong>Part (c)</strong> needs a condition that picks out Water Rage and nothing else. <code>gameName = "Water Rage"</code> would do it on this data, but the field guaranteed to be unique is the primary key:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>UPDATE Game
+SET rating = "18"
+WHERE gameID = "183B";</pre>
+          </div>
+          <img src="../resources/ddd/worked-examples/n5_update_q2-2_ans.png" alt="Marking instructions part c: WHERE gameID = 183B. One mark. Quotes not required." class="zoomable" />
+          <p>Only the <code>WHERE</code> line changes — the <code>UPDATE</code> and <code>SET</code> lines were correct all along. Notice that this is the mirror image of the Patel question: there the SET was wrong <em>and</em> the WHERE was too broad; here the SET is fine and the fault is entirely in the WHERE.</p>
+          <p><strong>Watch the trap:</strong> both questions were solved the same way — by checking the WHERE condition against the actual rows and <strong>counting how many it matches</strong>. If the answer is more than one and the question described a single record, you have found the fault. Do that count every time.</p>
+          <p style="color:#6A1B9A;">Part (b) — 1 mark: it <strong>changes all CodeQueen's games to 18</strong>, not just Water Rage.<br />Part (c) — 1 mark: <strong>WHERE gameID = "183B"</strong>. Quotes not required.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="delete">DELETE — Removing a Record</h2>
+        <p>A <strong>DELETE</strong> removes entire records from a table.</p>
+
+        <div class="code-block code-sql">
+          <div class="code-label">The pattern</div>
+          <pre>DELETE FROM tableName
+WHERE condition;</pre>
+        </div>
+
+        <p>It is the shortest of the three statements, because there is nothing to specify beyond which records to remove. And that is worth pausing on: <strong>there is no field list</strong>. You cannot delete part of a record — DELETE takes the whole row or nothing.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>If you want to empty a single field but keep the record, that is an <strong>UPDATE</strong>, not a DELETE — <code>UPDATE Pupil SET clubID = NULL WHERE pupilID = "P108";</code> leaves Louie in the school but in no club. Being asked to "remove a pupil from a club" and reaching for DELETE would remove the pupil from the <em>school</em>.</div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>A DELETE with no WHERE clause empties the table.</strong> <code>DELETE FROM Pupil;</code> removes all 11 records. The table still exists, but there is nothing in it, and no SELECT will bring them back.</div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Write a DELETE, Team Table (2 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_delete_q1-1.png" alt="Exam question 14. Teams take part in a technology competition, stored in a table called Team with fields teamID, schoolID, teamName, noOfMembers and technology. Rows: T1 936 Pseudo Boom 3 Robot; T22 871 Brainy Bunch 4 E-Glasses; T56 658 Thinking Caps 2 Air drone; T24 658 B.H.B 2 VR headset; T67 402 Fuzz Logic 4 Health tracker; T29 214 Alpha 1.0 5 Artificial intelligence; T37 214 Successors 3 Land drone; T46 214 Brainy Bunch 4 VR headset; T99 197 Elec-tricks 2 Smart watch." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_delete_q1-2.png" alt="Exam question part b: Brainy Bunch from schoolID 214 has been disqualified from the competition. Write the SQL statement to remove them from the table. Two marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the statement itself is short, so almost all the thinking goes into the <code>WHERE</code> clause. And the question has been written very deliberately.</p>
+          <p><strong>Read the question again:</strong> "Brainy Bunch <em>from schoolID 214</em>". Those four extra words are not padding. Look down the teamName column — <strong>Brainy Bunch appears twice</strong>: T22 from schoolID 871, and T46 from schoolID 214. Writing <code>WHERE teamName = "Brainy Bunch"</code> would disqualify both, and only one of them did anything wrong.</p>
+          <p><strong>So which record do we want?</strong> The one that is both Brainy Bunch and schoolID 214 — that is <strong>T46</strong>. Since <code>teamID</code> is the primary key, naming it identifies that record and no other:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>DELETE FROM Team
+WHERE teamID = "T46";</pre>
+          </div>
+          <img src="../resources/ddd/worked-examples/n5_delete_q1-2_ans.png" alt="Marking instructions part b: DELETE from Team; WHERE teamID = T46. Two marks. Also allow use of two fields: schoolID = 214 AND teamName = Brainy Bunch. Quotes not required." class="zoomable" />
+          <p>The marking instructions also accept the two-field version, which is what the question's wording points you towards:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Also accepted</div>
+            <pre>DELETE FROM Team
+WHERE schoolID = 214 AND teamName = "Brainy Bunch";</pre>
+          </div>
+          <p><strong>Watch the trap:</strong> the danger here is answering the question you expected instead of the one asked. "Brainy Bunch has been disqualified" would be a one-condition answer; "Brainy Bunch from schoolID 214" is not. When a question adds a qualifier like that, it is telling you the obvious field is not unique — go and check the data before you write anything.</p>
+          <p style="color:#6A1B9A;">1 mark for <strong>DELETE FROM Team</strong> · 1 mark for <strong>WHERE teamID = "T46"</strong> (or <code>schoolID = 214 AND teamName = "Brainy Bunch"</code>). Quotes not required.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="delete-eval">Is the DELETE Fit for Purpose?</h2>
+        <p>DELETE has the same fault-lines as UPDATE — a WHERE that is too broad, or missing entirely — plus one of its own, because removing a record can break the link another table depends on.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Evaluate a DELETE — Closing a Club (3 marks)</div>
+          <p>The Film Making club is closing at the end of term. A technician writes:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">The statement under review</div>
+            <pre>DELETE FROM Club
+WHERE clubName = "Film Making";</pre>
+          </div>
+          <p><strong>Give two reasons why this statement will not achieve what was intended, and describe how to close the club correctly.</strong></p>
+          <p><strong>How to tackle it:</strong> we check the WHERE clause first, as always, and then ask the question that only applies to DELETE — <em>is anything else pointing at this record?</em></p>
+          <p><strong>Reason 1 — referential integrity will refuse it.</strong> Three pupils hold <code>C03</code> as their foreign key: Noah, Lucienne and Harveer. Deleting the C03 record would leave all three pointing at a club that no longer exists, so the database rejects the deletion. The statement fails and the club is not closed.</p>
+          <p><strong>Reason 2 — deleting the club does not deal with the pupils.</strong> Even setting integrity aside, removing a row from Club changes nothing in Pupil. Those three pupils would still be recorded as members of a club that no longer exists. The statement addresses only half the problem.</p>
+          <p><strong>Doing it properly</strong> takes two statements, in this order — clear the references first, then remove the record:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>UPDATE Pupil
+SET clubID = NULL
+WHERE clubID = "C03";
+
+DELETE FROM Club
+WHERE clubID = "C03";</pre>
+          </div>
+          <p>Once no pupil refers to C03, nothing is left pointing at it, and the delete is allowed.</p>
+          <p><strong>Watch the trap:</strong> notice this is the <a href="#insert-eval">insert rule</a> in reverse. When adding, the record being pointed <em>at</em> must exist first. When deleting, everything pointing at it must be cleared first. Both are the same rule seen from opposite ends: <strong>a foreign key must never point at nothing</strong>.</p>
+          <p style="color:#6A1B9A;">1 mark: <strong>referential integrity prevents the deletion</strong>, because pupils still reference C03 · 1 mark: <strong>the pupils' records are not updated</strong>, so they would still refer to a club that does not exist · 1 mark: <strong>update the pupils first, then delete the club</strong>.</p>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>One habit covers most of this page.</strong> Before running an UPDATE or a DELETE, run the same <code>WHERE</code> clause as a <code>SELECT</code> first — <code>SELECT * FROM Team WHERE teamName = "Brainy Bunch";</code> would have returned two rows and shown the fault immediately. It is the only way to check what a statement will hit while you can still change your mind.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>These use a city cycle hire database. <strong>Station</strong> holds the docking stations, <strong>Bike</strong> holds the bikes, and <code>stationID</code> is the primary key of Station and a foreign key in Bike.</p>
+
+        <div class="example-block">
+          <div class="example-label">Table — Station</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>stationID</th><th>stationName</th><th>town</th><th>docks</th></tr></thead>
+              <tbody>
+                <tr><td>ST1</td><td>Riverside</td><td>Perth</td><td>24</td></tr>
+                <tr><td>ST2</td><td>Harbour Point</td><td>Dundee</td><td>16</td></tr>
+                <tr><td>ST3</td><td>Campus North</td><td>Dundee</td><td>30</td></tr>
+                <tr><td>ST4</td><td>Old Bridge</td><td>Perth</td><td>12</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Table — Bike</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>bikeID</th><th>model</th><th>condition</th><th>lastService</th><th>stationID</th></tr></thead>
+              <tbody>
+                <tr><td>B101</td><td>Ridgeback Comet</td><td>Good</td><td>04/03/2026</td><td>ST1</td></tr>
+                <tr><td>B102</td><td>Apollo Trail</td><td>Fair</td><td>18/01/2026</td><td>ST2</td></tr>
+                <tr><td>B103</td><td>Ridgeback Comet</td><td>Good</td><td>22/04/2026</td><td>ST3</td></tr>
+                <tr><td>B104</td><td>Vantage Sprint</td><td>Poor</td><td>09/11/2025</td><td>ST1</td></tr>
+                <tr><td>B105</td><td>Ridgeback Comet</td><td>Fair</td><td>15/02/2026</td><td>ST2</td></tr>
+                <tr><td>B106</td><td>Apollo Trail</td><td>Good</td><td>30/05/2026</td><td>ST4</td></tr>
+                <tr><td>B107</td><td>Vantage Sprint</td><td>Good</td><td>12/06/2026</td><td>ST3</td></tr>
+                <tr><td>B108</td><td>Apollo Trail</td><td>Poor</td><td>07/10/2025</td><td>ST1</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — Write the queries (3 marks)</div>
-          <p>A Member table has the fields: memberID, forename, surname, town. Write SQL to:</p>
-          <ol type="a">
-            <li>Add member 205, "Eilidh", "Ross", from "Troon".</li>
-            <li>Change every member from "Prestwick" to "Ayr".</li>
-            <li>Remove member 118.</li>
-          </ol>
+          <div class="q-label">Practice Question 1 — Write an INSERT (3 marks)</div>
+          <p>A new bike has arrived. Its details are: bike ID <strong>B109</strong>, model <strong>Ridgeback Comet</strong>, condition <strong>Good</strong>, last serviced <strong>01/08/2026</strong>, and it has been placed at the <strong>Old Bridge</strong> station.</p>
+          <p>Write the SQL to add it to the Bike table.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
               <div class="code-block code-sql">
-                <div class="code-label">Suggested answers</div>
-                <pre>INSERT INTO Member
-VALUES (205, "Eilidh", "Ross", "Troon");
-
-UPDATE Member
-SET Town = "Ayr"
-WHERE Town = "Prestwick";
-
-DELETE FROM Member
-WHERE MemberID = 118;</pre>
+                <div class="code-label">Model answer</div>
+                <pre>INSERT INTO Bike (bikeID, model, condition, lastService, stationID)
+VALUES ("B109", "Ridgeback Comet", "Good", "01/08/2026", "ST4");</pre>
               </div>
-              <p>1 mark each for a correct INSERT (values in field order), UPDATE (SET before WHERE) and DELETE (with WHERE).</p>
+              <p style="color:#6A1B9A;">1 mark: <strong>INSERT INTO Bike</strong> with the field list · 1 mark: <strong>VALUES</strong> with all five values in matching order · 1 mark: correct quoting.</p>
+              <p>The question names the station as "Old Bridge", but the Bike table stores a <strong>code</strong>. Look Old Bridge up in the Station table and write <code>"ST4"</code> — writing <code>"Old Bridge"</code> would break referential integrity, because no station has that stationID.</p>
+              <p>Every value here is text or a date, so all five are quoted. There is no number field in this table to catch you out — but check that before you assume it.</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — Explain the error (2 marks)</div>
-          <p>A pupil runs <code>DELETE FROM Member;</code> intending to remove one member. Describe what actually happens, and how the query should have been written.</p>
+          <div class="q-label">Practice Question 2 — Why Will This INSERT Fail? (2 marks)</div>
+          <p>A member of staff writes the following to add another bike:</p>
+          <div class="code-block code-sql">
+            <pre>INSERT INTO Bike (bikeID, model, condition, lastService, stationID)
+VALUES ("B110", "Fair", "Apollo Trail", "20/07/2026", "ST7");</pre>
+          </div>
+          <p>Give <strong>two</strong> reasons why this statement will not produce the intended result.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">Every record in the Member table is deleted, because there is no WHERE clause (1 mark). It should include a condition identifying the member, e.g. <code>DELETE FROM Member WHERE MemberID = …;</code> (1 mark).</p>
+              <p style="color:#6A1B9A;">1 mark: the <strong>values are in the wrong order</strong> — <code>"Fair"</code> and <code>"Apollo Trail"</code> have been swapped, so the model would be recorded as "Fair" and the condition as "Apollo Trail".</p>
+              <p style="color:#6A1B9A;">1 mark: <strong>ST7 is not a valid stationID</strong>. The Station table holds ST1 to ST4 only, so the foreign key points at a station that does not exist and <strong>referential integrity</strong> causes the whole record to be rejected.</p>
+              <p>Corrected:</p>
+              <div class="code-block code-sql">
+                <div class="code-label">Fixed</div>
+                <pre>INSERT INTO Bike (bikeID, model, condition, lastService, stationID)
+VALUES ("B110", "Apollo Trail", "Fair", "20/07/2026", "ST2");</pre>
+              </div>
+              <p>Note the two faults behave very differently. The swap produces <strong>no error at all</strong> — the record goes in, wrong. The invalid foreign key <strong>is</strong> caught and refused. The dangerous fault is the silent one.</p>
             </div>
           </details>
         </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Write an UPDATE (2 marks)</div>
+          <p>Bike <strong>B104</strong> has been repaired. Its condition is now <strong>Good</strong> and it was serviced on <strong>10/08/2026</strong>. Write the SQL to record both changes.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>UPDATE Bike
+SET condition = "Good", lastService = "10/08/2026"
+WHERE bikeID = "B104";</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: <strong>UPDATE Bike</strong> with both fields correctly set, separated by a comma · 1 mark: <strong>WHERE bikeID = "B104"</strong>.</p>
+              <p>Two separate UPDATE statements, one per field, are also correct — but the comma form does it in one pass and is what the question's wording invites.</p>
+              <p>The record was identified by its primary key. <code>WHERE model = "Vantage Sprint"</code> would have caught B107 as well, which is in perfectly good condition and was not repaired.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Evaluate an UPDATE (3 marks)</div>
+          <p>All bikes at the <strong>Campus North</strong> station are being moved to <strong>Riverside</strong>. A member of staff writes:</p>
+          <div class="code-block code-sql">
+            <pre>UPDATE Bike
+SET stationID = "ST1"
+WHERE model = "Ridgeback Comet";</pre>
+          </div>
+          <p><strong>(a)</strong> Explain why this statement would give an unexpected result. <strong>(b)</strong> Rewrite it correctly.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 2 marks: the <code>WHERE</code> clause matches the <strong>wrong records</strong>. It selects on the model rather than the station, so it would move <strong>all three</strong> Ridgeback Comets — B101 (already at Riverside), B103 and B105 — while <strong>missing B107</strong>, a Vantage Sprint that really is at Campus North and should have been moved.</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 1 mark:</p>
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>UPDATE Bike
+SET stationID = "ST1"
+WHERE stationID = "ST3";</pre>
+              </div>
+              <p>This is the classic fault: searching on the field that happens to be visible in the question ("Ridgeback Comet" is a striking name) rather than the field the request is actually about. The request was about a <em>station</em>, so the condition must be about the station.</p>
+              <p>Correctly written, it moves B103 and B107 — the two bikes at Campus North — and touches nothing else.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Write a DELETE (2 marks)</div>
+          <p>The <strong>Apollo Trail</strong> bike at the <strong>Riverside</strong> station has been damaged beyond repair and must be removed from the database. Write the SQL statement to remove it.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>DELETE FROM Bike
+WHERE bikeID = "B108";</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: <strong>DELETE FROM Bike</strong> · 1 mark: <strong>WHERE bikeID = "B108"</strong>, or <code>WHERE model = "Apollo Trail" AND stationID = "ST1"</code>.</p>
+              <p>The question deliberately gives you <strong>two</strong> pieces of information, exactly as the Brainy Bunch question did — and for the same reason. There are three Apollo Trails (B102, B106, B108), so <code>WHERE model = "Apollo Trail"</code> alone would delete all three. Only B108 is at Riverside (ST1).</p>
+              <p>Whenever a question describes a record with two details rather than one, treat it as a warning that the first detail is not unique. Check the data before writing the condition.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 6 — Deleting a Station (3 marks)</div>
+          <p>The <strong>Riverside</strong> station is being closed permanently. A member of staff writes:</p>
+          <div class="code-block code-sql">
+            <pre>DELETE FROM Station
+WHERE stationID = "ST1";</pre>
+          </div>
+          <p><strong>(a)</strong> Explain why this statement will not succeed. <strong>(b)</strong> Describe what must be done first.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 2 marks: <strong>referential integrity</strong> prevents it (1 mark), because three bikes — B101, B104 and B108 — still hold <code>ST1</code> as their foreign key (1 mark). Deleting the station would leave those bikes pointing at a station that no longer exists.</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 1 mark: the three bikes must be <strong>reassigned to another station (or their stationID cleared) first</strong>, after which nothing refers to ST1 and the delete is allowed. For example:</p>
+              <div class="code-block code-sql">
+                <div class="code-label">Do this first</div>
+                <pre>UPDATE Bike
+SET stationID = "ST4"
+WHERE stationID = "ST1";</pre>
+              </div>
+              <p>Note the statement itself is perfectly written — correct table, correct primary key, no fault in the SQL at all. It fails because of what <em>else</em> is in the database. That is what makes referential-integrity questions different from the WHERE-clause questions: you cannot spot the problem by reading the statement alone.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="next">Next — Checking It Works</h2>
+        <p>You can now read a database and change one. The remaining question is whether what you built actually does what was asked — which means <a href="testing-evaluation.html">testing and evaluation</a>: choosing test data, checking a solution against the original requirements, and judging it on fitness for purpose, accuracy and efficiency.</p>
       </article>
 
     </div>

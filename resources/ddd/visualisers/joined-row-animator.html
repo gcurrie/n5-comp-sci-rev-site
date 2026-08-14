@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Joined Row, Assembled — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --purp:#6A1B9A; --purp-bg:#F4E8FA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --cw:112px;   /* cell width  */
+    --ch:52px;    /* cell height */
+    --gap:86px;   /* how far below the Club strip starts */
+  }
+  @media (max-width:720px){ :root{ --cw:92px; --ch:48px; --gap:78px; } }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;
+       padding:clamp(10px,1.5vw,18px);font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  button{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  .wrap{max-width:1000px;margin:0 auto}
+
+  .phases{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+  .ph{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      padding:7px 11px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+      transition:background .3s,border-color .3s,color .3s}
+  .ph.on{background:var(--active-strong);border-color:var(--active-strong);color:#fff}
+  .ph.done{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+
+  .stagebox{background:var(--panel);border:1px solid var(--line);overflow-x:auto;padding:16px 16px 14px}
+  .stage{position:relative;height:calc(var(--gap) + var(--ch) + 26px);}
+
+  .strip{position:absolute;left:0;top:0;display:flex;align-items:flex-start;
+         transition:transform .95s cubic-bezier(.65,.02,.32,1)}
+  .strip .tag{position:absolute;top:-15px;left:0;font-family:var(--mono);font-size:9.5px;font-weight:700;
+              letter-spacing:.14em;text-transform:uppercase;color:var(--active);white-space:nowrap}
+  .cell{width:var(--cw);height:var(--ch);border:1px solid var(--line);border-left:none;background:#fff;
+        display:flex;flex-direction:column;justify-content:center;padding:0 8px;
+        transition:background .35s,border-color .35s,opacity .35s,box-shadow .3s}
+  .cell:first-child{border-left:1px solid var(--line)}
+  .cell .fn{font-family:var(--mono);font-size:8.5px;letter-spacing:.05em;color:var(--ink-soft);
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cell .fv{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink);
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cell.key{background:var(--match-bg);border-color:var(--match-accent);position:relative;z-index:2}
+  .cell.key .fn{color:var(--match)}
+  .cell.key .fv{color:var(--match)}
+  .cell.pulse{box-shadow:0 0 0 3px rgba(201,162,39,.35)}
+  .cell.faded{opacity:.28}
+  .cell.pick{background:var(--active-bg);border-color:var(--active)}
+  .cell.pick .fv{color:var(--active-strong)}
+
+  /* the vertical tie between the two key cells, shown before they merge */
+  .tie{position:absolute;border-left:2px dashed var(--match-accent);opacity:0;transition:opacity .4s}
+  .tie.show{opacity:1}
+  .tielab{position:absolute;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--match);
+          background:var(--bg);padding:0 6px;white-space:nowrap;opacity:0;transition:opacity .4s}
+  .tielab.show{opacity:1}
+
+  .cap{background:var(--purp-bg);border-left:4px solid var(--purp);padding:11px 14px;margin-top:12px;
+       font-size:13.5px;min-height:5.4em}
+  .cap b{color:var(--purp)}
+  .cap code{font-family:var(--mono);font-size:12.5px;background:#fff;border:1px solid var(--line);padding:1px 5px}
+  .cap .lead{display:block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;
+             text-transform:uppercase;color:var(--purp);margin-bottom:5px}
+
+  .foot{display:flex;align-items:center;gap:10px;min-height:42px;margin-top:10px}
+  .btn{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+       padding:9px 16px;border:1px solid var(--active-strong);background:#fff;color:var(--active-strong);
+       cursor:pointer;opacity:0;pointer-events:none;transition:opacity .4s,background .15s}
+  .btn.show{opacity:1;pointer-events:auto}
+  .btn:hover{background:var(--active-bg)}
+  .foot .note{font-size:12.5px;color:var(--ink-soft);opacity:0;transition:opacity .4s}
+  .foot .note.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="phases" aria-hidden="true">
+    <div class="ph" id="ph1">1 · Two records</div>
+    <div class="ph" id="ph2">2 · The keys match</div>
+    <div class="ph" id="ph3">3 · One joined row</div>
+  </div>
+
+  <div class="stagebox">
+    <div class="stage" id="stage">
+      <div class="strip" id="pupilStrip"><span class="tag">Pupil record</span></div>
+      <div class="strip" id="clubStrip"><span class="tag">Club record</span></div>
+      <div class="tie" id="tie"></div>
+      <div class="tielab" id="tielab">same value</div>
+    </div>
+  </div>
+
+  <p class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">
+    Archie's Pupil record holds pupilName Archie, house Churchill, meritPoints 42 and clubID C01. The Club record for
+    C01 holds clubID C01, clubName Chess Club, meetingDay Monday and staffLead Mr Anderson. Because both records hold
+    the same clubID, the equi-join joins them into a single row of seven fields — pupilName, house, meritPoints, the
+    shared clubID, clubName, meetingDay and staffLead — from which a query can select fields belonging to either
+    original table.
+  </p>
+
+  <div class="cap" id="cap"></div>
+
+  <div class="foot">
+    <button class="btn" id="replay" type="button">↻ Replay</button>
+    <span class="note" id="note">Runs once. Press replay to watch it again.</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Auto-size the parent iframe. Declared before anything renders. */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  const PUPIL = [
+    ["pupilName","Archie"],
+    ["house","Churchill"],
+    ["meritPoints","42"],
+    ["clubID","C01"]
+  ];
+  const CLUB = [
+    ["clubID","C01"],
+    ["clubName","Chess Club"],
+    ["meetingDay","Monday"],
+    ["staffLead","Mr Anderson"]
+  ];
+  const P_KEY = 3;   /* index of clubID in PUPIL */
+  const C_KEY = 0;   /* index of clubID in CLUB  */
+
+  const stage  = document.getElementById("stage");
+  const pStrip = document.getElementById("pupilStrip");
+  const cStrip = document.getElementById("clubStrip");
+  const tie    = document.getElementById("tie");
+  const tielab = document.getElementById("tielab");
+  const cap    = document.getElementById("cap");
+  const phEl   = [document.getElementById("ph1"), document.getElementById("ph2"), document.getElementById("ph3")];
+  const replay = document.getElementById("replay");
+  const note   = document.getElementById("note");
+
+  const pCells = [], cCells = [];
+
+  function build(strip, data, keyIdx, store){
+    data.forEach(function(d, i){
+      const el = document.createElement("div");
+      el.className = "cell" + (i === keyIdx ? " key" : "");
+      const fn = document.createElement("div"); fn.className = "fn"; fn.textContent = d[0];
+      const fv = document.createElement("div"); fv.className = "fv"; fv.textContent = d[1];
+      el.appendChild(fn); el.appendChild(fv);
+      strip.appendChild(el);
+      store.push(el);
+    });
+  }
+  build(pStrip, PUPIL, P_KEY, pCells);
+  build(cStrip, CLUB,  C_KEY, cCells);
+
+  /* Geometry is measured rather than assumed, so the cell width can change with
+     the viewport without the alignment drifting. */
+  let cw = 0, gap = 0;
+  function measure(){
+    cw  = pCells[0].getBoundingClientRect().width;
+    gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--gap")) || 86;
+    /* Club strip's final resting place: its key cell sits exactly on Pupil's. */
+    const finalX = P_KEY * cw - C_KEY * cw;
+    stage.style.minWidth = (finalX + CLUB.length * cw + 4) + "px";
+    return finalX;
+  }
+
+  function setClub(x, y){ cStrip.style.transform = "translate(" + x + "px," + y + "px)"; }
+
+  function placeTie(){
+    const finalX = measure();
+    const kx = P_KEY * cw + cw / 2;
+    tie.style.left   = kx + "px";
+    tie.style.top    = "calc(var(--ch))";
+    tie.style.height = "calc(" + gap + "px - var(--ch))";
+    tielab.style.left = (kx + 10) + "px";
+    tielab.style.top  = "calc(var(--ch) + " + ((gap - 52) / 2) + "px)";
+    return finalX;
+  }
+
+  function say(lead, html){ cap.innerHTML = '<span class="lead">' + lead + "</span>" + html; }
+  function phase(n){
+    phEl.forEach(function(p, i){
+      p.classList.toggle("on", i === n);
+      p.classList.toggle("done", i < n);
+    });
+  }
+
+  function reset(){
+    const finalX = placeTie();
+    pCells.concat(cCells).forEach(function(c){ c.classList.remove("pulse", "faded", "pick"); });
+    tie.classList.remove("show");
+    tielab.classList.remove("show");
+    phEl.forEach(function(p){ p.classList.remove("on", "done"); });
+    replay.classList.remove("show");
+    note.classList.remove("show");
+    cStrip.style.transition = "none";
+    setClub(finalX, gap);
+    /* force the browser to take the reset position before re-enabling the move */
+    void cStrip.offsetWidth;
+    cStrip.style.transition = "";
+    return finalX;
+  }
+
+  /* The marks and caption the animation comes to rest on. Deliberately touches
+     no geometry: called at the end of a run, the strip is already merged, and
+     re-seating it would make the slide play a second time. */
+  function finalMarks(){
+    pCells.concat(cCells).forEach(function(c){ c.classList.remove("pulse", "faded", "pick"); });
+    tie.classList.remove("show");
+    tielab.classList.remove("show");
+    cCells[C_KEY].classList.add("faded");
+    pCells[0].classList.add("pick");
+    cCells[2].classList.add("pick");
+    phEl.forEach(function(p){ p.classList.add("done"); });
+    say("One row, seven fields",
+      "The two records are now a single joined row. Only the <b>clubID</b> is shared — everything else " +
+      "comes from one side or the other, and a query can select from either. " +
+      "<code>SELECT pupilName, meetingDay</code> takes the first field from Pupil and the sixth from Club, " +
+      "and never has to care that they started in different tables.");
+    replay.classList.add("show");
+    note.classList.add("show");
+    postHeight();
+  }
+
+  /* Jump straight to the finished picture without any movement — used when the
+     reader has asked for reduced motion. */
+  function finalState(){
+    const finalX = reset();
+    cStrip.style.transition = "none";
+    setClub(finalX, 0);
+    void cStrip.offsetWidth;
+    cStrip.style.transition = "";
+    finalMarks();
+  }
+
+  let timers = [];
+  function at(ms, fn){ timers.push(setTimeout(fn, ms)); }
+  function stop(){ timers.forEach(clearTimeout); timers = []; }
+
+  function play(){
+    stop();
+    const finalX = reset();
+    let t = 0;
+    const step = function(ms, fn){ at(t, fn); t += ms; };
+
+    step(1000, function(){
+      phase(0);
+      say("Two separate records",
+        "Above is one <b>Pupil</b> record — Archie. Below is one <b>Club</b> record — the Chess Club. " +
+        "At this point they are simply two rows in two different tables, with no connection between them.");
+    });
+
+    step(1900, function(){
+      phase(1);
+      pCells[P_KEY].classList.add("pulse");
+      cCells[C_KEY].classList.add("pulse");
+      pCells.forEach(function(c, i){ if(i !== P_KEY) c.classList.add("faded"); });
+      cCells.forEach(function(c, i){ if(i !== C_KEY) c.classList.add("faded"); });
+      tie.classList.add("show");
+      tielab.classList.add("show");
+      say("The keys match",
+        "Archie's <b>clubID</b> is <code>C01</code>. The club's <b>clubID</b> is also <code>C01</code>. " +
+        "That is the entire test the equi-join performs — <code>Pupil.clubID = Club.clubID</code> — " +
+        "and because it is true for this pair, these two records belong together.");
+    });
+
+    step(1700, function(){
+      pCells.concat(cCells).forEach(function(c){ c.classList.remove("faded"); });
+      tie.classList.remove("show");
+      tielab.classList.remove("show");
+      say("Bringing them together",
+        "So the database lines the two records up on their matching key and slides them into one.");
+    });
+
+    step(1500, function(){
+      phase(2);
+      setClub(finalX, 0);           /* the slide */
+      postHeight();
+    });
+
+    step(1600, function(){
+      cCells[C_KEY].classList.add("faded");
+      say("The shared key",
+        "The two <b>clubID</b> cells land on top of each other, because they hold the same value. " +
+        "That one shared column is the seam the join is built on — everything to its left came from " +
+        "Pupil, everything to its right came from Club.");
+    });
+
+    step(2400, function(){
+      pCells[P_KEY].classList.remove("pulse");
+      pCells[0].classList.add("pick");
+      cCells[2].classList.add("pick");
+      say("Now you can select from either side",
+        "What you are left with is a single row containing every field from both records. " +
+        "<code>SELECT pupilName, meetingDay</code> picks one field from the Pupil half and one from the " +
+        "Club half — the exact query that produced <i>Archie, Monday</i> on the page above.");
+    });
+
+    step(0, function(){ finalMarks(); });
+  }
+
+  /* Shared with the in-view trigger below: pressing replay counts as having
+     started, so a pending start-fallback cannot restart the run underneath it. */
+  let started = false;
+  function start(){ if(!started){ started = true; play(); } }
+
+  replay.addEventListener("click", function(){ started = true; play(); });
+  window.addEventListener("resize", function(){
+    /* Keep the geometry honest if the frame is resized after the run. */
+    const finalX = placeTie();
+    if(replay.classList.contains("show")) setClub(finalX, 0);
+  });
+
+  /* Play once, when it actually comes into view. */
+  const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduced){
+    finalState();
+  } else {
+    say("", "");
+    reset();
+
+    if(window.parent !== window){
+      /* An observer in here would only see this frame's own viewport and would
+         fire the moment the frame loads, however far down the host page the
+         reader is. The host tells us instead; we repeat the hello until it
+         answers, because this frame can load before the host's script runs. */
+      let hostReady = false, tries = 0;
+      window.addEventListener("message", function(e){
+        if(!e.data) return;
+        if(e.data.type === "embed-host-ready") hostReady = true;
+        if(e.data.type === "embed-inview") start();
+      });
+      const hello = function(){
+        if(hostReady) return;
+        window.parent.postMessage({type:"embed-hello"}, "*");
+        if(++tries < 8) setTimeout(hello, 400);
+      };
+      hello();
+      setTimeout(function(){ if(!hostReady) start(); }, 4200);
+    } else if("IntersectionObserver" in window){
+      const io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ io.disconnect(); start(); } });
+      }, {threshold:0.25});
+      io.observe(document.querySelector(".stagebox"));
+      setTimeout(start, 8000);
+    } else {
+      start();
+    }
+  }
+})();
+</script>
+</body>
+</html>

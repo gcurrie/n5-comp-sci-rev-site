@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Database Design &amp; Development</div>
     <h1>Analysis</h1>
-    <p>End-user and functional requirements of a database problem — plus the UK GDPR and what it means for individuals and businesses.</p>
+    <p>Working out what a database has to do before you build any of it — and what the law requires of you once real people's data is inside it.</p>
   </div>
 </section>
 <main class="page-content">
@@ -41,106 +41,392 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#end-user">End-User Requirements</a></li>
-          <li><a href="#functional">Functional Requirements</a></li>
-          <li><a href="#gdpr">UK GDPR</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#requirements">Requirements</a></li>
+          <li><a href="#extracting">Extracting Requirements</a></li>
+          <li><a href="#gdpr">GDPR — Who Is Who</a></li>
+          <li><a href="#rights">Rights of the Data Subject</a></li>
+          <li><a href="#duties">Obligations on the Organisation</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="end-user">End-User Requirements</h2>
-        <p>In the analysis stage of a database problem you must be able to identify two kinds of requirement. <strong>End-user requirements</strong> describe what the <strong>people using the database</strong> want to accomplish with it.</p>
-        <div class="example-block">
-          <div class="example-label">Example — youth club (2019 exam context)</div>
-          <ul>
-            <li>The club leaders need to <strong>add new activities</strong>.</li>
-            <li>The club leaders need to <strong>identify adults with first aid qualifications</strong>.</li>
-            <li>The club leaders need to <strong>find the activities members are registered for</strong>.</li>
-            <li>The club leaders need to <strong>view all members listed alphabetically</strong>.</li>
-          </ul>
-        </div>
-        <div class="callout callout-tip">
-          <div class="callout-icon">💡</div>
-          <div><strong>Answer format:</strong> start with the person — "The <em>club leader</em> needs…", "The <em>shop staff</em> need…", "The <em>headteacher</em> needs…"</div>
-        </div>
-      </article>
+        <h2 id="intro">Introduction</h2>
+        <p><strong>Analysis</strong> is the first stage of building any database, and it happens entirely before you create a single table. It is the stage where you work out <em>what the thing has to do</em>.</p>
+        <p>That splits into two questions, and this page deals with both:</p>
+        <ul>
+          <li><strong>Requirements</strong> — what must the finished database be able to do? Someone describes a problem in ordinary English, and your job is to turn that description into a precise list of things the system must deliver.</li>
+          <li><strong>GDPR</strong> — what does the law require of you, given that the database will hold information about real people? Almost every database you will ever design stores personal data, and that brings legal duties with it.</li>
+        </ul>
+        <p>The two belong together because they are decided at the same moment. If a club tells you it needs to keep member records, the requirement is <em>store member details</em> — but GDPR immediately adds conditions: only the details you actually need, kept only as long as you need them, held securely, and deleted when the member leaves. Getting those wrong is not a bug. It is a breach of the law.</p>
 
-      <article>
-        <h2 id="functional">Functional Requirements</h2>
-        <p><strong>Functional requirements</strong> specify what the <strong>database</strong> must do to meet the end-users' needs — the entities and attributes (tables and fields) it needs, and the queries required to search and sort the data.</p>
-        <div class="example-block">
-          <div class="example-label">Example — youth club functional requirements</div>
-          <ul>
-            <li>The database needs a <strong>table</strong> storing leader details, including first aid qualification status.</li>
-            <li>The database needs <strong>tables</strong> for members and activities.</li>
-            <li>The database needs a <strong>query</strong> to display members sorted alphabetically by town.</li>
-          </ul>
-        </div>
-        <div class="callout callout-tip">
-          <div class="callout-icon">💡</div>
-          <div><strong>Answer format:</strong> start with the database — "The database needs a <em>table</em> about…", "The database needs a <em>query</em> to…"</div>
-        </div>
-      </article>
-
-      <article>
-        <h2 id="gdpr">The UK GDPR</h2>
-        <p>The <strong>General Data Protection Regulation (UK GDPR)</strong> is a law covering how your data is stored and used (it replaced the Data Protection Act terminology in 2018). Some key terms:</p>
+        <h3>Key Terms — Requirements</h3>
         <div class="key-terms">
-          <div class="key-term"><div class="term">Data subject</div><div class="def">The person whose data is stored.</div></div>
-          <div class="key-term"><div class="term">Data controller</div><div class="def">The person/organisation controlling how the data is used.</div></div>
-          <div class="key-term"><div class="term">Declared purpose</div><div class="def">The stated reason the data was collected.</div></div>
+          <div class="key-term"><div class="term">End user</div><div class="def">The person who will actually use the system. Usually has no technical knowledge of how it works.</div></div>
+          <div class="key-term"><div class="term">System owner</div><div class="def">The person or organisation paying for the system. Often not the same person as the end user.</div></div>
+          <div class="key-term"><div class="term">Functional requirement</div><div class="def">A statement of exactly <em>what the system should do</em> — the only kind National 5 asks you to identify.</div></div>
+          <div class="key-term"><div class="term">Non-functional requirement</div><div class="def">A statement about <em>how</em> the system works — its speed, security or reliability rather than its features.</div></div>
         </div>
-        <p>The implications for individuals and businesses are that data must be:</p>
-        <ol>
-          <li>processed <strong>lawfully, fairly and in a transparent manner</strong> in relation to individuals</li>
-          <li>used for the <strong>declared purpose only</strong></li>
-          <li><strong>limited to the data needed</strong> for the declared purpose</li>
-          <li><strong>accurate</strong></li>
-          <li><strong>not kept for longer than necessary</strong></li>
-          <li><strong>held securely</strong></li>
-        </ol>
-        <div class="example-block">
-          <div class="example-label">Example — GDPR applied to the youth club</div>
-          <ul>
-            <li>The club should collect <strong>only the data it needs</strong> for membership.</li>
-            <li>The data may be used <strong>only for running the club</strong> — not shared or sold without consent.</li>
-            <li>When a member leaves, their data should be <strong>deleted</strong> — it can't be kept longer than necessary.</li>
-            <li>Member data must be <strong>held securely</strong>.</li>
-          </ul>
+
+        <h3>Key Terms — GDPR</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Data subject</div><div class="def">The individual whose data is being collected. The data subject has specific rights under the regulation.</div></div>
+          <div class="key-term"><div class="term">Personal data</div><div class="def">Any data that can be used to identify an individual — directly, or by combining it with other information.</div></div>
+          <div class="key-term"><div class="term">Data controller</div><div class="def">The company or organisation using the personal data and managing how it is processed.</div></div>
+          <div class="key-term"><div class="term">Data processor</div><div class="def">A third party that processes data on the controller's behalf, providing a service, reports or recommendations.</div></div>
+          <div class="key-term"><div class="term">Privacy notice</div><div class="def">The statement the controller gives the subject explaining how their data will be processed and how long it will be kept.</div></div>
+          <div class="key-term"><div class="term">Information Commissioner</div><div class="def">The UK's independent regulator for data protection — investigates complaints and breaches and can issue fines.</div></div>
         </div>
+
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
-          <div>Exam questions usually ask you to identify <strong>two implications</strong> in the context of the scenario — knowing two or three well is enough. (GDPR officially sits in the <em>design</em> part of the course spec, but it fits naturally alongside analysis.)</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>identify functional requirements</strong> from a description of a problem, and <strong>describe the implications of GDPR</strong> for an organisation storing personal data. Requirements are far more likely to appear in the <strong>assignment</strong> than the exam; GDPR appears in both.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="requirements">Requirements</h2>
+
+        <h3>Who the system is for</h3>
+        <p>Two people matter when a system is being specified, and they are usually not the same person.</p>
+        <p>The <strong>end user</strong> is whoever sits down and uses the database. They are unlikely to have any technical knowledge of how it works, and they are normally not the developer who builds it or the administrator who maintains it. The <strong>system owner</strong> is the person or organisation paying for it.</p>
+        <p>A school office secretary entering pupil records is the end user; the school paying for the system is the owner. Their needs overlap but are not identical — and a solution has to meet both.</p>
+
+        <h3>Functional and non-functional requirements</h3>
+        <p>Every system has two kinds of requirement:</p>
+        <ul>
+          <li><strong>Functional requirements</strong> specify exactly <strong>what the system should do</strong> — "the system must allow a new pupil to be added".</li>
+          <li><strong>Non-functional requirements</strong> describe <strong>how it works</strong> — "the database must respond within two seconds", "only staff may log in".</li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>At National 5 you are <strong>only asked to identify functional requirements</strong>. Non-functional requirements exist and are worth knowing the name of, but you will not be asked to produce them. If in doubt, ask whether your statement describes something the system <em>does</em> — if so, it is functional.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="extracting">Extracting Requirements From a Description</h2>
+        <p>This is the skill the assignment tests. You are given a few paragraphs about an organisation and what it wants, and you have to convert that into a list of functional requirements.</p>
+        <p>The method is more mechanical than it looks, because these descriptions are written as a <strong>bulleted list of things the organisation concluded they need</strong> — and, as a rule of thumb, <strong>each bullet yields one requirement</strong>.</p>
+        <p>For each statement in the description, ask which of these it is describing:</p>
+        <ul>
+          <li><strong>Storing something</strong> → a requirement for a <strong>table</strong> or a <strong>field</strong> to hold that data.</li>
+          <li><strong>Finding or listing something</strong> → a requirement for a <strong>query or search</strong>.</li>
+          <li><strong>Adding something new</strong> → a requirement for a query to <strong>insert</strong> records.</li>
+          <li><strong>Changing or correcting something</strong> → a requirement for a query to <strong>update</strong> records.</li>
+          <li><strong>Removing something</strong> → a requirement for a query to <strong>delete</strong> records.</li>
+        </ul>
+        <p>Those five cover almost everything, and they map directly onto the SQL you already know.</p>
+
+        <h3>An example — the school clubs database</h3>
+        <p>Here is the kind of description you would be given, for the <a href="design.html">school clubs database</a> used throughout this section:</p>
+
+        <div class="example-block">
+          <div class="example-label">The problem description</div>
+          <p>A school wants to keep track of the after-school clubs it runs and the pupils who attend them. Staff have been discussing what they need from the new database. They concluded that:</p>
+          <ul>
+            <li>They need to store the details of each club, including the day and time it meets and the member of staff who runs it.</li>
+            <li>They already hold details of every pupil, and new pupils join throughout the year.</li>
+            <li>They want to know which pupils attend a particular club.</li>
+            <li>They need to be able to change a pupil's merit points when points are awarded.</li>
+          </ul>
+        </div>
+
+        <p>Taking the bullets one at a time:</p>
+        <table>
+          <thead><tr><th>What the description says</th><th>The functional requirement</th></tr></thead>
+          <tbody>
+            <tr><td>"store the details of each club…"</td><td>The database needs a <strong>table to store club data</strong>, with fields for the meeting day, meeting time and staff lead.</td></tr>
+            <tr><td>"already hold details of every pupil"</td><td>The database needs a <strong>table to store pupil data</strong>.</td></tr>
+            <tr><td>"new pupils join throughout the year"</td><td>A <strong>query to insert</strong> new pupil records.</td></tr>
+            <tr><td>"know which pupils attend a particular club"</td><td>A <strong>query to search</strong> for the pupils attending a given club.</td></tr>
+            <tr><td>"change a pupil's merit points"</td><td>A <strong>query to update</strong> a pupil's merit points.</td></tr>
+          </tbody>
+        </table>
+
+        <p>Notice that the second bullet produced <strong>two</strong> requirements — a table to hold pupils, and a way to add new ones. Bullets often carry more than one, so read them for every verb, not just the first.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>Write requirements as things the system does, not as things the school wants.</strong> "The school would like to see who is in Chess Club" is a wish; "a query to search for the pupils attending a given club" is a requirement. The second one tells a developer what to build.</div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Assignment 2025 — Create Two Functional Requirements (2 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_frs_q1.png" alt="Assignment question. An environmental group wants to encourage people to grow their own fruit and vegetables, and stores details on edible plants and the climates they grow in. They plan to create a database to store details about plants and climates and have been discussing the end-user requirements. They concluded that: they need to know the details of climates, including their humidity and temperature ranges; they already have a lot of information about different plants such as carrot, lettuce and watermelon and would like to add to the database when they have information about other plants; they want to know which plants grow best in a particular climate; they need to be able to amend their data when they receive new research. Question 2a: Using the information above, create two functional requirements of the database. Two marks." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the question says "using the information above", which is an instruction to work from the bullets rather than invent anything. There are four bullets and we need two requirements, so we have plenty to choose from — the job is to phrase two of them properly.</p>
+          <p><strong>Bullet 1 — "details of climates, including their humidity and temperature ranges."</strong> This is about storing and then looking up climate data. As a requirement: <em>a query to find the humidity and temperature of climates</em>. It also implies a <strong>table to store climate data</strong>, which is equally acceptable.</p>
+          <p><strong>Bullet 2 — "would like to add to the database when they have information about other plants."</strong> Adding new records: <em>a query to insert new plant records</em>.</p>
+          <p><strong>Bullet 3 — "which plants grow best in a particular climate."</strong> A search: <em>a query to find plants which grow in a particular climate</em>.</p>
+          <p><strong>Bullet 4 — "amend their data when they receive new research."</strong> "Amend" means change: <em>a query to update plant or climate data when required</em>.</p>
+          <img src="../resources/ddd/worked-examples/n5_frs_q1_ans.png" alt="Marking instructions 2a: award one mark for each bullet, maximum two marks. Acceptable answers include a query or search to find humidity and temperature of climates; a query to insert new plant records; a query or search to find plants which grow in a particular climate; a query to update plant or climate data when required; the database should have a table to store climate data; the database should have a table to store plant data; the database needs a field to store data." class="zoomable" />
+          <p>Any <strong>two</strong> of those score full marks. The mark scheme also accepts the structural answers — "the database should have a table to store plant data", "the database needs a field to store…" — so a requirement about <em>what is stored</em> counts just as much as one about <em>what is done</em>.</p>
+          <p><strong>Watch the trap:</strong> the question asks for <strong>two</strong> and there is no credit for more, so write two good ones rather than four vague ones. And do not stray outside the description — a requirement about user logins or a mobile app is not in the text, so it cannot earn a mark however sensible it sounds.</p>
+          <p style="color:#6A1B9A;">1 mark each, maximum 2. For example: <strong>a query to find plants which grow in a particular climate</strong>, and <strong>a query to insert new plant records</strong>.</p>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>Where this gets assessed.</strong> Functional requirements belong to the analysis stage, so they are normally examined in the <strong>assignment</strong> rather than the question paper — the example above is from the 2025 assignment. That is a pattern, though, not a guarantee. Requirements are part of the course specification, so a question <em>can</em> appear in the exam, and "it's usually in the assignment" is no defence for not knowing it.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="gdpr">GDPR — Who Is Who</h2>
+        <p>The <strong>General Data Protection Regulation</strong> is a set of rules designed to give people greater control over their personal data. It strengthens and replaces older data protection laws and updates them for the internet age, and it requires organisations holding data to be <strong>transparent</strong> about how they gather and use it.</p>
+        <p>It uses specific terms for the people involved, and exam questions depend on knowing which is which.</p>
+
+        <table>
+          <thead><tr><th>Term</th><th>Who or what it is</th><th>In the school clubs example</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Data subject</strong></td><td>The individual whose data is being collected. Holds the rights.</td><td>Each pupil in the database.</td></tr>
+            <tr><td><strong>Personal data</strong></td><td>Any data that can identify an individual, directly or combined with other information.</td><td>Pupil name, date of birth, house.</td></tr>
+            <tr><td><strong>Data controller</strong></td><td>The organisation using the data and deciding how it is processed. Holds the duties.</td><td>The school.</td></tr>
+            <tr><td><strong>Data processor</strong></td><td>A third party processing the data on the controller's behalf.</td><td>An outside company hired to produce attendance reports.</td></tr>
+            <tr><td><strong>Privacy notice</strong></td><td>The statement telling the subject how their data will be used and how long it is kept.</td><td>The letter home explaining what the school stores and why.</td></tr>
+            <tr><td><strong>Information Commissioner</strong></td><td>The UK's independent regulator. Enforces the law, investigates complaints and breaches, and can issue fines.</td><td>Who a parent would complain to if the school refused to correct a record.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>What counts as personal data?</h3>
+        <p>Anything that can be used to identify you <strong>directly</strong> is personal data — your name, your address, your IP address, the ID of your device, an examination number.</p>
+        <p>But it goes further than that. Data that could identify you <strong>when combined with other information</strong> is also personal data. Your postcode alone narrows you to an area; add the type of house you live in, whether it has a driveway, and how many cars are parked outside, and you can be picked out precisely. No single one of those is identifying, and together they are.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>The distinction to hold on to is <strong>subject holds the rights, controller holds the duties</strong>. Nearly every GDPR exam question is asking about one side or the other, and reading the question for which side it wants is most of the battle.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="rights">Rights of the Data Subject</h2>
+        <p>The regulation gives data subjects <strong>eight</strong> specific rights over how their data is processed.</p>
+
+        <table>
+          <thead><tr><th>Right</th><th>What it means</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. To be informed</strong></td><td>You must be told how your data will be processed, normally through a privacy notice written in clear language.</td></tr>
+            <tr><td><strong>2. Of access</strong></td><td>You can see the data an organisation holds about you, in a readable format and free of charge.</td></tr>
+            <tr><td><strong>3. To rectification</strong></td><td>Incorrect data must be corrected, normally within a month.</td></tr>
+            <tr><td><strong>4. To erasure</strong></td><td>The "right to be forgotten" — data must be deleted when there is no longer a need to hold it.</td></tr>
+            <tr><td><strong>5. To restrict processing</strong></td><td>You can block processing of your data where you have objected or where the law requires processing to stop.</td></tr>
+            <tr><td><strong>6. To data portability</strong></td><td>You can move your own data to a different service where the processing is automated.</td></tr>
+            <tr><td><strong>7. To object</strong></td><td>You can object to processing for direct marketing, research or "legitimate interest" reasons.</td></tr>
+            <tr><td><strong>8. Related to automated decision making</strong></td><td>You can refuse to be subject to purely automated decisions or profiling.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>The four that come up most</h3>
+        <p><strong>Right to be informed.</strong> When you sign up to a service, you should be given a <strong>privacy notice</strong> telling you plainly how your data will be used and how long it will be kept. In the school clubs database, that is the letter explaining what the school records about a pupil and why.</p>
+        <p><strong>Right of access.</strong> A pupil can ask to see everything the school holds about them. It must be provided in a readable format — digitally if the request was made digitally — and it must be <strong>free of charge</strong>.</p>
+        <p><strong>Right to rectification.</strong> If Archie's date of birth is wrong in the Pupil table, he can require the school to correct it, normally within one month. If the school has shared the data with anyone else, the school is responsible for making sure <em>they</em> correct it too.</p>
+        <p><strong>Right to erasure.</strong> The one exam questions reach for most often. Data must be erased when:</p>
+        <ul>
+          <li>it is no longer required for the purpose it was collected for;</li>
+          <li>the data subject withdraws consent;</li>
+          <li>the data subject objects and there is no valid legal reason to continue;</li>
+          <li>the data was processed unlawfully;</li>
+          <li>there is a legal requirement to delete it;</li>
+          <li>it was used to offer information services to a child without parental consent.</li>
+        </ul>
+        <p>The first of those is the one that matters in practice: <strong>when a person leaves, their data stops being needed, and it has to go.</strong> When a pupil leaves the school, the club records about them cannot simply be kept indefinitely.</p>
+
+        <p>The eighth right is worth one extra sentence, because it is the least intuitive. Where a decision is made about you purely by computer — an insurance company profiling you as high-risk, for instance — you have the right to <strong>have a human involved</strong>, to <strong>put your own point of view</strong>, to <strong>an explanation of the decision</strong>, and to <strong>challenge it</strong>.</p>
+      </article>
+
+      <article>
+        <h2 id="duties">Obligations on the Organisation</h2>
+        <p>Every right a data subject has creates a matching duty for the organisation holding the data. These are the <strong>principles</strong> the regulation places on data controllers and processors, and they are what an exam question means when it asks for the "implications" of GDPR for a business.</p>
+
+        <table>
+          <thead><tr><th>Principle</th><th>What the organisation must do</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. Processed lawfully, fairly and transparently</strong></td><td>Identify a lawful basis for holding the data, and be open about it.</td></tr>
+            <tr><td><strong>2. Used for the declared purpose only</strong></td><td>Use the data only for what the privacy notice said it would be used for.</td></tr>
+            <tr><td><strong>3. Limited to what is needed</strong></td><td>Collect only the data required for that purpose — nothing extra "just in case".</td></tr>
+            <tr><td><strong>4. Accurate</strong></td><td>Keep the data correct and, where necessary, up to date.</td></tr>
+            <tr><td><strong>5. Not kept longer than necessary</strong></td><td>Set a retention period and destroy the data at the end of it.</td></tr>
+            <tr><td><strong>6. Held securely</strong></td><td>Protect the data — for example by encrypting it — to prevent a data breach.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>The six lawful bases</h3>
+        <p>Principle 1 requires a <strong>lawful basis</strong> for processing. There are six, and any one of them is enough:</p>
+        <ul>
+          <li><strong>Consent</strong> — the data subject has given permission.</li>
+          <li><strong>Contract</strong> — there is a contract between controller and subject, such as providing insurance.</li>
+          <li><strong>Legal obligation</strong> — the law requires it, as when a bank must report suspected money laundering.</li>
+          <li><strong>Vital interest</strong> — to protect someone's life, as when A&amp;E accesses a medical history.</li>
+          <li><strong>Public task</strong> — official functions, such as a council collecting bins or providing education.</li>
+          <li><strong>Legitimate interest</strong> — the controller claims a reason of its own. This is the weakest, and a subject can object to it.</li>
+        </ul>
+
+        <h3>Retention and breaches</h3>
+        <p>Principle 5 is normally implemented as a <strong>retention period</strong> — a defined length of time after which data is destroyed. In Scotland, a pupil's records are kept for five years after they leave school and are then destroyed.</p>
+        <p>Principle 6 exists to prevent a <strong>data breach</strong>: a security incident that makes personal data available to others, corrupts or damages it, or makes it unavailable. Breaches are not only dramatic hacks — data emailed to the wrong person is a breach, and so is a system failure that locks people out of their own records.</p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>Read the question for whose side it is on.</strong> "State the implications of GDPR <em>for the youth club</em>" wants the club's <strong>obligations</strong> — store securely, delete when members leave, collect only what is needed. It does <strong>not</strong> want the members' rights. Marking instructions have explicitly rejected answers written from the wrong side, and it is the commonest way to lose these marks.</div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Two Implications for a Youth Club (2 marks)</div>
+          <p>This question follows a scenario in which a youth club stores personal details about its members.</p>
+          <img src="../resources/ddd/worked-examples/n5_gdpr_q1.png" alt="Exam question part d: State two implications of the General Data Protection Regulation (GDPR) for the youth club. Two marks, with lined space for Implication 1 and Implication 2." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the phrase to read carefully is <strong>"for the youth club"</strong>. The club is the <strong>data controller</strong>, so the question is asking for its duties — the six principles — and not for the members' rights.</p>
+          <p>Working down the principles and putting each in the club's own terms gives more than enough:</p>
+          <ul>
+            <li>The data must be <strong>processed lawfully</strong>.</li>
+            <li>The club must <strong>declare the purpose</strong> the data will be used for, and use it for that purpose only.</li>
+            <li>It must <strong>collect only the data required</strong> for that declared purpose.</li>
+            <li>The data must be <strong>accurate</strong>.</li>
+            <li>It must <strong>delete members' data when they leave</strong> — not keeping it longer than necessary.</li>
+            <li>It must <strong>store the data securely</strong>.</li>
+            <li>It <strong>cannot share the data</strong> without the members' permission.</li>
+            <li>It must <strong>show members their stored details</strong> when they ask.</li>
+          </ul>
+          <img src="../resources/ddd/worked-examples/n5_gdpr_q1_ans.png" alt="Marking instructions: any two from processed lawfully; must declare the purpose for which the data will be used; collect only the data required for the declared purpose; data must be accurate; delete personal data if members leave the club; store data securely; data cannot be shared without members' permission; must show members their stored details when requested. Two marks. Answers must refer to youth club implications and not members' implications." class="zoomable" />
+          <p><strong>Watch the trap:</strong> the marking instructions carry an explicit warning — <em>"Answers must refer to youth club implications and not members' implications."</em> Writing "members have the right to see their data" describes the same rule from the wrong side and scores nothing. Turn it round: "the club must show members their details when asked." Same fact, correct subject, full marks.</p>
+          <p>Notice how the last two bullets in the mark scheme are the members' rights of access and to object, rewritten as duties. That is the conversion the question is testing.</p>
+          <p style="color:#6A1B9A;">1 mark each for any <strong>two</strong> implications written from the club's point of view — for example <strong>the club must store members' data securely</strong> and <strong>the club must delete a member's data when they leave</strong>.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Cancelling an Account (1 mark)</div>
+          <img src="../resources/ddd/worked-examples/n5_gdpr_q2.png" alt="Exam question 13: Nathan cancels his ClipClop social media account. Describe one implication for ClipClop under UK General Data Protection Regulation. One mark." class="zoomable" />
+          <p><strong>How to tackle it:</strong> again, the implication is asked for <strong>"for ClipClop"</strong> — the company, the data controller. And the event that has happened is that a user has <em>left</em>.</p>
+          <p>Once Nathan cancels his account, ClipClop no longer has any reason to hold his data. The purpose it was collected for — running his account — has ended. That engages the <strong>right to erasure</strong> on Nathan's side and, on ClipClop's side, the principle that data must <strong>not be kept longer than necessary</strong>.</p>
+          <p>So the implication is that <strong>ClipClop should delete his data</strong>.</p>
+          <img src="../resources/ddd/worked-examples/n5_gdpr_q2_ans.png" alt="Marking instructions question 13: company should delete data; company should not keep data longer than necessary. One mark for any one bullet." class="zoomable" />
+          <p><strong>Watch the trap:</strong> it is worth <strong>one</strong> mark, so one clear sentence is the whole answer. "ClipClop should delete Nathan's data" earns it. Do not list every principle you can remember hoping one lands — and do not answer "Nathan has the right to be forgotten", which is once again the right rule attributed to the wrong party.</p>
+          <p style="color:#6A1B9A;">1 mark: <strong>the company should delete his data</strong>, or <strong>the company should not keep the data longer than necessary</strong>.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>These all use the same scenario, in the way the assignment does — first the requirements, then the GDPR implications for the same organisation.</p>
+
+        <div class="example-block">
+          <div class="example-label">The scenario — Riverbank Swimming Club</div>
+          <p>Riverbank Swimming Club wants a database to manage its members and the lessons it runs. The club committee have been discussing what they need from the new system. They concluded that:</p>
+          <ul>
+            <li>They need to store details of each member, including their name, date of birth, contact email address and the level they swim at.</li>
+            <li>They run a number of lessons, each with a coach, a day, a start time and a maximum number of places.</li>
+            <li>New members join throughout the year, and some members leave.</li>
+            <li>They want to know which members are booked into a particular lesson.</li>
+            <li>They need to correct a member's contact details when those change.</li>
+          </ul>
+          <p>The club stores this information on a laptop kept in the pool office. An outside company is paid to produce monthly attendance reports from the data.</p>
+        </div>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — Requirements (2 marks)</div>
-          <p>A gym is having a database created. State one <strong>end-user requirement</strong> and one <strong>functional requirement</strong> for a system that lets staff find members whose membership has expired.</p>
+          <div class="q-label">Practice Question 1 — Functional Requirements (3 marks)</div>
+          <p>Using the information above, create <strong>three</strong> functional requirements of the database.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">End-user: the gym staff need to identify members whose membership has expired (1 mark). Functional: the database needs a query to display members where the expiry date is before today's date / a table storing membership expiry dates (1 mark).</p>
+              <p style="color:#6A1B9A;">1 mark each, maximum 3. Any three from:</p>
+              <ul>
+                <li>a <strong>table to store member data</strong> (with fields for name, date of birth, email and level)</li>
+                <li>a <strong>table to store lesson data</strong> (with fields for coach, day, start time and maximum places)</li>
+                <li>a <strong>query to insert</strong> new member records</li>
+                <li>a <strong>query to delete</strong> members who leave</li>
+                <li>a <strong>query to search</strong> for the members booked into a particular lesson</li>
+                <li>a <strong>query to update</strong> a member's contact details</li>
+              </ul>
+              <p>The third bullet of the description carries <strong>two</strong> requirements — members joining (insert) and members leaving (delete). Reading each bullet for every verb rather than stopping at the first is what turns five bullets into six requirements.</p>
+              <p>No credit for requirements that are not in the description. A login system, a mobile app or online payment might all be sensible ideas, but none of them appears in the text.</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — GDPR (2 marks)</div>
-          <p>The gym stores members' personal details. Describe <strong>two</strong> implications of the UK GDPR for the gym.</p>
+          <div class="q-label">Practice Question 2 — End User and Requirement Types (3 marks)</div>
+          <p><strong>(a)</strong> Identify the end user of this system. <strong>(b)</strong> Explain the difference between a functional and a non-functional requirement. <strong>(c)</strong> Which type are you asked to identify at National 5?</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">Any two of: only collect the data needed for membership; use it only for the declared purpose; keep it accurate; delete it when no longer needed (e.g. when a member leaves); hold it securely; process it lawfully, fairly and transparently. (1 mark each)</p>
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 1 mark: the <strong>club committee / office staff</strong> who will use the database to manage members and lessons. Accept the coaches. The end user is the person who uses the system and is unlikely to have technical knowledge of how it works.</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 1 mark: a <strong>functional</strong> requirement specifies <strong>what the system should do</strong>, while a <strong>non-functional</strong> requirement describes <strong>how it works</strong> — its speed, security or reliability.</p>
+              <p style="color:#6A1B9A;"><strong>(c)</strong> 1 mark: <strong>functional requirements only</strong>.</p>
+              <p>The club itself is the <strong>system owner</strong> — the organisation paying for the system — which is not the same role as the end user, even when the same people fill both.</p>
             </div>
           </details>
         </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Who Is Who (4 marks)</div>
+          <p>For the Riverbank Swimming Club system, identify: <strong>(a)</strong> the data subjects, <strong>(b)</strong> the data controller, <strong>(c)</strong> the data processor, and <strong>(d)</strong> state one thing the Information Commissioner does.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 1 mark: <strong>the members</strong> — the individuals whose personal data is stored.</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 1 mark: <strong>Riverbank Swimming Club</strong> — the organisation using the data and deciding how it is processed.</p>
+              <p style="color:#6A1B9A;"><strong>(c)</strong> 1 mark: <strong>the outside company producing the monthly attendance reports</strong> — a third party processing the data on the controller's behalf.</p>
+              <p style="color:#6A1B9A;"><strong>(d)</strong> 1 mark: any one of — <strong>enforces data protection law</strong>, <strong>investigates complaints from data subjects</strong>, <strong>investigates data breaches</strong>, <strong>can issue fines</strong>.</p>
+              <p>Hiring a processor does not transfer responsibility. The club remains the data controller and stays accountable for what the reporting company does with the data.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Implications for the Club (2 marks)</div>
+          <p>State <strong>two</strong> implications of GDPR for Riverbank Swimming Club.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">1 mark each, maximum 2. Any two from:</p>
+              <ul>
+                <li>the club must <strong>store the data securely</strong> — a laptop in the pool office should at least be encrypted and password protected</li>
+                <li>the club must <strong>declare the purpose</strong> the data is used for and use it only for that</li>
+                <li>the club must <strong>collect only the data it needs</strong> for that purpose</li>
+                <li>the club must <strong>keep the data accurate</strong></li>
+                <li>the club must <strong>delete a member's data when they leave</strong></li>
+                <li>the club must <strong>show a member their stored details</strong> if asked</li>
+                <li>the club <strong>cannot share the data</strong> without permission</li>
+              </ul>
+              <p><strong>Answers must be written from the club's side.</strong> "Members can ask to see their data" is the same rule stated as a right, and would not be credited — it has to be "the club must show members their data when asked".</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — A Member Leaves (2 marks)</div>
+          <p>A member cancels their membership and leaves the club. <strong>(a)</strong> Describe one implication for the club. <strong>(b)</strong> Name the right the member is exercising.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 1 mark: the club <strong>should delete the member's data</strong>, as it should <strong>not be kept longer than necessary</strong> — the purpose it was collected for has ended.</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 1 mark: the <strong>right to erasure</strong> (also accepted: the right to be forgotten).</p>
+              <p>Part (a) asks for the club's duty and part (b) for the member's right — the same rule seen from each side. Answering (a) with "the member has the right to be forgotten" gets the sides the wrong way round and would lose that mark.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 6 — A Wrong Email Address (2 marks)</div>
+          <p>A member notices the club has recorded their email address incorrectly. <strong>(a)</strong> Name the right the member can rely on. <strong>(b)</strong> Describe what the club must do.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 1 mark: the <strong>right to rectification</strong>.</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 1 mark: the club must <strong>correct the data</strong>, normally <strong>within one month</strong> of being told. Also accept: if the club has shared the data with anyone else — such as the reporting company — it is responsible for making sure they correct it too.</p>
+              <p>This is also principle 4 in action: the club has a standing duty to keep the data <strong>accurate</strong>, whether or not anyone complains.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="next">Next — Turning Requirements Into a Structure</h2>
+        <p>Once you know what the database has to do, the next job is working out what it has to look like: which tables, which fields, which keys, and how the tables link together.</p>
+        <p>That is the <a href="design.html">design</a> stage — and the requirements you extracted here are exactly what it is built from.</p>
       </article>
 
     </div>

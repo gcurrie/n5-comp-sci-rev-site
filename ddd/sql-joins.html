@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Database Design &amp; Development</div>
     <h1>SQL — Joins (Equi-Join)</h1>
-    <p>Querying two linked tables at once by joining the primary key to the matching foreign key.</p>
+    <p>Pulling data from two linked tables in a single query, by matching the foreign key back to the primary key it points at.</p>
   </div>
 </section>
 <main class="page-content">
@@ -41,85 +41,628 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#why">Why Joins Are Needed</a></li>
-          <li><a href="#how">Writing an Equi-Join</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#recap">Linked Tables — A Recap</a></li>
+          <li><a href="#without">What the Join Actually Does</a></li>
+          <li><a href="#writing">Writing an Equi-Join</a></li>
+          <li><a href="#design-vs-sql">Design or SQL — Is the Join Needed?</a></li>
+          <li><a href="#more">Try It</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="why">Why Joins Are Needed</h2>
-        <p>An <strong>equi-join</strong> is needed when a query uses <strong>two tables</strong>. Imagine a garage database with a <strong>Car</strong> table and a <strong>Customer</strong> table, where <code>CustomerID</code> is the primary key of Customer and a foreign key in Car.</p>
-        <p><strong>Task:</strong> find the addresses of all Ford Fiesta owners. The problem: <code>Address</code> lives in the Customer table, but <code>Model</code> lives in the Car table — the query needs data from <strong>both</strong>.</p>
-        <div class="code-block code-sql">
-          <div class="code-label">SQL — WRONG: no join between the tables</div>
-          <pre>SELECT Make, Model, Address
-FROM Car, Customer
-WHERE Model = "Fiesta";</pre>
+        <h2 id="intro">Introduction</h2>
+        <p>On the <a href="sql-select.html">SELECT page</a> every query used <strong>one table</strong>. That works right up until the moment someone asks a question whose answer is split across two.</p>
+        <p>"Which pupils are in the Chess Club?" sounds like one question, but the data lives in two places. The pupils' <em>names</em> are in the Pupil table. The <em>name of the club</em> is in the Club table. Neither table can answer it alone.</p>
+        <p>An <strong>equi-join</strong> is what lets a single query reach across both. It works by matching the <strong>foreign key</strong> in one table to the <strong>primary key</strong> it points at in the other, so the database knows which record belongs with which. Once you can do that, a query can:</p>
+        <ul>
+          <li><strong>Display fields from both tables at once</strong> — a pupil's name beside their club's meeting day.</li>
+          <li><strong>Search one table using a condition from the other</strong> — find pupils by the <em>name</em> of the club they attend, even though the Pupil table only stores a code.</li>
+          <li><strong>Keep the database properly split</strong>, without losing the ability to see the whole picture when you need it.</li>
+        </ul>
+        <p>"Equi" simply means <em>equal</em> — the join is built on an equals sign, matching one key to the other.</p>
+
+        <h3>Key Terms</h3>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Equi-join</div><div class="def">A query condition that links two tables by matching a foreign key to the primary key it refers to, using <code>=</code>.</div></div>
+          <div class="key-term"><div class="term">Join condition</div><div class="def">The part of the WHERE clause that does the linking, written <code>Table1.key = Table2.key</code>.</div></div>
+          <div class="key-term"><div class="term">Primary key</div><div class="def">The field that uniquely identifies each record in a table.</div></div>
+          <div class="key-term"><div class="term">Foreign key</div><div class="def">A field in one table that holds the primary key value of a record in another table, creating the link.</div></div>
+          <div class="key-term"><div class="term">Qualified field name</div><div class="def">A field written with its table in front — <code>Pupil.clubID</code> — so there is no doubt which table it came from.</div></div>
         </div>
-        <p>This query produces nonsense — every Fiesta gets paired with <em>every</em> customer's address, because nothing tells the database which customer owns which car.</p>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe and implement</strong> a query that uses two tables — <strong>designing</strong> such a query, <strong>writing the SQL</strong> including the join condition, and <strong>explaining what goes wrong</strong> when the join is left out.</div>
+        </div>
       </article>
 
       <article>
-        <h2 id="how">Writing an Equi-Join</h2>
-        <p>The fix is to add the <strong>join condition</strong> — matching the primary key in one table to the foreign key in the other:</p>
-        <div class="code-block code-sql">
-          <div class="code-label">SQL — CORRECT: with the equi-join</div>
-          <pre>SELECT Make, Model, Address
-FROM Car, Customer
-WHERE Model = "Fiesta"
-  AND Car.CustomerID = Customer.CustomerID;</pre>
+        <h2 id="recap">Linked Tables — A Recap</h2>
+        <p>Back on the <a href="design.html">design page</a> you split a single overloaded table into two: <strong>Pupil</strong> and <strong>Club</strong>. Every example on this page uses that database.</p>
+
+        <div class="example-block">
+          <div class="example-label">Table — Pupil</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilID</th><th>pupilName</th><th>dateOfBirth</th><th>yearGroup</th><th>house</th><th>meritPoints</th><th>clubID</th></tr></thead>
+              <tbody>
+                <tr><td>P101</td><td>Archie</td><td>14/03/2010</td><td>4</td><td>Churchill</td><td>42</td><td>C01</td></tr>
+                <tr><td>P102</td><td>Noah</td><td>02/11/2009</td><td>5</td><td>Curie</td><td>18</td><td>C03</td></tr>
+                <tr><td>P103</td><td>Mason</td><td>27/06/2010</td><td>4</td><td>Montgomerie</td><td>55</td><td>C01</td></tr>
+                <tr><td>P104</td><td>Christian</td><td>09/01/2008</td><td>6</td><td>Nightingale</td><td>31</td><td>C02</td></tr>
+                <tr><td>P105</td><td>Leoni</td><td>18/09/2010</td><td>4</td><td>Curie</td><td>67</td><td>C04</td></tr>
+                <tr><td>P106</td><td>Lucienne</td><td>30/04/2009</td><td>5</td><td>Churchill</td><td>24</td><td>C03</td></tr>
+                <tr><td>P107</td><td>Erika</td><td>12/12/2011</td><td>3</td><td>Montgomerie</td><td>49</td><td>C04</td></tr>
+                <tr><td>P108</td><td>Louie</td><td>05/07/2009</td><td>5</td><td>Nightingale</td><td>12</td><td>C01</td></tr>
+                <tr><td>P109</td><td>Matthew</td><td>21/02/2011</td><td>3</td><td>Curie</td><td>38</td><td>C02</td></tr>
+                <tr><td>P110</td><td>Riley</td><td>08/05/2010</td><td>4</td><td>Churchill</td><td>71</td><td>C04</td></tr>
+                <tr><td>P111</td><td>Harveer</td><td>16/10/2008</td><td>6</td><td>Nightingale</td><td>26</td><td>C03</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <p>The equi-join always follows this pattern:</p>
-        <div class="code-block code-sql">
-          <div class="code-label">The pattern</div>
-          <pre>Table1.PrimaryKey = Table2.ForeignKey</pre>
+
+        <div class="example-block">
+          <div class="example-label">Table — Club</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>clubID</th><th>clubName</th><th>meetingDay</th><th>meetingTime</th><th>staffLead</th><th>equipmentProvided</th></tr></thead>
+              <tbody>
+                <tr><td>C01</td><td>Chess Club</td><td>Monday</td><td>15:30</td><td>Mr Anderson</td><td>TRUE</td></tr>
+                <tr><td>C02</td><td>Debating</td><td>Tuesday</td><td>13:05</td><td>Ms Hendry</td><td>FALSE</td></tr>
+                <tr><td>C03</td><td>Film Making</td><td>Thursday</td><td>15:30</td><td>Mrs Kaur</td><td>TRUE</td></tr>
+                <tr><td>C04</td><td>Athletics</td><td>Wednesday</td><td>16:00</td><td>Miss Lawson</td><td>FALSE</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <img src="../resources/ddd/Images/sql-join-match.svg" alt="Diagram showing how the join condition matches the primary key in one table to the foreign key in the other." class="zoomable" style="max-width:100%;" />
+
+        <p><code>clubID</code> is the <strong>primary key</strong> of Club — it appears there once per club, and identifies it. The same field appears in Pupil as a <strong>foreign key</strong>, where it is <em>not</em> unique: three different pupils can all hold <code>C01</code>, because three pupils can all be in the Chess Club.</p>
+        <p>That repetition is the whole point. A foreign key is a pupil's way of pointing at a club without copying the club's details onto every pupil record. The diagram below shows the pointing actually happening:</p>
+
+        <div class="example-block">
+          <div class="example-label">Diagram — the foreign key pointing at the primary key</div>
+          <svg class="jn-svg" viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="jnTitle jnDesc" style="width:100%;height:auto;">
+            <title id="jnTitle">How the clubID foreign key links each pupil to a club</title>
+            <desc id="jnDesc">Four pupil records on the left, each showing a name and a clubID, with arrows running to the matching clubID in the Club table on the right. Archie holds C01 and points to Chess Club. Noah holds C03 and points to Film Making. Leoni holds C04 and points to Athletics. Riley also holds C04 and points to the same Athletics record, showing that two pupils can point at one club. The Club table also contains C02 Debating, which no arrow reaches in this subset.</desc>
+            <style>
+              .jn-svg .jn-box { fill:#FFFFFF; stroke:#00442A; stroke-width:2.5; }
+              .jn-svg .jn-cap { fill:#00442A; }
+              .jn-svg .jn-cap-t { font-family:'Public Sans',system-ui,sans-serif; font-size:15px; font-weight:700; fill:#FFFFFF; }
+              .jn-svg .jn-hdr { fill:#E8F5EE; stroke:#C7DED2; stroke-width:1; }
+              .jn-svg .jn-hdr-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:11px; font-weight:700; fill:#00442A; letter-spacing:.04em; }
+              .jn-svg .jn-cell-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:13px; fill:#1A1A1A; }
+              .jn-svg .jn-key { fill:#FEF3C7; stroke:#C9A227; stroke-width:1.6; }
+              .jn-svg .jn-key-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:13px; font-weight:700; fill:#92750A; }
+              .jn-svg .jn-rule { stroke:#EDEFF1; stroke-width:1; }
+              .jn-svg .jn-arrow { stroke:#C9A227; stroke-width:2.2; fill:none; }
+              .jn-svg .jn-eq { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:14px; font-weight:700; fill:#92750A; text-anchor:middle; }
+            </style>
+            <defs>
+              <marker id="jnHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#C9A227" />
+              </marker>
+            </defs>
+
+            <text class="jn-eq" x="500" y="30">Pupil.clubID  =  Club.clubID</text>
+
+            <!-- Pupil side -->
+            <rect class="jn-cap" x="40" y="46" width="320" height="26" />
+            <text class="jn-cap-t" x="52" y="65">Pupil</text>
+            <rect class="jn-box" x="40" y="72" width="320" height="188" fill="none" />
+            <rect class="jn-hdr" x="41" y="73" width="318" height="28" />
+            <text class="jn-hdr-t" x="54" y="92">pupilName</text>
+            <text class="jn-hdr-t" x="252" y="92">clubID</text>
+            <g class="jn-rule">
+              <line x1="41" y1="140" x2="359" y2="140" />
+              <line x1="41" y1="180" x2="359" y2="180" />
+              <line x1="41" y1="220" x2="359" y2="220" />
+              <line x1="240" y1="73" x2="240" y2="259" />
+            </g>
+            <text class="jn-cell-t" x="54" y="126">Archie</text>
+            <text class="jn-cell-t" x="54" y="166">Noah</text>
+            <text class="jn-cell-t" x="54" y="206">Leoni</text>
+            <text class="jn-cell-t" x="54" y="246">Riley</text>
+            <rect class="jn-key" x="246" y="108" width="52" height="24" />
+            <text class="jn-key-t" x="254" y="126">C01</text>
+            <rect class="jn-key" x="246" y="148" width="52" height="24" />
+            <text class="jn-key-t" x="254" y="166">C03</text>
+            <rect class="jn-key" x="246" y="188" width="52" height="24" />
+            <text class="jn-key-t" x="254" y="206">C04</text>
+            <rect class="jn-key" x="246" y="228" width="52" height="24" />
+            <text class="jn-key-t" x="254" y="246">C04</text>
+
+            <!-- Club side -->
+            <rect class="jn-cap" x="640" y="46" width="320" height="26" />
+            <text class="jn-cap-t" x="652" y="65">Club</text>
+            <rect class="jn-box" x="640" y="72" width="320" height="188" fill="none" />
+            <rect class="jn-hdr" x="641" y="73" width="318" height="28" />
+            <text class="jn-hdr-t" x="654" y="92">clubID</text>
+            <text class="jn-hdr-t" x="762" y="92">clubName</text>
+            <g class="jn-rule">
+              <line x1="641" y1="140" x2="959" y2="140" />
+              <line x1="641" y1="180" x2="959" y2="180" />
+              <line x1="641" y1="220" x2="959" y2="220" />
+              <line x1="750" y1="73" x2="750" y2="259" />
+            </g>
+            <rect class="jn-key" x="648" y="108" width="52" height="24" />
+            <text class="jn-key-t" x="656" y="126">C01</text>
+            <rect class="jn-key" x="648" y="148" width="52" height="24" />
+            <text class="jn-key-t" x="656" y="166">C02</text>
+            <rect class="jn-key" x="648" y="188" width="52" height="24" />
+            <text class="jn-key-t" x="656" y="206">C03</text>
+            <rect class="jn-key" x="648" y="228" width="52" height="24" />
+            <text class="jn-key-t" x="656" y="246">C04</text>
+            <text class="jn-cell-t" x="762" y="126">Chess Club</text>
+            <text class="jn-cell-t" x="762" y="166">Debating</text>
+            <text class="jn-cell-t" x="762" y="206">Film Making</text>
+            <text class="jn-cell-t" x="762" y="246">Athletics</text>
+
+            <!-- the pointing -->
+            <g class="jn-arrow" marker-end="url(#jnHead)">
+              <path d="M 300 120 C 420 120, 520 120, 646 120" />
+              <path d="M 300 160 C 420 160, 520 200, 646 200" />
+              <path d="M 300 200 C 420 200, 520 240, 646 240" />
+              <path d="M 300 240 C 400 240, 520 240, 646 240" />
+            </g>
+          </svg>
+        </div>
+
+        <p>Two things in that diagram are worth pausing on. <strong>Leoni and Riley both point at the same club</strong> — one club, many pupils, which is exactly what a one-to-many relationship looks like from the data's side. And <strong>C02 Debating has no arrow reaching it</strong> in this subset, which is fine: a club is allowed to exist whether or not anyone in these four rows attends it.</p>
+
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div><strong>Checklist for two-table queries:</strong> both tables in <code>FROM</code> (separated by a comma), and the join condition <code>Table1.Key = Table2.Key</code> in the <code>WHERE</code> clause, ANDed with any search criteria. Forgetting the join is the most common lost mark.</div>
+          <div>The join condition is just those arrows, written down. Everywhere an arrow lands, <code>Pupil.clubID</code> and <code>Club.clubID</code> hold the same value — and that equality is the whole of the equi-join.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
+        <h2 id="without">What the Join Actually Does</h2>
+        <p>The clearest way to understand a join is to watch what happens when you forget it. Suppose we want each pupil's name next to the name of their club, and we write this:</p>
+
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — WRONG: two tables, but no join</div>
+          <pre>SELECT pupilName, clubName
+FROM Pupil, Club;</pre>
+        </div>
+
+        <p>Naming both tables in <code>FROM</code> tells the database to use them both, but it says nothing about <em>how they relate</em>. With no instruction to match anything up, the database does the only thing it can: it pairs <strong>every</strong> pupil with <strong>every</strong> club.</p>
+        <p>There are 11 pupils and 4 clubs, so the result is <strong>11 × 4 = 44 rows</strong>. Here are the first three pupils' worth — 3 × 4 = 12 rows — which is enough to see the pattern:</p>
+
+        <div class="example-block">
+          <div class="example-label">Output — the first 12 of 44 nonsense rows</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilName</th><th>clubName</th><th>Is this true?</th></tr></thead>
+              <tbody>
+                <tr><td>Archie</td><td>Chess Club</td><td>✅ correct — Archie is C01</td></tr>
+                <tr><td>Archie</td><td>Debating</td><td>❌ invented</td></tr>
+                <tr><td>Archie</td><td>Film Making</td><td>❌ invented</td></tr>
+                <tr><td>Archie</td><td>Athletics</td><td>❌ invented</td></tr>
+                <tr><td>Noah</td><td>Chess Club</td><td>❌ invented</td></tr>
+                <tr><td>Noah</td><td>Debating</td><td>❌ invented</td></tr>
+                <tr><td>Noah</td><td>Film Making</td><td>✅ correct — Noah is C03</td></tr>
+                <tr><td>Noah</td><td>Athletics</td><td>❌ invented</td></tr>
+                <tr><td>Mason</td><td>Chess Club</td><td>✅ correct — Mason is C01</td></tr>
+                <tr><td>Mason</td><td>Debating</td><td>❌ invented</td></tr>
+                <tr><td>Mason</td><td>Film Making</td><td>❌ invented</td></tr>
+                <tr><td>Mason</td><td>Athletics</td><td>❌ invented</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p>Every pupil appears four times, once against each club, and only <strong>one of those four</strong> is true. The other three are pairings the database has manufactured out of nothing. Across all 44 rows, exactly 11 are real and <strong>33 are fiction</strong>.</p>
+        <p>Notice what the database has <em>not</em> done: it has not made a mistake, and it has not ignored your instructions. It has done precisely what you asked. You gave it two tables and no rule connecting them, so it produced every possible combination. The nonsense is in the question, not the answer.</p>
+
+        <p>Now add the join condition:</p>
+
+        <div class="code-block code-sql">
+          <div class="code-label">SQL — CORRECT: with the equi-join</div>
+          <pre>SELECT pupilName, clubName
+FROM Pupil, Club
+WHERE Pupil.clubID = Club.clubID;</pre>
+        </div>
+
+        <p>That single line is a <strong>filter over the 44 pairings</strong>. It keeps a pairing only where the pupil's <code>clubID</code> matches the club's <code>clubID</code> — the 11 rows with a tick above — and throws away the other 33. What is left is one row per pupil, each beside their real club:</p>
+
+        <div class="example-block">
+          <div class="example-label">Output — 11 rows, all of them true</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilName</th><th>clubName</th></tr></thead>
+              <tbody>
+                <tr><td>Archie</td><td>Chess Club</td></tr>
+                <tr><td>Noah</td><td>Film Making</td></tr>
+                <tr><td>Mason</td><td>Chess Club</td></tr>
+                <tr><td>Christian</td><td>Debating</td></tr>
+                <tr><td>Leoni</td><td>Athletics</td></tr>
+                <tr><td>Lucienne</td><td>Film Making</td></tr>
+                <tr><td>Erika</td><td>Athletics</td></tr>
+                <tr><td>Louie</td><td>Chess Club</td></tr>
+                <tr><td>Matthew</td><td>Debating</td></tr>
+                <tr><td>Riley</td><td>Athletics</td></tr>
+                <tr><td>Harveer</td><td>Film Making</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>Leaving out the join does not cause an error message.</strong> The query runs perfectly happily and hands back a large, confident, completely wrong answer. That is what makes it dangerous — nothing warns you. If a two-table query returns far more rows than you expected, the missing join is the first thing to check.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="writing">Writing an Equi-Join</h2>
+        <p>Every equi-join follows the same shape, and it only differs from a single-table query in two places:</p>
+
+        <div class="code-block code-sql">
+          <div class="code-label">The pattern</div>
+          <pre>SELECT  fields from either table
+FROM    Table1, Table2
+WHERE   search criteria
+  AND   Table1.key = Table2.key;</pre>
+        </div>
+
+        <ul>
+          <li><strong>Both tables go in <code>FROM</code></strong>, separated by a comma.</li>
+          <li><strong>The join condition goes in <code>WHERE</code></strong>, joined to any search criteria with <code>AND</code>.</li>
+        </ul>
+
+        <p>The join condition is always written as <code>table.field = table.field</code>. Putting the table name in front is called <strong>qualifying</strong> the field, and here it is compulsory: both tables have a field called <code>clubID</code>, so <code>clubID = clubID</code> would be meaningless. <code>Pupil.clubID = Club.clubID</code> leaves no doubt.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>The two sides can be written in either order — <code>Pupil.clubID = Club.clubID</code> and <code>Club.clubID = Pupil.clubID</code> are the same condition and both earn the mark. The same goes for the order of the tables in <code>FROM</code>.</div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Two Tables, One Question — The Chess Club List (4 marks)</div>
+          <p>Mr Anderson asks for a register: <em>"Can I have the name of every pupil in the Chess Club, and remind me which day we meet?"</em></p>
+          <p><strong>Design the query, then write the SQL.</strong></p>
+          <p><strong>How to tackle it:</strong> we work out the design first, and the moment the design names two tables we know a join is coming.</p>
+          <p><strong>Field(s)</strong> — he wants "the name of every pupil", so <code>pupilName</code>, and "which day we meet", so <code>meetingDay</code>. Nothing else.</p>
+          <p><strong>Table(s)</strong> — and here is the giveaway. <code>pupilName</code> is in Pupil; <code>meetingDay</code> is in Club. Two tables, so <strong>Pupil, Club</strong>.</p>
+          <p><strong>Search criteria</strong> — "in the Chess Club". Look carefully at where that phrase can be tested. The Pupil table only stores <code>C01</code>; the words "Chess Club" appear in the <em>Club</em> table, so the condition is <code>clubName = "Chess Club"</code>.</p>
+          <p><strong>Sort order</strong> — he has not asked for one, so leave it empty. Never invent a sort.</p>
+          <p>So the design is:</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>pupilName, meetingDay</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Pupil, Club</td></tr>
+              <tr><th scope="row">Search criteria</th><td>clubName = "Chess Club"</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p>Turning that into SQL, the two tables in the design become the two tables in <code>FROM</code>, and — because there are two of them — the join condition has to be added:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>SELECT pupilName, meetingDay
+FROM Pupil, Club
+WHERE clubName = "Chess Club"
+  AND Pupil.clubID = Club.clubID;</pre>
+          </div>
+          <p>Which produces:</p>
+          <table>
+            <thead><tr><th>pupilName</th><th>meetingDay</th></tr></thead>
+            <tbody>
+              <tr><td>Archie</td><td>Monday</td></tr>
+              <tr><td>Mason</td><td>Monday</td></tr>
+              <tr><td>Louie</td><td>Monday</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Watch the trap:</strong> it is tempting to write <code>WHERE clubID = "C01"</code>, because you can see from the Club table that Chess Club is C01. That does find the right pupils — but you have done the lookup in your head rather than letting the query do it, and it stops being an answer to the question that was asked. If the club were renumbered tomorrow, the query would quietly return the wrong pupils. Search on what the question actually named.</p>
+          <p style="color:#6A1B9A;">1 mark for <strong>SELECT pupilName, meetingDay</strong> · 1 mark for <strong>FROM Pupil, Club</strong> · 1 mark for <strong>clubName = "Chess Club"</strong> · 1 mark for the <strong>equi-join</strong> <code>Pupil.clubID = Club.clubID</code> attached with AND.</p>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>The join is the mark most often dropped.</strong> Pupils get the fields right, the tables right and the condition right, then finish the query without the join and lose a quarter of the marks. Build a habit: the second you write two table names after <code>FROM</code>, write the join condition before you write anything else.</div>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="design-vs-sql">Design or SQL — Is the Join Needed?</h2>
+        <p>This catches people out every year, so it is worth being exact about it.</p>
+        <p>A <strong>query design</strong> — the Field(s) / Table(s) / Search criteria / Sort order table — is a <em>plan</em>. It records what you want, not how the database will fetch it. Because the join is a mechanical detail of the fetching, SQA's marking instructions say plainly that the <strong>equi-join is not required in a design answer</strong>. Naming both tables in the Table(s) row is what earns that mark.</p>
+        <p>A <strong>SQL answer</strong> is the real thing, and there the join is <strong>compulsory</strong>. Without it the query returns nonsense, and the mark is gone.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>So what should you actually do?</strong> Write the join in your design anyway. It is <strong>never penalised</strong> — a design with the join is still fully correct — and it builds the habit that saves you the mark in the SQL question a few lines later. Just make sure the rest of the design is right first: the join is a bonus there, but the fields, tables and criteria are where the marks are.</div>
+        </div>
+
+        <p>The two past-paper questions below are both <em>design</em> questions, and their marking instructions say so explicitly. The third is the SQL version of the same idea, where the join carries a mark of its own.</p>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Designing a Two-Table Query, Company Database (4 marks)</div>
+          <p>This question uses the company database below. Each employee applies for one vacancy, and <code>jobRef</code> links the two tables.</p>
+          <img src="../resources/ddd/worked-examples/n5_companyDB_structure.png" alt="Company database. Vacancy table with fields jobRef, jobTitle, department and startDate, containing HR22 Clerk HR 04/06/2019; PD18 Manager Production; AD36 Administrator Admin 30/06/2019; FN42 Finance Officer Finance; PD20 Sales Manager Production 10/07/2019. Employee table with fields appRef, jobRef, initial, surname, payGrade, drivingLicence and cvAttached, containing seven applicants numbered 325 to 331." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_join_q1-companyDB.png" alt="Exam question part b: Design a query to display the job title and names of employees at pay grade 2 who have applied for any job in the Production department. Four marks. A blank design table is provided with rows for Field(s), Table(s) and Search criteria." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the wording "Design a query" tells us to fill in the design table, not to write SQL. We take the sentence apart one row at a time.</p>
+          <p><strong>Field(s)</strong> — "display the job title and names of employees". That is <code>jobTitle</code>, plus the name, which in this database is split into <code>initial</code> and <code>surname</code>. So <code>jobTitle, initial, surname</code>. Nothing else — the marking instructions say <em>"with no other fields"</em>, and adding <code>department</code> or <code>payGrade</code> because they are mentioned would cost the mark.</p>
+          <p><strong>Table(s)</strong> — <code>jobTitle</code> and <code>department</code> are in Vacancy; <code>initial</code>, <code>surname</code> and <code>payGrade</code> are in Employee. Both are needed, so <strong>Vacancy, Employee</strong>.</p>
+          <p><strong>Search criteria</strong> — two conditions, one from each table: <code>department = "Production"</code> and <code>payGrade = 2</code>.</p>
+          <p><strong>The point of this question:</strong> the answer is a two-table query, and yet the equi-join appears nowhere in the marking instructions. They state it directly — <em>"Logical operators and equi-joins are not required in the search criteria as this is design."</em> The Table(s) row naming both tables is what shows you understood the query spans two.</p>
+          <img src="../resources/ddd/worked-examples/n5_join_q1_ans-companyDB.png" alt="Marking instructions: one mark each for jobTitle, initial, surname with no other fields; Vacancy, Employee; department = Production; payGrade = 2. Four marks. Note that logical operators and equi-joins are not required in the search criteria as this is design. If logical operators are used they must produce the correct result." class="zoomable" />
+          <p>So the completed design is:</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>jobTitle, initial, surname</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Vacancy, Employee</td></tr>
+              <tr><th scope="row">Search criteria</th><td>department = "Production"<br />payGrade = 2</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Watch the trap:</strong> the marking instructions add a warning about logical operators — if you <em>do</em> write <code>AND</code> or <code>OR</code> between your conditions, they have to give the correct result. Writing <code>department = "Production" OR payGrade = 2</code> would return everyone in Production plus everyone on grade 2, which is not what was asked. Listing the conditions on separate lines, as the answer does, avoids the risk entirely.</p>
+          <p style="color:#6A1B9A;">1 mark: <strong>jobTitle, initial, surname</strong> and no other fields · 1 mark: <strong>Vacancy, Employee</strong> · 1 mark: <strong>department = Production</strong> · 1 mark: <strong>payGrade = 2</strong>.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Designing a Two-Table Query, Netball Database (4 marks)</div>
+          <p>This question and the next both use the netball league database. <code>clubID</code> is the primary key of Club and a foreign key in Player.</p>
+          <img src="../resources/ddd/worked-examples/n5_netballDB_structure.png" alt="Netball league database. Club table with fields clubID, clubName, trainingVenue, contactNo and division, containing A2706 Joint Forces Glasgow division 3; B1803 Shooting Stars Renfrewshire division 2; E0408 Team Titans Glasgow division 1; P2507 Hot Shots Lanarkshire division 1; H0311 Throwing Tigers Glasgow division 2. Player table with fields playerID, name, email, age, position and clubID, containing nine players including Meenal age 21 Goal keeper E0408, Ibrahim age 36 Wing defence E0408 and Xander age 38 Goal defence E0408." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_join_q2_netball.png" alt="Exam question part b: Design a query that could be used to create a list of names and the division for Goal keepers that are over 30 years old. Four marks. A blank design table is provided with rows for Field(s), Table(s) and Search Criteria." class="zoomable" />
+          <p><strong>How to tackle it:</strong> same method, and again the phrase "Design a query" means the design table only.</p>
+          <p><strong>Field(s)</strong> — "a list of names and the division". So <code>name</code> and <code>division</code>. Note how little is asked for: not the position, not the age, even though both are used to filter. A field you search on does not have to be a field you display.</p>
+          <p><strong>Table(s)</strong> — <code>name</code>, <code>position</code> and <code>age</code> are in Player; <code>division</code> is in Club. So <strong>Player, Club</strong>.</p>
+          <p><strong>Search criteria</strong> — "Goal keepers" gives <code>position = "Goal keeper"</code>, and "over 30 years old" gives <code>age &gt; 30</code>.</p>
+          <img src="../resources/ddd/worked-examples/n5_join_q2_ans_netball.png" alt="Marking instructions: fields name, division; tables Player, Club; position = Goal Keeper; age greater than 30. Four marks. Candidates may express answers differently in design, for example age = greater than 30. Fields can be in any order and no mark if additional fields are included. Table names can be in any order. Conditions can be in any order and an equi-join is not required." class="zoomable" />
+          <p>So the completed design is:</p>
+          <table class="query-design">
+            <tbody>
+              <tr><th scope="row">Field(s)</th><td>name, division</td></tr>
+              <tr><th scope="row">Table(s)</th><td>Player, Club</td></tr>
+              <tr><th scope="row">Search criteria</th><td>position = "Goal keeper"<br />age &gt; 30</td></tr>
+              <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Watch the trap:</strong> "over 30" is <code>&gt; 30</code>, not <code>&gt;= 30</code>. In the sample data Ibrahim is 36 and Xander is 38, but if a 30-year-old goal keeper existed the marker would be checking whether you had wrongly let them in.</p>
+          <p>The marking instructions are generous on presentation — fields in any order, tables in any order, conditions in any order — but strict on two things: <strong>no extra fields</strong>, and once again <em>"Equi-join not required"</em>.</p>
+          <p style="color:#6A1B9A;">1 mark: <strong>name, division</strong> · 1 mark: <strong>Player, Club</strong> · 1 mark: <strong>position = Goal Keeper</strong> · 1 mark: <strong>age &gt; 30</strong>.</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Now Write the SQL, Netball Database (4 marks)</div>
+          <p>Same database, next part of the same question — and this time the join is worth a mark.</p>
+          <img src="../resources/ddd/worked-examples/n5_join_q3_netball.png" alt="Exam question part c i: The netball league wants a list of players who meet at least one of the following criteria — train in Lanarkshire, or play for a team in division 2. Complete the SQL query below. Four marks. SELECT clubName, name, playerID is given, with FROM and WHERE left blank." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the <code>SELECT</code> line is already printed, so every mark is in <code>FROM</code> and <code>WHERE</code>. Three things have to appear: both tables, the two conditions correctly combined, and the join.</p>
+          <p><strong>FROM</strong> — <code>clubName</code> is in Club, while <code>name</code> and <code>playerID</code> are in Player. The SELECT line alone tells us both tables are needed: <code>FROM Club, Player</code>.</p>
+          <p><strong>The conditions</strong> — "train in Lanarkshire" is <code>trainingVenue = "Lanarkshire"</code>, and "a team in division 2" is <code>division = 2</code>. Both fields live in Club.</p>
+          <p><strong>How to combine them</strong> — this is where the marks are won or lost. The question says <strong>"at least one of the following criteria"</strong>. At least one means <strong>OR</strong>, not AND. If you read too quickly and write AND, you are asking for clubs that are in Lanarkshire <em>and</em> in division 2 — a far smaller list, and the wrong one.</p>
+          <p><strong>The join</strong> — two tables are in play, so <code>Club.clubID = Player.clubID</code> must be there, attached with <code>AND</code>.</p>
+          <img src="../resources/ddd/worked-examples/n5_join_q3_ans_netball.png" alt="Marking instructions: FROM Club, Player. WHERE trainingVenue = Lanarkshire, division = 2, OR between two conditions, and club.clubID = player.clubID with attached AND. Four marks. Table names can be in any order, order of search conditions could change, quotes and brackets not required." class="zoomable" />
+          <p>So the completed query is:</p>
+          <div class="code-block code-sql">
+            <div class="code-label">Model answer</div>
+            <pre>SELECT clubName, name, playerID
+FROM Club, Player
+WHERE (trainingVenue = "Lanarkshire" OR division = 2)
+  AND Club.clubID = Player.clubID;</pre>
+          </div>
+          <p><strong>A note on the brackets:</strong> the marking instructions say quotes and brackets are <em>not</em> required, so you will not lose a mark without them. They are still worth writing. The condition mixes OR and AND, and the brackets make it unmistakable that the OR is the pair of search conditions and the AND attaches the join to both of them. It costs two characters and removes all doubt — for you as much as for the marker.</p>
+          <p><strong>Watch the trap:</strong> compare this with the two design questions above. Identical database, almost identical thinking — but the moment the question says "Complete the SQL query", the equi-join stops being optional and becomes a mark in its own right.</p>
+          <p style="color:#6A1B9A;">1 mark: <strong>FROM Club, Player</strong> · 1 mark: <strong>trainingVenue = "Lanarkshire"</strong> and <strong>division = 2</strong> · 1 mark: the two conditions joined by <strong>OR</strong> · 1 mark: the equi-join <strong>Club.clubID = Player.clubID</strong> attached with AND.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="more">Try It</h2>
+
+        <div class="interactive-block">
+          <div class="ib-label">Visualiser</div>
+          <p class="ib-title">Join Switch</p>
+          <div class="ib-body">
+            <p class="ib-intro">One switch, one query, two very different answers. With the join <strong>off</strong> the result fills with all 44 pairings and every false one is named as invented. Switch it <strong>on</strong> and watch the 33 nonsense rows strike through and fall away, leaving the 11 that are true. Flip it back and forth until the difference feels obvious.</p>
+            <iframe src="../resources/ddd/visualisers/join-switch.html"
+                    title="Join Switch — toggle the equi-join on and off and watch the result change from 44 rows to 11"
+                    loading="lazy"
+                    style="height:900px"></iframe>
+          </div>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Visualiser</div>
+          <p class="ib-title">Which Table Is It In?</p>
+          <div class="ib-body">
+            <p class="ib-intro">Before you can write a join you have to notice you need one. Work through five queries, placing each field in the table it lives in — click a field, then click a table. When everything is placed, the interactive tells you how many tables the query really needed and builds the <code>FROM</code> line. Three of the five need a join; two do not, and the last one is a trap.</p>
+            <iframe src="../resources/ddd/visualisers/which-table.html"
+                    title="Which Table Is It In? — place each field of a query in the Pupil or Club table and find out whether the query needs a join"
+                    loading="lazy"
+                    style="height:1020px"></iframe>
+          </div>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Animation</div>
+          <p class="ib-title">The Joined Row, Assembled</p>
+          <div class="ib-body">
+            <p class="ib-intro">What <em>is</em> a joined record, exactly? One Pupil record and one Club record line up on their matching <code>clubID</code> and slide together into a single row containing every field from both — which is why a query can then select from either side without caring where anything started.</p>
+            <iframe src="../resources/ddd/visualisers/joined-row-animator.html"
+                    title="Animation showing a Pupil record and a Club record sliding together on their matching clubID to form one joined row of seven fields"
+                    loading="lazy"
+                    style="height:430px"></iframe>
+          </div>
+        </div>
+
+      </article>
+
+      <article>
+        <h2 id="practice">Practice Questions</h2>
+        <p>These use a garden centre database. <strong>Supplier</strong> holds the growers, <strong>Plant</strong> holds the stock, and <code>supplierID</code> is the primary key of Supplier and a foreign key in Plant.</p>
+
+        <div class="example-block">
+          <div class="example-label">Table — Supplier</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>supplierID</th><th>supplierName</th><th>town</th><th>phone</th></tr></thead>
+              <tbody>
+                <tr><td>S01</td><td>Highland Growers</td><td>Perth</td><td>01738 900112</td></tr>
+                <tr><td>S02</td><td>Border Blooms</td><td>Kelso</td><td>01573 900487</td></tr>
+                <tr><td>S03</td><td>Clyde Nurseries</td><td>Lanark</td><td>01555 900263</td></tr>
+                <tr><td>S04</td><td>Tay Valley Plants</td><td>Perth</td><td>01382 900745</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Table — Plant</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>plantID</th><th>plantName</th><th>category</th><th>priceGBP</th><th>inStock</th><th>supplierID</th></tr></thead>
+              <tbody>
+                <tr><td>P201</td><td>Lavender</td><td>Shrub</td><td>6.50</td><td>TRUE</td><td>S02</td></tr>
+                <tr><td>P202</td><td>Japanese Maple</td><td>Tree</td><td>34.00</td><td>TRUE</td><td>S01</td></tr>
+                <tr><td>P203</td><td>Hosta</td><td>Perennial</td><td>8.25</td><td>FALSE</td><td>S03</td></tr>
+                <tr><td>P204</td><td>Rosemary</td><td>Herb</td><td>4.99</td><td>TRUE</td><td>S02</td></tr>
+                <tr><td>P205</td><td>Silver Birch</td><td>Tree</td><td>27.50</td><td>TRUE</td><td>S01</td></tr>
+                <tr><td>P206</td><td>Foxglove</td><td>Perennial</td><td>5.75</td><td>TRUE</td><td>S04</td></tr>
+                <tr><td>P207</td><td>Bay Tree</td><td>Shrub</td><td>18.00</td><td>FALSE</td><td>S03</td></tr>
+                <tr><td>P208</td><td>Thyme</td><td>Herb</td><td>3.99</td><td>TRUE</td><td>S04</td></tr>
+                <tr><td>P209</td><td>Rowan</td><td>Tree</td><td>31.00</td><td>TRUE</td><td>S01</td></tr>
+                <tr><td>P210</td><td>Astilbe</td><td>Perennial</td><td>7.40</td><td>FALSE</td><td>S02</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div class="practice-question">
-          <div class="q-label">Q1 — Spot the missing join (2 marks)</div>
-          <p>A school database has Pupil (pupilID PK, forename, surname, classCode*) and Class (classCode PK, teacher, room). Explain why this query is wrong, and rewrite the WHERE clause correctly:</p>
-          <div class="code-block code-sql">
-            <pre>SELECT forename, surname, teacher
-FROM Pupil, Class
-WHERE room = "12";</pre>
-          </div>
+          <div class="q-label">Practice Question 1 — Design a Two-Table Query (4 marks)</div>
+          <p>Design a query to display the name and price of every tree costing more than £30, together with the name of the supplier who provides it.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;">There is no join condition, so every pupil is matched with every class (1 mark). Corrected: <code>WHERE room = "12" AND Pupil.classCode = Class.classCode</code> (1 mark).</p>
+              <table class="query-design">
+                <tbody>
+                  <tr><th scope="row">Field(s)</th><td>plantName, priceGBP, supplierName</td></tr>
+                  <tr><th scope="row">Table(s)</th><td>Plant, Supplier</td></tr>
+                  <tr><th scope="row">Search criteria</th><td>category = "Tree"<br />priceGBP &gt; 30</td></tr>
+                  <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+                </tbody>
+              </table>
+              <p style="color:#6A1B9A;">1 mark: <strong>plantName, priceGBP, supplierName</strong> and no other fields · 1 mark: <strong>Plant, Supplier</strong> · 1 mark: <strong>category = "Tree"</strong> · 1 mark: <strong>priceGBP &gt; 30</strong>.</p>
+              <p>This is a <strong>design</strong> question, so the equi-join is not required — naming both tables is what shows you knew the query spans two. Writing the join as well would not be penalised.</p>
+              <p>Do not add <code>category</code> to the fields. It is what you search on, not what you were asked to display.</p>
+              <p>The design would return Japanese Maple at £34.00 and Rowan at £31.00, both from Highland Growers. Silver Birch is a tree but costs £27.50, so <code>&gt; 30</code> correctly leaves it out — <code>&gt;= 30</code> would not have changed the answer here, but "more than" is still <code>&gt;</code>.</p>
             </div>
           </details>
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Q2 — Write an equi-join (3 marks)</div>
-          <p>Using the garage database (Car: registration PK, make, model, customerID*; Customer: customerID PK, name, address, town), write a query to display the name of every customer who owns a Vauxhall.</p>
+          <div class="q-label">Practice Question 2 — Write the Equi-Join (4 marks)</div>
+          <p>Write the SQL to display the plant name and the supplier's name for every plant costing more than £20.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
               <div class="code-block code-sql">
-                <div class="code-label">Suggested answer</div>
-                <pre>SELECT Name
-FROM Car, Customer
-WHERE Make = "Vauxhall"
-  AND Car.CustomerID = Customer.CustomerID;</pre>
+                <div class="code-label">Model answer</div>
+                <pre>SELECT plantName, supplierName
+FROM Plant, Supplier
+WHERE priceGBP &gt; 20
+  AND Plant.supplierID = Supplier.supplierID;</pre>
               </div>
-              <p>1 mark: SELECT Name with both tables in FROM. 1 mark: correct search condition. 1 mark: correct equi-join.</p>
+              <p style="color:#6A1B9A;">1 mark: <strong>SELECT plantName, supplierName</strong> · 1 mark: <strong>FROM Plant, Supplier</strong> · 1 mark: <strong>priceGBP &gt; 20</strong> · 1 mark: the equi-join <strong>Plant.supplierID = Supplier.supplierID</strong> attached with AND.</p>
+              <p>Output: Japanese Maple (Highland Growers), Silver Birch (Highland Growers), Rowan (Highland Growers). All three of the plants over £20 happen to come from the same supplier, which is exactly why the join is needed — without it the query would pair each of them with all four suppliers.</p>
+              <p><code>20</code> takes no quotes because <code>priceGBP</code> is a number. The table names in <code>FROM</code> and the two sides of the join may be written in either order.</p>
             </div>
           </details>
         </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Spot the Missing Join (3 marks)</div>
+          <p>A pupil writes the following query to list the name of every plant that is out of stock, along with the phone number to reorder it.</p>
+          <div class="code-block code-sql">
+            <pre>SELECT plantName, phone
+FROM Plant, Supplier
+WHERE inStock = FALSE;</pre>
+          </div>
+          <p><strong>(a)</strong> Explain what is wrong with this query. <strong>(b)</strong> State how many rows it would return. <strong>(c)</strong> Rewrite the WHERE clause correctly.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 1 mark: there is no join condition, so every out-of-stock plant is paired with every supplier, producing rows that state a phone number belonging to a supplier who does not provide that plant.</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 1 mark: <strong>12 rows</strong>. Three plants are out of stock — Hosta, Bay Tree and Astilbe — and there are 4 suppliers, so 3 × 4 = 12. Only 3 of those rows would be true.</p>
+              <p style="color:#6A1B9A;"><strong>(c)</strong> 1 mark:</p>
+              <div class="code-block code-sql">
+                <div class="code-label">Corrected WHERE clause</div>
+                <pre>WHERE inStock = FALSE
+  AND Plant.supplierID = Supplier.supplierID;</pre>
+              </div>
+              <p>Corrected output: Hosta with Clyde Nurseries' number, Bay Tree with Clyde Nurseries' number, and Astilbe with Border Blooms' number.</p>
+              <p>Note that the query as written produces <strong>no error message</strong> — it runs and returns 12 confident-looking rows. That is what makes a missing join so easy to hand in.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — OR With a Join (4 marks)</div>
+          <p>The garden centre wants a list of plants that meet <strong>at least one</strong> of the following:</p>
+          <ul>
+            <li>they are supplied from Perth</li>
+            <li>they cost less than £5.00</li>
+          </ul>
+          <p>Write the SQL to display the plant name, the price and the supplier's town.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>SELECT plantName, priceGBP, town
+FROM Plant, Supplier
+WHERE (town = "Perth" OR priceGBP &lt; 5)
+  AND Plant.supplierID = Supplier.supplierID;</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: <strong>SELECT plantName, priceGBP, town</strong> with <strong>FROM Plant, Supplier</strong> · 1 mark: <strong>town = "Perth"</strong> and <strong>priceGBP &lt; 5</strong> · 1 mark: the two conditions joined by <strong>OR</strong> · 1 mark: the equi-join attached with AND.</p>
+              <p>Output: Japanese Maple, Silver Birch and Rowan (Perth, via Highland Growers); Foxglove and Thyme (Perth, via Tay Valley Plants); and Rosemary at £4.99 from Border Blooms in Kelso, which qualifies on price alone. Thyme meets both conditions but still appears only once.</p>
+              <p><strong>"At least one" means OR.</strong> Using AND would ask for plants that are both from Perth and under £5, which returns Thyme only.</p>
+              <p>Brackets round the OR are not required for the mark, but they make it clear that the join applies to both alternatives.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Design, Then Implement (5 marks)</div>
+          <p><strong>(a)</strong> Design a query to display the name of every herb and the town it is supplied from. <strong>(b)</strong> Write the SQL for your design.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;"><strong>(a)</strong> 2 marks:</p>
+              <table class="query-design">
+                <tbody>
+                  <tr><th scope="row">Field(s)</th><td>plantName, town</td></tr>
+                  <tr><th scope="row">Table(s)</th><td>Plant, Supplier</td></tr>
+                  <tr><th scope="row">Search criteria</th><td>category = "Herb"</td></tr>
+                  <tr><th scope="row">Sort order</th><td class="none">none</td></tr>
+                </tbody>
+              </table>
+              <p>1 mark for the fields and tables, 1 mark for the search criteria. No equi-join needed here.</p>
+              <p style="color:#6A1B9A;"><strong>(b)</strong> 3 marks:</p>
+              <div class="code-block code-sql">
+                <div class="code-label">Model answer</div>
+                <pre>SELECT plantName, town
+FROM Plant, Supplier
+WHERE category = "Herb"
+  AND Plant.supplierID = Supplier.supplierID;</pre>
+              </div>
+              <p style="color:#6A1B9A;">1 mark: correct fields and both tables · 1 mark: <strong>category = "Herb"</strong> · 1 mark: the equi-join.</p>
+              <p>Output: Rosemary from Kelso, Thyme from Perth.</p>
+              <p><strong>The whole point of this question</strong> is the difference between the two parts. The design and the SQL contain the same thinking, but only part (b) awards a mark for the join — and only part (b) would return nonsense without it.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="next">Next — Changing the Data</h2>
+        <p>Everything on this page and the <a href="sql-select.html">SELECT page</a> only <em>reads</em> the database. Nothing you have written so far changes a single stored value.</p>
+        <p>The next page covers the queries that do: <a href="sql-insert-update-delete.html">INSERT, UPDATE and DELETE</a> — adding a record, changing one, and removing one — along with what referential integrity does when you try to delete something another table still points at.</p>
       </article>
 
     </div>

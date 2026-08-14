@@ -243,15 +243,77 @@
   // fit its own content, so there is no scrollbar inside the frame — the page
   // scrolls normally instead. The embedded page posts {type:'embed-height',
   // height} and we size whichever iframe it came from to match.
-  window.addEventListener('message', function (e) {
-    const d = e.data;
-    if (!d || d.type !== 'embed-height' || typeof d.height !== 'number') return;
+  function frameFor(source) {
     const frames = document.getElementsByTagName('iframe');
     for (let i = 0; i < frames.length; i++) {
-      if (frames[i].contentWindow === e.source) {
-        frames[i].style.height = Math.ceil(d.height) + 'px';
-        break;
+      if (frames[i].contentWindow === source) return frames[i];
+    }
+    return null;
+  }
+
+  // Iframes waiting to be told they have scrolled into view. A frame only
+  // joins this list once it has said hello, which means it has loaded and the
+  // page around it has settled — checking earlier gives false positives,
+  // because before the images are sized everything below the fold is still
+  // bunched up inside the viewport.
+  const pendingFrames = [];
+  let frameWatchBound = false;
+
+  // True once the frame overlaps the middle of the viewport, so a frame that
+  // is merely clipping the bottom edge does not count as being read yet.
+  function frameInView(fr) {
+    const r = fr.getBoundingClientRect();
+    const h = window.innerHeight || document.documentElement.clientHeight;
+    return r.bottom > h * 0.1 && r.top < h * 0.9;
+  }
+
+  function checkPendingFrames() {
+    for (let i = pendingFrames.length - 1; i >= 0; i--) {
+      const fr = pendingFrames[i];
+      if (!fr.contentWindow) { pendingFrames.splice(i, 1); continue; }
+      if (frameInView(fr)) {
+        fr.contentWindow.postMessage({ type: 'embed-inview' }, '*');
+        pendingFrames.splice(i, 1);
       }
+    }
+  }
+
+  function watchFrame(fr) {
+    pendingFrames.push(fr);
+    if (!frameWatchBound) {
+      frameWatchBound = true;
+      let queued = false;
+      const onScroll = function () {
+        if (queued) return;
+        queued = true;
+        setTimeout(function () { queued = false; checkPendingFrames(); }, 120);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+    }
+    checkPendingFrames();
+  }
+
+  window.addEventListener('message', function (e) {
+    const d = e.data;
+    if (!d) return;
+
+    if (d.type === 'embed-height' && typeof d.height === 'number') {
+      const fr = frameFor(e.source);
+      if (fr) fr.style.height = Math.ceil(d.height) + 'px';
+      return;
+    }
+
+    // A visualiser announcing itself. Answering does two jobs: it tells the
+    // frame the host understands in-view signalling, so it waits for one rather
+    // than starting on a timer, and it adds the frame to the watch list. The
+    // frame repeats its hello until answered, because it can finish loading
+    // before this script has run.
+    if (d.type === 'embed-hello') {
+      const fr = frameFor(e.source);
+      if (!fr) return;
+      e.source.postMessage({ type: 'embed-host-ready' }, '*');
+      watchFrame(fr);
     }
   });
 

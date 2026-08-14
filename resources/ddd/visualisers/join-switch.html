@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join Switch — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --purp:#6A1B9A; --purp-bg:#F4E8FA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;
+       padding:clamp(10px,1.5vw,18px);font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  input,button,select{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+  header h1{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:14.5px;max-width:900px}
+
+  .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;margin-top:16px;align-items:start}
+  @media (max-width:840px){ .two{grid-template-columns:minmax(0,1fr)} }
+
+  .panel{background:var(--panel);border:1px solid var(--line)}
+  .panel .cap{background:var(--active-strong);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;
+              letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;display:flex;justify-content:space-between;
+              gap:8px;align-items:center}
+  .panel .cap .n{color:var(--tint);letter-spacing:.06em}
+  .pad{padding:14px}
+
+  /* ---- the switch ---- */
+  .switchbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .switch{position:relative;display:inline-flex;align-items:center;gap:0;border:2px solid var(--active-strong);
+          background:#fff;cursor:pointer;padding:0;font-family:var(--mono);font-size:11.5px;font-weight:700;
+          letter-spacing:.09em;text-transform:uppercase}
+  .switch span{padding:9px 15px;transition:background .22s,color .22s;color:var(--ink-soft)}
+  .switch .s-off{background:var(--warn);color:#fff}
+  .switch .s-on{background:#fff;color:var(--ink-soft)}
+  .switch.on .s-off{background:#fff;color:var(--ink-soft)}
+  .switch.on .s-on{background:var(--active);color:#fff}
+  .switch:focus-visible{outline:3px solid var(--match-accent);outline-offset:2px}
+  .switchlab{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;
+             text-transform:uppercase;color:var(--ink-soft)}
+
+  pre.sql{margin:12px 0 0;padding:13px 14px;background:#0D1117;color:#CDD9E5;font-family:var(--mono);
+          font-size:12.5px;line-height:1.8;overflow-x:auto;white-space:pre}
+  pre.sql .kw{color:#C9A227;font-weight:700}
+  pre.sql .joinline{display:block;background:rgba(27,107,69,.35);outline:1px solid rgba(46,160,103,.75)}
+  pre.sql .missing{display:block;color:#F19A9A;font-style:italic;opacity:.85}
+
+  .tally{margin-top:12px;border:1px solid var(--line);padding:11px 13px;background:var(--bg)}
+  .tally .big{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+  .tally.bad .big{color:var(--warn)}
+  .tally.good .big{color:var(--active)}
+  .tally .sm{font-size:12.5px;color:var(--ink-soft);margin-top:3px}
+  .tally .sums{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:7px}
+
+  .why{background:var(--purp-bg);border-left:4px solid var(--purp);padding:11px 13px;margin-top:12px;font-size:13.5px;min-height:5.6em}
+  .why b{color:var(--purp)}
+  .why code{font-family:var(--mono);font-size:12.5px;background:#fff;border:1px solid var(--line);padding:1px 5px}
+
+  /* ---- results ---- */
+  .scroller{max-height:420px;overflow-y:auto;overflow-x:auto;border-top:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+  thead th{position:sticky;top:0;z-index:1;background:var(--active-bg);color:var(--active-strong);text-align:left;
+           padding:8px 10px;font-size:10px;letter-spacing:.07em;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:6px 10px;border-bottom:1px solid #EDEFF1;white-space:nowrap}
+  tr.real td{background:var(--active-bg)}
+  tr.fake td{color:var(--warn)}
+  tr.fake td.st{font-weight:700}
+  tr.struck td{background:var(--warn-bg);text-decoration:line-through;opacity:.55;
+               transition:background .3s,opacity .3s}
+  tr.gone{display:none}
+  td.st{font-family:var(--sans);font-size:12.5px}
+  tr.real td.st{color:var(--active);font-weight:700}
+  .pupilstart td{border-top:2px solid var(--tint)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · Database Design &amp; Development</p>
+    <h1>Join Switch</h1>
+    <p class="sub">The same query, run twice. Turn the join condition off and the database pairs <b>every</b> pupil with <b>every</b> club. Turn it on and it keeps only the pairings that are actually true. Flip it back and forth — the difference between 44 rows and 11 is the whole idea of an equi-join.</p>
+  </header>
+
+  <div class="two">
+    <div>
+      <div class="panel">
+        <div class="cap">The query <span class="n" id="stateChip">JOIN OFF</span></div>
+        <div class="pad">
+          <div class="switchbar">
+            <span class="switchlab">Join condition</span>
+            <button class="switch" id="sw" type="button" role="switch" aria-checked="false"
+                    aria-label="Join condition on or off">
+              <span class="s-off">Off</span><span class="s-on">On</span>
+            </button>
+          </div>
+          <pre class="sql" id="sql"></pre>
+          <div class="tally bad" id="tally">
+            <div class="big" id="tallyBig">44 rows</div>
+            <div class="sm" id="tallySm"></div>
+            <div class="sums" id="tallySums"></div>
+          </div>
+        </div>
+      </div>
+      <div class="why" id="why"></div>
+    </div>
+
+    <div class="panel">
+      <div class="cap">Result <span class="n" id="resChip">44 rows</span></div>
+      <div class="scroller">
+        <table>
+          <thead><tr><th>pupilName</th><th>clubName</th><th>Is this true?</th></tr></thead>
+          <tbody id="tb"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Auto-size the parent iframe. Declared before the first render(). */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  const PUPILS = [
+    {name:"Archie",    club:"C01"},
+    {name:"Noah",      club:"C03"},
+    {name:"Mason",     club:"C01"},
+    {name:"Christian", club:"C02"},
+    {name:"Leoni",     club:"C04"},
+    {name:"Lucienne",  club:"C03"},
+    {name:"Erika",     club:"C04"},
+    {name:"Louie",     club:"C01"},
+    {name:"Matthew",   club:"C02"},
+    {name:"Riley",     club:"C04"},
+    {name:"Harveer",   club:"C03"}
+  ];
+  const CLUBS = [
+    {id:"C01", name:"Chess Club"},
+    {id:"C02", name:"Debating"},
+    {id:"C03", name:"Film Making"},
+    {id:"C04", name:"Athletics"}
+  ];
+
+  const TOTAL = PUPILS.length * CLUBS.length;   /* 44 */
+  const REAL  = PUPILS.length;                  /* 11 */
+  const FAKE  = TOTAL - REAL;                   /* 33 */
+
+  const tb       = document.getElementById("tb");
+  const sw       = document.getElementById("sw");
+  const sqlEl    = document.getElementById("sql");
+  const whyEl    = document.getElementById("why");
+  const tally    = document.getElementById("tally");
+  const tallyBig = document.getElementById("tallyBig");
+  const tallySm  = document.getElementById("tallySm");
+  const tallySums= document.getElementById("tallySums");
+  const stateChip= document.getElementById("stateChip");
+  const resChip  = document.getElementById("resChip");
+
+  /* Build all 44 pairings once. Rows are never rebuilt — the switch only
+     changes which of them are showing, so nothing jumps about. */
+  const rows = [];
+  PUPILS.forEach(function(p, pi){
+    CLUBS.forEach(function(c){
+      const real = (p.club === c.id);
+      const tr = document.createElement("tr");
+      tr.className = real ? "real" : "fake";
+      if(c === CLUBS[0] && pi > 0) tr.classList.add("pupilstart");
+      const a = document.createElement("td"); a.textContent = p.name;
+      const b = document.createElement("td"); b.textContent = c.name;
+      const s = document.createElement("td"); s.className = "st";
+      s.textContent = real ? ("✅ true — " + p.name + " is " + p.club)
+                           : ("❌ invented — " + p.name + " is " + p.club + ", not " + c.id);
+      tr.appendChild(a); tr.appendChild(b); tr.appendChild(s);
+      tb.appendChild(tr);
+      rows.push({tr:tr, real:real});
+    });
+  });
+
+  const SQL_BASE =
+    '<span class="kw">SELECT</span> pupilName, clubName\n' +
+    '<span class="kw">FROM</span>   Pupil, Club';
+
+  let on = false;
+  let timers = [];
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+
+  function render(animate){
+    clearTimers();
+
+    sw.classList.toggle("on", on);
+    sw.setAttribute("aria-checked", on ? "true" : "false");
+    stateChip.textContent = on ? "JOIN ON" : "JOIN OFF";
+
+    sqlEl.innerHTML = on
+      ? SQL_BASE + '\n<span class="joinline"><span class="kw">WHERE</span>  Pupil.clubID = Club.clubID;</span>'
+      : SQL_BASE + ';\n<span class="missing">-- no join condition</span>';
+
+    if(on){
+      tally.className = "tally good";
+      tallyBig.textContent = REAL + " rows";
+      tallySm.textContent  = "One row per pupil. Every one of them is true.";
+      tallySums.textContent = "the join kept " + REAL + " pairings and threw away " + FAKE;
+      resChip.textContent = REAL + " rows";
+      whyEl.innerHTML = "<b>The join is a filter.</b> It looks at all " + TOTAL +
+        " possible pairings and keeps only those where <code>Pupil.clubID</code> equals " +
+        "<code>Club.clubID</code>. Each pupil matches exactly one club, so " + REAL +
+        " rows survive — one per pupil, each beside their real club.";
+    } else {
+      tally.className = "tally bad";
+      tallyBig.textContent = TOTAL + " rows";
+      tallySm.textContent  = "Only " + REAL + " are true. " + FAKE + " are invented.";
+      tallySums.textContent = PUPILS.length + " pupils × " + CLUBS.length + " clubs = " + TOTAL + " rows";
+      resChip.textContent = TOTAL + " rows";
+      whyEl.innerHTML = "<b>Nothing links the tables.</b> Naming both after <code>FROM</code> says " +
+        "<i>use these two</i>, not <i>how they relate</i> — so the database pairs every pupil with " +
+        "every club. It has not gone wrong; it did exactly what was asked. Scroll the result: each " +
+        "pupil appears " + CLUBS.length + " times and only one of those is real.";
+    }
+
+    if(!on){
+      /* Bring every row back, immediately. */
+      rows.forEach(function(r){ r.tr.classList.remove("struck", "gone"); });
+      postHeight();
+      return;
+    }
+
+    if(!animate){
+      rows.forEach(function(r){ if(!r.real) r.tr.classList.add("struck", "gone"); });
+      postHeight();
+      return;
+    }
+
+    /* Strike the false rows through first so the reader sees what is being
+       removed, then drop them out of the table. */
+    rows.forEach(function(r){ if(!r.real) r.tr.classList.add("struck"); });
+    timers.push(setTimeout(function(){
+      rows.forEach(function(r){ if(!r.real) r.tr.classList.add("gone"); });
+      postHeight();
+    }, 620));
+  }
+
+  sw.addEventListener("click", function(){ on = !on; render(true); });
+
+  render(false);
+})();
+</script>
+</body>
+</html>
