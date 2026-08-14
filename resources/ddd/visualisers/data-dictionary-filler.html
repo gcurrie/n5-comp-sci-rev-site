@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Dictionary Filler — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --purp:#6A1B9A; --purp-bg:#F4E8FA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;
+       padding:clamp(10px,1.5vw,18px);font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  input,button,select{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+  header h1{font-size:clamp(21px,3vw,30px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:880px}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0 0}
+  .tab{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.07em;padding:9px 14px;
+       border:1px solid var(--line);border-top-width:3px;border-top-color:var(--active);background:#fff;
+       color:var(--ink-soft);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+  .tab:hover{color:var(--active-strong);border-color:var(--active)}
+  .tab.on{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+  .tab .done{color:var(--active);font-weight:700}
+
+  .brief{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--match-accent);
+         padding:13px 16px;margin-top:14px}
+  .brief .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+              color:var(--match);font-weight:700;margin-bottom:5px}
+  .brief p{margin:0;font-size:14px}
+
+  .panel{background:var(--panel);border:1px solid var(--line);margin-top:14px}
+  .panel .cap{background:var(--active-strong);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;
+              letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;display:flex;justify-content:space-between;gap:8px}
+  .panel .cap span.n{color:var(--tint);letter-spacing:.06em}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+  th{background:var(--active-bg);color:var(--active-strong);text-align:left;padding:7px 9px;font-size:10.5px;
+     letter-spacing:.05em;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:5px 9px;border-bottom:1px solid #EDEFF1;vertical-align:middle}
+  td.attr{font-weight:700;color:var(--active-strong)}
+  td.given{color:var(--ink-soft)}
+  td.blank{background:#FFFDF3;padding:4px 6px}
+  td.blank.right{background:var(--active-bg)}
+  td.blank.wrong{background:var(--warn-bg)}
+  select{font-family:var(--mono);font-size:12px;padding:5px 6px;border:1px solid var(--match-accent);
+         background:#fff;color:var(--ink);width:100%;min-width:76px;cursor:pointer}
+  select:focus{outline:2px solid var(--active);outline-offset:1px}
+  td.blank.right select{border-color:var(--active)}
+  td.blank.wrong select{border-color:var(--warn)}
+  .mk{font-family:var(--sans);font-weight:700;font-size:13px;margin-left:4px}
+  .mk.ok{color:var(--active)}
+  .mk.no{color:var(--warn)}
+
+  .row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:14px}
+  .btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+       padding:10px 18px;border:1px solid var(--active-strong);background:var(--active-strong);color:#fff;cursor:pointer}
+  .btn:hover{background:var(--active)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn.ghost{background:#fff;color:var(--active-strong)}
+  .btn.ghost:hover{background:var(--active-bg)}
+  .score{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-left:auto}
+  .score b{font-size:16px;color:var(--active-strong)}
+
+  .fb{margin-top:14px;display:none}
+  .fb.show{display:block}
+  .fb h3{font-size:14px;margin:0 0 9px;color:var(--active-strong)}
+  .fbi{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--active);
+       padding:10px 13px;margin-bottom:8px;font-size:13.5px}
+  .fbi.no{border-left-color:var(--warn)}
+  .fbi .hd{font-family:var(--mono);font-size:11.5px;font-weight:700;margin-bottom:4px}
+  .fbi .hd .cell{color:var(--match)}
+  .fbi.no .hd .bad{color:var(--warn)}
+  .fbi .hd .good{color:var(--active)}
+  .fbi p{margin:0;color:var(--ink-soft)}
+
+  .allright{background:var(--active-bg);border-left:4px solid var(--active);padding:12px 15px;
+            margin-top:14px;font-size:14px;display:none}
+  .allright.show{display:block}
+  .allright b{color:var(--active-strong)}
+  .rule{background:var(--purp-bg);border-left:4px solid var(--purp);padding:11px 14px;margin-top:16px;font-size:13.5px}
+  .rule b{color:var(--purp)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · Database Design &amp; Development</p>
+    <h1>Data Dictionary Filler</h1>
+    <p class="sub">Read what the customer needs, then fill in the missing cells — exactly the task the exam sets. Start with the school database you already know, then try three you have not seen.</p>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="brief">
+    <div class="lbl" id="briefLbl"></div>
+    <p id="briefTxt"></p>
+  </div>
+
+  <div class="panel">
+    <div class="cap"><span id="entName"></span><span class="n" id="blankCount"></span></div>
+    <div style="overflow-x:auto"><table id="ddTable"></table></div>
+  </div>
+
+  <div class="row">
+    <button class="btn" id="checkBtn">Check answers</button>
+    <button class="btn ghost" id="showBtn">Show answers</button>
+    <button class="btn ghost" id="clearBtn">Clear</button>
+    <span class="score" id="score"></span>
+  </div>
+
+  <div class="allright" id="allright"></div>
+  <div class="fb" id="fb"></div>
+
+  <div class="rule">
+    <b>Three marks people throw away:</b> <b>Size</b> is filled in for Text and nothing else · the <b>primary key</b> is always Required = Yes · a borrowed key is <b>FK</b>, not PK. And this is a database, so it is <b>Text</b> and <b>Number</b> — never "string", "integer" or "real".
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Auto-size the parent iframe. Declared before the first render(). */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  const OPTS = [
+    ["—","PK","FK"],
+    ["Text","Number","Date","Time","Boolean"],
+    ["—","1","3","4","5","6","8","9","10","15","20","30"],
+    ["Yes","No"],
+    ["Presence check","Range check","Length check","Restricted choice"]
+  ];
+  const COLNAMES = ["Key","Type","Size","Required","Validation"];
+
+  /* A cell is either a plain string (already filled in) or {a:answer, why:explanation}. */
+  const SCEN = [
+    {
+      tab:"1 · School clubs", lbl:"Warm-up — the database from this page",
+      ent:"Club",
+      brief:"The school records each of its lunchtime and after-school clubs. Every club has a three-character code that identifies it and is never reused. The club's name and the member of staff who runs it must always be entered. Clubs meet on a weekday — Monday to Friday — at a set time. Some clubs provide equipment and some do not.",
+      rows:[
+        {attr:"clubID", c:[
+          {a:"PK", why:"clubID is the one attribute that uniquely identifies a club — C01 never appears twice — so it is the primary key."},
+          "Text","3","Yes",
+          {a:"Length check", why:"Every clubID is exactly 3 characters (C01, C02 …), so a length check fits. A presence check would also be accepted for a primary key."}
+        ]},
+        {attr:"clubName", c:["—","Text","20","Yes",
+          {a:"Presence check", why:"The name \"must always be entered\", and that wording — cannot be blank, compulsory, must be entered — always signals a presence check."}
+        ]},
+        {attr:"meetingDay", c:["—","Text","9","Yes",
+          {a:"Restricted choice", why:"Only Monday to Friday are allowed. A fixed list of permitted values is a restricted choice, not a range — ranges are for numbers."}
+        ]},
+        {attr:"meetingTime", c:["—",
+          {a:"Time", why:"15:30 is a time of day, so the Time attribute type stores it. Storing it as Text would allow nonsense like \"25:99\"."},
+          {a:"—", why:"Size is only ever filled in for Text. Number, Date, Time and Boolean fields leave it blank."},
+          "Yes","Presence check"
+        ]},
+        {attr:"staffLead", c:["—","Text","20","Yes","Presence check"]},
+        {attr:"equipmentProvided", c:["—",
+          {a:"Boolean", why:"A club either provides equipment or it does not — two possible values, TRUE or FALSE. That is exactly what Boolean is for."},
+          "—","Yes","Presence check"
+        ]}
+      ]
+    },
+    {
+      tab:"2 · Leisure centre", lbl:"End-user requirements",
+      ent:"Member",
+      brief:"A leisure centre is setting up a database of its members. Each member is given a six-character membership number that no one else has. A member's name and the date they joined must always be recorded. Membership level is Bronze, Silver or Gold. Members must be aged between 16 and 100. Each member is assigned to one fitness class, identified by the four-character class code from the Class table.",
+      rows:[
+        {attr:"memberNo", c:[
+          {a:"PK", why:"\"a six-character membership number that no one else has\" — an attribute that is never repeated is the primary key."},
+          "Text","6","Yes","Length check — 6 characters"
+        ]},
+        {attr:"memberName", c:["—","Text","20","Yes",
+          {a:"Presence check", why:"The name \"must always be recorded\", so the field cannot be left empty."}
+        ]},
+        {attr:"joinDate", c:["—",
+          {a:"Date", why:"A calendar date is stored with the Date attribute type. Note that the Size beside it stays blank."},
+          "—","Yes","Presence check"
+        ]},
+        {attr:"membershipLevel", c:["—","Text","6","Yes",
+          {a:"Restricted choice", why:"Bronze, Silver or Gold is a fixed list of allowed values — restricted choice."}
+        ]},
+        {attr:"age", c:["—","Number","—","Yes",
+          {a:"Range check", why:"\"between 16 and 100\" puts a lower and an upper limit on a number, which is a range check."}
+        ]},
+        {attr:"classID", c:[
+          {a:"FK", why:"classID is the primary key of the Class table, borrowed into Member to link the two. In this table it is a foreign key, not a primary key — Member already has one of those."},
+          "Text","4","Yes","Presence check"
+        ]}
+      ]
+    },
+    {
+      tab:"3 · Driving school", lbl:"End-user requirements",
+      ent:"Lesson",
+      brief:"A driving school records every lesson it gives. Each lesson is given a lesson number that is never repeated. A lesson has a date and a start time. The lesson type is Motorway, Town or Test. Lessons cost between £20 and £90. The school records whether the pupil has already passed their theory test. Each lesson is taught by one instructor, identified by the three-character instructor code from the Instructor table.",
+      rows:[
+        {attr:"lessonNo", c:[
+          {a:"PK", why:"\"never repeated\" is the definition of a primary key."},
+          "Number","—","Yes","Presence check"
+        ]},
+        {attr:"lessonDate", c:["—",
+          {a:"Date", why:"A calendar date uses the Date attribute type."},
+          "—","Yes","Presence check"
+        ]},
+        {attr:"startTime", c:["—",
+          {a:"Time", why:"A time of day is stored as Time — not as Text, and not as Number."},
+          "—","Yes","Presence check"
+        ]},
+        {attr:"lessonType", c:["—","Text","8","Yes",
+          {a:"Restricted choice", why:"Motorway, Town or Test — three permitted values and nothing else."}
+        ]},
+        {attr:"cost", c:["—",
+          {a:"Number", why:"A price is a quantity you would add up, so it is a Number. In Software Design you might call it \"real\", but a database question wants Number."},
+          "—","Yes",
+          {a:"Range check", why:"\"between £20 and £90\" gives a lower and an upper limit — a range check."}
+        ]},
+        {attr:"theoryPassed", c:["—",
+          {a:"Boolean", why:"Passed or not passed — only two possible values, so Boolean."},
+          "—","Yes","Presence check"
+        ]},
+        {attr:"instructorID", c:[
+          {a:"FK", why:"The instructor code is the Instructor table's primary key, appearing here to link the two tables — so in Lesson it is a foreign key."},
+          "Text","3","Yes","Length check — 3 characters"
+        ]}
+      ]
+    },
+    {
+      tab:"4 · Cinema", lbl:"End-user requirements",
+      ent:"Booking",
+      brief:"A cinema stores its online bookings. Every booking is given an eight-character reference that appears on no other booking. The customer's name must be entered. A booking records the date and the screening time. The number of seats booked must be from 1 to 12. A booking is Standard, Premium or VIP. The cinema records whether the customer wants an email confirmation. Each booking is for one film, identified by the five-character film code from the Film table.",
+      rows:[
+        {attr:"bookingRef", c:["PK","Text",
+          {a:"8", why:"The reference is eight characters, and Size records how many characters a Text field needs."},
+          "Yes",
+          {a:"Length check", why:"\"eight-character reference\" fixes the number of characters — a length check."}
+        ]},
+        {attr:"customerName", c:["—","Text","20","Yes","Presence check"]},
+        {attr:"bookingDate", c:["—","Date","—","Yes","Presence check"]},
+        {attr:"screeningTime", c:["—",
+          {a:"Time", why:"A screening time is a time of day, so the Time attribute type."},
+          {a:"—", why:"Size is left blank for every type except Text — and this one is a Time."},
+          "Yes","Presence check"
+        ]},
+        {attr:"seats", c:["—","Number","—","Yes",
+          {a:"Range check", why:"\"from 1 to 12\" sets limits on a number."}
+        ]},
+        {attr:"bookingType", c:["—","Text","8","Yes",
+          {a:"Restricted choice", why:"Standard, Premium or VIP is a fixed list of allowed values."}
+        ]},
+        {attr:"emailWanted", c:["—",
+          {a:"Boolean", why:"Wants an email or does not — two values only, TRUE or FALSE."},
+          "—","Yes","Presence check"
+        ]},
+        {attr:"filmCode", c:[
+          {a:"FK", why:"The film code is the Film table's primary key, used here to link a booking to its film."},
+          "Text","5","Yes","Presence check"
+        ]}
+      ]
+    }
+  ];
+
+  let si = 0, picks = {}, checked = false, revealed = false;
+  const solved = SCEN.map(() => false);
+
+  function blanks(s){
+    const out = [];
+    s.rows.forEach((r, ri) => r.c.forEach((c, ci) => { if(typeof c === "object") out.push({ri:ri, ci:ci, cell:c, attr:r.attr}); }));
+    return out;
+  }
+
+  function renderTabs(){
+    const t = document.getElementById("tabs");
+    t.innerHTML = "";
+    SCEN.forEach((s, i) => {
+      const b = document.createElement("button");
+      b.className = "tab" + (i === si ? " on" : "");
+      b.innerHTML = s.tab + (solved[i] ? " <span class='done'>✓</span>" : "");
+      b.onclick = function(){ si = i; picks = {}; checked = false; revealed = false; render(); };
+      t.appendChild(b);
+    });
+  }
+
+  function render(){
+    const s = SCEN[si];
+    renderTabs();
+    document.getElementById("briefLbl").textContent = s.lbl;
+    document.getElementById("briefTxt").textContent = s.brief;
+    document.getElementById("entName").textContent = "Entity: " + s.ent;
+
+    const bl = blanks(s);
+    document.getElementById("blankCount").textContent = bl.length + " cells to fill";
+
+    let h = "<thead><tr><th>Attribute name</th><th>Key</th><th>Type</th><th>Size</th><th>Required</th><th>Validation</th></tr></thead><tbody>";
+    s.rows.forEach((r, ri) => {
+      h += "<tr><td class='attr'>" + r.attr + "</td>";
+      r.c.forEach((c, ci) => {
+        if(typeof c === "string"){
+          h += "<td class='given'>" + c + "</td>";
+        } else {
+          const k = ri + "-" + ci;
+          const val = picks[k] || "";
+          /* Marks and colouring only after Check. After Show answers the select
+             displays the model answer, so a tick or cross there would be
+             meaningless — the cell is left neutral. */
+          let cls = "blank";
+          if(checked){ cls += (val === c.a) ? " right" : " wrong"; }
+          let sel = "<select data-k='" + k + "'" + (revealed ? " disabled" : "") + "><option value=''>— choose —</option>";
+          OPTS[ci].forEach(o => {
+            const v = revealed ? c.a : val;
+            sel += "<option value=\"" + o + "\"" + (v === o ? " selected" : "") + ">" + o + "</option>";
+          });
+          sel += "</select>";
+          const mark = checked ? (val === c.a ? "<span class='mk ok'>✓</span>" : "<span class='mk no'>✗</span>") : "";
+          h += "<td class='" + cls + "'>" + sel + mark + "</td>";
+        }
+      });
+      h += "</tr>";
+    });
+    document.getElementById("ddTable").innerHTML = h + "</tbody>";
+
+    document.querySelectorAll("#ddTable select").forEach(el => {
+      el.onchange = function(){
+        picks[el.dataset.k] = el.value;
+        checked = false;
+        document.getElementById("fb").className = "fb";
+        document.getElementById("allright").className = "allright";
+        render();
+      };
+    });
+
+    const done = bl.filter(b => picks[b.ri + "-" + b.ci] === b.cell.a).length;
+    document.getElementById("score").innerHTML =
+      revealed ? "answers shown" :
+      checked  ? "<b>" + done + "</b> of " + bl.length + " correct"
+               : Object.keys(picks).filter(k => picks[k]).length + " of " + bl.length + " chosen";
+    document.getElementById("showBtn").disabled = revealed;
+    postHeight();
+  }
+
+  function check(){
+    const s = SCEN[si], bl = blanks(s);
+    checked = true;
+    const wrong = [], right = [];
+    bl.forEach(b => {
+      const val = picks[b.ri + "-" + b.ci] || "";
+      (val === b.cell.a ? right : wrong).push({b:b, val:val});
+    });
+
+    let h = "<h3>Every cell explained</h3>";
+    bl.forEach(b => {
+      const val = picks[b.ri + "-" + b.ci] || "";
+      const ok = val === b.cell.a;
+      h += "<div class='fbi" + (ok ? "" : " no") + "'>";
+      h += "<div class='hd'><span class='cell'>" + b.attr + " · " + COLNAMES[b.ci] + "</span> — ";
+      h += ok ? "<span class='good'>✓ " + b.cell.a + "</span>"
+              : "<span class='bad'>✗ you chose " + (val || "nothing") + "</span> · <span class='good'>answer: " + b.cell.a + "</span>";
+      h += "</div><p>" + b.cell.why + "</p></div>";
+    });
+    document.getElementById("fb").innerHTML = h;
+    document.getElementById("fb").className = "fb show";
+
+    const ar = document.getElementById("allright");
+    if(wrong.length === 0){
+      solved[si] = true;
+      ar.innerHTML = "<b>All " + bl.length + " cells correct.</b> That is the whole exam task — read the requirement, pick the cell. " +
+        (si < SCEN.length - 1 ? "Try the next scenario." : "You have completed all four.");
+      ar.className = "allright show";
+    } else {
+      ar.className = "allright";
+    }
+    render();
+  }
+
+  document.getElementById("checkBtn").onclick = check;
+  document.getElementById("showBtn").onclick = function(){
+    revealed = true; checked = false;
+    const s = SCEN[si];
+    let h = "<h3>Model answers</h3>";
+    blanks(s).forEach(b => {
+      h += "<div class='fbi'><div class='hd'><span class='cell'>" + b.attr + " · " + COLNAMES[b.ci] +
+           "</span> — <span class='good'>" + b.cell.a + "</span></div><p>" + b.cell.why + "</p></div>";
+    });
+    document.getElementById("fb").innerHTML = h;
+    document.getElementById("fb").className = "fb show";
+    document.getElementById("allright").className = "allright";
+    render();
+  };
+  document.getElementById("clearBtn").onclick = function(){
+    picks = {}; checked = false; revealed = false;
+    document.getElementById("fb").className = "fb";
+    document.getElementById("allright").className = "allright";
+    render();
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>

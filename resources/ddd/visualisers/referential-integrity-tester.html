@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referential Integrity Tester — National 5 Computing Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#4A5568; --bg:#F8F7F2; --panel:#ffffff; --line:#D1D5DB;
+    --active:#1B6B45; --active-bg:#E8F5EE; --active-strong:#00442A; --bar:#001810;
+    --tint:#C7DED2;
+    --match:#92750A; --match-accent:#C9A227; --match-bg:#FEF3C7;
+    --warn:#B91C1C; --warn-bg:#FDECEA;
+    --purp:#6A1B9A; --purp-bg:#F4E8FA;
+    --mono:'JetBrains Mono',ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --sans:'Public Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scrollbar-gutter:stable}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5;
+       padding:clamp(10px,1.5vw,18px);font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  input,button,select{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--active);font-weight:700;margin:0 0 10px}
+  header h1{font-size:clamp(21px,3vw,30px);font-weight:800;letter-spacing:-.025em;color:var(--active-strong);margin:0 0 8px}
+  header p.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:880px}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0 0}
+  .tab{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.07em;padding:9px 14px;
+       border:1px solid var(--line);border-top-width:3px;background:#fff;color:var(--ink-soft);cursor:pointer;
+       transition:background .15s,border-color .15s,color .15s}
+  .tab:nth-child(1){border-top-color:var(--active)}
+  .tab:nth-child(2){border-top-color:var(--warn)}
+  .tab:hover{color:var(--active-strong);border-color:var(--active)}
+  .tab.on{background:var(--active-bg);border-color:var(--active);color:var(--active-strong)}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  @media (max-width:760px){ .grid{grid-template-columns:1fr} }
+
+  .panel{background:var(--panel);border:1px solid var(--line)}
+  .panel .cap{background:var(--active-strong);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;
+              letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;display:flex;justify-content:space-between;gap:8px}
+  .panel .cap span.n{color:var(--tint);letter-spacing:.06em}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+  th{background:var(--active-bg);color:var(--active-strong);text-align:left;padding:7px 10px;font-size:11px;
+     letter-spacing:.06em;border-bottom:1px solid var(--line)}
+  td{padding:6px 10px;border-bottom:1px solid #EDEFF1}
+  tr.dim td{opacity:.4}
+  tr.flash td{background:var(--active-bg);animation:pop .9s ease-out}
+  tr.gone td{background:var(--warn-bg);text-decoration:line-through;opacity:.55}
+  @keyframes pop{0%{background:#BFE6CF}100%{background:var(--active-bg)}}
+  td.key{background:var(--match-bg);font-weight:700;color:var(--match)}
+
+  .stage{background:var(--panel);border:1px solid var(--line);padding:14px 16px;margin-top:14px}
+  .stage h2{margin:0 0 4px;font-size:15px;color:var(--active-strong)}
+  .stage p.hint{margin:0 0 12px;font-size:13.5px;color:var(--ink-soft)}
+
+  .rec{border:1px solid var(--line);background:var(--bg);padding:0;margin-bottom:12px;overflow-x:auto}
+  .rec table{font-size:12px}
+  .rec td.pick{background:var(--match-bg);font-weight:700;color:var(--match)}
+  .rec td.empty{background:var(--warn-bg);color:var(--warn);font-weight:700}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 12px}
+  .chip{font-family:var(--mono);font-size:12px;font-weight:700;padding:8px 13px;border:1px solid var(--line);
+        background:#fff;color:var(--ink-soft);cursor:pointer;transition:all .13s}
+  .chip:hover{border-color:var(--active);color:var(--active-strong)}
+  .chip.on{background:var(--match-bg);border-color:var(--match-accent);color:var(--match)}
+  .chip:disabled{opacity:.35;cursor:not-allowed}
+
+  .btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+       padding:10px 18px;border:1px solid var(--active-strong);background:var(--active-strong);color:#fff;cursor:pointer}
+  .btn:hover{background:var(--active)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn.ghost{background:#fff;color:var(--active-strong)}
+  .btn.ghost:hover{background:var(--active-bg)}
+  .row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+
+  .verdict{margin-top:13px;border:1px solid var(--line);padding:12px 14px;display:none}
+  .verdict.show{display:block}
+  .verdict.ok{border-left:4px solid var(--active);background:var(--active-bg)}
+  .verdict.no{border-left:4px solid var(--warn);background:var(--warn-bg)}
+  .verdict h3{margin:0 0 6px;font-size:14px}
+  .verdict.ok h3{color:var(--active-strong)}
+  .verdict.no h3{color:var(--warn)}
+  .verdict p{margin:0 0 6px;font-size:13.5px}
+  .verdict p:last-child{margin-bottom:0}
+  .trace{font-family:var(--mono);font-size:12px;background:#fff;border:1px solid var(--line);padding:9px 11px;margin:8px 0}
+  .trace div{padding:1px 0}
+  .trace .no{color:var(--warn)}
+  .trace .yes{color:var(--active);font-weight:700}
+
+  .tally{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+         margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+  .tally b{color:var(--active-strong);font-size:14px}
+  .rule{background:var(--purp-bg);border-left:4px solid var(--purp);padding:11px 14px;margin-top:14px;font-size:13.5px}
+  .rule b{color:var(--purp)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">National 5 · Database Design &amp; Development</p>
+    <h1>Referential Integrity Tester</h1>
+    <p class="sub">Two linked tables, and one rule holding them together: <strong>every foreign key value must match a primary key that already exists</strong>. Try to break it and watch the database refuse.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab on" data-mode="add">Add a pupil</button>
+    <button class="tab" data-mode="del">Delete a club</button>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="cap"><span>Club</span><span class="n" id="clubCount"></span></div>
+      <div style="overflow-x:auto"><table id="clubTable"></table></div>
+    </div>
+    <div class="panel">
+      <div class="cap"><span>Pupil</span><span class="n" id="pupilCount"></span></div>
+      <div style="overflow-x:auto"><table id="pupilTable"></table></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <h2 id="stageTitle"></h2>
+    <p class="hint" id="stageHint"></p>
+    <div id="stageBody"></div>
+    <div class="row">
+      <button class="btn" id="goBtn"></button>
+      <button class="btn ghost" id="resetBtn">Reset</button>
+    </div>
+    <div class="verdict" id="verdict"></div>
+    <div class="tally">
+      <span>Accepted <b id="tOk">0</b></span>
+      <span>Rejected <b id="tNo">0</b></span>
+    </div>
+  </div>
+
+  <div class="rule">
+    <b>The rule:</b> a foreign key may only hold a value that already exists as a primary key in the linked table. That single sentence explains both a rejected pupil and a refused deletion.
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Auto-size the parent iframe. Declared before the first render(), which
+     calls postHeight(). */
+  let sentH = 0;
+  function postHeight(){
+    if(window.parent === window) return;
+    const h = Math.ceil(document.body.scrollHeight) + 6;
+    if(h > sentH || h < sentH - 24){
+      sentH = h;
+      window.parent.postMessage({type:"embed-height", height:h}, "*");
+      requestAnimationFrame(postHeight);
+    }
+  }
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  if("ResizeObserver" in window){ new ResizeObserver(postHeight).observe(document.body); }
+
+  const CLUBS0 = [
+    {id:"C01", name:"Chess Club",  day:"Monday",    time:"15:30"},
+    {id:"C02", name:"Debating",    day:"Tuesday",   time:"13:05"},
+    {id:"C03", name:"Film Making", day:"Thursday",  time:"15:30"},
+    {id:"C04", name:"Athletics",   day:"Wednesday", time:"16:00"},
+    {id:"C05", name:"Robotics",    day:"Friday",    time:"15:30"}
+  ];
+  const PUPILS0 = [
+    {id:"P101", name:"Archie",   club:"C01"},
+    {id:"P102", name:"Noah",     club:"C03"},
+    {id:"P103", name:"Mason",    club:"C01"},
+    {id:"P104", name:"Christian",club:"C02"},
+    {id:"P105", name:"Leoni",    club:"C04"},
+    {id:"P106", name:"Lucienne", club:"C03"},
+    {id:"P107", name:"Erika",    club:"C04"},
+    {id:"P108", name:"Louie",    club:"C01"},
+    {id:"P109", name:"Matthew",  club:"C02"},
+    {id:"P110", name:"Riley",    club:"C04"},
+    {id:"P111", name:"Harveer",  club:"C03"}
+  ];
+  const CANDIDATES = [
+    {id:"P112", name:"Blair",  dob:"11/01/2010", yg:4, house:"Curie",       merits:0},
+    {id:"P113", name:"Rowan",  dob:"22/09/2011", yg:3, house:"Montgomerie", merits:0},
+    {id:"P114", name:"Nadia",  dob:"03/06/2009", yg:5, house:"Churchill",   merits:0}
+  ];
+  /* Offered foreign key values — two of them do not exist in Club. */
+  const OFFERED = ["C01","C02","C03","C04","C05","C07","C09"];
+
+  let mode = "add";
+  let clubs, pupils, candIdx, picked, flashId, goneId, tOk, tNo;
+
+  function reset(){
+    clubs   = CLUBS0.map(c => Object.assign({}, c));
+    pupils  = PUPILS0.map(p => Object.assign({}, p));
+    candIdx = 0; picked = null; flashId = null; goneId = null;
+    tOk = 0; tNo = 0;
+    render();
+  }
+
+  function memberIds(cid){ return pupils.filter(p => p.club === cid); }
+
+  function renderClubs(){
+    let s = "<thead><tr><th>clubID</th><th>clubName</th><th>meetingDay</th><th>meetingTime</th></tr></thead><tbody>";
+    clubs.forEach(c => {
+      const cls = c.id === goneId ? " class='gone'" : "";
+      s += "<tr" + cls + "><td class='key'>" + c.id + "</td><td>" + c.name + "</td><td>" + c.day + "</td><td>" + c.time + "</td></tr>";
+    });
+    document.getElementById("clubTable").innerHTML = s + "</tbody>";
+    document.getElementById("clubCount").textContent = clubs.length + " records";
+  }
+
+  function renderPupils(){
+    let s = "<thead><tr><th>pupilID</th><th>pupilName</th><th>clubID</th></tr></thead><tbody>";
+    pupils.forEach(p => {
+      const cls = p.id === flashId ? " class='flash'" : "";
+      s += "<tr" + cls + "><td>" + p.id + "</td><td>" + p.name + "</td><td class='key'>" + p.club + "</td></tr>";
+    });
+    document.getElementById("pupilTable").innerHTML = s + "</tbody>";
+    document.getElementById("pupilCount").textContent = pupils.length + " records";
+  }
+
+  function renderStage(){
+    const title = document.getElementById("stageTitle");
+    const hint  = document.getElementById("stageHint");
+    const body  = document.getElementById("stageBody");
+    const go    = document.getElementById("goBtn");
+
+    if(mode === "add"){
+      const c = CANDIDATES[candIdx];
+      if(!c){
+        title.textContent = "Every new pupil has been added";
+        hint.textContent  = "All three joined a club that really exists. Reset to run through them again, or switch to the delete tab.";
+        body.innerHTML = "";
+        go.style.display = "none";
+        return;
+      }
+      go.style.display = "";
+      go.textContent = "Try to add record";
+      go.disabled = picked === null;
+      title.textContent = "Add " + c.name + " to the Pupil table";
+      hint.innerHTML = "Every value is already filled in except the foreign key. Choose a <b>clubID</b>, then try to save the record.";
+
+      let s = "<div class='rec'><table><thead><tr><th>pupilID</th><th>pupilName</th><th>dateOfBirth</th>" +
+              "<th>yearGroup</th><th>house</th><th>meritPoints</th><th>clubID</th></tr></thead><tbody><tr>" +
+              "<td>" + c.id + "</td><td>" + c.name + "</td><td>" + c.dob + "</td><td>" + c.yg + "</td>" +
+              "<td>" + c.house + "</td><td>" + c.merits + "</td>" +
+              (picked ? "<td class='pick'>" + picked + "</td>" : "<td class='empty'>?</td>") +
+              "</tr></tbody></table></div>";
+      s += "<div class='chips' id='chips'></div>";
+      body.innerHTML = s;
+
+      const chips = document.getElementById("chips");
+      OFFERED.forEach(v => {
+        const b = document.createElement("button");
+        b.className = "chip" + (picked === v ? " on" : "");
+        b.textContent = v;
+        b.onclick = function(){ picked = v; hideVerdict(); render(); };
+        chips.appendChild(b);
+      });
+    } else {
+      go.style.display = "";
+      go.textContent = "Try to delete club";
+      go.disabled = picked === null;
+      title.textContent = "Delete a club from the Club table";
+      hint.innerHTML = "Choose a club, then try to delete it. Before it removes anything, the database checks whether any pupil still points at that clubID.";
+      body.innerHTML = "<div class='chips' id='chips'></div>";
+      const chips = document.getElementById("chips");
+      clubs.forEach(c => {
+        const b = document.createElement("button");
+        b.className = "chip" + (picked === c.id ? " on" : "");
+        b.textContent = c.id + " · " + c.name;
+        b.onclick = function(){ picked = c.id; hideVerdict(); render(); };
+        chips.appendChild(b);
+      });
+      if(clubs.length === 0){ chips.innerHTML = "<em>Every club has been deleted. Reset to start again.</em>"; }
+    }
+  }
+
+  function hideVerdict(){ document.getElementById("verdict").className = "verdict"; }
+
+  function showVerdict(ok, html){
+    const v = document.getElementById("verdict");
+    v.className = "verdict show " + (ok ? "ok" : "no");
+    v.innerHTML = html;
+  }
+
+  function render(){
+    renderClubs(); renderPupils(); renderStage();
+    document.getElementById("tOk").textContent = tOk;
+    document.getElementById("tNo").textContent = tNo;
+    postHeight();
+  }
+
+  /* Walk the Club primary key looking for the value entered in the foreign key. */
+  function traceLookup(value){
+    let t = "<div class='trace'><div>Foreign key entered: <b>clubID = " + value + "</b></div>" +
+            "<div>Searching the primary key of Club&hellip;</div>";
+    let found = false;
+    clubs.forEach(c => {
+      const hit = c.id === value;
+      if(hit) found = true;
+      t += "<div class='" + (hit ? "yes" : "no") + "'>&nbsp;&nbsp;" + c.id + "? " + (hit ? "MATCH" : "no") + "</div>";
+    });
+    t += "<div class='" + (found ? "yes" : "no") + "'>" + (found ? "→ Match found." : "→ No match anywhere in Club.") + "</div></div>";
+    return t;
+  }
+
+  function tryAdd(){
+    const c = CANDIDATES[candIdx];
+    if(!c || picked === null) return;
+    const exists = clubs.some(x => x.id === picked);
+    const trace  = traceLookup(picked);
+
+    if(exists){
+      const club = clubs.find(x => x.id === picked);
+      pupils.push({id:c.id, name:c.name, club:picked});
+      flashId = c.id; candIdx++; picked = null; tOk++;
+      showVerdict(true,
+        "<h3>✅ Record accepted</h3>" + trace +
+        "<p><b>" + c.name + "</b> has been stored, linked to <b>" + club.name + "</b>. Referential integrity is satisfied: the value in the foreign key exists as a primary key in Club.</p>");
+    } else {
+      tNo++;
+      showVerdict(false,
+        "<h3>❌ Record rejected</h3>" + trace +
+        "<p>There is no club <b>" + picked + "</b>, so <b>" + c.name + "</b> would be linked to a club that does not exist. The database refuses the whole record — <b>not one</b> of the other six values is stored either, because a half-saved pupil would be worse than none.</p>" +
+        "<p>Pick a clubID that is actually in the Club table and try again.</p>");
+    }
+    render();
+    setTimeout(function(){ flashId = null; renderPupils(); }, 1200);
+  }
+
+  function tryDelete(){
+    if(picked === null) return;
+    const club = clubs.find(c => c.id === picked);
+    if(!club) return;
+    const members = memberIds(picked);
+
+    if(members.length === 0){
+      goneId = picked;
+      showVerdict(true,
+        "<h3>✅ Club deleted</h3>" +
+        "<p><b>" + club.name + "</b> (" + club.id + ") had <b>no pupils</b> pointing at it, so removing it leaves nothing dangling. The delete is allowed.</p>" +
+        "<p>This is the club that was added before anyone had joined — exactly the situation a single flat table could not cope with.</p>");
+      tOk++;
+      setTimeout(function(){
+        clubs = clubs.filter(c => c.id !== goneId);
+        goneId = null; picked = null; render();
+      }, 1100);
+      render();
+    } else {
+      tNo++;
+      const names = members.map(p => p.name + " (" + p.id + ")").join(", ");
+      showVerdict(false,
+        "<h3>❌ Deletion refused</h3>" +
+        "<div class='trace'><div>Delete requested: <b>" + club.id + " · " + club.name + "</b></div>" +
+        "<div>Checking the foreign key in Pupil for " + club.id + "&hellip;</div>" +
+        "<div class='no'>&nbsp;&nbsp;" + members.length + " pupil record" + (members.length === 1 ? "" : "s") + " still point" + (members.length === 1 ? "s" : "") + " at " + club.id + "</div>" +
+        "<div class='no'>→ Deleting would orphan " + (members.length === 1 ? "it" : "them") + ".</div></div>" +
+        "<p>These pupils would be left holding a clubID that matches nothing: <b>" + names + "</b>.</p>" +
+        "<p>Referential integrity works in both directions — you cannot join a club that does not exist, and you cannot delete a club that still has members.</p>");
+      render();
+    }
+  }
+
+  document.querySelectorAll(".tab").forEach(function(t){
+    t.onclick = function(){
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
+      t.classList.add("on");
+      mode = t.dataset.mode; picked = null; hideVerdict(); render();
+    };
+  });
+  document.getElementById("goBtn").onclick = function(){ mode === "add" ? tryAdd() : tryDelete(); };
+  document.getElementById("resetBtn").onclick = function(){ hideVerdict(); reset(); };
+
+  reset();
+})();
+</script>
+</body>
+</html>

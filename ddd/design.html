@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Database Design &amp; Development</div>
     <h1>Design</h1>
-    <p>Relational databases, primary and foreign keys, data dictionaries, entity-relationship diagrams and query design.</p>
+    <p>Why one table is never enough — splitting data across linked tables, primary and foreign keys, referential integrity, data dictionaries and entity-relationship diagrams.</p>
   </div>
 </section>
 <main class="page-content">
@@ -41,171 +41,1086 @@
       <nav class="sidebar-nav" aria-label="Page sections">
         <div class="sidebar-title">On this page</div>
         <ul>
-          <li><a href="#relational">Relational Databases</a></li>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#relational">From One Table to Two</a></li>
           <li><a href="#keys">Primary &amp; Foreign Keys</a></li>
+          <li><a href="#integrity">Referential Integrity</a></li>
           <li><a href="#data-dictionary">Data Dictionaries</a></li>
           <li><a href="#er-diagrams">ER Diagrams</a></li>
-          <li><a href="#query-design">Query Design</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
+          <li><a href="#practice">Practice Questions</a></li>
         </ul>
       </nav>
     </aside>
     <div class="content-area">
 
       <article>
-        <h2 id="relational">Relational Databases</h2>
-        <p>A <strong>flat file database</strong> has just one table — and that causes problems. Imagine a single Pupil table that also stores each pupil's house and head of house:</p>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead><tr><th>Forename</th><th>Surname</th><th>House</th><th>HeadOfHouse</th></tr></thead>
-            <tbody>
-              <tr><td>James</td><td>Watson</td><td>Montgomerie</td><td>Mrs Newall</td></tr>
-              <tr><td>Sara</td><td>Boyd</td><td>Curie</td><td>Mr Todd</td></tr>
-              <tr><td>Lena</td><td>Weir</td><td>Curie</td><td>Mr Todd</td></tr>
-              <tr><td>Ross</td><td>Hill</td><td>Churchill</td><td>Ms Blair</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <ul>
-          <li><strong>Delete anomaly</strong> — if James Watson is deleted, so is the house Montgomerie and Mrs Newall.</li>
-          <li><strong>Update anomaly</strong> — if the Head of House for Curie changes, it needs changed in more than one place.</li>
-          <li><strong>Insert anomaly</strong> — a new house can't be added without adding a new pupil.</li>
-        </ul>
-        <p>The solution is a <strong>relational database</strong>: split the data into <strong>two linked tables</strong> (Pupil and House). Now a new house can be added on its own, house details only need changed in one place, and removing a pupil doesn't remove a house. At National 5 you work with databases of <strong>two linked tables</strong>.</p>
-        <p>Database design uses three building blocks:</p>
+        <h2 id="intro">Introduction</h2>
+        <p>On the <a href="database-introduction.html">introduction page</a> a database was a table — fields, records, one neat grid. <strong>Design</strong> is the stage where we decide what those tables should actually be <em>before</em> anyone types in a single record, and it turns out that one table is almost never the right answer.</p>
+        <p>Get the design right and the database is quick to search, impossible to fill with contradictory rubbish, and easy to add to. Get it wrong and you are stuck with it — which is why the exam spends so much time here. Design is examined through four things: <strong>splitting data across linked tables</strong>, <strong>keys</strong>, <strong>data dictionaries</strong> and <strong>entity-relationship diagrams</strong>.</p>
+
+        <h3>Key Terms</h3>
         <div class="key-terms">
-          <div class="key-term"><div class="term">Entity</div><div class="def">A database table representing a person, object or event — e.g. Staff Member, DVD, Booking.</div></div>
-          <div class="key-term"><div class="term">Attribute</div><div class="def">A field — one of the set of fields that describes an entity.</div></div>
-          <div class="key-term"><div class="term">Relationship</div><div class="def">The link between two entities.</div></div>
+          <div class="key-term"><div class="term">Entity</div><div class="def">A database table representing a person, object or event — e.g. Pupil, Club, Booking. One entity becomes one table.</div></div>
+          <div class="key-term"><div class="term">Attribute</div><div class="def">A field — one of the set of fields that describes an entity, e.g. pupilName, meetingTime.</div></div>
+          <div class="key-term"><div class="term">Relationship</div><div class="def">The link between two entities, described with a verb — "one club <em>has</em> many pupils".</div></div>
+          <div class="key-term"><div class="term">Primary key</div><div class="def">An attribute whose value <strong>uniquely identifies</strong> each record in a table. Never repeated, never left empty.</div></div>
+          <div class="key-term"><div class="term">Foreign key</div><div class="def">An attribute in one table that is the <strong>primary key of another table</strong>. It is what actually links the two tables together.</div></div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div><strong>What the exam expects:</strong> you should be able to <strong>describe</strong> the purpose of primary and foreign keys, <strong>explain</strong> the need for referential integrity, <strong>complete</strong> a partially finished data dictionary (attribute types, sizes, keys, required, validation), and <strong>complete or draw</strong> an entity-relationship diagram showing a one-to-many relationship.</div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div>Every section on this page is built around <strong>one</strong> database — a school pupils and clubs database. Learn that one database properly and you can answer almost any design question, because the exam only ever changes the story, never the ideas.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="keys">Primary &amp; Foreign Keys</h2>
-        <p>All entities must have a <strong>primary key</strong> — an attribute used to <strong>uniquely identify each record</strong>. The value in the primary key field is never repeated in another record. IDs, numbers, codes and registrations make natural primary keys (e.g. <code>pupilID</code>, ISBN for books).</p>
-        <p><strong>Foreign keys</strong> are used to <strong>link entities</strong> in a relational database. A foreign key is an attribute in one entity that is the <em>primary key of another entity</em> — for example, <code>PublisherID</code> is the primary key of the Publisher table and appears in the Book table as a foreign key.</p>
-        <img src="../resources/ddd/Images/pk-fk-link.svg" alt="Diagram showing a primary key in one table linked to a matching foreign key in another table." class="zoomable" style="max-width:100%;" />
+        <h2 id="relational">From One Table to Two</h2>
+        <p>Our school wants to record every pupil, and which lunchtime or after-school club each pupil attends. The obvious first attempt is to shove the lot into a single table — a <strong>flat file database</strong>:</p>
 
-        <h3>Referential integrity</h3>
-        <p>When two tables are linked with primary/foreign keys, the data in both tables must "match" — this is <strong>referential integrity</strong>. If a Movies table stores a <code>DirectorID</code>, deleting that director while movies still reference them would <strong>break referential integrity</strong> — the foreign key would point at a record that no longer exists.</p>
-        <div class="callout callout-info">
-          <div class="callout-icon">ℹ️</div>
-          <div>You won't be asked for a definition — but you could be asked <strong>what would happen</strong> (what kind of error occurs) if data in one linked table is removed or changed.</div>
+        <div class="example-block">
+          <div class="example-label">Attempt 1 — everything in one flat table</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilID</th><th>pupilName</th><th>house</th><th>clubName</th><th>meetingDay</th><th>staffLead</th></tr></thead>
+              <tbody>
+                <tr><td>P101</td><td>Archie</td><td>Churchill</td><td>Chess Club</td><td>Monday</td><td>Mr Anderson</td></tr>
+                <tr><td>P103</td><td>Mason</td><td>Montgomerie</td><td>Chess Club</td><td>Monday</td><td>Mr Anderson</td></tr>
+                <tr><td>P108</td><td>Louie</td><td>Nightingale</td><td>Chess Club</td><td>Monday</td><td>Mr Anderson</td></tr>
+                <tr><td>P104</td><td>Christian</td><td>Nightingale</td><td>Debating</td><td>Tuesday</td><td>Ms Hendry</td></tr>
+                <tr><td>P109</td><td>Matthew</td><td>Curie</td><td>Debating</td><td>Tuesday</td><td>Ms Hendry</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Look at the last three columns. "Chess Club — Monday — Mr Anderson" has been typed out <strong>three times</strong>, and we have only listed five pupils. With thirty members it would be there thirty times.</p>
+        </div>
+
+        <h3>Why that is a problem</h3>
+        <p>Repeating the same information is not just untidy — it causes three specific faults, and the exam expects you to be able to describe them:</p>
+        <ul>
+          <li><strong>Update anomaly</strong> — Chess Club moves from Monday to Thursday. Every single Chess Club pupil's record has to be edited. Miss one and the database now says two different things at once.</li>
+          <li><strong>Insert anomaly</strong> — the school starts a Robotics Club, but nobody has joined yet. There is nowhere to put it, because a club can only exist attached to a pupil.</li>
+          <li><strong>Delete anomaly</strong> — Christian and Matthew both leave. Delete their records and Debating Club vanishes from the school entirely, along with Ms Hendry.</li>
+        </ul>
+
+        <h3>The fix — split it into two tables</h3>
+        <p>The information about <em>pupils</em> and the information about <em>clubs</em> are two different things, so they belong in two different tables. Each club is stored <strong>once</strong>, and each pupil simply records <em>which</em> club they attend by storing its ID. This is a <strong>relational database</strong>.</p>
+
+        <figure style="margin:1.25rem 0;">
+          <svg class="sp-svg" viewBox="0 0 960 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="spTitle spDesc" style="width:100%;height:auto;">
+            <title id="spTitle">Splitting one flat table into two linked tables</title>
+            <desc id="spDesc">On the left, a single Pupil table containing pupilID, pupilName, house, clubName, meetingDay and staffLead, with the last three highlighted as repeated data. An arrow labelled SPLIT points right to two tables: a Pupil table containing pupilID, pupilName, house and clubID, and a Club table containing clubID, clubName, meetingDay and staffLead, joined by a link between the two clubID attributes.</desc>
+            <style>
+              .sp-svg .sp-cap { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12px; font-weight:700; letter-spacing:.1em; fill:#4A5568; }
+              .sp-svg .sp-box { fill:#FFFFFF; stroke:#00442A; stroke-width:2; }
+              .sp-svg .sp-hdr { fill:#00442A; }
+              .sp-svg .sp-hdr-t { font-family:'Public Sans',system-ui,sans-serif; font-size:14px; font-weight:700; fill:#FFFFFF; }
+              .sp-svg .sp-row-l { stroke:#D1D5DB; stroke-width:1; }
+              .sp-svg .sp-f { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12.5px; fill:#1A1A1A; }
+              .sp-svg .sp-rep { fill:#FEF3C7; }
+              .sp-svg .sp-key { fill:#FEF3C7; }
+              .sp-svg .sp-note { font-family:'Public Sans',system-ui,sans-serif; font-size:12px; font-style:italic; fill:#92750A; }
+              .sp-svg .sp-arrow { stroke:#C9A227; stroke-width:4; fill:none; }
+              .sp-svg .sp-arrow-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12px; font-weight:700; letter-spacing:.12em; fill:#92750A; text-anchor:middle; }
+              .sp-svg .sp-link { stroke:#00442A; stroke-width:2.5; fill:none; }
+            </style>
+            <defs>
+              <marker id="spHead" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#C9A227" />
+              </marker>
+            </defs>
+
+            <!-- BEFORE -->
+            <text class="sp-cap" x="30" y="26">BEFORE — ONE FLAT TABLE</text>
+            <rect class="sp-rep" x="31" y="166" width="298" height="90" />
+            <rect class="sp-box" x="30" y="44" width="300" height="212" />
+            <rect class="sp-hdr" x="31" y="45" width="298" height="31" />
+            <text class="sp-hdr-t" x="44" y="66">Pupil</text>
+            <line class="sp-row-l" x1="31" y1="106" x2="329" y2="106" />
+            <line class="sp-row-l" x1="31" y1="136" x2="329" y2="136" />
+            <line class="sp-row-l" x1="31" y1="166" x2="329" y2="166" />
+            <line class="sp-row-l" x1="31" y1="196" x2="329" y2="196" />
+            <line class="sp-row-l" x1="31" y1="226" x2="329" y2="226" />
+            <text class="sp-f" x="44" y="96">pupilID</text>
+            <text class="sp-f" x="44" y="126">pupilName</text>
+            <text class="sp-f" x="44" y="156">house</text>
+            <text class="sp-f" x="44" y="186">clubName</text>
+            <text class="sp-f" x="44" y="216">meetingDay</text>
+            <text class="sp-f" x="44" y="246">staffLead</text>
+            <text class="sp-note" x="30" y="278">↑ typed out again for every single pupil in the club</text>
+
+            <!-- ARROW -->
+            <line class="sp-arrow" x1="352" y1="150" x2="412" y2="150" marker-end="url(#spHead)" />
+            <text class="sp-arrow-t" x="382" y="135">SPLIT</text>
+
+            <!-- AFTER -->
+            <text class="sp-cap" x="440" y="26">AFTER — TWO LINKED TABLES</text>
+            <rect class="sp-key" x="441" y="166" width="228" height="30" />
+            <rect class="sp-box" x="440" y="44" width="230" height="152" />
+            <rect class="sp-hdr" x="441" y="45" width="228" height="31" />
+            <text class="sp-hdr-t" x="454" y="66">Pupil</text>
+            <line class="sp-row-l" x1="441" y1="106" x2="669" y2="106" />
+            <line class="sp-row-l" x1="441" y1="136" x2="669" y2="136" />
+            <line class="sp-row-l" x1="441" y1="166" x2="669" y2="166" />
+            <text class="sp-f" x="454" y="96">pupilID</text>
+            <text class="sp-f" x="454" y="126">pupilName</text>
+            <text class="sp-f" x="454" y="156">house</text>
+            <text class="sp-f" x="454" y="186">clubID</text>
+
+            <rect class="sp-key" x="711" y="153" width="228" height="30" />
+            <rect class="sp-box" x="710" y="122" width="230" height="153" />
+            <rect class="sp-hdr" x="711" y="123" width="228" height="31" />
+            <text class="sp-hdr-t" x="724" y="144">Club</text>
+            <line class="sp-row-l" x1="711" y1="183" x2="939" y2="183" />
+            <line class="sp-row-l" x1="711" y1="213" x2="939" y2="213" />
+            <line class="sp-row-l" x1="711" y1="243" x2="939" y2="243" />
+            <text class="sp-f" x="724" y="174">clubID</text>
+            <text class="sp-f" x="724" y="204">clubName</text>
+            <text class="sp-f" x="724" y="234">meetingDay</text>
+            <text class="sp-f" x="724" y="264">staffLead</text>
+
+            <path class="sp-link" d="M 670 181 L 690 181 L 690 168 L 710 168" />
+            <text class="sp-note" x="440" y="296">clubID is the link — stored once in Club, referred to by every pupil</text>
+          </svg>
+        </figure>
+
+        <div class="example-block">
+          <div class="example-label">Attempt 2 — the same data, now in two tables</div>
+          <p><strong>Club</strong> — every club appears exactly once:</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>clubID</th><th>clubName</th><th>meetingDay</th><th>meetingTime</th><th>staffLead</th><th>equipmentProvided</th></tr></thead>
+              <tbody>
+                <tr><td>C01</td><td>Chess Club</td><td>Monday</td><td>15:30</td><td>Mr Anderson</td><td>TRUE</td></tr>
+                <tr><td>C02</td><td>Debating</td><td>Tuesday</td><td>13:05</td><td>Ms Hendry</td><td>FALSE</td></tr>
+                <tr><td>C03</td><td>Film Making</td><td>Thursday</td><td>15:30</td><td>Mrs Kaur</td><td>TRUE</td></tr>
+                <tr><td>C04</td><td>Athletics</td><td>Wednesday</td><td>16:00</td><td>Miss Lawson</td><td>FALSE</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><strong>Pupil</strong> — each pupil stores only the club's ID:</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilID</th><th>pupilName</th><th>dateOfBirth</th><th>yearGroup</th><th>house</th><th>meritPoints</th><th>clubID</th></tr></thead>
+              <tbody>
+                <tr><td>P101</td><td>Archie</td><td>14/03/2010</td><td>4</td><td>Churchill</td><td>42</td><td>C01</td></tr>
+                <tr><td>P102</td><td>Noah</td><td>02/11/2009</td><td>5</td><td>Curie</td><td>18</td><td>C03</td></tr>
+                <tr><td>P103</td><td>Mason</td><td>27/06/2010</td><td>4</td><td>Montgomerie</td><td>55</td><td>C01</td></tr>
+                <tr><td>P104</td><td>Christian</td><td>09/01/2008</td><td>6</td><td>Nightingale</td><td>31</td><td>C02</td></tr>
+                <tr><td>P105</td><td>Leoni</td><td>18/09/2010</td><td>4</td><td>Curie</td><td>67</td><td>C04</td></tr>
+                <tr><td>P106</td><td>Lucienne</td><td>30/04/2009</td><td>5</td><td>Churchill</td><td>24</td><td>C03</td></tr>
+                <tr><td>P107</td><td>Erika</td><td>12/12/2011</td><td>3</td><td>Montgomerie</td><td>49</td><td>C04</td></tr>
+                <tr><td>P108</td><td>Louie</td><td>05/07/2009</td><td>5</td><td>Nightingale</td><td>12</td><td>C01</td></tr>
+                <tr><td>P109</td><td>Matthew</td><td>21/02/2011</td><td>3</td><td>Curie</td><td>38</td><td>C02</td></tr>
+                <tr><td>P110</td><td>Riley</td><td>08/05/2010</td><td>4</td><td>Churchill</td><td>71</td><td>C04</td></tr>
+                <tr><td>P111</td><td>Harveer</td><td>16/10/2008</td><td>6</td><td>Nightingale</td><td>26</td><td>C03</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>All three anomalies are gone. Chess Club changes day? Edit <strong>one</strong> record. Robotics Club has no members yet? Add it to Club and leave it there. Everyone leaves Debating? The club is still on the books.</p>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>Why is <code>house</code> still just a field?</strong> Because the only thing we store about a house is its name. There is no repeated <em>extra</em> information to pull out — moving it to its own table would gain us nothing. If the school also wanted to record each house's head of house, colour and points total, then house <em>would</em> deserve its own table. Split out a table when there is <strong>other data that keeps repeating alongside it</strong>, not just because a value appears more than once.</div>
+        </div>
+
+        <p>At National 5 you work with databases of <strong>two linked tables</strong>, and always with a <strong>one-to-many</strong> relationship: one club has many pupils, one owner has many pets, one team has many players.</p>
+      </article>
+
+      <article>
+        <h2 id="keys">Primary &amp; Foreign Keys</h2>
+        <p>Splitting the data into two tables only works if the computer can tell records apart, and can find its way from one table to the other. That is what the two keys are for.</p>
+
+        <h3>Unique identification and the primary key</h3>
+        <p>Every entity must have a <strong>primary key</strong>: an attribute used to <strong>uniquely identify each record</strong>. The value in the primary key is never repeated in another record, and it is never left empty.</p>
+        <p>Why not just use <code>pupilName</code>? Because names are not unique. Our eleven pupils happen to have eleven different names, but a school of a thousand will have several called Matthew — and the moment a second one enrols, searching for "Matthew" returns two records and the database can no longer tell them apart. Which one gets the merit point? A primary key has to stay unique <strong>forever</strong>, not just today, so anything a second pupil could plausibly share is unusable.</p>
+        <p>That is why IDs, numbers, codes and registrations make natural primary keys — they are <em>invented</em> to be unique: <code>pupilID</code>, <code>clubID</code>, an ISBN for a book, a registration number for a car.</p>
+
+        <h3>Linking the tables with a foreign key</h3>
+        <p>A <strong>foreign key</strong> is an attribute in one entity that is the <strong>primary key of another entity</strong>. In our database, <code>clubID</code> is the primary key of Club — and it appears again in Pupil, where it is the foreign key. That single shared attribute is the entire link between the two tables.</p>
+
+        <figure style="margin:1.25rem 0;">
+          <svg class="kl-svg" viewBox="0 0 560 466" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="klTitle klDesc" style="width:100%;height:auto;max-width:620px;margin:0 auto;">
+            <title id="klTitle">How a primary key and a foreign key link two tables</title>
+            <desc id="klDesc">The Club table has clubID as its primary key, holding the unique values C01, C02 and C03. The Pupil table lists pupilID, pupilName and clubID, where clubID is a foreign key and the values C01, C02 and C01 repeat. An arrow shows the values being copied from the Club primary key into the Pupil foreign key.</desc>
+            <style>
+              .kl-svg .kl-box { fill:#FFFFFF; stroke:#00442A; stroke-width:2; }
+              .kl-svg .kl-bar { fill:#00442A; }
+              .kl-svg .kl-bar-t { font-family:'Public Sans',system-ui,sans-serif; font-size:14px; font-weight:700; fill:#FFFFFF; }
+              .kl-svg .kl-th { fill:#E8F5EE; }
+              .kl-svg .kl-th-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12px; font-weight:700; fill:#002D1C; }
+              .kl-svg .kl-td { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12.5px; fill:#1A1A1A; }
+              .kl-svg .kl-keycol { fill:#FEF3C7; }
+              .kl-svg .kl-grid { stroke:#D1D5DB; stroke-width:1; }
+              .kl-svg .kl-keyline { stroke:#C9A227; stroke-width:2; fill:none; }
+              .kl-svg .kl-chip { fill:#C9A227; }
+              .kl-svg .kl-chip-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:10px; font-weight:700; letter-spacing:.1em; fill:#FFFFFF; text-anchor:middle; }
+              .kl-svg .kl-flow { stroke:#6A1B9A; stroke-width:2.5; fill:none; }
+              .kl-svg .kl-flow-t { font-family:'Public Sans',system-ui,sans-serif; font-size:12.5px; font-weight:600; fill:#6A1B9A; text-anchor:middle; }
+            </style>
+            <defs>
+              <marker id="klHead" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#6A1B9A" />
+              </marker>
+            </defs>
+
+            <!-- CLUB TABLE -->
+            <rect class="kl-keycol" x="41" y="55" width="109" height="128" />
+            <rect class="kl-box" x="40" y="24" width="460" height="159" />
+            <rect class="kl-bar" x="41" y="25" width="458" height="30" />
+            <text class="kl-bar-t" x="54" y="45">Club</text>
+            <rect class="kl-th" x="150" y="55" width="349" height="32" />
+            <line class="kl-grid" x1="41" y1="87" x2="499" y2="87" />
+            <line class="kl-grid" x1="41" y1="119" x2="499" y2="119" />
+            <line class="kl-grid" x1="41" y1="151" x2="499" y2="151" />
+            <line class="kl-grid" x1="150" y1="55" x2="150" y2="183" />
+            <line class="kl-grid" x1="330" y1="55" x2="330" y2="183" />
+            <rect class="kl-keyline" x="41" y="55" width="109" height="128" />
+            <text class="kl-th-t" x="56" y="76">clubID</text>
+            <text class="kl-th-t" x="164" y="76">clubName</text>
+            <text class="kl-th-t" x="344" y="76">meetingDay</text>
+            <text class="kl-td" x="56" y="108">C01</text><text class="kl-td" x="164" y="108">Chess Club</text><text class="kl-td" x="344" y="108">Monday</text>
+            <text class="kl-td" x="56" y="140">C02</text><text class="kl-td" x="164" y="140">Debating</text><text class="kl-td" x="344" y="140">Tuesday</text>
+            <text class="kl-td" x="56" y="172">C03</text><text class="kl-td" x="164" y="172">Film Making</text><text class="kl-td" x="344" y="172">Thursday</text>
+            <rect class="kl-chip" x="52" y="0" width="88" height="18" />
+            <text class="kl-chip-t" x="96" y="13">PRIMARY KEY</text>
+
+            <!-- FLOW -->
+            <path class="kl-flow" d="M 95 195 C 95 235, 300 220, 448 262" marker-end="url(#klHead)" />
+            <text class="kl-flow-t" x="262" y="209">every value below must already exist above</text>
+
+            <!-- PUPIL TABLE -->
+            <rect class="kl-keycol" x="391" y="305" width="108" height="128" />
+            <rect class="kl-box" x="40" y="274" width="460" height="159" />
+            <rect class="kl-bar" x="41" y="275" width="458" height="30" />
+            <text class="kl-bar-t" x="54" y="295">Pupil</text>
+            <rect class="kl-th" x="41" y="305" width="350" height="32" />
+            <line class="kl-grid" x1="41" y1="337" x2="499" y2="337" />
+            <line class="kl-grid" x1="41" y1="369" x2="499" y2="369" />
+            <line class="kl-grid" x1="41" y1="401" x2="499" y2="401" />
+            <line class="kl-grid" x1="175" y1="305" x2="175" y2="433" />
+            <rect class="kl-keyline" x="391" y="305" width="108" height="128" />
+            <text class="kl-th-t" x="56" y="326">pupilID</text>
+            <text class="kl-th-t" x="189" y="326">pupilName</text>
+            <text class="kl-th-t" x="405" y="326">clubID</text>
+            <text class="kl-td" x="56" y="358">P101</text><text class="kl-td" x="189" y="358">Archie</text><text class="kl-td" x="405" y="358">C01</text>
+            <text class="kl-td" x="56" y="390">P104</text><text class="kl-td" x="189" y="390">Christian</text><text class="kl-td" x="405" y="390">C02</text>
+            <text class="kl-td" x="56" y="422">P108</text><text class="kl-td" x="189" y="422">Louie</text><text class="kl-td" x="405" y="422">C01</text>
+            <rect class="kl-chip" x="401" y="440" width="88" height="18" />
+            <text class="kl-chip-t" x="445" y="453">FOREIGN KEY</text>
+          </svg>
+        </figure>
+
+        <p>The two gold columns hold the same kind of value, but they behave completely differently — and that difference is the whole idea:</p>
+        <table>
+          <thead><tr><th></th><th>Primary key — Club.clubID</th><th>Foreign key — Pupil.clubID</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Repeats?</strong></td><td>Never. Every value is different.</td><td>Freely. Archie and Louie are both C01.</td></tr>
+            <tr><td><strong>Its job</strong></td><td>Uniquely identify one club.</td><td>Link each pupil to their club.</td></tr>
+            <tr><td><strong>Rule</strong></td><td>Must be unique and must be filled in.</td><td>Must match a value that already exists in Club.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Worked examples</h3>
+
+        <div class="worked-example">
+          <div class="q-label">Our Database — Identifying the Keys (2 marks)</div>
+          <p>Look back at the Pupil and Club tables above. <strong>Identify the primary key of each table, and identify the foreign key.</strong></p>
+          <p><strong>How to tackle it:</strong> we work through it in a fixed order, and the same order works every time.</p>
+          <p><strong>Step 1 — find each primary key.</strong> We take one table at a time and ask: <em>which single attribute never repeats?</em> In Club, <code>clubID</code> runs C01, C02, C03, C04 — all different. Nothing else qualifies; two clubs could easily meet on a Monday. In Pupil, <code>pupilID</code> runs P101 to P111 — all different. Watch <code>pupilName</code>: it happens to be unique across our eleven pupils, but a primary key has to be unique <em>forever</em>, not just today. One more Archie and it breaks.</p>
+          <p><strong>Step 2 — find the attribute that appears in both tables.</strong> Scan the two lists of attributes side by side. Only one name shows up twice: <code>clubID</code>.</p>
+          <p><strong>Step 3 — decide which copy is the foreign key.</strong> The one that <em>repeats</em> is the foreign key. In Club, clubID is unique — that is the primary key, its home table. In Pupil, C01 appears three times — so <em>that</em> copy is the foreign key.</p>
+          <p><strong>Watch the trap:</strong> "clubID is the foreign key" on its own is not a full answer, because clubID is in both tables. Always say <strong>which table</strong> the foreign key is in — the mark is for <code>clubID</code> <em>in the Pupil table</em>.</p>
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;">Primary keys: <strong>pupilID</strong> in the Pupil table and <strong>clubID</strong> in the Club table (1 mark). Foreign key: <strong>clubID</strong> in the <strong>Pupil</strong> table, which is the primary key of Club (1 mark).</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — The Purpose of a Foreign Key (1 mark)</div>
+          <p>This question uses a netball league database. The Club table stores the clubs; the Player table stores the players:</p>
+          <img src="../resources/ddd/worked-examples/n5_netballDB_structure.png" alt="Netball database structure: a Club table with clubID, clubName, trainingVenue, contactNo and division; and a Player table with playerID, name, email, age, position and clubID." class="zoomable" />
+          <img src="../resources/ddd/worked-examples/n5_key_q1.png" alt="Exam question: Explain the purpose of the foreign key clubID in the Player table." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the question has already told us <code>clubID</code> is a foreign key, so no marks are going for spotting that. It asks for the <strong>purpose</strong> — what the attribute is <em>for</em>.</p>
+          <p>We check what it does in the data. Every player record carries a clubID, and that value also appears in the Club table as its primary key. So a player's clubID is what points them at their club. Without it, the two tables would sit there as two unrelated lists.</p>
+          <p><strong>Watch the trap:</strong> it is tempting to write "it identifies the club" — but that is the job of the <em>primary key</em> over in Club. A foreign key's job is to <strong>create the relationship</strong>. One word does the heavy lifting here: <em>links</em>.</p>
+          <img src="../resources/ddd/worked-examples/n5_key_q1_ans.png" alt="Marking instructions: Creates a relationship / Links Club and Player tables. 1 mark." class="zoomable" />
+          <p>Notice how short the marking instruction is. For 1 mark, name the two tables and say they are linked — no more is needed.</p>
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;">It <strong>creates a relationship between the Club and Player tables</strong> — each player's clubID matches the primary key of a club, linking that player to their club.</p>
+        </div>
+      </article>
+
+      <article>
+        <h2 id="integrity">Referential Integrity</h2>
+        <p>Linking two tables with a primary and foreign key raises an obvious question: what stops somebody typing in a club that does not exist?</p>
+        <p><strong>Referential integrity</strong> is the rule that says <strong>every foreign key value must match an existing primary key value in the linked table</strong>. When it is switched on, the database itself refuses to let you break the link — you do not have to remember, and neither does anyone else using it.</p>
+
+        <div class="example-block">
+          <div class="example-label">Example — a new pupil, Blair, is added to the database</div>
+          <p>A new pupil, <strong>Blair</strong>, has joined the school in S4 and needs a record. Here is the complete set of data the office types in — one value for every attribute in the Pupil table:</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilID</th><th>pupilName</th><th>dateOfBirth</th><th>yearGroup</th><th>house</th><th>meritPoints</th><th>clubID</th></tr></thead>
+              <tbody>
+                <tr><td>P112</td><td>Blair</td><td>11/01/2010</td><td>4</td><td>Curie</td><td>0</td><td>C07</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Read across it and every value looks perfectly reasonable. P112 is a fresh ID that nobody else has. The name is filled in. The date of birth fits an S4 pupil. Curie is a real house. Zero merit points is fine for someone who has just arrived. Six of the seven values would sail through every validation check on the page.</p>
+          <p>The seventh is the problem. The Club table holds <strong>C01, C02, C03 and C04</strong> — and nothing else. There is no <strong>C07</strong>.</p>
+
+          <p><strong>What the database does with it.</strong> Before storing anything, it takes the foreign key value and goes looking for it in the linked table:</p>
+          <ul>
+            <li>Take the value entered in the foreign key: <code>clubID = C07</code>.</li>
+            <li>Search the <strong>primary key</strong> of the Club table for C07.</li>
+            <li>C01? No. C02? No. C03? No. C04? No. <strong>No match.</strong></li>
+            <li>Reject the whole record. <span class="verdict">❌</span></li>
+          </ul>
+          <p>Blair's record is <strong>not saved at all</strong> — not even the six good values. The insert fails as a single unit, because a half-stored pupil would be worse than no pupil.</p>
+
+          <p><strong>Why refusing is the helpful thing to do.</strong> Suppose it had been allowed. Blair would sit in the database attached to a club that does not exist. Print the Chess Club register and Blair is missing. Ask the database which club Blair attends and it answers "C07", which means nothing to anybody. The error would not show up until months later, and by then nobody would remember what C07 was meant to be. Referential integrity turns a silent, permanent fault into an obvious one, at the only moment it can still be fixed easily.</p>
+
+          <p><strong>The fix.</strong> Someone checks with Blair, who says Debating. <code>C07</code> is corrected to <code>C02</code>, and the same check now runs differently — C02 <em>is</em> in the Club table, so the record is accepted <span class="verdict">✅</span> and stored:</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>pupilID</th><th>pupilName</th><th>dateOfBirth</th><th>yearGroup</th><th>house</th><th>meritPoints</th><th>clubID</th></tr></thead>
+              <tbody>
+                <tr><td>P112</td><td>Blair</td><td>11/01/2010</td><td>4</td><td>Curie</td><td>0</td><td>C02</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p>The rule works in the other direction too. Deleting Chess Club while Archie, Mason and Louie are still in it is <strong>also rejected</strong> — three pupil records would be left pointing at a club that no longer exists.</p>
+        <p>Put plainly, without any of the vocabulary: <strong>you cannot join a club that does not exist, and you cannot delete a club that still has members.</strong> The same sentence works for any database — a player cannot play for a club that is not in the league, a pet cannot belong to an owner who was never registered, a booking cannot be for a flight that does not run.</p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div>You will not be asked to define referential integrity. You <em>will</em> be asked <strong>why</strong> it is useful, or <strong>what goes wrong</strong> without it. Both answers come back to the same thing: it guarantees the foreign key always points at a record that really exists.</div>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Referential Integrity Before Adding a Player (1 mark)</div>
+          <p>This is a later part of the netball league question. The Club and Player tables are linked by <code>clubID</code>.</p>
+          <img src="../resources/ddd/worked-examples/n5_integrity_q1.png" alt="Exam question: Explain why it is better to have referential integrity implemented before adding a new player to the netball database." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the question says "<strong>before adding a new player</strong>", which tells us exactly which moment to think about — someone is typing a clubID into a brand new player record.</p>
+          <p>So we ask what could go wrong at that moment. They could mistype the ID, or enter a club that has never existed. With referential integrity switched on, the database checks that clubID against the Club table and refuses anything that does not match. The new player is therefore guaranteed to be attached to a club that is really there.</p>
+          <p><strong>Watch the trap:</strong> this is not a validation question. Presence checks and length checks look at the value <em>on its own</em>; referential integrity checks it <strong>against another table</strong>. Answering "it stops invalid data being entered" is too vague to get the mark — say what it is being checked against.</p>
+          <img src="../resources/ddd/worked-examples/n5_integrity_q1_ans.png" alt="Marking instructions: To ensure the player is linked to an existing team. 1 mark." class="zoomable" />
+          <p>Once again the marking instruction is a single line — and the word that earns it is <strong>existing</strong>.</p>
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;">It ensures the new player is <strong>linked to a club that already exists</strong> — the clubID entered must match a clubID in the Club table, so a player cannot be added to a club that is not in the database.</p>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Interactive</div>
+          <p class="ib-title">Referential Integrity Tester</p>
+          <div class="ib-body">
+            <p class="ib-intro">The Club and Pupil tables, live. Try to add a pupil to a club that does not exist and watch the database refuse the whole record — then switch to <strong>Delete a club</strong> and try to remove one that still has members. Reading that referential integrity would stop you is one thing; being stopped is another.</p>
+            <iframe src="../resources/ddd/visualisers/referential-integrity-tester.html"
+                    title="Referential integrity tester — try to add a pupil to a club that does not exist, and try to delete a club that still has members"
+                    loading="lazy"
+                    style="height:1320px"></iframe>
+          </div>
         </div>
       </article>
 
       <article>
         <h2 id="data-dictionary">Data Dictionaries</h2>
-        <p>The <strong>data dictionary</strong> helps us plan the content of a table. In the exam you're more likely to <strong>complete a partially-filled dictionary</strong> than create one from scratch. For each attribute it records:</p>
+        <p>A <strong>data dictionary</strong> is the plan for the tables — it records, for every attribute, exactly what the database is allowed to store. In the exam you are far more likely to <strong>complete a partly-filled dictionary</strong> from a description of what the customer needs than to write one from scratch. It records six things:</p>
         <ul>
-          <li><strong>Entity name</strong> and <strong>attribute name</strong> (e.g. ProductName)</li>
-          <li><strong>Key</strong> — primary key (PK, one per table at N5) or foreign key (FK, "borrowed" from another table)</li>
+          <li><strong>Attribute name</strong> — e.g. <code>meetingTime</code></li>
+          <li><strong>Key</strong> — primary key (PK) or foreign key (FK); at N5 one PK per table, and blank for everything else</li>
           <li><strong>Type</strong> — text, number, date, time or Boolean</li>
-          <li><strong>Size</strong> — for text, the number of characters needed (e.g. a 12-character name)</li>
-          <li><strong>Required</strong> — must the field be filled in? (The primary key is always required)</li>
-          <li><strong>Validation</strong> — any checks on the data entered</li>
+          <li><strong>Size</strong> — for text only, the number of characters needed</li>
+          <li><strong>Required</strong> — must this field be filled in? (a primary key is always required)</li>
+          <li><strong>Validation</strong> — any checks applied to the data entered</li>
         </ul>
 
-        <h3>The four types of validation</h3>
-        <div class="key-terms">
-          <div class="key-term"><div class="term">Presence check</div><div class="def">The field cannot be left empty — a value must be entered.</div></div>
-          <div class="key-term"><div class="term">Restricted choice</div><div class="def">Only certain values are allowed — e.g. size must be "S", "M" or "L".</div></div>
-          <div class="key-term"><div class="term">Field length</div><div class="def">The value must have a certain number of characters — e.g. a postcode of at most 8 characters.</div></div>
-          <div class="key-term"><div class="term">Range</div><div class="def">A number must fall between limits — e.g. mark between 0 and 100.</div></div>
+        <h3>Attribute types</h3>
+        <p>Each attribute is given a <strong>type</strong>, which decides what sort of data it can hold. The five National 5 types are covered on the <a href="database-introduction.html#types">introduction page</a>; here is the short version, with an example from our database:</p>
+        <table>
+          <thead><tr><th>Type</th><th>Stores</th><th>In our database</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Text</strong></td><td>Letters, numbers and symbols</td><td><code>pupilName</code> = "Lucienne", <code>pupilID</code> = "P101"</td></tr>
+            <tr><td><strong>Number</strong></td><td>Numeric values you might calculate with</td><td><code>meritPoints</code> = 42</td></tr>
+            <tr><td><strong>Date</strong></td><td>A calendar date</td><td><code>dateOfBirth</code> = 14/03/2010</td></tr>
+            <tr><td><strong>Time</strong></td><td>A time of day</td><td><code>meetingTime</code> = 15:30</td></tr>
+            <tr><td><strong>Boolean</strong></td><td>Only TRUE or FALSE</td><td><code>equipmentProvided</code> = TRUE</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div><strong>The trap that costs the most marks on this page.</strong> Software Design and Development uses <em>data types</em>: string, integer, real, Boolean. Databases use <em>attribute types</em>: text, number, date, time, Boolean. They are not interchangeable. Writing "string" instead of "text", or "integer"/"real" instead of "number", in a database question <strong>does not get the mark</strong> — and it is an easy slip to make when you have just come out of an SDD lesson. Only <strong>Boolean</strong> appears in both lists.</div>
         </div>
 
+        <table>
+          <thead><tr><th>In SDD, you would write…</th><th>In a database, write…</th></tr></thead>
+          <tbody>
+            <tr><td>String</td><td><strong>Text</strong></td></tr>
+            <tr><td>Integer</td><td><strong>Number</strong></td></tr>
+            <tr><td>Real</td><td><strong>Number</strong></td></tr>
+            <tr><td>Boolean</td><td><strong>Boolean</strong> — the one that is the same</td></tr>
+            <tr><td>(no equivalent)</td><td><strong>Date</strong>, <strong>Time</strong></td></tr>
+          </tbody>
+        </table>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Attribute Type from a Screen (1 mark)</div>
+          <img src="../resources/ddd/worked-examples/n5_attribute_q1.png" alt="Exam question: a phone screen showing a new contact being added, with an arrow pointing at the phone number 07895582319. State the attribute type that would be used to store the data identified by the arrow." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the arrow points at <strong>07895582319</strong> — a mobile number. It is made of digits, so the instinct is to answer "number", and that instinct is wrong.</p>
+          <p>We apply the test that settles every one of these: <em>would you ever do arithmetic with it?</em> Nobody adds two phone numbers together or works out the average. It is a label made of digits, not a quantity.</p>
+          <p>There is a second, more concrete reason. A phone number starts with a <strong>0</strong>. Store 07895582319 as a number and the computer drops the leading zero, leaving 7895582319 — the number is now wrong and undiallable. Text keeps every character exactly as typed.</p>
+          <p><strong>Watch the trap:</strong> phone numbers, postcodes, bank sort codes, product codes and our own <code>pupilID</code> are all stored as <strong>Text</strong>, however numeric they look. And this is a database question, so the answer is "Text" — never "String".</p>
+          <img src="../resources/ddd/worked-examples/n5_attribute_q1_ans.png" alt="Marking instructions: Text. 1 mark." class="zoomable" />
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;"><strong>Text</strong></p>
+        </div>
+
+        <h3>Validation</h3>
+        <p><strong>Validation</strong> checks that data entered is sensible <em>before</em> it is stored. There are exactly <strong>four</strong> types at National 5 — if a question asks which validation applies, the answer is one of these four:</p>
+        <div class="key-terms">
+          <div class="key-term"><div class="term">Presence check</div><div class="def">The field cannot be left empty. This is the same thing as ticking <strong>Required</strong> in the data dictionary — e.g. a pupil must have a name.</div></div>
+          <div class="key-term"><div class="term">Range check</div><div class="def">A number must fall between two limits — e.g. <code>yearGroup</code> must be from 1 to 6, <code>meritPoints</code> from 0 to 100.</div></div>
+          <div class="key-term"><div class="term">Length check</div><div class="def">The value must have a set number of characters — e.g. <code>pupilID</code> must be exactly 4 characters.</div></div>
+          <div class="key-term"><div class="term">Restricted choice</div><div class="def">Only certain values are allowed — e.g. <code>house</code> must be Churchill, Curie, Montgomerie or Nightingale.</div></div>
+        </div>
+        <p>Spotting which one a question wants is mostly about the wording used in the description:</p>
+        <table>
+          <thead><tr><th>The requirement says…</th><th>Validation</th></tr></thead>
+          <tbody>
+            <tr><td>"must be entered", "cannot be blank", "compulsory"</td><td><strong>Presence check</strong></td></tr>
+            <tr><td>"between 0 and 100", "no more than 5", "at least 12"</td><td><strong>Range check</strong></td></tr>
+            <tr><td>"exactly 4 characters", "8 digits long"</td><td><strong>Length check</strong></td></tr>
+            <tr><td>a fixed list of options, a drop-down menu, a set of radio buttons</td><td><strong>Restricted choice</strong></td></tr>
+          </tbody>
+        </table>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Validating a Book Reference (1 mark)</div>
+          <img src="../resources/ddd/worked-examples/n5_validation_q1.png" alt="Exam question: three records from a Book table showing bookRef values 0783567328120, 0703487922417 and 0724603125633, with title, author and publisher. State a suitable type of validation for the bookRef field." class="zoomable" />
+          <p><strong>How to tackle it:</strong> the question gives us no description of the customer's needs — just three records. So the evidence has to come from the <strong>data itself</strong>, and that means looking down the column rather than reading across.</p>
+          <p>The three bookRef values are 0783567328120, 0703487922417 and 0724603125633. Count them: every one is <strong>13 characters</strong>. That consistency is the clue the question is built on, and it points straight at a <strong>length check</strong>.</p>
+          <p>A presence check also earns the mark here, and it is easy to justify: bookRef is clearly the primary key of the Book table, and a primary key can never be left empty.</p>
+          <p><strong>Watch the trap:</strong> a range check is wrong. These look like numbers but they are book references — they start with 0, and no one is going to calculate with them, so they are stored as Text. Ranges are for numbers you measure or count.</p>
+          <img src="../resources/ddd/worked-examples/n5_validation_q1_ans.png" alt="Marking instructions: Length (check) or presence (check). 1 mark. Accept implementation examples of validation, LEN(bookRef) = 13." class="zoomable" />
+          <p>Note what the marking instructions accept at the end: writing it the way you would implement it, <code>LEN(bookRef) = 13</code>, is fine too.</p>
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;"><strong>Length check</strong> — every bookRef is 13 characters long. (A <strong>presence check</strong> is equally acceptable.)</p>
+        </div>
+
+        <h3>A completed data dictionary</h3>
+        <p>Putting all of it together, here is the full data dictionary for our two tables. This is the finished article — in the exam, some of these cells would be blank for you to fill in.</p>
+
         <div class="example-block">
-          <div class="example-label">Example — data dictionary for a Product entity</div>
+          <div class="example-label">Data dictionary — Pupil</div>
           <div style="overflow-x:auto;">
             <table>
-              <thead><tr><th>Entity: Product</th><th>Key</th><th>Type</th><th>Size</th><th>Required</th><th>Validation</th></tr></thead>
+              <thead><tr><th>Attribute name</th><th>Key</th><th>Type</th><th>Size</th><th>Required</th><th>Validation</th></tr></thead>
               <tbody>
-                <tr><td>productID</td><td>PK</td><td>Number</td><td></td><td>Yes</td><td>Presence check</td></tr>
-                <tr><td>productName</td><td></td><td>Text</td><td>20</td><td>Yes</td><td>Presence check</td></tr>
-                <tr><td>price</td><td></td><td>Number</td><td></td><td>Yes</td><td>Range: &gt;0 and &lt;500</td></tr>
-                <tr><td>size</td><td></td><td>Text</td><td>1</td><td>Yes</td><td>Restricted choice: S, M or L</td></tr>
-                <tr><td>supplierID</td><td>FK</td><td>Number</td><td></td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>pupilID</td><td>PK</td><td>Text</td><td>4</td><td>Yes</td><td>Length check — exactly 4 characters</td></tr>
+                <tr><td>pupilName</td><td></td><td>Text</td><td>15</td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>dateOfBirth</td><td></td><td>Date</td><td></td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>yearGroup</td><td></td><td>Number</td><td></td><td>Yes</td><td>Range check — 1 to 6</td></tr>
+                <tr><td>house</td><td></td><td>Text</td><td>12</td><td>Yes</td><td>Restricted choice — Churchill, Curie, Montgomerie, Nightingale</td></tr>
+                <tr><td>meritPoints</td><td></td><td>Number</td><td></td><td>Yes</td><td>Range check — 0 to 100</td></tr>
+                <tr><td>clubID</td><td>FK</td><td>Text</td><td>3</td><td>Yes</td><td>Presence check</td></tr>
               </tbody>
             </table>
           </div>
         </div>
+
+        <div class="example-block">
+          <div class="example-label">Data dictionary — Club</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>Attribute name</th><th>Key</th><th>Type</th><th>Size</th><th>Required</th><th>Validation</th></tr></thead>
+              <tbody>
+                <tr><td>clubID</td><td>PK</td><td>Text</td><td>3</td><td>Yes</td><td>Length check — exactly 3 characters</td></tr>
+                <tr><td>clubName</td><td></td><td>Text</td><td>20</td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>meetingDay</td><td></td><td>Text</td><td>9</td><td>Yes</td><td>Restricted choice — Monday to Friday</td></tr>
+                <tr><td>meetingTime</td><td></td><td>Time</td><td></td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>staffLead</td><td></td><td>Text</td><td>20</td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>equipmentProvided</td><td></td><td>Boolean</td><td></td><td>Yes</td><td>Presence check</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>There are <strong>only four types of validation</strong> at N5 — presence check, range, field length and restricted choice. If an exam question asks which validation applies, the answer is one of these!</div>
+          <div>Three things markers look for, and they are easy marks: <strong>Size is only ever filled in for Text</strong> — leave it blank for Number, Date, Time and Boolean. <strong>The primary key is always Required = Yes.</strong> And a <strong>foreign key is not the primary key of this table</strong>, so it is marked FK, not PK.</div>
+        </div>
+
+        <div class="interactive-block">
+          <div class="ib-label">Trainer</div>
+          <p class="ib-title">Data Dictionary Filler</p>
+          <div class="ib-body">
+            <p class="ib-intro">Completing a part-finished data dictionary from a customer's description is the most common exam task on this page. Four sets to work through: the school clubs table you have just read, then a leisure centre, a driving school and a cinema. Every cell explains itself when you check it — including the ones you got right.</p>
+            <iframe src="../resources/ddd/visualisers/data-dictionary-filler.html"
+                    title="Data dictionary filler — complete the missing key, type, size, required and validation cells from a customer description"
+                    loading="lazy"
+                    style="height:960px"></iframe>
+          </div>
         </div>
       </article>
 
       <article>
         <h2 id="er-diagrams">Entity-Relationship Diagrams</h2>
-        <p>An <strong>entity-relationship (ER) diagram</strong> shows the structure of the database more clearly than a data dictionary. A <strong>relationship</strong> is a link between two entities describing how they are related.</p>
-        <p>At National 5 you work with <strong>one-to-many</strong> relationships: every record in one entity is linked with several records in the other. For example, <em>one</em> school has <em>many</em> teachers; <em>one</em> director directs <em>many</em> movies.</p>
-        <img src="../resources/ddd/Images/er_1tm.svg" alt="Entity-relationship diagram showing a one-to-many relationship between two entities." class="zoomable" style="max-width:100%;" />
-        <p>In an ER diagram:</p>
+        <p>A data dictionary tells you what is inside each table. An <strong>entity-relationship (ER) diagram</strong> shows the whole database in one picture — both entities, all their attributes, and the relationship joining them.</p>
+
+        <h3>How to draw one</h3>
+        <p>The SQA expects a specific layout, and drawing it any other way loses marks:</p>
         <ul>
-          <li><strong>Entities</strong> (tables) are drawn as rectangles</li>
-          <li><strong>Attributes</strong> (fields) are drawn around each entity as ovals</li>
-          <li>The <strong>primary key</strong> is underlined</li>
-          <li>The <strong>foreign key</strong> is marked with an asterisk (*)</li>
-          <li>The relationship line shows <strong>1</strong> at one end and <strong>many</strong> (crow's foot) at the other</li>
+          <li><strong>Entities</strong> (tables) are drawn as <strong>rectangles</strong>, one for each table.</li>
+          <li><strong>Attributes</strong> (fields) are drawn as <strong>ovals</strong> arranged around their entity, each joined to it by a line.</li>
+          <li>The <strong>primary key</strong> attribute is <strong>underlined</strong>.</li>
+          <li>The <strong>foreign key</strong> attribute is marked with an <strong>asterisk (*)</strong>.</li>
+          <li>The <strong>relationship</strong> is a line between the two rectangles, <strong>named with a verb</strong> written above it.</li>
+          <li><strong>Cardinality</strong> is shown with a <strong>crow's foot</strong> — the three-pronged fork touches the entity on the <em>many</em> side. At N5 it is always one-to-many.</li>
         </ul>
+
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div>Always describe the relationship with a <strong>verb</strong>: "One director <em>directs</em> many movies" or "Many movies <em>are directed by</em> one director". ER diagram questions are typically worth 2–6 marks.</div>
+          <div>Two quick checks that save marks. The <strong>foreign key and the crow's foot always live on the same entity</strong> — if you have drawn the fork on one table and the asterisk on the other, one of them is wrong. And every diagram needs <strong>exactly two underlines</strong>, one per entity.</div>
         </div>
+
+        <h3>Building our database as an ER diagram, step by step</h3>
+        <p>Nobody draws a finished ER diagram in one go. It is built in five passes, and doing them in this order matters — each one gives you the information you need for the next. Here is our pupils and clubs database coming together.</p>
+
+        <h4>Step 1 — Draw the entities</h4>
+        <p>Start by asking what the database stores information <em>about</em>. Ours records pupils, and it records clubs — two things, so <strong>two tables, and two rectangles</strong>. Name each one in the <strong>singular</strong>: the entity is called Pupil because each record describes one pupil, not the whole school.</p>
+        <p>Leave a generous gap between the rectangles and plenty of white space all around them. That space is not wasted — every attribute has to fit around the outside of its own entity, and the middle has to stay clear for the relationship. This is where most rushed diagrams go wrong: the boxes get drawn in the centre of the page and there is no room left for anything else.</p>
+
+        <figure style="margin:1.25rem 0;">
+          <svg class="er-svg" viewBox="0 240 1000 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="es1Title es1Desc" style="width:100%;height:auto;">
+            <title id="es1Title">ER diagram step 1 — the two entities</title>
+            <desc id="es1Desc">Two empty rectangles side by side, one labelled Pupil and one labelled Club, with a gap between them and no attributes or relationship drawn yet.</desc>
+            <style>
+              /* Shared styles for all five step diagrams and the finished diagram below.
+                 Inline SVG styles apply document-wide, so they are defined once here. */
+              .er-svg .er-line { stroke:#1B6B45; stroke-width:1.6; }
+              .er-svg .er-ent { fill:#FFFFFF; stroke:#00442A; stroke-width:2.5; }
+              .er-svg .er-ent-t { font-family:'Public Sans',system-ui,sans-serif; font-size:17px; font-weight:700; fill:#002D1C; text-anchor:middle; }
+              .er-svg .er-att { fill:#E8F5EE; stroke:#1B6B45; stroke-width:1.8; }
+              .er-svg .er-att-pk { fill:#FEF3C7; stroke:#C9A227; stroke-width:2.2; }
+              .er-svg .er-att-fk { fill:#FEF3C7; stroke:#C9A227; stroke-width:2.2; stroke-dasharray:5 3; }
+              .er-svg .er-att-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:13px; fill:#002D1C; text-anchor:middle; }
+              .er-svg .er-ul { stroke:#002D1C; stroke-width:1.4; }
+              .er-svg .er-rel { stroke:#00442A; stroke-width:2.5; fill:none; }
+              .er-svg .er-rel-t { font-family:'Public Sans',system-ui,sans-serif; font-size:15px; font-weight:600; fill:#002D1C; text-anchor:middle; }
+              .er-svg .er-badge { fill:#00442A; }
+              .er-svg .er-badge-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:11px; font-weight:700; letter-spacing:.12em; fill:#FFFFFF; }
+            </style>
+            <rect class="er-badge" x="8" y="248" width="112" height="20" />
+            <text class="er-badge-t" x="18" y="262">STEP 1 OF 5</text>
+
+            <rect class="er-ent" x="300" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="380" y="317">Pupil</text>
+            <rect class="er-ent" x="640" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="720" y="317">Club</text>
+          </svg>
+        </figure>
+
+        <h4>Step 2 — Add the attributes</h4>
+        <p>Now every field becomes an <strong>oval joined to its entity by a line</strong>. Read them straight off the data dictionary — Pupil has seven, Club has six — and fan them around the <em>outside</em> of each rectangle so the middle stays clear.</p>
+        <p>One thing here always looks like a mistake and is not: <code>clubID</code> appears <strong>twice</strong>, once on Pupil and once on Club. That is exactly right, and it is the whole reason the two tables can be linked. Step 3 is where we say what each copy is doing.</p>
+
+        <figure style="margin:1.25rem 0;">
+          <svg class="er-svg" viewBox="0 70 1000 510" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="es2Title es2Desc" style="width:100%;height:auto;">
+            <title id="es2Title">ER diagram step 2 — attributes added</title>
+            <desc id="es2Desc">The Pupil and Club rectangles, each now surrounded by oval attributes joined by lines. Pupil has pupilID, pupilName, clubID, dateOfBirth, yearGroup, house and meritPoints. Club has clubID, clubName, meetingDay, meetingTime, staffLead and equipmentProvided. No keys are marked and no relationship is drawn yet.</desc>
+            <rect class="er-badge" x="8" y="78" width="112" height="20" />
+            <text class="er-badge-t" x="18" y="92">STEP 2 OF 5</text>
+
+            <g class="er-line">
+              <line x1="150" y1="158" x2="380" y2="310" />
+              <line x1="330" y1="108" x2="380" y2="310" />
+              <line x1="500" y1="150" x2="380" y2="310" />
+              <line x1="80"  y1="285" x2="380" y2="310" />
+              <line x1="150" y1="440" x2="380" y2="310" />
+              <line x1="330" y1="522" x2="380" y2="310" />
+              <line x1="505" y1="468" x2="380" y2="310" />
+              <line x1="720" y1="108" x2="720" y2="310" />
+              <line x1="890" y1="175" x2="720" y2="310" />
+              <line x1="910" y1="285" x2="720" y2="310" />
+              <line x1="910" y1="395" x2="720" y2="310" />
+              <line x1="860" y1="490" x2="720" y2="310" />
+              <line x1="690" y1="540" x2="720" y2="310" />
+            </g>
+
+            <rect class="er-ent" x="300" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="380" y="317">Pupil</text>
+            <rect class="er-ent" x="640" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="720" y="317">Club</text>
+
+            <ellipse class="er-att" cx="330" cy="108" rx="70" ry="24" /><text class="er-att-t" x="330" y="112">pupilID</text>
+            <ellipse class="er-att" cx="150" cy="158" rx="70" ry="24" /><text class="er-att-t" x="150" y="162">pupilName</text>
+            <ellipse class="er-att" cx="500" cy="150" rx="70" ry="24" /><text class="er-att-t" x="500" y="154">clubID</text>
+            <ellipse class="er-att" cx="80" cy="285" rx="70" ry="24" /><text class="er-att-t" x="80" y="289">dateOfBirth</text>
+            <ellipse class="er-att" cx="150" cy="440" rx="70" ry="24" /><text class="er-att-t" x="150" y="444">yearGroup</text>
+            <ellipse class="er-att" cx="330" cy="522" rx="70" ry="24" /><text class="er-att-t" x="330" y="526">house</text>
+            <ellipse class="er-att" cx="505" cy="468" rx="70" ry="24" /><text class="er-att-t" x="505" y="472">meritPoints</text>
+
+            <ellipse class="er-att" cx="720" cy="108" rx="70" ry="24" /><text class="er-att-t" x="720" y="112">clubID</text>
+            <ellipse class="er-att" cx="890" cy="175" rx="70" ry="24" /><text class="er-att-t" x="890" y="179">clubName</text>
+            <ellipse class="er-att" cx="910" cy="285" rx="70" ry="24" /><text class="er-att-t" x="910" y="289">meetingDay</text>
+            <ellipse class="er-att" cx="910" cy="395" rx="70" ry="24" /><text class="er-att-t" x="910" y="399">meetingTime</text>
+            <ellipse class="er-att" cx="860" cy="490" rx="70" ry="24" /><text class="er-att-t" x="860" y="494">staffLead</text>
+            <ellipse class="er-att" cx="690" cy="540" rx="80" ry="24" /><text class="er-att-t" x="690" y="544">equipmentProvided</text>
+          </svg>
+        </figure>
+
+        <h4>Step 3 — Identify the keys</h4>
+        <p>Take one entity at a time and find the attribute that could <strong>never repeat</strong>. In Pupil that is <code>pupilID</code>; in Club it is <code>clubID</code>. <strong>Underline</strong> both — that is how a primary key is shown, and every ER diagram ends up with exactly two underlines, one per entity.</p>
+        <p>Then deal with the attribute that turned up twice in step 2. One copy is a primary key and the other is the foreign key, so which is which? The copy sitting in its <em>own</em> table — <code>clubID</code> on Club — is the primary key, and it gets the underline. The <em>borrowed</em> copy, <code>clubID</code> on Pupil, is the foreign key, and it gets an <strong>asterisk</strong>: <code>clubID*</code>.</p>
+        <p>This step decides step 4 for you, so it is worth getting right before moving on.</p>
+
+        <figure style="margin:1.25rem 0;">
+          <svg class="er-svg" viewBox="0 70 1000 510" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="es3Title es3Desc" style="width:100%;height:auto;">
+            <title id="es3Title">ER diagram step 3 — keys identified</title>
+            <desc id="es3Desc">The same diagram as step 2, but pupilID on Pupil and clubID on Club are now underlined as primary keys, and clubID on Pupil is marked with an asterisk as the foreign key. Still no relationship line.</desc>
+            <rect class="er-badge" x="8" y="78" width="112" height="20" />
+            <text class="er-badge-t" x="18" y="92">STEP 3 OF 5</text>
+
+            <g class="er-line">
+              <line x1="150" y1="158" x2="380" y2="310" />
+              <line x1="330" y1="108" x2="380" y2="310" />
+              <line x1="500" y1="150" x2="380" y2="310" />
+              <line x1="80"  y1="285" x2="380" y2="310" />
+              <line x1="150" y1="440" x2="380" y2="310" />
+              <line x1="330" y1="522" x2="380" y2="310" />
+              <line x1="505" y1="468" x2="380" y2="310" />
+              <line x1="720" y1="108" x2="720" y2="310" />
+              <line x1="890" y1="175" x2="720" y2="310" />
+              <line x1="910" y1="285" x2="720" y2="310" />
+              <line x1="910" y1="395" x2="720" y2="310" />
+              <line x1="860" y1="490" x2="720" y2="310" />
+              <line x1="690" y1="540" x2="720" y2="310" />
+            </g>
+
+            <rect class="er-ent" x="300" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="380" y="317">Pupil</text>
+            <rect class="er-ent" x="640" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="720" y="317">Club</text>
+
+            <ellipse class="er-att-pk" cx="330" cy="108" rx="70" ry="24" /><text class="er-att-t" x="330" y="112">pupilID</text>
+            <line class="er-ul" x1="303" y1="117" x2="357" y2="117" />
+            <ellipse class="er-att" cx="150" cy="158" rx="70" ry="24" /><text class="er-att-t" x="150" y="162">pupilName</text>
+            <ellipse class="er-att-fk" cx="500" cy="150" rx="70" ry="24" /><text class="er-att-t" x="500" y="154">clubID*</text>
+            <ellipse class="er-att" cx="80" cy="285" rx="70" ry="24" /><text class="er-att-t" x="80" y="289">dateOfBirth</text>
+            <ellipse class="er-att" cx="150" cy="440" rx="70" ry="24" /><text class="er-att-t" x="150" y="444">yearGroup</text>
+            <ellipse class="er-att" cx="330" cy="522" rx="70" ry="24" /><text class="er-att-t" x="330" y="526">house</text>
+            <ellipse class="er-att" cx="505" cy="468" rx="70" ry="24" /><text class="er-att-t" x="505" y="472">meritPoints</text>
+
+            <ellipse class="er-att-pk" cx="720" cy="108" rx="70" ry="24" /><text class="er-att-t" x="720" y="112">clubID</text>
+            <line class="er-ul" x1="697" y1="117" x2="743" y2="117" />
+            <ellipse class="er-att" cx="890" cy="175" rx="70" ry="24" /><text class="er-att-t" x="890" y="179">clubName</text>
+            <ellipse class="er-att" cx="910" cy="285" rx="70" ry="24" /><text class="er-att-t" x="910" y="289">meetingDay</text>
+            <ellipse class="er-att" cx="910" cy="395" rx="70" ry="24" /><text class="er-att-t" x="910" y="399">meetingTime</text>
+            <ellipse class="er-att" cx="860" cy="490" rx="70" ry="24" /><text class="er-att-t" x="860" y="494">staffLead</text>
+            <ellipse class="er-att" cx="690" cy="540" rx="80" ry="24" /><text class="er-att-t" x="690" y="544">equipmentProvided</text>
+          </svg>
+        </figure>
+
+        <h4>Step 4 — Draw the relationship and its cardinality</h4>
+        <p>Join the two rectangles with a line, then decide which end gets the crow's foot. There is a rule that removes the guesswork entirely:</p>
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div><strong>The crow's foot follows the foreign key.</strong> Whichever entity carries the asterisk gets the fork. You marked <code>clubID*</code> on Pupil in step 3, so the fork goes on <strong>Pupil</strong> — no thinking required.</div>
+        </div>
+        <p>It is worth seeing <em>why</em> that rule works rather than just trusting it. A foreign key repeats: Archie, Mason and Louie all store C01. So three pupil records point at one club record — many pupils, one club. The table holding the repeating value is always the "many" end, and that is always the table holding the foreign key.</p>
+        <p>Sanity-check it by reading the line in both directions. "Many pupils attend one club" — sensible. "Many clubs are attended by one pupil" — nonsense, our pupils join one club each. If the second sentence is the daft one, the fork is on the right end.</p>
+
+        <figure style="margin:1.25rem 0;">
+          <svg class="er-svg" viewBox="0 70 1000 510" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="es4Title es4Desc" style="width:100%;height:auto;">
+            <title id="es4Title">ER diagram step 4 — relationship and cardinality added</title>
+            <desc id="es4Desc">The same diagram as step 3, with a relationship line now joining Pupil and Club. A three-pronged crow's foot touches the Pupil rectangle, showing many pupils to one club. The relationship is not yet named.</desc>
+            <rect class="er-badge" x="8" y="78" width="112" height="20" />
+            <text class="er-badge-t" x="18" y="92">STEP 4 OF 5</text>
+
+            <g class="er-line">
+              <line x1="150" y1="158" x2="380" y2="310" />
+              <line x1="330" y1="108" x2="380" y2="310" />
+              <line x1="500" y1="150" x2="380" y2="310" />
+              <line x1="80"  y1="285" x2="380" y2="310" />
+              <line x1="150" y1="440" x2="380" y2="310" />
+              <line x1="330" y1="522" x2="380" y2="310" />
+              <line x1="505" y1="468" x2="380" y2="310" />
+              <line x1="720" y1="108" x2="720" y2="310" />
+              <line x1="890" y1="175" x2="720" y2="310" />
+              <line x1="910" y1="285" x2="720" y2="310" />
+              <line x1="910" y1="395" x2="720" y2="310" />
+              <line x1="860" y1="490" x2="720" y2="310" />
+              <line x1="690" y1="540" x2="720" y2="310" />
+            </g>
+
+            <g class="er-rel">
+              <line x1="460" y1="282" x2="505" y2="310" />
+              <line x1="460" y1="310" x2="505" y2="310" />
+              <line x1="460" y1="338" x2="505" y2="310" />
+              <line x1="505" y1="310" x2="640" y2="310" />
+            </g>
+
+            <rect class="er-ent" x="300" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="380" y="317">Pupil</text>
+            <rect class="er-ent" x="640" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="720" y="317">Club</text>
+
+            <ellipse class="er-att-pk" cx="330" cy="108" rx="70" ry="24" /><text class="er-att-t" x="330" y="112">pupilID</text>
+            <line class="er-ul" x1="303" y1="117" x2="357" y2="117" />
+            <ellipse class="er-att" cx="150" cy="158" rx="70" ry="24" /><text class="er-att-t" x="150" y="162">pupilName</text>
+            <ellipse class="er-att-fk" cx="500" cy="150" rx="70" ry="24" /><text class="er-att-t" x="500" y="154">clubID*</text>
+            <ellipse class="er-att" cx="80" cy="285" rx="70" ry="24" /><text class="er-att-t" x="80" y="289">dateOfBirth</text>
+            <ellipse class="er-att" cx="150" cy="440" rx="70" ry="24" /><text class="er-att-t" x="150" y="444">yearGroup</text>
+            <ellipse class="er-att" cx="330" cy="522" rx="70" ry="24" /><text class="er-att-t" x="330" y="526">house</text>
+            <ellipse class="er-att" cx="505" cy="468" rx="70" ry="24" /><text class="er-att-t" x="505" y="472">meritPoints</text>
+
+            <ellipse class="er-att-pk" cx="720" cy="108" rx="70" ry="24" /><text class="er-att-t" x="720" y="112">clubID</text>
+            <line class="er-ul" x1="697" y1="117" x2="743" y2="117" />
+            <ellipse class="er-att" cx="890" cy="175" rx="70" ry="24" /><text class="er-att-t" x="890" y="179">clubName</text>
+            <ellipse class="er-att" cx="910" cy="285" rx="70" ry="24" /><text class="er-att-t" x="910" y="289">meetingDay</text>
+            <ellipse class="er-att" cx="910" cy="395" rx="70" ry="24" /><text class="er-att-t" x="910" y="399">meetingTime</text>
+            <ellipse class="er-att" cx="860" cy="490" rx="70" ry="24" /><text class="er-att-t" x="860" y="494">staffLead</text>
+            <ellipse class="er-att" cx="690" cy="540" rx="80" ry="24" /><text class="er-att-t" x="690" y="544">equipmentProvided</text>
+          </svg>
+        </figure>
+
+        <h4>Step 5 — Describe the relationship</h4>
+        <p>The line now shows that Pupil and Club are connected and how many of each are involved, but not <em>what the connection is</em>. Write a short description above the line — always a <strong>verb</strong>, because a relationship is something one entity does to the other. Ours is <strong>attends</strong>.</p>
+        <p>Test it by reading the diagram out as a sentence, starting from the crow's foot: "many pupils <em>attend</em> one club". If that sentence makes sense, the description is right. Vague labels like "link", "has" or "connected to" earn little credit — the marker wants a word that could only come from <em>this</em> database.</p>
+        <p>That completes the diagram:</p>
+
+        <figure style="margin:1.25rem 0;">
+          <svg class="er-svg" viewBox="0 70 1000 510" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="erTitle erDesc" style="width:100%;height:auto;">
+            <title id="erTitle">ER diagram step 5 — the completed diagram for the Pupil and Club database</title>
+            <desc id="erDesc">Two entity rectangles, Pupil and Club, joined by a relationship line named "attends" with a crow's foot touching Pupil to show that many pupils attend one club. The Pupil entity is surrounded by oval attributes: pupilID (underlined as the primary key), pupilName, dateOfBirth, yearGroup, house, meritPoints, and clubID marked with an asterisk as the foreign key. The Club entity is surrounded by oval attributes: clubID (underlined as the primary key), clubName, meetingDay, meetingTime, staffLead and equipmentProvided.</desc>
+            <!-- Shared .er-* styles are defined in the Step 1 diagram above. -->
+            <rect class="er-badge" x="8" y="78" width="112" height="20" />
+            <text class="er-badge-t" x="18" y="92">STEP 5 OF 5</text>
+
+            <!-- connector lines (drawn first, hidden under the shapes) -->
+            <g class="er-line">
+              <line x1="150" y1="158" x2="380" y2="310" />
+              <line x1="330" y1="108" x2="380" y2="310" />
+              <line x1="500" y1="150" x2="380" y2="310" />
+              <line x1="80"  y1="285" x2="380" y2="310" />
+              <line x1="150" y1="440" x2="380" y2="310" />
+              <line x1="330" y1="522" x2="380" y2="310" />
+              <line x1="505" y1="468" x2="380" y2="310" />
+              <line x1="720" y1="108" x2="720" y2="310" />
+              <line x1="890" y1="175" x2="720" y2="310" />
+              <line x1="910" y1="285" x2="720" y2="310" />
+              <line x1="910" y1="395" x2="720" y2="310" />
+              <line x1="860" y1="490" x2="720" y2="310" />
+              <line x1="690" y1="540" x2="720" y2="310" />
+            </g>
+
+            <!-- relationship: crow's foot on Pupil (many), plain line into Club (one) -->
+            <g class="er-rel">
+              <line x1="460" y1="282" x2="505" y2="310" />
+              <line x1="460" y1="310" x2="505" y2="310" />
+              <line x1="460" y1="338" x2="505" y2="310" />
+              <line x1="505" y1="310" x2="640" y2="310" />
+            </g>
+            <text class="er-rel-t" x="572" y="300">attends</text>
+
+            <!-- entities -->
+            <rect class="er-ent" x="300" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="380" y="317">Pupil</text>
+            <rect class="er-ent" x="640" y="272" width="160" height="76" />
+            <text class="er-ent-t" x="720" y="317">Club</text>
+
+            <!-- Pupil attributes -->
+            <ellipse class="er-att-pk" cx="330" cy="108" rx="70" ry="24" />
+            <text class="er-att-t" x="330" y="112">pupilID</text>
+            <line class="er-ul" x1="303" y1="117" x2="357" y2="117" />
+
+            <ellipse class="er-att" cx="150" cy="158" rx="70" ry="24" />
+            <text class="er-att-t" x="150" y="162">pupilName</text>
+
+            <ellipse class="er-att-fk" cx="500" cy="150" rx="70" ry="24" />
+            <text class="er-att-t" x="500" y="154">clubID*</text>
+
+            <ellipse class="er-att" cx="80" cy="285" rx="70" ry="24" />
+            <text class="er-att-t" x="80" y="289">dateOfBirth</text>
+
+            <ellipse class="er-att" cx="150" cy="440" rx="70" ry="24" />
+            <text class="er-att-t" x="150" y="444">yearGroup</text>
+
+            <ellipse class="er-att" cx="330" cy="522" rx="70" ry="24" />
+            <text class="er-att-t" x="330" y="526">house</text>
+
+            <ellipse class="er-att" cx="505" cy="468" rx="70" ry="24" />
+            <text class="er-att-t" x="505" y="472">meritPoints</text>
+
+            <!-- Club attributes -->
+            <ellipse class="er-att-pk" cx="720" cy="108" rx="70" ry="24" />
+            <text class="er-att-t" x="720" y="112">clubID</text>
+            <line class="er-ul" x1="697" y1="117" x2="743" y2="117" />
+
+            <ellipse class="er-att" cx="890" cy="175" rx="70" ry="24" />
+            <text class="er-att-t" x="890" y="179">clubName</text>
+
+            <ellipse class="er-att" cx="910" cy="285" rx="70" ry="24" />
+            <text class="er-att-t" x="910" y="289">meetingDay</text>
+
+            <ellipse class="er-att" cx="910" cy="395" rx="70" ry="24" />
+            <text class="er-att-t" x="910" y="399">meetingTime</text>
+
+            <ellipse class="er-att" cx="860" cy="490" rx="70" ry="24" />
+            <text class="er-att-t" x="860" y="494">staffLead</text>
+
+            <ellipse class="er-att" cx="690" cy="540" rx="80" ry="24" />
+            <text class="er-att-t" x="690" y="544">equipmentProvided</text>
+          </svg>
+          <figcaption style="font-size:.85rem;color:#4A5568;margin-top:.5rem;">Gold ovals mark the keys: solid for the primary key (underlined), dashed for the foreign key (asterisked). The SQA draws every oval the same — the colour here is just to help you find them.</figcaption>
+        </figure>
+
+        <p>The finished diagram reads in both directions, which is how the exam will ask for it: <strong>many</strong> pupils <em>attend</em> <strong>one</strong> club (the crow's foot end), and <strong>one</strong> club is <em>attended by</em> <strong>many</strong> pupils (the plain end).</p>
+
+        <div class="callout callout-success">
+          <div class="callout-icon">✅</div>
+          <div><strong>The five steps, as a checklist:</strong> ① a rectangle for each entity, named in the singular · ② an oval for every attribute, fanned around the outside · ③ underline each primary key, asterisk the foreign key · ④ join the rectangles, crow's foot on the entity holding the foreign key · ⑤ a verb above the line. Exam ER questions are worth 4 marks and the bullet points in the question are almost always steps ②–⑤.</div>
+        </div>
+
+        <h3>Worked examples</h3>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — Youth Club Membership (4 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_er_q1.png" alt="Exam question: a youth club records information on paper. A Club Membership Card shows member forename, surname, membership number, town, date of birth and activity code. An Activity Card shows activity name, activity code, activity level, leader first name, leader surname and first aider. Each activity can have a maximum of 10 club members and each club member can register for only one activity. Complete the entity relationship diagram by drawing any missing attributes, drawing the relationship, naming the relationship and identifying any additional key attributes." class="zoomable" />
+          <p><strong>How to tackle it:</strong> four bullet points means four marks, one each. We take them in an order that makes the work easy, rather than the order they are printed.</p>
+          <p><strong>First, work out the cardinality</strong>, because everything else follows from it. The sentence to find is: "Each activity can have a maximum of 10 club members. Each club member can register for only one activity." One activity, many members — so <strong>many Members to one Activity</strong>, and the crow's foot goes on Member.</p>
+          <p><strong>Second, the foreign key.</strong> It always sits on the many side, which we have just established is Member. What links them? The paper documents show <code>actCode</code> on <em>both</em> cards — that is the giveaway. But look at the diagram: the Member entity has no actCode oval. So we draw one and mark it <code>actCode*</code>. That is the missing attribute the question is asking for.</p>
+          <p><strong>Third, the primary keys.</strong> Member needs one that never repeats — <code>memberNum</code>, the membership number, which is exactly what membership numbers are for. Underline it. In Activity, <code>actCode</code> does the same job. Underline that too.</p>
+          <p><strong>Fourth, name the relationship</strong> with a verb: "registers for" reads straight off the question.</p>
+          <p><strong>Watch the trap:</strong> the question says draw <em>any missing attributes</em>, and it is tempting to start adding extras from the cards. Do not. Only <strong>one</strong> attribute is genuinely missing — the foreign key. Adding more can actually cost you the key mark.</p>
+          <img src="../resources/ddd/worked-examples/n5_er_q1_ans.png" alt="Marking instructions: one mark each for missing attribute added (only one attribute added to ERD, actCode added to Member entity); many Members to one Activity relationship drawn; relationship named appropriately; identify PK memberNum and FK actCode in Member table. Variations on actCode are acceptable." class="zoomable" />
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;">Add an <strong>actCode*</strong> oval to the Member entity (1). Draw the relationship with the <strong>crow's foot on Member</strong> — many members to one activity (1). Name it, e.g. <strong>"registers for"</strong> (1). Underline <strong>memberNum</strong> in Member and <strong>actCode</strong> in Activity, and asterisk <strong>actCode</strong> in Member (1).</p>
+        </div>
+
+        <div class="worked-example">
+          <div class="q-label">Past Paper — The Games Lab (4 marks)</div>
+          <img src="../resources/ddd/worked-examples/n5_er_q2.png" alt="Exam question: The Games Lab is a video game testing company that programmers can send games to for testing. Each game is allocated to a tester who works on several different games. Testers are based in three offices — Scotland, France and Australia — and only accept games rated 12A, 15 and 18. Complete the entity-relationship diagram by identifying any additional key attributes, drawing any missing attributes, drawing the relationship between entities and naming the relationship." class="zoomable" />
+          <p><strong>How to tackle it:</strong> same four bullets, same method — but this time the missing attribute is hidden in a sentence rather than on a form.</p>
+          <p><strong>Cardinality first.</strong> "Each game is allocated to a tester who works on several different games." One tester, several games — so <strong>many Games to one Tester</strong>. Crow's foot on Game.</p>
+          <p><strong>The missing attribute.</strong> Read the description again for a fact that has nowhere to live: "Testers are based in three offices — Scotland, France and Australia". Nothing in the Tester entity stores that, so we add a <code>location</code> oval to <strong>Tester</strong>. Note it goes on Tester, not Game — offices belong to testers.</p>
+          <p><strong>Keys.</strong> <code>testerID</code> is already drawn on Tester: underline it as the primary key. It also already appears on Game — asterisk it as the foreign key. That is consistent with the crow's foot being on Game, so we know we are right. <code>gameID</code> is Game's primary key, underlined.</p>
+          <p><strong>Name the relationship:</strong> "can test" — the tester tests the games.</p>
+          <p><strong>Watch the trap:</strong> the rating "12A, 15 and 18" is <em>not</em> a missing attribute — Game already has a <code>rating</code> oval. That detail is there to describe validation (restricted choice), not to add a field. The marking instructions warn about this from the other direction too: add extra FK or PK attributes of your own and you lose the key mark.</p>
+          <img src="../resources/ddd/worked-examples/n5_er_q2_ans.png" alt="Marking instructions: one mark each for location in Tester entity, M:1 cardinality, relationship name, testerID FK and PK, with an example answer diagram showing Game and Tester entities joined by a 'can test' relationship with a crow's foot at the Game end." class="zoomable" />
+          <p>The example answer at the bottom of the marking instructions is worth studying — it is exactly the layout your own diagrams should follow.</p>
+          <p>So the answer is:</p>
+          <p style="color:#6A1B9A;">Add a <strong>location</strong> oval to Tester (1). Draw the relationship with the <strong>crow's foot on Game</strong> — many games to one tester (1). Name it, e.g. <strong>"can test"</strong> (1). Underline <strong>gameID</strong> and <strong>testerID</strong> as primary keys, and asterisk <strong>testerID</strong> in Game as the foreign key (1).</p>
+        </div>
+
       </article>
 
       <article>
-        <h2 id="query-design">Query Design</h2>
-        <p>Before writing SQL, a query can be planned in a <strong>query design table</strong> stating the field(s), table(s), search criteria and sort order:</p>
+        <h2 id="practice">Practice Questions</h2>
+        <p>These use a different scenario from the pupils and clubs database, so you are working the method rather than remembering the answers. A vet's surgery stores its records in two tables:</p>
+
         <div class="example-block">
-          <div class="example-label">Design — members from Ayr, sorted by surname</div>
-          <table>
-            <tbody>
-              <tr><td style="width:11rem;"><strong>Field(s)</strong></td><td>forename, surname, town</td></tr>
-              <tr><td><strong>Table(s)</strong></td><td>Member</td></tr>
-              <tr><td><strong>Search criteria</strong></td><td>town = "Ayr"</td></tr>
-              <tr><td><strong>Sort order</strong></td><td>surname, ascending</td></tr>
-            </tbody>
-          </table>
+          <div class="example-label">The vet's surgery database</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th colspan="4">Owner</th></tr>
+                <tr><th>ownerID</th><th>ownerName</th><th>phone</th><th>town</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>OW22</td><td>D Sutherland</td><td>07700 900412</td><td>Troon</td></tr>
+                <tr><td>OW23</td><td>P Ndiaye</td><td>07700 900873</td><td>Ayr</td></tr>
+                <tr><td>OW24</td><td>L Moreau</td><td>07700 900155</td><td>Troon</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th colspan="5">Pet</th></tr>
+                <tr><th>petID</th><th>petName</th><th>species</th><th>dateOfBirth</th><th>ownerID</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>101</td><td>Bramble</td><td>Dog</td><td>02/05/2021</td><td>OW22</td></tr>
+                <tr><td>102</td><td>Nutmeg</td><td>Cat</td><td>19/11/2019</td><td>OW24</td></tr>
+                <tr><td>103</td><td>Pepper</td><td>Dog</td><td>07/03/2023</td><td>OW22</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <p>The design maps directly onto the SQL you'll meet on the next page: fields → <code>SELECT</code>, tables → <code>FROM</code>, search criteria → <code>WHERE</code>, sort order → <code>ORDER BY</code>.</p>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 1 — Identifying the Keys (3 marks)</div>
+          <p>Using the vet's surgery database above:</p>
+          <p>a) Identify the primary key of the Owner table.<br />
+             b) Identify the primary key of the Pet table.<br />
+             c) Identify the foreign key, stating which table it is in.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) <strong>ownerID</strong> (1 mark). b) <strong>petID</strong> (1 mark). c) <strong>ownerID</strong> in the <strong>Pet</strong> table (1 mark).</p>
+              <p>Part c) needs the table named. "ownerID" on its own is not enough, because ownerID appears in both tables — the foreign key is specifically the copy sitting in Pet.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 2 — The Purpose of Keys (3 marks)</div>
+          <p>a) Describe the purpose of a primary key. (1 mark)<br />
+             b) Describe the purpose of a foreign key. (1 mark)<br />
+             c) The surgery tries to add a pet with an ownerID of OW99, which does not exist in the Owner table. Explain why the database rejects this. (1 mark)</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">a) It <strong>uniquely identifies each record</strong> in a table — the value is never repeated (1 mark).</p>
+              <p style="color:#6A1B9A;">b) It <strong>links two tables</strong> — it is the primary key of another table, creating the relationship between them (1 mark).</p>
+              <p style="color:#6A1B9A;">c) <strong>Referential integrity</strong> — every foreign key value must match an existing primary key in Owner, and there is no owner OW99, so the pet would be linked to an owner who does not exist (1 mark).</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 3 — Attribute Types (4 marks)</div>
+          <p>The surgery is adding an appointments feature. On the booking screen, the receptionist enters the appointment date, chooses a start time, ticks a box to say whether the pet has been seen before, and types in the fee to be charged.</p>
+          <p>State the most suitable attribute type for each of the four items, and state the type you would use for the existing <code>phone</code> attribute in the Owner table.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">Appointment date — <strong>Date</strong>. Start time — <strong>Time</strong>. Seen before (a tick box) — <strong>Boolean</strong>. Fee — <strong>Number</strong>. (1 mark each, 4 marks; the phone answer is the check below.)</p>
+              <p style="color:#6A1B9A;">phone — <strong>Text</strong>, because "07700 900412" contains a space and a leading zero that would be lost if stored as a number, and you would never calculate with it.</p>
+              <p>A tick box on a screen almost always signals Boolean. And remember this is a database question: <strong>Text</strong>, not "String"; <strong>Number</strong>, not "Real".</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 4 — Choosing Validation (4 marks)</div>
+          <p>The surgery gives the following requirements for the Pet table:</p>
+          <ul>
+            <li>Every pet must be given a name — it cannot be left blank.</li>
+            <li><code>species</code> must be one of Dog, Cat, Rabbit or Bird.</li>
+            <li><code>petID</code> is always exactly 3 characters.</li>
+            <li>A pet's weight in kilograms must be between 0 and 90.</li>
+          </ul>
+          <p>State the most suitable validation for each requirement.</p>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">petName — <strong>presence check</strong>. species — <strong>restricted choice</strong>. petID — <strong>length check</strong>. weight — <strong>range check</strong>. (1 mark each)</p>
+              <p>The wording gives each one away: "cannot be left blank" → presence; "one of…" (a fixed list) → restricted choice; "exactly 3 characters" → length; "between 0 and 90" → range.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 5 — Completing a Data Dictionary (6 marks)</div>
+          <p>Complete the six shaded cells in the data dictionary for the Pet table, using the sample data and the requirements from Question 4.</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>Attribute name</th><th>Key</th><th>Type</th><th>Size</th><th>Required</th><th>Validation</th></tr></thead>
+              <tbody>
+                <tr><td>petID</td><td><strong>(a)</strong></td><td>Text</td><td>3</td><td>Yes</td><td>Length check — 3 characters</td></tr>
+                <tr><td>petName</td><td></td><td><strong>(b)</strong></td><td>20</td><td>Yes</td><td><strong>(c)</strong></td></tr>
+                <tr><td>species</td><td></td><td>Text</td><td>10</td><td>Yes</td><td><strong>(d)</strong></td></tr>
+                <tr><td>dateOfBirth</td><td></td><td><strong>(e)</strong></td><td></td><td>Yes</td><td>Presence check</td></tr>
+                <tr><td>ownerID</td><td><strong>(f)</strong></td><td>Text</td><td>4</td><td>Yes</td><td>Presence check</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">(a) <strong>PK</strong> — petID uniquely identifies each pet.<br />
+                 (b) <strong>Text</strong>.<br />
+                 (c) <strong>Presence check</strong> — every pet must be given a name.<br />
+                 (d) <strong>Restricted choice</strong> — Dog, Cat, Rabbit or Bird.<br />
+                 (e) <strong>Date</strong>.<br />
+                 (f) <strong>FK</strong> — ownerID is the primary key of the Owner table. (1 mark each)</p>
+              <p>Note what is <em>not</em> asked: the Size cell for dateOfBirth stays blank, because size is only ever filled in for Text.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="practice-question">
+          <div class="q-label">Practice Question 6 — Completing an ER Diagram (4 marks)</div>
+          <p>One owner can register many pets at the surgery. Each pet belongs to only one owner.</p>
+          <p>Use the information provided to complete the entity-relationship diagram below by:</p>
+          <ul>
+            <li>drawing any missing attributes</li>
+            <li>identifying any additional key attributes</li>
+            <li>drawing the relationship between the entities</li>
+            <li>naming the relationship between the entities.</li>
+          </ul>
+          <figure style="margin:1rem 0;">
+            <svg class="pe-svg" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="peTitle peDesc" style="width:100%;height:auto;">
+              <title id="peTitle">Incomplete entity-relationship diagram for the vet's surgery</title>
+              <desc id="peDesc">Two entity rectangles, Owner and Pet, with no relationship line drawn between them. Owner has oval attributes ownerID, ownerName, phone and town. Pet has oval attributes petID, petName, species and dateOfBirth. No attribute is underlined or asterisked, and the Pet entity has no attribute linking it to Owner.</desc>
+              <style>
+                .pe-svg .pe-line { stroke:#1B6B45; stroke-width:1.6; }
+                .pe-svg .pe-ent { fill:#FFFFFF; stroke:#00442A; stroke-width:2.5; }
+                .pe-svg .pe-ent-t { font-family:'Public Sans',system-ui,sans-serif; font-size:17px; font-weight:700; fill:#002D1C; text-anchor:middle; }
+                .pe-svg .pe-att { fill:#E8F5EE; stroke:#1B6B45; stroke-width:1.8; }
+                .pe-svg .pe-att-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:13px; fill:#002D1C; text-anchor:middle; }
+              </style>
+              <g class="pe-line">
+                <line x1="120" y1="90"  x2="235" y2="210" />
+                <line x1="72"  y1="210" x2="235" y2="210" />
+                <line x1="120" y1="330" x2="235" y2="210" />
+                <line x1="270" y1="352" x2="235" y2="210" />
+                <line x1="700" y1="90"  x2="665" y2="210" />
+                <line x1="828" y1="150" x2="665" y2="210" />
+                <line x1="828" y1="270" x2="665" y2="210" />
+                <line x1="700" y1="345" x2="665" y2="210" />
+              </g>
+              <rect class="pe-ent" x="185" y="176" width="150" height="68" />
+              <text class="pe-ent-t" x="260" y="217">Owner</text>
+              <rect class="pe-ent" x="590" y="176" width="150" height="68" />
+              <text class="pe-ent-t" x="665" y="217">Pet</text>
+
+              <ellipse class="pe-att" cx="120" cy="90" rx="66" ry="23" />
+              <text class="pe-att-t" x="120" y="94">ownerID</text>
+              <ellipse class="pe-att" cx="72" cy="210" rx="66" ry="23" />
+              <text class="pe-att-t" x="72" y="214">ownerName</text>
+              <ellipse class="pe-att" cx="120" cy="330" rx="66" ry="23" />
+              <text class="pe-att-t" x="120" y="334">phone</text>
+              <ellipse class="pe-att" cx="270" cy="352" rx="66" ry="23" />
+              <text class="pe-att-t" x="270" y="356">town</text>
+
+              <ellipse class="pe-att" cx="700" cy="90" rx="66" ry="23" />
+              <text class="pe-att-t" x="700" y="94">petID</text>
+              <ellipse class="pe-att" cx="828" cy="150" rx="66" ry="23" />
+              <text class="pe-att-t" x="828" y="154">petName</text>
+              <ellipse class="pe-att" cx="828" cy="270" rx="66" ry="23" />
+              <text class="pe-att-t" x="828" y="274">species</text>
+              <ellipse class="pe-att" cx="700" cy="345" rx="70" ry="23" />
+              <text class="pe-att-t" x="700" y="349">dateOfBirth</text>
+            </svg>
+          </figure>
+          <details class="marking-instructions">
+            <summary>Marking Instructions</summary>
+            <div class="answer-body">
+              <p style="color:#6A1B9A;">One mark each for:</p>
+              <p style="color:#6A1B9A;">• Missing attribute added — <strong>ownerID*</strong> drawn as an oval on the <strong>Pet</strong> entity (and only that one attribute added).<br />
+                 • Relationship drawn with the <strong>crow's foot on Pet</strong> — many pets to one owner.<br />
+                 • Relationship <strong>named appropriately</strong>, e.g. "owns" or "registers".<br />
+                 • Keys identified — <strong>ownerID</strong> underlined in Owner and <strong>petID</strong> underlined in Pet, with <strong>ownerID</strong> asterisked in Pet.</p>
+              <p>Check yourself with the two-way reading test: "many pets are owned by one owner" ✅ and "one owner owns many pets" ✅. If you had put the fork on Owner, you would be claiming one pet has many owners — which the question rules out.</p>
+            </div>
+          </details>
+        </div>
       </article>
 
       <article>
-        <h2 id="test-yourself">Test Yourself</h2>
-
-        <div class="practice-question">
-          <div class="q-label">Q1 — Keys (2 marks)</div>
-          <p>A library database has a Book table and a Publisher table (one publisher publishes many books). State a suitable primary key for the Publisher table, and explain how the two tables would be linked.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">Primary key: publisherID (any unique identifier) (1 mark). The Book table contains publisherID as a <strong>foreign key</strong>, linking each book to its publisher (1 mark).</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q2 — Validation (2 marks)</div>
-          <p>Name the most suitable validation for: a) a review score that must be between 1 and 5; b) a delivery option that must be "Standard" or "Express".</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">a) Range (1 mark). b) Restricted choice (1 mark).</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q3 — Referential integrity (1 mark)</div>
-          <p>A Publisher record is deleted while books in the Book table still reference it. State the problem this causes.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">Referential integrity is broken — the foreign key in Book points to a publisher record that no longer exists.</p>
-            </div>
-          </details>
-        </div>
+        <h2 id="next">Next — Turning the Design into Questions</h2>
+        <p>Designing a database is only half the job; the other half is getting answers out of it. <strong>Query design</strong> — deciding which fields, which tables, what to search for and how to sort — is covered alongside the language that carries it out, on the <a href="sql-select.html">SQL — SELECT</a> page, with the two-table version on <a href="sql-joins.html">SQL — Joins</a>. The pupils and clubs database from this page is the one you will be querying.</p>
       </article>
 
     </div>
