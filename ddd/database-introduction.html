@@ -45,7 +45,6 @@
           <li><a href="#real-world">Databases You Already Use</a></li>
           <li><a href="#terminology">Key Terminology</a></li>
           <li><a href="#types">Attribute Types</a></li>
-          <li><a href="#test-yourself">Test Yourself</a></li>
         </ul>
       </nav>
     </aside>
@@ -113,10 +112,135 @@
           <p>Nothing on the screen mentioned a database, and you never saw the list of thousands of products it searched. That is what almost every database looks like from the outside: <strong>invisible, and doing all the work</strong>.</p>
         </div>
 
-        <div class="img-placeholder">
-          <span class="ph-icon">🖼️</span>
-          <em>Placeholder — diagram</em>
-          Suggestion: the app and the database behind it — a phone screen on the left showing a music app's search results, and the same information on the right as a plain table, with lines joining each result on screen to its row in the table. The caption makes the point directly: <strong>the row you are looking at on the screen is a record</strong>. This is the diagram that turns "database" from a word into a thing pupils can picture.
+        <div class="example-block">
+          <div class="example-label">Diagram — the screen, and the table behind it</div>
+          <!-- 380px keeps each panel close to its natural 480-unit width. Below
+               that the pair stacks rather than shrinking the labels to nothing. -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1rem;">
+
+            <svg class="dbi-svg" viewBox="0 0 480 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="dbiATitle dbiADesc" style="width:100%;height:auto;">
+              <title id="dbiATitle">A self-checkout screen and the Product table behind it</title>
+              <desc id="dbiADesc">A till screen shows Orange Juice 1L at £1.85 with no approval needed. An arrow runs from the first row of a Product table, which reads Orange Juice 1L, £1.85, back to the screen. The table also holds Wholemeal Loaf at £1.20 and Cheddar 200g at £2.75, neither of which is shown on the screen. The barcode is used to find the one matching row.</desc>
+              <style>
+                /* Shared by both panels below. Inline SVG styles are document-wide,
+                   so every rule here is prefixed to keep it off the other diagrams. */
+                .dbi-svg .dbi-badge { fill:#00442A; }
+                .dbi-svg .dbi-badge-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:10px; font-weight:700; letter-spacing:.14em; fill:#FFFFFF; }
+                .dbi-svg .dbi-dev { fill:#FFFFFF; stroke:#00442A; stroke-width:2; }
+                .dbi-svg .dbi-devbar { fill:#00442A; }
+                .dbi-svg .dbi-devbar-t { font-family:'Public Sans',system-ui,sans-serif; font-size:11.5px; font-weight:700; fill:#FFFFFF; }
+                .dbi-svg .dbi-big { font-family:'Public Sans',system-ui,sans-serif; font-size:13px; font-weight:700; fill:#1A1A1A; }
+                .dbi-svg .dbi-price { font-family:'Public Sans',system-ui,sans-serif; font-size:15px; font-weight:800; fill:#92750A; }
+                .dbi-svg .dbi-sm { font-family:'Public Sans',system-ui,sans-serif; font-size:10.5px; fill:#4A5568; }
+                .dbi-svg .dbi-rule { stroke:#D1D5DB; stroke-width:1; }
+                .dbi-svg .dbi-cap { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:10px; font-weight:700; letter-spacing:.08em; fill:#1B6B45; }
+                .dbi-svg .dbi-tbl { fill:none; stroke:#00442A; stroke-width:1.6; }
+                .dbi-svg .dbi-hdr { fill:#E8F5EE; }
+                .dbi-svg .dbi-hdr-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:9.5px; font-weight:700; letter-spacing:.05em; fill:#00442A; }
+                .dbi-svg .dbi-cell { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:10.5px; fill:#1A1A1A; }
+                .dbi-svg .dbi-hit { fill:#FEF3C7; }
+                .dbi-svg .dbi-link { stroke:#C9A227; stroke-width:2; fill:none; }
+                .dbi-svg .dbi-note { font-family:'Public Sans',system-ui,sans-serif; font-size:11px; fill:#4A5568; text-anchor:middle; }
+                .dbi-svg .dbi-linklab { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:9px; font-weight:700; fill:#92750A; text-anchor:middle; }
+              </style>
+              <defs>
+                <marker id="dbiHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#C9A227" />
+                </marker>
+              </defs>
+
+              <rect class="dbi-badge" x="8" y="8" width="126" height="20" />
+              <text class="dbi-badge-t" x="16" y="22">SELF-CHECKOUT</text>
+
+              <!-- the screen -->
+              <rect class="dbi-dev" x="14" y="44" width="180" height="150" />
+              <rect class="dbi-devbar" x="15" y="45" width="178" height="26" />
+              <text class="dbi-devbar-t" x="24" y="63">Self-checkout</text>
+              <text class="dbi-big" x="24" y="98">Orange Juice 1L</text>
+              <text class="dbi-price" x="24" y="122">£1.85</text>
+              <line class="dbi-rule" x1="24" y1="136" x2="184" y2="136" />
+              <text class="dbi-sm" x="24" y="154">Approval needed: No</text>
+              <text class="dbi-sm" x="24" y="174">Total  £1.85</text>
+
+              <!-- the table -->
+              <text class="dbi-cap" x="252" y="58">PRODUCT TABLE</text>
+              <rect class="dbi-hdr" x="252" y="66" width="216" height="24" />
+              <rect class="dbi-hit" x="252" y="90" width="216" height="28" />
+              <rect class="dbi-tbl" x="252" y="66" width="216" height="108" />
+              <g class="dbi-rule">
+                <line x1="252" y1="90"  x2="468" y2="90" />
+                <line x1="252" y1="118" x2="468" y2="118" />
+                <line x1="252" y1="146" x2="468" y2="146" />
+                <line x1="392" y1="66"  x2="392" y2="174" />
+              </g>
+              <text class="dbi-hdr-t" x="258" y="82">productName</text>
+              <text class="dbi-hdr-t" x="398" y="82">price</text>
+              <text class="dbi-cell" x="258" y="109">Orange Juice 1L</text>
+              <text class="dbi-cell" x="398" y="109">£1.85</text>
+              <text class="dbi-cell" x="258" y="137">Wholemeal Loaf</text>
+              <text class="dbi-cell" x="398" y="137">£1.20</text>
+              <text class="dbi-cell" x="258" y="165">Cheddar 200g</text>
+              <text class="dbi-cell" x="398" y="165">£2.75</text>
+
+              <path class="dbi-link" d="M 252 104 C 232 104 218 112 200 112" marker-end="url(#dbiHead)" />
+              <text class="dbi-linklab" x="226" y="132">barcode</text>
+
+              <text class="dbi-note" x="240" y="238">The barcode finds <tspan font-weight="700">one row</tspan>. That row is what</text>
+              <text class="dbi-note" x="240" y="256">the screen shows you.</text>
+            </svg>
+
+            <svg class="dbi-svg" viewBox="0 0 480 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="dbiBTitle dbiBDesc" style="width:100%;height:auto;">
+              <title id="dbiBTitle">A music app's search results and the Song table behind them</title>
+              <desc id="dbiBDesc">A phone showing a search for sky returns three results — Skyline by Nova Reef, Skylark by Mae Iona and Sky Harbour by Kestrel. An arrow runs from each result on the screen to the matching row of a Song table holding the same three titles and artists. Each result on the screen is one record in the table.</desc>
+
+              <rect class="dbi-badge" x="8" y="8" width="94" height="20" />
+              <text class="dbi-badge-t" x="16" y="22">MUSIC APP</text>
+
+              <!-- the phone -->
+              <rect class="dbi-dev" x="14" y="44" width="170" height="210" />
+              <rect class="dbi-devbar" x="15" y="45" width="168" height="26" />
+              <text class="dbi-devbar-t" x="24" y="63">Search: sky</text>
+              <g class="dbi-rule">
+                <line x1="15" y1="124" x2="183" y2="124" />
+                <line x1="15" y1="168" x2="183" y2="168" />
+              </g>
+              <text class="dbi-big" x="26" y="102">Skyline</text>
+              <text class="dbi-sm"  x="26" y="117">Nova Reef</text>
+              <text class="dbi-big" x="26" y="146">Skylark</text>
+              <text class="dbi-sm"  x="26" y="161">Mae Iona</text>
+              <text class="dbi-big" x="26" y="190">Sky Harbour</text>
+              <text class="dbi-sm"  x="26" y="205">Kestrel</text>
+
+              <!-- the table -->
+              <text class="dbi-cap" x="252" y="58">SONG TABLE</text>
+              <rect class="dbi-hdr" x="252" y="66" width="216" height="24" />
+              <rect class="dbi-tbl" x="252" y="66" width="216" height="108" />
+              <g class="dbi-rule">
+                <line x1="252" y1="90"  x2="468" y2="90" />
+                <line x1="252" y1="118" x2="468" y2="118" />
+                <line x1="252" y1="146" x2="468" y2="146" />
+                <line x1="372" y1="66"  x2="372" y2="174" />
+              </g>
+              <text class="dbi-hdr-t" x="258" y="82">title</text>
+              <text class="dbi-hdr-t" x="378" y="82">artist</text>
+              <text class="dbi-cell" x="258" y="109">Skyline</text>
+              <text class="dbi-cell" x="378" y="109">Nova Reef</text>
+              <text class="dbi-cell" x="258" y="137">Skylark</text>
+              <text class="dbi-cell" x="378" y="137">Mae Iona</text>
+              <text class="dbi-cell" x="258" y="165">Sky Harbour</text>
+              <text class="dbi-cell" x="378" y="165">Kestrel</text>
+
+              <g class="dbi-link" marker-end="url(#dbiHead)">
+                <path d="M 186 106 C 212 106 226 104 248 104" />
+                <path d="M 186 150 C 212 150 226 132 248 132" />
+                <path d="M 186 194 C 212 194 226 160 248 160" />
+              </g>
+
+              <text class="dbi-note" x="240" y="278">Each result on screen is <tspan font-weight="700">one record</tspan> in the table.</text>
+            </svg>
+
+          </div>
+          <p>Neither screen mentions a database, and neither shows you the thousands of rows it searched. That is what almost every database looks like from the outside: <strong>invisible, and doing all the work</strong>. The thing to hold on to is that <strong>the row you are looking at on the screen is a record</strong> — the app has simply dressed it up.</p>
         </div>
       </article>
 
@@ -131,27 +255,84 @@
         </div>
 
         <div class="example-block">
-          <div class="example-label">Example — a school pupil table</div>
-          <div style="overflow-x:auto;">
-            <table>
-              <thead><tr><th>Forename</th><th>Surname</th><th>DateOfBirth</th><th>YearGroup</th></tr></thead>
-              <tbody>
-                <tr><td>Aisha</td><td>Khan</td><td>04/02/2010</td><td>S4</td></tr>
-                <tr><td>Callum</td><td>Reid</td><td>19/09/2009</td><td>S5</td></tr>
-                <tr><td>Iona</td><td>Murray</td><td>30/06/2010</td><td>S4</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p>Each <strong>column</strong> is a field (attribute); each <strong>row</strong> is a record; the whole thing is a table.</p>
+          <div class="example-label">Diagram — the anatomy of a table</div>
+          <svg class="tan-svg" viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tanTitle tanDesc" style="width:100%;height:auto;">
+            <title id="tanTitle">A school pupil table with its field, record and table labelled</title>
+            <desc id="tanDesc">A table of three pupils with the columns Forename, Surname, DateOfBirth and YearGroup. Aisha Khan was born 04/02/2010 and is in S4; Callum Reid 19/09/2009, S5; Iona Murray 30/06/2010, S4. The DateOfBirth column is shaded and labelled FIELD (attribute) — one piece of information about every pupil. Aisha Khan's row is shaded and labelled RECORD — everything about one pupil. A bracket under the whole grid is labelled TABLE — a record for every pupil in the school. Where the shaded row and shaded column cross sits a single item of data, 04/02/2010.</desc>
+            <style>
+              .tan-svg .tan-lab { font-family:'Public Sans',system-ui,sans-serif; font-size:14px; font-weight:800; fill:#00442A; letter-spacing:-.01em; }
+              .tan-svg .tan-sub { font-family:'Public Sans',system-ui,sans-serif; font-size:11px; fill:#4A5568; }
+              .tan-svg .tan-fieldtint { fill:#FEF3C7; }
+              .tan-svg .tan-rectint { fill:#E8F5EE; fill-opacity:.78; }
+              .tan-svg .tan-grid { stroke:#D1D5DB; stroke-width:1; }
+              .tan-svg .tan-outer { fill:none; stroke:#00442A; stroke-width:1.8; }
+              .tan-svg .tan-hdrline { stroke:#00442A; stroke-width:1.8; }
+              .tan-svg .tan-hdr-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:11px; font-weight:700; letter-spacing:.03em; fill:#00442A; }
+              .tan-svg .tan-cell-t { font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-ligatures:none; font-size:12.5px; fill:#1A1A1A; }
+              .tan-svg .tan-lead { stroke:#1B6B45; stroke-width:1.8; fill:none; }
+              .tan-svg .tan-brace { stroke:#00442A; stroke-width:2; fill:none; }
+            </style>
+            <defs>
+              <marker id="tanHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1B6B45" />
+              </marker>
+            </defs>
+
+            <!-- FIELD label, above the DateOfBirth column -->
+            <text class="tan-lab" x="560" y="34" text-anchor="middle">FIELD (attribute)</text>
+            <text class="tan-sub" x="560" y="54" text-anchor="middle">one piece of information about every pupil</text>
+            <line class="tan-lead" x1="560" y1="64" x2="560" y2="94" marker-end="url(#tanHead)" />
+
+            <!-- RECORD label, to the left of Aisha's row -->
+            <text class="tan-lab" x="180" y="147" text-anchor="end">RECORD</text>
+            <text class="tan-sub" x="180" y="165" text-anchor="end">everything about one pupil</text>
+            <line class="tan-lead" x1="186" y1="152" x2="204" y2="152" marker-end="url(#tanHead)" />
+
+            <!-- tints: the column first, then the row over it, so the cell where
+                 they cross takes on both and needs no label of its own -->
+            <rect class="tan-fieldtint" x="490" y="100" width="140" height="142" />
+            <rect class="tan-rectint"   x="210" y="134" width="560" height="36" />
+
+            <g class="tan-grid">
+              <line x1="350" y1="100" x2="350" y2="242" />
+              <line x1="490" y1="100" x2="490" y2="242" />
+              <line x1="630" y1="100" x2="630" y2="242" />
+              <line x1="210" y1="170" x2="770" y2="170" />
+              <line x1="210" y1="206" x2="770" y2="206" />
+            </g>
+            <line class="tan-hdrline" x1="210" y1="134" x2="770" y2="134" />
+            <rect class="tan-outer" x="210" y="100" width="560" height="142" />
+
+            <text class="tan-hdr-t" x="222" y="122">Forename</text>
+            <text class="tan-hdr-t" x="362" y="122">Surname</text>
+            <text class="tan-hdr-t" x="502" y="122">DateOfBirth</text>
+            <text class="tan-hdr-t" x="642" y="122">YearGroup</text>
+
+            <text class="tan-cell-t" x="222" y="157">Aisha</text>
+            <text class="tan-cell-t" x="362" y="157">Khan</text>
+            <text class="tan-cell-t" x="502" y="157">04/02/2010</text>
+            <text class="tan-cell-t" x="642" y="157">S4</text>
+
+            <text class="tan-cell-t" x="222" y="193">Callum</text>
+            <text class="tan-cell-t" x="362" y="193">Reid</text>
+            <text class="tan-cell-t" x="502" y="193">19/09/2009</text>
+            <text class="tan-cell-t" x="642" y="193">S5</text>
+
+            <text class="tan-cell-t" x="222" y="229">Iona</text>
+            <text class="tan-cell-t" x="362" y="229">Murray</text>
+            <text class="tan-cell-t" x="502" y="229">30/06/2010</text>
+            <text class="tan-cell-t" x="642" y="229">S4</text>
+
+            <!-- TABLE brace, under the whole grid -->
+            <path class="tan-brace" d="M 210 256 L 210 266 L 770 266 L 770 256" />
+            <text class="tan-lab" x="490" y="290" text-anchor="middle">TABLE</text>
+            <text class="tan-sub" x="490" y="308" text-anchor="middle">a record for every pupil in the school</text>
+          </svg>
+          <p>Each <strong>column</strong> is a field (attribute); each <strong>row</strong> is a record; the whole grid is a table. Look at the one cell where the shaded row and the shaded column cross — <strong>04/02/2010</strong>. That is a single item of data, and it takes <em>both</em> a record and a field to say where it sits.</p>
         </div>
 
         <p>It is worth checking you can say that the other way round too, because the exam asks it both ways: <em>Aisha Khan's whole row</em> is a record; <em>the DateOfBirth column</em> is a field; <em>04/02/2010</em> is one piece of data sitting where a record and a field meet. Swap "field" and "record" over and you lose the mark, so it is worth a minute to make it stick.</p>
 
-        <div class="img-placeholder">
-          <span class="ph-icon">🖼️</span>
-          <em>Placeholder — diagram</em>
-          Suggestion: the anatomy of a table — the pupil table above redrawn with labelled brackets pointing at it: a bracket down one column reading <strong>FIELD (attribute) — one piece of information about every pupil</strong>, a bracket across one row reading <strong>RECORD — everything about one pupil</strong>, and a box round the whole thing reading <strong>TABLE</strong>. The three terms are examined directly and get mixed up constantly, so having them labelled on the actual grid is worth more than any amount of prose.
-        </div>
       </article>
 
       <article>
@@ -170,32 +351,6 @@
         <div class="callout callout-warning">
           <div class="callout-icon">⚠️</div>
           <div>In MS Access, Date and Time fields are called <em>Date/Time</em> and Boolean fields are called <em>Yes/No</em>. You must <strong>not</strong> use the MS Access names when designing your database or answering exam questions — use the SQA types above.</div>
-        </div>
-      </article>
-
-      <article>
-        <h2 id="test-yourself">Test Yourself</h2>
-
-        <div class="practice-question">
-          <div class="q-label">Q1 — Terminology (3 marks)</div>
-          <p>A vet's database stores information about pets. Match the terms <em>field</em>, <em>record</em> and <em>table</em> to: a) all the information about one pet; b) all of the pets; c) a pet's name.</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">a) Record. b) Table. c) Field (attribute). (1 mark each)</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="practice-question">
-          <div class="q-label">Q2 — Attribute types (3 marks)</div>
-          <p>State the most suitable attribute type for: a) a pet's appointment time; b) whether its vaccinations are up to date; c) the owner's phone number "07700 900123".</p>
-          <details class="marking-instructions">
-            <summary>Marking Instructions</summary>
-            <div class="answer-body">
-              <p style="color:#6A1B9A;">a) Time. b) Boolean. c) Text — the leading 0 and space would be lost if stored as a number! (1 mark each)</p>
-            </div>
-          </details>
         </div>
       </article>
 
