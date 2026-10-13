@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 770" font-family="'Public Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif" role="img" aria-labelledby="wfTitle wfDesc">
   <title id="wfTitle">The Iterative (Waterfall) Development Process</title>
-  <desc id="wfDesc">A staircase diagram showing the five phases of software development flowing downwards in sequence: Analysis, Design, Implementation, Testing and Evaluation. Solid arrows show the forward flow from each phase down to the next. Three dashed curved arrows sweep back up to show iteration: one from Testing back up to Implementation, for example when testing finds a syntax error; one from Testing back up to Design, for example when testing finds a logic error; and one from Evaluation all the way back up to Analysis, for example when the program is not fit for purpose or the client asks for new features. A legend explains that solid arrows mean flow down to the next phase and dashed arrows mean going back to repeat an earlier phase.</desc>
+  <desc id="wfDesc">A staircase diagram showing the five stages of software development flowing downwards in sequence: Analysis, Design, Implementation, Testing and Evaluation. Solid arrows show the forward flow from each stage down to the next. Three dashed curved arrows sweep back up to show iteration: one from Testing back up to Implementation, for example when testing finds a syntax error; one from Testing back up to Design, for example when testing finds a logic error; and one from Evaluation all the way back up to Analysis, for example when the program is not fit for purpose or the client asks for new features. A legend explains that solid arrows mean flow down to the next stage and dashed arrows mean going back to repeat an earlier stage.</desc>
 
   <defs>
     <marker id="wfFlow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
@@ -17,7 +17,7 @@
   <!-- heading -->
   <text x="520" y="50" text-anchor="middle" font-size="30" font-weight="800" fill="#00442A" letter-spacing="-0.5">The Iterative (Waterfall) Development Process</text>
   <text x="520" y="80" text-anchor="middle" font-size="11.5" font-weight="700" letter-spacing="2.4" fill="#1B6B45"
-        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">WORK FLOWS <tspan fill="#92750A">DOWNWARDS</tspan> &#183; DASHED ARROWS = PHASES REVISITED</text>
+        font-family="'JetBrains Mono','Cascadia Code',Consolas,'Courier New',monospace">WORK FLOWS <tspan fill="#92750A">DOWNWARDS</tspan> &#183; DASHED ARROWS = STAGES REVISITED</text>
 
   <!-- ================= forward flow arrows (solid, down) ================= -->
   <line x1="200" y1="170" x2="200" y2="218" stroke="#00442A" stroke-width="3" marker-end="url(#wfFlow)"/>
@@ -46,7 +46,7 @@
   <text x="728" y="394" font-size="12" font-style="italic" fill="#4A5568">for purpose, or the client</text>
   <text x="728" y="410" font-size="12" font-style="italic" fill="#4A5568">asks for new features</text>
 
-  <!-- ================= phase boxes ================= -->
+  <!-- ================= stage boxes ================= -->
   <!-- 1 Analysis -->
   <rect x="40" y="100" width="250" height="70" fill="#001810"/>
   <text x="165" y="132" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">Analysis</text>
@@ -85,9 +85,9 @@
   <!-- ================= legend ================= -->
   <g transform="translate(40, 700)">
     <line x1="0" y1="10" x2="34" y2="10" stroke="#00442A" stroke-width="3" marker-end="url(#wfFlow)"/>
-    <text x="46" y="14" font-size="12.5" fill="#1A1A1A">Flow down to the next phase (sequential)</text>
+    <text x="46" y="14" font-size="12.5" fill="#1A1A1A">Flow down to the next stage (sequential)</text>
 
     <path d="M 380,16 C 392,2 408,2 420,16" fill="none" stroke="#92750A" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#wfBack)"/>
-    <text x="434" y="14" font-size="12.5" fill="#1A1A1A">Go back and repeat an earlier phase (iteration)</text>
+    <text x="434" y="14" font-size="12.5" fill="#1A1A1A">Go back and repeat an earlier stage (iteration)</text>
   </g>
 </svg>

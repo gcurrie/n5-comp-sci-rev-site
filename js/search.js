@@ -10,10 +10,9 @@
   const INDEX = [
 
     /* ── SDD: Iterative Development ─── */
-    { term: 'Iterative development', desc: 'Repeating or revisiting development phases — e.g. returning to design after testing finds a problem', page: 'sdd/development-methodologies.html', section: 'SDD' },
-    { term: 'Software development process', desc: 'Analysis → Design → Implementation → Testing → Documentation → Evaluation', page: 'sdd/development-methodologies.html', section: 'SDD' },
-    { term: 'Iteration', desc: 'Repeating a process — revisiting phases that have already been worked on', page: 'sdd/development-methodologies.html', section: 'SDD' },
-    { term: 'Documentation', desc: 'Producing supporting documents such as a user guide and technical guide', page: 'sdd/development-methodologies.html', section: 'SDD' },
+    { term: 'Iterative development', desc: 'Repeating or revisiting development stages — e.g. returning to design after testing finds a problem', page: 'sdd/development-methodologies.html', section: 'SDD' },
+    { term: 'Software development process', desc: 'Analysis → Design → Implementation → Testing → Evaluation', page: 'sdd/development-methodologies.html', section: 'SDD' },
+    { term: 'Iteration', desc: 'Repeating a process — revisiting stages that have already been worked on', page: 'sdd/development-methodologies.html', section: 'SDD' },
 
     /* ── SDD: Analysis ─── */
     { term: 'Analysis', desc: 'Identifying the purpose and functional requirements of a problem', page: 'sdd/analysis.html', section: 'SDD' },

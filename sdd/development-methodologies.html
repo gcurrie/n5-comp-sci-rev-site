@@ -19,7 +19,7 @@
   <div class="inner">
     <div class="hero-badge">Software Design &amp; Development</div>
     <h1>Iterative Development</h1>
-    <p>The development process — what happens in each phase, the iterative/waterfall model, and why real teams keep going back over their work.</p>
+    <p>The development process — what happens in each stage, the iterative/waterfall model, and why real teams keep going back over their work.</p>
   </div>
 </section>
 <main class="page-content">
@@ -47,7 +47,7 @@
         <div class="sidebar-title">On this page</div>
         <ul>
           <li><a href="#intro">Introduction</a></li>
-          <li><a href="#phases">The Development Phases</a></li>
+          <li><a href="#phases">The Development Stages</a></li>
           <li><a href="#model">The Iterative/Waterfall Model</a></li>
           <li><a href="#why-iterative">Why Is It Iterative?</a></li>
           <li><a href="#practice">Practice Questions</a></li>
@@ -59,28 +59,28 @@
       <article>
         <h2 id="intro">Introduction</h2>
         <p>Modern computer software is very complex — it is often worked on by teams of people who can write <strong>millions of lines of code</strong> between them! Even a small project raises tricky questions. What exactly should the program do? How should it look? How will its logic work? And how do we know when it's finished?</p>
-        <p>To answer these questions without everything descending into chaos, programming teams work through a set of steps called the <strong>software development process</strong>. Working through the phases in a structured way helps teams reduce errors and stay organised.</p>
+        <p>To answer these questions without everything descending into chaos, programming teams work through a set of steps called the <strong>software development process</strong>. Working through the stages in a structured way helps teams reduce errors and stay organised.</p>
 
         <h3>Key Terms</h3>
         <div class="key-terms">
-          <div class="key-term"><div class="term">Software development process</div><div class="def">The sequence of phases used to create software: analysis, design, implementation, testing and evaluation.</div></div>
-          <div class="key-term"><div class="term">Phase</div><div class="def">One stage of the development process. Each phase produces something the next phase needs.</div></div>
-          <div class="key-term"><div class="term">Iterative/waterfall model</div><div class="def">The model of development where the phases flow in order — but phases are revisited (repeated) as problems are discovered.</div></div>
-          <div class="key-term"><div class="term">Iteration</div><div class="def">Repeating a process. In software development, going back to a phase that has already been worked on.</div></div>
+          <div class="key-term"><div class="term">Software development process</div><div class="def">The sequence of stages used to create software: analysis, design, implementation, testing and evaluation.</div></div>
+          <div class="key-term"><div class="term">Stage</div><div class="def">One step of the development process. Each stage produces something the next one needs.</div></div>
+          <div class="key-term"><div class="term">Iterative/waterfall model</div><div class="def">The model of development where the stages flow in order — but stages are revisited (repeated) as problems are discovered.</div></div>
+          <div class="key-term"><div class="term">Iteration</div><div class="def">Repeating a process. In software development, going back to a stage that has already been worked on.</div></div>
         </div>
 
         <div class="callout callout-info">
           <div class="callout-icon">ℹ️</div>
-          <div><strong>What to know for the exam:</strong> you should be able to <strong>describe</strong> the phases of an iterative development process, and be able to explain and give examples of how the process is iterative.</div>
+          <div><strong>What to know for the exam:</strong> you should be able to <strong>describe</strong> the stages of an iterative development process, and be able to explain and give examples of how the process is iterative.</div>
         </div>
       </article>
 
       <article>
-        <h2 id="phases">The Development Phases</h2>
-        <p>There are five phases, and they always come in the same order. Here's what actually happens in each one:</p>
+        <h2 id="phases">The Development Stages</h2>
+        <p>There are five stages, and they always come in the same order. Here's what actually happens in each one:</p>
 
         <table>
-          <thead><tr><th>Phase</th><th>What happens</th></tr></thead>
+          <thead><tr><th>Stage</th><th>What happens</th></tr></thead>
           <tbody>
             <tr><td><strong>Analysis</strong></td><td>A systems analyst meets the client to work out exactly what the program is required to do — its overall <strong>purpose</strong>, and its <strong>functional requirements</strong> (the inputs, processes and outputs it needs).</td></tr>
             <tr><td><strong>Design</strong></td><td>Planning the solution before any code is written: what the <strong>user interface</strong> will look like, what <strong>data</strong> will be stored, and how the program will work (the <strong>algorithm</strong>, planned using a design technique).</td></tr>
@@ -90,32 +90,32 @@
           </tbody>
         </table>
 
-        <p>Notice how each phase feeds the next. You can't design a solution until you know what the problem is (analysis). You can't write the code until you have a design to follow. And you can't test a program that doesn't exist yet. The order matters!</p>
+        <p>Notice how each stage feeds the next. You can't design a solution until you know what the problem is (analysis). You can't write the code until you have a design to follow. And you can't test a program that doesn't exist yet. The order matters!</p>
       </article>
 
       <article>
         <h2 id="model">The Iterative/Waterfall Model</h2>
-        <p>Because each phase flows down into the next, the process is often drawn as a staircase of steps, with the work "flowing" from one phase down to the next like a waterfall. This is the <strong>iterative/waterfall model</strong> of software development.</p>
+        <p>Because each stage flows down into the next, the process is often drawn as a staircase of steps, with the work "flowing" from one stage down to the next like a waterfall. This is the <strong>iterative/waterfall model</strong> of software development.</p>
 
-        <img src="../resources/sdd/waterfall-iterative-process.svg" alt="The iterative (waterfall) development process: five phases — Analysis, Design, Implementation, Testing and Evaluation — drawn as a staircase flowing from top-left to bottom-right, joined by solid downward arrows. Dashed curved arrows sweep back up to show iteration: from Testing back to Design when testing finds a logic error, and from Evaluation all the way back to Analysis when the program is not fit for purpose or the client asks for new features." class="zoomable" style="max-width:100%;" />
+        <img src="../resources/sdd/waterfall-iterative-process.svg" alt="The iterative (waterfall) development process: five stages — Analysis, Design, Implementation, Testing and Evaluation — drawn as a staircase flowing from top-left to bottom-right, joined by solid downward arrows. Dashed curved arrows sweep back up to show iteration: from Testing back to Design when testing finds a logic error, and from Evaluation all the way back to Analysis when the program is not fit for purpose or the client asks for new features." class="zoomable" style="max-width:100%;" />
 
-        <p>In a perfect world, a team would do each phase once, finish it, and never look back. But software development doesn't work like that — and that's where the <em>iterative</em> part comes in.</p>
+        <p>In a perfect world, a team would do each stage once, finish it, and never look back. But software development doesn't work like that — and that's where the <em>iterative</em> part comes in.</p>
       </article>
 
       <article>
         <h2 id="why-iterative">Why Is It Iterative?</h2>
-        <p><strong>Iteration means repeating a process.</strong> In software development, it describes going back to phases that have already been "finished".</p>
+        <p><strong>Iteration means repeating a process.</strong> In software development, it describes going back to stages that have already been "finished".</p>
         <p>Why would a team need to do that? Because things change, and problems get discovered:</p>
         <ul>
-          <li><strong>Testing finds an error</strong> — the team goes back to the <em>design</em> and <em>implementation</em> phases to fix it, then tests again.</li>
+          <li><strong>Testing finds an error</strong> — the team goes back to the <em>design</em> and <em>implementation</em> stages to fix it, then tests again.</li>
           <li><strong>The client changes their mind</strong> — new requirements appear, so the team revisits <em>analysis</em> and everything that follows from it.</li>
           <li><strong>The evaluation shows the program isn't fit for purpose</strong> — back round the loop we go.</li>
         </ul>
-        <p>For example: the design for part of a program is created and implemented. Errors found during testing mean parts of the design and implementation have to change, and then further testing is carried out. The phases have been <strong>revisited</strong> — that's iteration.</p>
+        <p>For example: the design for part of a program is created and implemented. Errors found during testing mean parts of the design and implementation have to change, and then further testing is carried out. The stages have been <strong>revisited</strong> — that's iteration.</p>
 
         <div class="callout callout-tip">
           <div class="callout-icon">💡</div>
-          <div><strong>Exam answer:</strong> if you're asked why development is described as <em>iterative</em>, say that <strong>phases are revisited or repeated</strong> — and give an example, such as returning to design and implementation after testing reveals an error.</div>
+          <div><strong>Exam answer:</strong> if you're asked why development is described as <em>iterative</em>, say that <strong>stages are revisited or repeated</strong> — and give an example, such as returning to design and implementation after testing reveals an error.</div>
         </div>
 
         <p>You'll go through a basic version of this process yourself in the coursework assignment: you'll analyse a problem, design a solution, implement it, test it — and when a test fails (it happens to everyone), you'll loop back, fix your code, and test again. That <em>is</em> iterative development.</p>
@@ -191,8 +191,8 @@
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Practice Question 3 — Name the Phase (2 marks)</div>
-          <p>State the phase of the development process in which each of the following takes place:</p>
+          <div class="q-label">Practice Question 3 — Name the Stage (2 marks)</div>
+          <p>State the stage of the development process in which each of the following takes place:</p>
           <p>(a) The program is checked using carefully chosen test data.<br/>(b) The functional requirements (inputs, processes and outputs) are identified.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
@@ -203,8 +203,8 @@
         </div>
 
         <div class="practice-question">
-          <div class="q-label">Practice Question 4 — What Happens in a Phase (2 marks)</div>
-          <p>Describe <strong>two</strong> tasks carried out during the <strong>design</strong> phase of the software development process.</p>
+          <div class="q-label">Practice Question 4 — What Happens in a Stage (2 marks)</div>
+          <p>Describe <strong>two</strong> tasks carried out during the <strong>design</strong> stage of the software development process.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
@@ -215,11 +215,11 @@
 
         <div class="practice-question">
           <div class="q-label">Practice Question 5 — The Client Changes Their Mind (2 marks)</div>
-          <p>A finished program is shown to the client, who asks for an extra feature to be added. State which phase the development team should return to <strong>first</strong>, and explain why this situation shows that development is iterative.</p>
+          <p>A finished program is shown to the client, who asks for an extra feature to be added. State which stage the development team should return to <strong>first</strong>, and explain why this situation shows that development is iterative.</p>
           <details class="marking-instructions">
             <summary>Marking Instructions</summary>
             <div class="answer-body">
-              <p style="color:#6A1B9A;"><strong>Analysis</strong> — the new requirement must be agreed/added to the requirements first (1 mark). It shows iteration because phases that were already completed are being <strong>revisited</strong>/the team goes back through design, implementation and testing again for the new feature (1 mark).</p>
+              <p style="color:#6A1B9A;"><strong>Analysis</strong> — the new requirement must be agreed/added to the requirements first (1 mark). It shows iteration because stages that were already completed are being <strong>revisited</strong>/the team goes back through design, implementation and testing again for the new feature (1 mark).</p>
             </div>
           </details>
         </div>
